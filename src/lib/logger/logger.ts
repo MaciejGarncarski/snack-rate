@@ -1,25 +1,17 @@
 import { pinoLogger } from "#/lib/logger/pino";
-import { httpLogger } from "#/lib/logger/http";
 
 class LoggerFacade {
-  info(msg: string, meta?: object) {
-    pinoLogger.info(meta || {}, msg);
+  info(meta: object, message?: string, ...args: any[]) {
+    pinoLogger.info(meta, message, ...args);
   }
-
-  error(msg: string, err?: unknown) {
-    pinoLogger.error({ err }, msg);
+  error(meta: object, message?: string, ...args: any[]) {
+    pinoLogger.error(meta, message, ...args);
   }
-
-  warn(msg: string, meta?: object) {
-    pinoLogger.warn(meta || {}, msg);
+  debug(meta: object, message?: string, ...args: any[]) {
+    pinoLogger.debug(meta, message, ...args);
   }
-
-  debug(msg: string, meta?: object) {
-    pinoLogger.debug(meta || {}, msg);
-  }
-
-  http() {
-    return httpLogger;
+  warn(meta: object, message?: string, ...args: any[]) {
+    pinoLogger.warn(meta, message, ...args);
   }
 }
 
