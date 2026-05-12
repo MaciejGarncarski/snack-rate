@@ -1,5 +1,6 @@
-import { register } from "#/lib/metrics/metrics";
 import { createFileRoute } from "@tanstack/react-router";
+
+import { register } from "#/lib/metrics/metrics";
 
 export const Route = createFileRoute("/metrics")({
   server: {

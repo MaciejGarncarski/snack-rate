@@ -1,5 +1,6 @@
-import { parseEnv } from "#/env/parse";
 import * as z from "zod";
+
+import { parseEnv } from "#/env/parse";
 
 describe("parseEnv", () => {
   it("should parse valid environment variables", () => {
@@ -28,6 +29,6 @@ describe("parseEnv", () => {
         { PORT: "not-a-number", DATABASE_URL: "postgres://user:pass@localhost:5432/db" },
         "server",
       ),
-    ).toThrow(/Invalid server environment variables/);
+    ).toThrow(/Invalid server environment variables/u);
   });
 });

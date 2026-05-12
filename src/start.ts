@@ -1,6 +1,8 @@
+import { createMiddleware, createStart } from "@tanstack/react-start";
+
 import { logger } from "#/lib/logger/logger";
 import { httpDuration } from "#/lib/metrics/http-duration";
-import { createMiddleware, createStart } from "@tanstack/react-start";
+
 export const requestLogger = createMiddleware({ type: "request" }).server(
   async ({ request, next }) => {
     const endTimer = httpDuration.startTimer();

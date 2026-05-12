@@ -1,4 +1,5 @@
 import * as z from "zod";
+
 import { parseEnv } from "#/env/parse";
 
 const portSchema = z.coerce.number().int().min(1024).max(65535).default(3000);

@@ -1,9 +1,10 @@
-import { Button } from "#/components/ui/button";
-import { testCounter } from "#/lib/metrics/counters";
-import { client, orpc } from "#/orpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+
+import { Button } from "#/components/ui/button";
+import { testCounter } from "#/lib/metrics/counters";
+import { client, orpc } from "#/orpc/client";
 
 export const Route = createFileRoute("/")({ component: Home });
 

@@ -1,4 +1,5 @@
 import * as z from "zod";
+
 import { parseEnv } from "#/env/parse";
 
 export const clientEnvSchema = z.object({

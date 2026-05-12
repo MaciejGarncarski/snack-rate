@@ -1,3 +1,4 @@
+// oxlint-disable no-underscore-dangle
 import { Registry, collectDefaultMetrics } from "prom-client";
 
 type MetricsGlobal = typeof globalThis & {

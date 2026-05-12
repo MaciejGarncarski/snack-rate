@@ -1,5 +1,6 @@
-import { register } from "#/lib/metrics/metrics";
 import { Histogram } from "prom-client";
+
+import { register } from "#/lib/metrics/metrics";
 
 export const httpDuration = new Histogram({
   name: "http_request_duration_seconds",

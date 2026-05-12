@@ -11,6 +11,6 @@ describe("runtime guard", () => {
       source: envVariables,
     });
 
-    expect(() => env.PORT).toThrow(/serverEnv cannot be accessed on the client/);
+    expect(() => env.PORT).toThrow(/serverEnv cannot be accessed on the client/u);
   });
 });
