@@ -9,6 +9,10 @@ import { nitro } from "nitro/vite";
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
+  server: {
+    host: true,
+    allowedHosts: ["host.docker.internal"],
+  },
   plugins: [devtools(), nitro(), tailwindcss(), tanstackStart(), viteReact()],
 });
 

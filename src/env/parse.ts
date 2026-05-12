@@ -7,8 +7,6 @@ export function parseEnv<TSchema extends z.ZodType>(
 ): z.output<TSchema> {
   const parsed = schema.safeParse(input);
 
-  console.log(input, parsed);
-
   if (parsed.success) {
     return parsed.data;
   }

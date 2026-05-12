@@ -1,33 +1,44 @@
 import { logger } from "#/lib/logger/logger";
+import { httpDuration } from "#/lib/metrics/http-duration";
 import { createMiddleware, createStart } from "@tanstack/react-start";
 export const requestLogger = createMiddleware({ type: "request" }).server(
   async ({ request, next }) => {
-    const start = Temporal.Now.instant().epochMilliseconds;
+    const endTimer = httpDuration.startTimer();
+    const route = new URL(request.url).pathname;
 
     try {
       const res = await next();
+      const status = String(res.response.status);
 
-      const duration = Temporal.Now.instant().epochMilliseconds - start;
+      endTimer({
+        method: request.method,
+        route,
+        status,
+      });
 
       logger.info(
         {
           method: request.method,
           url: request.url,
-          status: res.response.status,
-          duration: `${duration}ms`,
+          status,
         },
         "Request completed",
       );
 
       return res;
     } catch (err) {
-      const duration = Temporal.Now.instant().epochMilliseconds - start;
+      const status = "500";
+
+      endTimer({
+        method: request.method,
+        route,
+        status,
+      });
 
       logger.error(
         {
           method: request.method,
           url: request.url,
-          duration: `${duration}ms`,
           error: err,
         },
         "Request failed",
