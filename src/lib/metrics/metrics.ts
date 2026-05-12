@@ -1,5 +1,5 @@
 // oxlint-disable no-underscore-dangle
-import { Registry, collectDefaultMetrics } from "prom-client";
+import { Registry, collectDefaultMetrics, Counter } from "prom-client";
 
 type MetricsGlobal = typeof globalThis & {
   __metrics_registry__?: Registry;
@@ -16,3 +16,13 @@ if (!metricsGlobal.__metrics_collected__) {
   collectDefaultMetrics({ register });
   metricsGlobal.__metrics_collected__ = true;
 }
+
+export const readinessFailureCounter =
+  (metricsGlobal as any).__readiness_failure_counter__ ||
+  new Counter({
+    name: "readiness_failure_total",
+    help: "Number of readiness failures",
+    registers: [register],
+  });
+
+(metricsGlobal as any).__readiness_failure_counter__ = readinessFailureCounter;

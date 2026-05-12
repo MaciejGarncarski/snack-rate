@@ -3,18 +3,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
 import { Button } from "#/components/ui/button";
-import { testCounter } from "#/lib/metrics/counters";
-import { client, orpc } from "#/orpc/client";
+import { orpc } from "#/orpc/client";
 
 export const Route = createFileRoute("/")({ component: Home });
 
-const sre = createServerFn().handler(async () => {
-  await testCounter.inc({
-    status: "success",
-    user_id: Math.floor(Math.random() * 1000).toString(),
-  });
-  const todos = await client.listTodos({});
-  return { message: "Hello from the server!", todos };
+const sre = createServerFn().handler(() => {
+  return { message: "Hello from the server!" };
 });
 
 function Home() {
