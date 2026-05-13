@@ -3,7 +3,6 @@ node_modules
 dist
 dist-ssr
 *.local
-.env
 .nitro
 .tanstack
 .wrangler
@@ -12,3 +11,6 @@ dist-ssr
 __unconfig*
 todos.json
 log-files
+coverage
+.env*
+!.env.example

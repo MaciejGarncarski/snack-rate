@@ -1,4 +1,27 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "ignorePatterns": ["pnpm-lock.yaml", "node_modules", "dist"]
+  "ignorePatterns": ["pnpm-lock.yaml", "node_modules", "dist", "src/routeTree.gen.ts"],
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "jsxSingleQuote": false,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "singleAttributePerLine": false,
+  "sortImports": {
+    "internalPattern": ["#/", "@/"],
+    "newlinesBetween": true,
+    "groups": [
+      ["value-builtin", "value-external", "type-builtin", "type-external"],
+      ["value-internal", "type-internal"],
+      ["value-parent", "value-sibling", "value-index", "type-parent", "type-sibling", "type-index"],
+      "unknown"
+    ]
+  },
+  "sortTailwindcss": {
+    "stylesheet": "./src/styles.css",
+    "functions": ["clsx", "cn"],
+    "preserveWhitespace": true
+  }
 }

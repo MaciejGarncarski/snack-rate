@@ -1,0 +1,111 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    profiles:
+      - production
+    container_name: snack_rate_app
+    restart: unless-stopped
+
+    env_file:
+      - .env.production
+
+    ports:
+      - "3000:3000"
+
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+    depends_on:
+      - postgres
+      - prometheus
+      - tempo
+
+  postgres:
+    image: postgres:18-alpine
+    container_name: postgres_db
+    restart: unless-stopped
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./init:/docker-entrypoint-initdb.d
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    shm_size: 256mb
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+    ports:
+      - "127.0.0.1:9090:9090"
+
+  tempo:
+    image: grafana/tempo:2.10.5
+    container_name: tempo
+    restart: unless-stopped
+
+    command:
+      - -config.file=/etc/tempo.yml
+
+    volumes:
+      - ./tempo.yml:/etc/tempo.yml:ro
+      - tempo_data:/tmp/tempo
+
+    ports:
+      - "127.0.0.1:3200:3200"
+      - "127.0.0.1:4317:4317"
+      - "127.0.0.1:4318:4318"
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SERVER_DOMAIN: localhost
+      GF_SERVER_ROOT_URL: http://localhost:3001/
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+    ports:
+      - "127.0.0.1:3001:3000"
+
+    depends_on:
+      - prometheus
+      - tempo
+
+volumes:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
+  tempo_data:
