@@ -2,7 +2,8 @@ import pRetry from "p-retry";
 import type { Pool } from "pg";
 
 import { dbPool } from "#/db";
-import { logger } from "#/lib/logger/logger";
+import { dbFailuresCounter } from "#/observability/counters";
+import { logger } from "#/observability/logger/logger";
 
 type DbCheckResult = { ok: true } | { ok: false; error: string };
 
@@ -27,6 +28,8 @@ export async function checkDb(timeoutMs: number, retries = 2): Promise<DbCheckRe
 
     return { ok: true };
   } catch (err) {
+    dbFailuresCounter.add(1);
+
     logger.error({ err }, "Database readiness check failed");
     return {
       ok: false,

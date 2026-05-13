@@ -27,24 +27,47 @@ services:
     image: prom/prometheus
     container_name: prometheus
     restart: unless-stopped
+
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus
       - --storage.tsdb.retention.time=15d
+
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
+
     ports:
       - "127.0.0.1:9090:9090"
+
+  tempo:
+    image: grafana/tempo:2.10.5
+    container_name: tempo
+    restart: unless-stopped
+
+    command:
+      - -config.file=/etc/tempo.yml
+
+    volumes:
+      - ./tempo.yml:/etc/tempo.yml:ro
+      - tempo_data:/tmp/tempo
+
+    ports:
+      - "127.0.0.1:3200:3200" # Tempo query UI/API
+      - "127.0.0.1:4317:4317" # OTLP gRPC
+      - "127.0.0.1:4318:4318" # OTLP HTTP
 
   grafana:
     image: grafana/grafana
     container_name: grafana
     restart: unless-stopped
+
     env_file:
       - .env
+
     environment:
       GF_AUTH_ANONYMOUS_ENABLED: "false"
       GF_USERS_ALLOW_SIGN_UP: "false"
@@ -52,14 +75,19 @@ services:
       GF_SERVER_ROOT_URL: http://localhost:3001/
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+
     volumes:
       - grafana_data:/var/lib/grafana
+
     ports:
       - "127.0.0.1:3001:3000"
+
     depends_on:
       - prometheus
+      - tempo
 
 volumes:
   postgres_data:
   prometheus_data:
   grafana_data:
+  tempo_data:

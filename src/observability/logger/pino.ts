@@ -1,13 +1,14 @@
 import pino from "pino";
 
 import { env } from "#/env/env";
+import { observabilityConfig } from "#/observability/config";
 
 export const pinoLogger = env.isProduction
   ? pino({
-      level: "info",
+      level: observabilityConfig.logLevel,
     })
   : pino({
-      level: "debug",
+      level: observabilityConfig.logLevel,
       transport: {
         target: "pino-pretty",
         options: {

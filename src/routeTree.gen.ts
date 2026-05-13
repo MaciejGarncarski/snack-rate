@@ -9,18 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as MetricsRouteImport } from './routes/metrics'
 import { Route as HealthRouteImport } from './routes/health'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HealthReadyRouteImport } from './routes/health.ready'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 
-const MetricsRoute = MetricsRouteImport.update({
-  id: '/metrics',
-  path: '/metrics',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const HealthRoute = HealthRouteImport.update({
   id: '/health',
   path: '/health',
@@ -50,7 +44,6 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/health': typeof HealthRouteWithChildren
-  '/metrics': typeof MetricsRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -58,7 +51,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/health': typeof HealthRouteWithChildren
-  '/metrics': typeof MetricsRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -67,49 +59,27 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/health': typeof HealthRouteWithChildren
-  '/metrics': typeof MetricsRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/health'
-    | '/metrics'
-    | '/api/$'
-    | '/health/ready'
-    | '/api/rpc/$'
+  fullPaths: '/' | '/health' | '/api/$' | '/health/ready' | '/api/rpc/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/health' | '/metrics' | '/api/$' | '/health/ready' | '/api/rpc/$'
-  id:
-    | '__root__'
-    | '/'
-    | '/health'
-    | '/metrics'
-    | '/api/$'
-    | '/health/ready'
-    | '/api/rpc/$'
+  to: '/' | '/health' | '/api/$' | '/health/ready' | '/api/rpc/$'
+  id: '__root__' | '/' | '/health' | '/api/$' | '/health/ready' | '/api/rpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   HealthRoute: typeof HealthRouteWithChildren
-  MetricsRoute: typeof MetricsRoute
   ApiSplatRoute: typeof ApiSplatRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/metrics': {
-      id: '/metrics'
-      path: '/metrics'
-      fullPath: '/metrics'
-      preLoaderRoute: typeof MetricsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/health': {
       id: '/health'
       path: '/health'
@@ -162,7 +132,6 @@ const HealthRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HealthRoute: HealthRouteWithChildren,
-  MetricsRoute: MetricsRoute,
   ApiSplatRoute: ApiSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
 }

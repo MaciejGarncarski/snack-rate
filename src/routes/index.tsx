@@ -3,12 +3,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
 import { Button } from "#/components/ui/button";
+import { db } from "#/db";
 import { orpc } from "#/orpc/client";
 
 export const Route = createFileRoute("/")({ component: Home });
 
-const sre = createServerFn().handler(() => {
-  return { message: "Hello from the server!" };
+const sre = createServerFn().handler(async () => {
+  try {
+    const data = await db.query.todos.findFirst();
+
+    console.log("Data from the database:", data);
+    return { message: "Hello from the server!" };
+  } catch (error) {
+    console.error("Error querying the database:", error);
+    throw error;
+  }
 });
 
 function Home() {

@@ -7,6 +7,7 @@ import { onError } from "@orpc/server";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { createFileRoute } from "@tanstack/react-router";
 
+import { getActiveTraceId } from "#/observability/tracing";
 import router from "#/orpc/router";
 import { TodoSchema } from "#/orpc/schema";
 
@@ -60,7 +61,15 @@ async function handle({ request }: { request: Request }) {
     context: {},
   });
 
-  return response ?? new Response("Not Found", { status: 404 });
+  const traceId = getActiveTraceId();
+
+  if (response) {
+    // Add traceId to response headers
+    response.headers.set("x-trace-id", traceId || "unknown");
+    return response;
+  }
+
+  return new Response("Not Found", { status: 404 });
 }
 
 export const Route = createFileRoute("/api/$")({

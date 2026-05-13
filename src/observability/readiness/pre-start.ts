@@ -2,9 +2,9 @@ import pRetry from "p-retry";
 import { Pool } from "pg";
 
 import { env } from "#/env/env";
-import { logger } from "#/lib/logger/logger";
-import { readinessFailureCounter } from "#/lib/metrics/metrics";
-import { checkDatabaseOnce } from "#/lib/readiness/check-db";
+import { readinessFailureCounter } from "#/observability/counters";
+import { logger } from "#/observability/logger/logger";
+import { checkDatabaseOnce } from "#/observability/readiness/check-db";
 
 export async function runPreStartChecks() {
   if (env.isTesting) return;
@@ -38,7 +38,7 @@ export async function runPreStartChecks() {
       status: "Pre-start DB check succeeded",
     });
   } catch (err) {
-    readinessFailureCounter.inc();
+    readinessFailureCounter.add(1);
 
     logger.error({ err }, "Pre-start readiness check failed — exiting");
 

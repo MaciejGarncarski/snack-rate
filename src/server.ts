@@ -1,20 +1,15 @@
-import {
-  createStartHandler,
-  defaultStreamHandler,
-  defineHandlerCallback,
-} from "@tanstack/react-start/server";
-import { createServerEntry } from "@tanstack/react-start/server-entry";
+// oxlint-disable-next-line no-inline-comments
+// Initialize OpenTelemetry SDK and instrumentations
+// oxlint-disable-next-line import/no-unassigned-import
+import "#/observability/instrumentation";
+import handler from "@tanstack/react-start/server-entry";
 
-import { runPreStartChecks } from "#/lib/readiness/pre-start";
+import { runPreStartChecks } from "#/observability/readiness/pre-start";
 
 await runPreStartChecks();
 
-const customHandler = defineHandlerCallback((ctx) => {
-  return defaultStreamHandler(ctx);
-});
-
-const startHandler = createStartHandler(customHandler);
-
-export default createServerEntry({
-  fetch: startHandler,
-});
+export default {
+  fetch(request: Request) {
+    return handler.fetch(request);
+  },
+};
