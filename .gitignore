@@ -12,5 +12,5 @@ __unconfig*
 todos.json
 log-files
 coverage
-.env*
-!.env.example
+.env.production
+.env.development
