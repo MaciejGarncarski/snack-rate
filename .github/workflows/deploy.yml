@@ -1,0 +1,56 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to deploy (e.g. v0.2.0)"
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate version format
+        run: |
+          if [[ ! "${{ github.event.inputs.version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "✖ Invalid version format. Use vX.Y.Z (e.g. v0.2.0)"
+            exit 1
+          fi
+
+      - name: Verify image exists on ghcr.io
+        run: |
+          docker manifest inspect ghcr.io/${{ github.repository }}:${{ github.event.inputs.version }} > /dev/null 2>&1 || {
+            echo "✖ Image not found: ghcr.io/${{ github.repository }}:${{ github.event.inputs.version }}"
+            echo "  Make sure the build workflow finished successfully for this tag."
+            exit 1
+          }
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -euo pipefail
+            cd ${{ secrets.VPS_DIR }}
+
+            echo "→ Pulling ghcr.io/${{ github.repository }}:${{ github.event.inputs.version }}..."
+            docker pull ghcr.io/${{ github.repository }}:${{ github.event.inputs.version }}
+
+            echo "→ Updating IMAGE_TAG..."
+            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${{ github.event.inputs.version }}|" .env.production
+
+            echo "→ Restarting app..."
+            docker compose -f compose.yml \
+              --env-file .env.production \
+              --profile production \
+              up -d --no-deps app
+
+            echo "→ Cleaning old images..."
+            docker image prune -f
+
+            echo "✓ ${{ github.event.inputs.version }} is live"

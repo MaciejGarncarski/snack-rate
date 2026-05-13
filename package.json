@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
-    "preview": "vite preview",
+    "start": "node .output/server/index.mjs",
     "test": "vitest run",
     "test:cov": "vitest run --coverage",
     "lint": "oxlint",
@@ -20,9 +20,12 @@
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio",
-    "infra:up": "docker compose -f compose.yml up -d",
-    "infra:down": "docker compose -f compose.yml down",
-    "infra:logs": "docker compose -f compose.yml logs -f"
+    "infra:up": "docker compose -f compose.yml --env-file .env.development up -d",
+    "infra:down": "docker compose -f compose.yml --env-file .env.development down",
+    "infra:logs": "docker compose -f compose.yml --env-file .env.development logs -f",
+    "prod:up": "docker compose -f compose.yml --env-file .env.production --profile production up -d",
+    "prod:down": "docker compose -f compose.yml --env-file .env.production --profile production down",
+    "prod:logs": "docker compose -f compose.yml --env-file .env.production --profile production logs -f"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.8",
