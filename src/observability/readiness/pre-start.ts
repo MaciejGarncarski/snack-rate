@@ -1,18 +1,18 @@
 import pRetry from "p-retry";
 import { Pool } from "pg";
 
-import { env } from "#/env/env";
+import { serverEnv } from "#/env/server.env";
 import { readinessFailureCounter } from "#/observability/counters";
 import { logger } from "#/observability/logger/logger";
 import { checkDatabaseOnce } from "#/observability/readiness/check-db";
 
 export async function runPreStartChecks() {
-  if (env.isTesting) return;
+  if (serverEnv.isTest) return;
 
   const timeoutMs = 1000;
 
   const pool = new Pool({
-    connectionString: env.server.DATABASE_URL,
+    connectionString: serverEnv.DATABASE_URL,
     max: 1,
   });
 

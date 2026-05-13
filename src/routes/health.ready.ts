@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { readinessFailureCounter } from "#/observability/metrics";
+import { readinessFailureCounter } from "#/observability/counters";
 import { checkDb } from "#/observability/readiness/check-db";
 
 export const Route = createFileRoute("/health/ready")({
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/health/ready")({
         const durationMs = Math.round(performance.now() - startedAt);
 
         if (!dbResult.ok) {
-          readinessFailureCounter.inc();
+          readinessFailureCounter.add(1, { check: "db" });
 
           return Response.json(
             {

@@ -1,4 +1,4 @@
-import { env } from "#/env/env";
+import { serverEnv } from "#/env/server.env";
 
 const observabilityConfigData = {
   development: {
@@ -18,6 +18,6 @@ const observabilityConfigData = {
   },
 } as const;
 
-export const observabilityConfig = observabilityConfigData[env.client.NODE_ENV];
+export const observabilityConfig = observabilityConfigData[serverEnv.NODE_ENV];
 
 console.log("Observability configuration:", observabilityConfig);

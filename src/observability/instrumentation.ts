@@ -4,7 +4,7 @@ import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 
-import { serverEnv } from "#/env/server";
+import { serverEnv } from "#/env/server.env";
 import { observabilityConfig } from "#/observability/config";
 import { logger } from "#/observability/logger/logger";
 import { prometheusExporter } from "#/observability/metrics";

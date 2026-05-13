@@ -2,11 +2,11 @@ import { instrumentDrizzleClient } from "@kubiks/otel-drizzle";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
-import { env } from "#/env/env.ts";
+import { serverEnv } from "#/env/server.env.ts";
 
 import * as schema from "./schema.ts";
 
-const url = new URL(env.server.DATABASE_URL);
+const url = new URL(serverEnv.DATABASE_URL);
 
 export const dbPool = new Pool({
   host: url.hostname,
