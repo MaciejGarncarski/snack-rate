@@ -1,9 +1,10 @@
-import { observabilityConfig } from "#/observability/config";
 import { pinoLogger } from "#/observability/logger/pino";
 import { getTraceContext } from "#/observability/tracing";
 
+const enableTracing = process.env.OBSERVABILITY_TRACING_ENABLED !== "false";
+
 function withTrace(meta: object) {
-  if (!observabilityConfig.enableTracing) return meta;
+  if (!enableTracing) return meta;
   const { traceId, spanId } = getTraceContext();
   return { ...meta, traceId, spanId };
 }

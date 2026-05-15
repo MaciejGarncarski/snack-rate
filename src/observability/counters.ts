@@ -15,3 +15,7 @@ export const readinessFailureCounter = meter.createCounter("readiness_failures_t
 export const dbFailuresCounter = meter.createCounter("db_failures_total", {
   description: "Total database failures",
 });
+
+export const testCounter = meter.createCounter("test_counter_total", {
+  description: "A test counter for demonstration purposes",
+});

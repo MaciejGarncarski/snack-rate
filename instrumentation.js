@@ -5,10 +5,10 @@ import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 
-import { serverEnv } from "#/env/server.env";
-import { logger } from "#/observability/logger/logger";
+const enableTracing = process.env.OBSERVABILITY_TRACING_ENABLED !== "false";
+const enableMetrics = process.env.OBSERVABILITY_METRICS_ENABLED !== "false";
 
-function createTraceExporterUrl(endpoint: string) {
+function createTraceExporterUrl(endpoint) {
   const url = new URL(endpoint);
 
   if (url.pathname === "/") {
@@ -17,10 +17,8 @@ function createTraceExporterUrl(endpoint: string) {
 
   return url.toString();
 }
-const traceExporterUrl = createTraceExporterUrl(serverEnv.OTEL_EXPORTER_OTLP_ENDPOINT);
 
-const enableTracing = serverEnv.OBSERVABILITY_TRACING_ENABLED !== "false";
-const enableMetrics = serverEnv.OBSERVABILITY_METRICS_ENABLED !== "false";
+const traceExporterUrl = createTraceExporterUrl(process.env.OTEL_EXPORTER_OTLP_ENDPOINT);
 
 const otelSdk = new NodeSDK({
   traceExporter: enableTracing
@@ -30,7 +28,6 @@ const otelSdk = new NodeSDK({
         concurrencyLimit: 10,
       })
     : undefined,
-
   metricReader: enableMetrics
     ? new PrometheusExporter(
         {
@@ -38,11 +35,11 @@ const otelSdk = new NodeSDK({
           endpoint: "/metrics",
           host: "0.0.0.0",
         },
-        (error: unknown) => {
+        (error) => {
           if (error) {
-            logger.error({ port: 9464 }, "Error occurred while starting Prometheus metrics server");
+            console.log({ port: 9464 }, "Error occurred while starting Prometheus metrics server");
           } else {
-            logger.info({ port: 9464 }, "Prometheus metrics server is running");
+            console.log({ port: 9464 }, "Prometheus metrics server is running");
           }
         },
       )
@@ -60,5 +57,5 @@ const otelSdk = new NodeSDK({
   ],
 });
 
-otelSdk.start();
-logger.info({ endpoint: traceExporterUrl }, "OpenTelemetry SDK started");
+await otelSdk.start();
+console.log({ endpoint: traceExporterUrl }, "OpenTelemetry SDK started");

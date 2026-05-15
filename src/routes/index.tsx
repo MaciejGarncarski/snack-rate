@@ -3,11 +3,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
 import { Button } from "#/components/ui/button";
+import { testCounter } from "#/observability/counters";
 import { orpc } from "#/orpc/client";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 const sre = createServerFn().handler(() => {
+  testCounter.add(1, { route: "/" });
   return { message: "Hello from the server!" };
 });
 

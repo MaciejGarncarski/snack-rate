@@ -8,12 +8,16 @@ const schema = z.object({
   POSTGRES_USER: z.string().min(1),
   POSTGRES_PASSWORD: z.string().min(1),
   POSTGRES_DB: z.string().min(1),
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.url(),
 
   // Observability
   GRAFANA_ADMIN_USER: z.string().min(1),
   GRAFANA_ADMIN_PASSWORD: z.string().min(1),
-  OTEL_EXPORTER_OTLP_ENDPOINT: z.string().url(),
+  OTEL_EXPORTER_OTLP_ENDPOINT: z.url(),
+
+  OBSERVABILITY_LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+  OBSERVABILITY_METRICS_ENABLED: z.enum(["true", "false"]).default("true"),
+  OBSERVABILITY_TRACING_ENABLED: z.enum(["true", "false"]).default("true"),
 });
 
 const parsed = schema.safeParse(process.env);

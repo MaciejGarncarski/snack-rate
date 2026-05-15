@@ -1,4 +1,17 @@
 {
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 3000,
+  "[markdown]": {
+    "editor.defaultFormatter": null
+  },
+  "[toml]": {
+    "editor.defaultFormatter": null
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": null
+  },
   "files.watcherExclude": {
     "**/routeTree.gen.ts": true
   },

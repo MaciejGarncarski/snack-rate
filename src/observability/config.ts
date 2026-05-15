@@ -4,10 +4,10 @@ const observabilityConfigData = {
   development: {
     logLevel: "debug",
     enableTracing: true,
-    enableMetrics: false,
+    enableMetrics: true,
   },
   production: {
-    logLevel: "warn",
+    logLevel: "info",
     enableTracing: true,
     enableMetrics: true,
   },
@@ -19,5 +19,4 @@ const observabilityConfigData = {
 } as const;
 
 export const observabilityConfig = observabilityConfigData[serverEnv.NODE_ENV];
-
-console.log("Observability configuration:", observabilityConfig);
+console.log("Observability configuration:", observabilityConfig, { nodeEnv: serverEnv.NODE_ENV });
