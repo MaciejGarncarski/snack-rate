@@ -1,4 +1,59 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: snack_rate_app
+    restart: unless-stopped
+
+    env_file:
+      - .env.production
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      prometheus:
+        condition: service_started
+      tempo:
+        condition: service_started
+      loki:
+        condition: service_started
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health/ready >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  caddy:
+    image: caddy:2-alpine
+    env_file:
+      - .env.production
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+      - grafana
+
+  grafana:
+    environment:
+      GF_SERVER_ROOT_URL: https://localhost/grafana/
+
   prometheus:
     volumes:
       - ./config/prometheus.production.yml:/etc/prometheus/prometheus.yml:ro

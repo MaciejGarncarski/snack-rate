@@ -1,45 +1,4 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-
-    profiles:
-      - production
-
-    container_name: snack_rate_app
-    restart: unless-stopped
-
-    env_file:
-      - .env.production
-
-    ports:
-      - "3000:3000"
-      - "9464:9464"
-
-    depends_on:
-      postgres:
-        condition: service_healthy
-      prometheus:
-        condition: service_started
-      tempo:
-        condition: service_started
-      loki:
-        condition: service_started
-
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health/ready >/dev/null || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
-
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
-
   postgres:
     image: postgres:18-alpine
 
@@ -51,9 +10,6 @@ services:
 
     env_file:
       - .env.production
-
-    ports:
-      - "5432:5432"
 
     volumes:
       - postgres_data:/var/lib/postgresql
@@ -100,9 +56,6 @@ services:
       retries: 5
       start_period: 10s
 
-    ports:
-      - "127.0.0.1:9090:9090"
-
     logging:
       driver: json-file
       options:
@@ -122,11 +75,6 @@ services:
       - ./config/tempo.yml:/etc/tempo.yml:ro
       - tempo_data:/var/tempo
 
-    ports:
-      - "127.0.0.1:3200:3200"
-      - "127.0.0.1:4317:4317"
-      - "127.0.0.1:4318:4318"
-
     logging:
       driver: json-file
       options:
@@ -145,9 +93,6 @@ services:
     volumes:
       - ./config/loki.yml:/etc/loki/loki.yml:ro
       - loki_data:/loki
-
-    ports:
-      - "127.0.0.1:3100:3100"
 
     logging:
       driver: json-file
@@ -177,7 +122,6 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-
     container_name: grafana
     restart: unless-stopped
 
@@ -189,7 +133,6 @@ services:
       GF_USERS_ALLOW_SIGN_UP: "false"
 
       GF_SERVER_DOMAIN: localhost
-      GF_SERVER_ROOT_URL: http://localhost:3001/
 
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
@@ -197,9 +140,6 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
-
-    ports:
-      - "127.0.0.1:3001:3000"
 
     depends_on:
       prometheus:
@@ -225,3 +165,5 @@ volumes:
   grafana_data:
   tempo_data:
   loki_data:
+  caddy_data:
+  caddy_config:
