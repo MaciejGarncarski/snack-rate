@@ -1,9 +1,9 @@
 {
-    "uid": "snack-rate-overview",
-    "title": "Default dashboard",
+    "uid": "snack-rate-app-health",
+    "title": "App Health",
     "tags": [
         "snack-rate",
-        "overview"
+        "app-health"
     ],
     "timezone": "browser",
     "schemaVersion": 39,
@@ -146,6 +146,129 @@
                 "y": 16,
                 "w": 24,
                 "h": 10
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "Root filesystem usage (%)",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "targets": [
+                {
+                    "expr": "100 * (1 - (node_filesystem_avail_bytes{job=\"node-exporter\", mountpoint=\"/\", fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{job=\"node-exporter\", mountpoint=\"/\", fstype!~\"tmpfs|overlay\"}))",
+                    "legendFormat": "{{instance}}",
+                    "refId": "A"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "percent",
+                    "min": 0,
+                    "max": 100
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "x": 0,
+                "y": 26,
+                "w": 24,
+                "h": 8
+            }
+        },
+        {
+            "type": "row",
+            "title": "Reliability Signals",
+            "gridPos": {
+                "x": 0,
+                "y": 34,
+                "w": 24,
+                "h": 1
+            },
+            "collapsed": false,
+            "panels": []
+        },
+        {
+            "type": "stat",
+            "title": "Readiness failures",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "targets": [
+                {
+                    "expr": "sum(increase(readiness_failures_total[1h]))",
+                    "refId": "A"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "none",
+                    "decimals": 0
+                },
+                "overrides": []
+            },
+            "options": {
+                "reduceOptions": {
+                    "values": false,
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": ""
+                },
+                "orientation": "auto",
+                "textMode": "auto",
+                "colorMode": "none",
+                "graphMode": "none",
+                "justifyMode": "auto"
+            },
+            "gridPos": {
+                "x": 0,
+                "y": 35,
+                "w": 12,
+                "h": 5
+            }
+        },
+        {
+            "type": "stat",
+            "title": "DB failures",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+            },
+            "targets": [
+                {
+                    "expr": "sum(increase(db_failures_total[1h]))",
+                    "refId": "A"
+                }
+            ],
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "none",
+                    "decimals": 0
+                },
+                "overrides": []
+            },
+            "options": {
+                "reduceOptions": {
+                    "values": false,
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": ""
+                },
+                "orientation": "auto",
+                "textMode": "auto",
+                "colorMode": "none",
+                "graphMode": "none",
+                "justifyMode": "auto"
+            },
+            "gridPos": {
+                "x": 12,
+                "y": 35,
+                "w": 12,
+                "h": 5
             }
         }
     ]

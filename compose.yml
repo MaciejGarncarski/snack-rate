@@ -120,6 +120,32 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  node-exporter:
+    image: prom/node-exporter:latest
+
+    container_name: node_exporter
+    restart: unless-stopped
+
+    command:
+      - --path.rootfs=/host
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run/credentials/.+|var/lib/docker/.+|var/lib/containers/storage/.+)($|/)
+      - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|squashfs|sysfs|tmpfs|tracefs|9p)$
+
+    pid: host
+
+    volumes:
+      - /:/host:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -131,11 +157,16 @@ services:
     environment:
       GF_AUTH_ANONYMOUS_ENABLED: "false"
       GF_USERS_ALLOW_SIGN_UP: "false"
-
       GF_SERVER_DOMAIN: localhost
-
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GF_SMTP_ENABLED: "true"
+      GF_SMTP_HOST: "${GRAFANA_SMTP}"
+      GF_SMTP_USER: "${GRAFANA_SMTP_USER}"
+      GF_SMTP_PASSWORD: "${GRAFANA_SMTP_PASSWORD}"
+      GF_SMTP_FROM_ADDRESS: "${GRAFANA_SMTP_FROM_ADDRESS}"
+      GF_SMTP_FROM_NAME: "Grafana Alerts"
+      GF_SMTP_STARTTLS_POLICY: "OpportunisticStartTLS"
 
     volumes:
       - grafana_data:/var/lib/grafana

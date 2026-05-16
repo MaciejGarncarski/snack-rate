@@ -1,0 +1,259 @@
+groups:
+  - name: node-exporter-cpu
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------
+      # CPU — warning at 80%, critical at 95%
+      # Using (1 - idle) is cleaner and avoids operator precedence traps
+      # ---------------------------------------------------------------
+      - alert: HighCpuUsage
+        expr: |
+          (1 - avg by (instance, job) (rate(node_cpu_seconds_total{job="node-exporter", mode="idle"}[5m]))) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: 'CPU usage is {{ printf "%.1f" $value }}% on {{ $labels.instance }} (threshold: 80%).'
+          runbook_url: "https://your-wiki/runbooks/high-cpu"
+
+      - alert: CriticalCpuUsage
+        expr: |
+          (1 - avg by (instance, job) (rate(node_cpu_seconds_total{job="node-exporter", mode="idle"}[5m]))) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical CPU usage on {{ $labels.instance }}"
+          description: 'CPU usage is {{ printf "%.1f" $value }}% on {{ $labels.instance }} (threshold: 95%).'
+          runbook_url: "https://your-wiki/runbooks/high-cpu"
+
+      # ---------------------------------------------------------------
+      # CPU I/O Wait — high iowait means disk bottleneck, not CPU load
+      # ---------------------------------------------------------------
+      - alert: HighCpuIoWait
+        expr: |
+          avg by (instance, job) (rate(node_cpu_seconds_total{job="node-exporter", mode="iowait"}[5m])) * 100 > 20
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU I/O wait on {{ $labels.instance }}"
+          description: 'CPU I/O wait is {{ printf "%.1f" $value }}% on {{ $labels.instance }}. Possible disk bottleneck.'
+
+  - name: node-exporter-memory
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------
+      # Memory — available memory dropping below threshold
+      # node_memory_MemAvailable_bytes is more accurate than free alone
+      # (includes reclaimable cache/buffers)
+      # ---------------------------------------------------------------
+      - alert: HighMemoryUsage
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes{job="node-exporter"} / node_memory_MemTotal_bytes{job="node-exporter"})) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: 'Memory usage is {{ printf "%.1f" $value }}% on {{ $labels.instance }} (threshold: 85%).'
+
+      - alert: CriticalMemoryUsage
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes{job="node-exporter"} / node_memory_MemTotal_bytes{job="node-exporter"})) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical memory usage on {{ $labels.instance }}"
+          description: 'Memory usage is {{ printf "%.1f" $value }}% on {{ $labels.instance }} (threshold: 95%).'
+
+      # ---------------------------------------------------------------
+      # OOM Kills — kernel killed a process due to memory exhaustion
+      # ---------------------------------------------------------------
+      - alert: OomKillDetected
+        expr: |
+          increase(node_vmstat_oom_kill{job="node-exporter"}[5m]) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: "OOM kill detected on {{ $labels.instance }}"
+          description: "The kernel OOM killer was triggered {{ $value }} time(s) in the last 5 minutes on {{ $labels.instance }}."
+
+  - name: node-exporter-disk
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------
+      # Disk Space — exclude tmpfs and other virtual filesystems
+      # ---------------------------------------------------------------
+      - alert: LowDiskSpace
+        expr: |
+          (1 - (node_filesystem_avail_bytes{job="node-exporter", fstype!~"tmpfs|overlay|squashfs"}
+              / node_filesystem_size_bytes{job="node-exporter", fstype!~"tmpfs|overlay|squashfs"})) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: 'Filesystem {{ $labels.mountpoint }} on {{ $labels.instance }} is {{ printf "%.1f" $value }}% full.'
+
+      - alert: CriticalDiskSpace
+        expr: |
+          (1 - (node_filesystem_avail_bytes{job="node-exporter", fstype!~"tmpfs|overlay|squashfs"}
+              / node_filesystem_size_bytes{job="node-exporter", fstype!~"tmpfs|overlay|squashfs"})) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical disk space on {{ $labels.instance }}"
+          description: 'Filesystem {{ $labels.mountpoint }} on {{ $labels.instance }} is {{ printf "%.1f" $value }}% full. Immediate action required.'
+
+      # ---------------------------------------------------------------
+      # Disk Fill Rate — predicts when disk will be full (4h lookahead)
+      # ---------------------------------------------------------------
+      - alert: DiskWillFillIn4Hours
+        expr: |
+          predict_linear(node_filesystem_avail_bytes{job="node-exporter", fstype!~"tmpfs|overlay|squashfs"}[1h], 4 * 3600) < 0
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk filling up fast on {{ $labels.instance }}"
+          description: "Filesystem {{ $labels.mountpoint }} on {{ $labels.instance }} is predicted to run out of space within 4 hours."
+
+      # ---------------------------------------------------------------
+      # Inode Exhaustion — full inodes = can't create files even with space
+      # ---------------------------------------------------------------
+      - alert: LowInodes
+        expr: |
+          (1 - (node_filesystem_files_free{job="node-exporter", fstype!~"tmpfs|overlay|squashfs"}
+              / node_filesystem_files{job="node-exporter", fstype!~"tmpfs|overlay|squashfs"})) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low inodes on {{ $labels.instance }}"
+          description: 'Filesystem {{ $labels.mountpoint }} on {{ $labels.instance }} has {{ printf "%.1f" $value }}% inodes used.'
+
+      # ---------------------------------------------------------------
+      # Disk I/O Saturation — disk too busy, high latency expected
+      # ---------------------------------------------------------------
+      - alert: HighDiskIoUtilization
+        expr: |
+          rate(node_disk_io_time_seconds_total{job="node-exporter"}[5m]) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High disk I/O utilization on {{ $labels.instance }}"
+          description: 'Disk {{ $labels.device }} on {{ $labels.instance }} is {{ printf "%.1f" $value }}% utilized.'
+
+  - name: node-exporter-network
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------
+      # Network Errors — persistent errors suggest bad NIC or cable
+      # ---------------------------------------------------------------
+      - alert: NetworkReceiveErrors
+        expr: |
+          rate(node_network_receive_errs_total{job="node-exporter", device!="lo"}[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Network receive errors on {{ $labels.instance }}"
+          description: 'Interface {{ $labels.device }} on {{ $labels.instance }} is receiving {{ printf "%.2f" $value }} errors/sec.'
+
+      - alert: NetworkTransmitErrors
+        expr: |
+          rate(node_network_transmit_errs_total{job="node-exporter", device!="lo"}[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Network transmit errors on {{ $labels.instance }}"
+          description: 'Interface {{ $labels.device }} on {{ $labels.instance }} is transmitting {{ printf "%.2f" $value }} errors/sec.'
+
+      # ---------------------------------------------------------------
+      # Network Saturation — throughput near interface speed limit
+      # Assumes 1Gbps NICs (1e9 bits). Adjust if yours differ.
+      # ---------------------------------------------------------------
+      - alert: HighNetworkThroughput
+        expr: |
+          (rate(node_network_receive_bytes_total{job="node-exporter", device!="lo"}[5m])
+          + rate(node_network_transmit_bytes_total{job="node-exporter", device!="lo"}[5m])) * 8 / 1e9 > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High network throughput on {{ $labels.instance }}"
+          description: 'Interface {{ $labels.device }} on {{ $labels.instance }} is using {{ printf "%.2f" $value }}Gbps (threshold: 0.9Gbps).'
+
+  - name: node-exporter-system
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------
+      # System Load — relative to number of CPU cores
+      # > 1.0 means overloaded per core
+      # ---------------------------------------------------------------
+      - alert: HighSystemLoad
+        expr: |
+          node_load1{job="node-exporter"} / count by (instance) (node_cpu_seconds_total{job="node-exporter", mode="idle"}) > 1.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High system load on {{ $labels.instance }}"
+          description: '1-minute load average per CPU core is {{ printf "%.2f" $value }} on {{ $labels.instance }} (threshold: 1.5).'
+
+      # ---------------------------------------------------------------
+      # Node Down — instance stopped reporting to Prometheus
+      # ---------------------------------------------------------------
+      - alert: NodeDown
+        expr: |
+          up{job="node-exporter"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node unreachable: {{ $labels.instance }}"
+          description: "Node {{ $labels.instance }} has been unreachable for more than 2 minutes."
+
+      # ---------------------------------------------------------------
+      # Clock Skew — large time drift breaks TLS, logs, distributed systems
+      # ---------------------------------------------------------------
+      - alert: ClockSkewDetected
+        expr: |
+          abs(node_timex_offset_seconds{job="node-exporter"}) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Clock skew detected on {{ $labels.instance }}"
+          description: 'Clock offset is {{ printf "%.4f" $value }}s on {{ $labels.instance }}. Check NTP sync.'
+
+      # ---------------------------------------------------------------
+      # File Descriptor Exhaustion — can cause 'too many open files' errors
+      # ---------------------------------------------------------------
+      - alert: HighFileDescriptorUsage
+        expr: |
+          (node_filefd_allocated{job="node-exporter"} / node_filefd_maximum{job="node-exporter"}) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High file descriptor usage on {{ $labels.instance }}"
+          description: '{{ printf "%.1f" $value }}% of file descriptors are in use on {{ $labels.instance }}.'
+
+      # ---------------------------------------------------------------
+      # System Reboot — detects unexpected reboots via uptime
+      # ---------------------------------------------------------------
+      - alert: UnexpectedReboot
+        expr: |
+          node_boot_time_seconds{job="node-exporter"} > (time() - 600)
+        labels:
+          severity: warning
+        annotations:
+          summary: "Node rebooted: {{ $labels.instance }}"
+          description: "Node {{ $labels.instance }} was rebooted less than 10 minutes ago."
