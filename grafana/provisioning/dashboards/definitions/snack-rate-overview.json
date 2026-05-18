@@ -1,7 +1,10 @@
 {
   "uid": "snack-rate-app-health",
   "title": "App Health",
-  "tags": ["snack-rate", "app-health"],
+  "tags": [
+    "snack-rate",
+    "app-health"
+  ],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,
@@ -15,7 +18,7 @@
   },
   "panels": [
     {
-      "type": "timeseries",
+      "type": "stat",
       "title": "Request rate (req/s)",
       "datasource": {
         "type": "prometheus",
@@ -24,25 +27,34 @@
       "targets": [
         {
           "expr": "sum(rate(http_requests_total[5m]))",
-          "legendFormat": "requests",
           "refId": "A"
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "reqps"
+          "unit": "reqps",
+          "decimals": 2
         },
         "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false,
+          "fields": ""
+        }
       },
       "gridPos": {
         "x": 0,
         "y": 0,
-        "w": 12,
+        "w": 4,
         "h": 8
       }
     },
     {
-      "type": "timeseries",
+      "type": "stat",
       "title": "Latency p95 (ms)",
       "datasource": {
         "type": "prometheus",
@@ -51,25 +63,34 @@
       "targets": [
         {
           "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_ms_bucket[5m])) by (le))",
-          "legendFormat": "p95",
           "refId": "A"
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "ms"
+          "unit": "ms",
+          "decimals": 2
         },
         "overrides": []
       },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false,
+          "fields": ""
+        }
+      },
       "gridPos": {
-        "x": 12,
+        "x": 4,
         "y": 0,
-        "w": 12,
+        "w": 4,
         "h": 8
       }
     },
     {
-      "type": "timeseries",
+      "type": "stat",
       "title": "HTTP 5xx rate (req/s)",
       "datasource": {
         "type": "prometheus",
@@ -78,20 +99,29 @@
       "targets": [
         {
           "expr": "sum(rate(http_status_codes_total{http_status_code=~\"5..\"}[5m]))",
-          "legendFormat": "5xx",
           "refId": "A"
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "reqps"
+          "unit": "reqps",
+          "decimals": 2
         },
         "overrides": []
       },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false,
+          "fields": ""
+        }
+      },
       "gridPos": {
-        "x": 0,
-        "y": 8,
-        "w": 12,
+        "x": 8,
+        "y": 0,
+        "w": 4,
         "h": 8
       }
     },
@@ -146,35 +176,6 @@
       }
     },
     {
-      "type": "timeseries",
-      "title": "Root filesystem usage (%)",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "targets": [
-        {
-          "expr": "100 * (1 - (node_filesystem_avail_bytes{job=\"node-exporter\", mountpoint=\"/\", fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{job=\"node-exporter\", mountpoint=\"/\", fstype!~\"tmpfs|overlay\"}))",
-          "legendFormat": "{{instance}}",
-          "refId": "A"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "min": 0,
-          "max": 100
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "x": 0,
-        "y": 26,
-        "w": 24,
-        "h": 8
-      }
-    },
-    {
       "type": "row",
       "title": "Reliability Signals",
       "gridPos": {
@@ -209,7 +210,9 @@
       "options": {
         "reduceOptions": {
           "values": false,
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": ""
         },
         "orientation": "auto",
@@ -248,7 +251,9 @@
       "options": {
         "reduceOptions": {
           "values": false,
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": ""
         },
         "orientation": "auto",
