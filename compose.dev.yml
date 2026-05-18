@@ -6,6 +6,8 @@ services:
       - ./config/prometheus.development.yml:/etc/prometheus/prometheus.yml:ro
       - ./config/alerts:/etc/prometheus/alerts:ro
   grafana:
+    env_file:
+      - .env.development
     environment:
       GF_SERVER_ROOT_URL: http://localhost:3001/
     ports:

@@ -1,6 +1,12 @@
 # Snack Rating App
 
-Not hosted anywhere for now.
+## Project purpose
+
+### Why I created this project?
+
+This project was built as an exercise in doing things “properly” from end to end. The main goal was to learn how to integrate a full observability stack and design a production-like development experience. After seeing many poorly built production applications, I decided to create this repository as an example of a cleaner and more maintainable approach.
+
+The second goal was to build something people could actually use on a daily basis. When a new energy drink or snack comes out, users can quickly check ratings and decide whether it’s worth buying.
 
 ## Prerequisites
 
@@ -48,16 +54,21 @@ Observability:
 
 Copy the appropriate example file and fill in values before running anything.
 
-| Variable                    | Used in    | Description                               |
-| --------------------------- | ---------- | ----------------------------------------- |
-| `POSTGRES_USER`             | dev + prod | Database user                             |
-| `POSTGRES_PASSWORD`         | dev + prod | Database password                         |
-| `POSTGRES_DB`               | dev + prod | Database name                             |
-| `APP_DOMAIN`                | prod       | Domain for Caddy TLS (e.g. `example.com`) |
-| `GRAFANA_SMTP`              | prod       | SMTP host for Grafana alerts              |
-| `GRAFANA_SMTP_USER`         | prod       | SMTP username                             |
-| `GRAFANA_SMTP_PASSWORD`     | prod       | SMTP password                             |
-| `GRAFANA_SMTP_FROM_ADDRESS` | prod       | From address for alert emails             |
+| Variable                         | Used in    | Description                               |
+| -------------------------------- | ---------- | ----------------------------------------- |
+| `POSTGRES_USER`                  | dev + prod | Database user                             |
+| `POSTGRES_PASSWORD`              | dev + prod | Database password                         |
+| `POSTGRES_DB`                    | dev + prod | Database name                             |
+| `APP_DOMAIN`                     | prod       | Domain for Caddy TLS (e.g. `example.com`) |
+| `GRAFANA_INITIAL_ADMIN_USER`     | dev + prod | Initial grafana username                  |
+| `GRAFANA_INITIAL_ADMIN_PASSWORD` | dev + prod | Initial grafana password                  |
+| `GRAFANA_SMTP`                   | prod       | SMTP host for Grafana alerts              |
+| `GRAFANA_SMTP_USER`              | prod       | SMTP username                             |
+| `GRAFANA_SMTP_PASSWORD`          | prod       | SMTP password                             |
+| `GRAFANA_SMTP_FROM_ADDRESS`      | prod       | From address for alert emails             |
+
+> [!IMPORTANT]
+> `GRAFANA_INITIAL_*` variables only work on a fresh Grafana volume. Changes made after Grafana has been initialized will not be applied. Use `grafana-cli` instead.
 
 Dev: `.env.development` - Prod: `.env.production`
 
