@@ -122,7 +122,8 @@ Caddy handles TLS automatically when `APP_DOMAIN` is set to a real domain. It al
 ### Infrastructure diagram - production
 
 ```mermaid
-graph TD
+%%{init: {'flowchart': {'nodeSpacing':50, 'rankSpacing': 100}}}%%
+graph LR
   Internet["Internet :80/:443"]
 
   subgraph docker["Docker network"]
@@ -140,12 +141,19 @@ graph TD
   Internet -->|":80/:443"| Caddy
   Caddy -->|"/*"| App
   Caddy -->|"/grafana*"| Grafana
+
   App --> Postgres
   App -->|"traces"| Tempo
-  App -->|"scrapes"| Prometheus
-  Grafana -->|"reads"| Prometheus
-  Promtail -->|"pushes"| Loki
-  NodeExp --> Prometheus
+  App -->|"metrics export"| Prometheus
+
+  Prometheus --> App
+  Prometheus --> NodeExp
+
+  Grafana -->|"queries"| Prometheus
+  Grafana -->|"queries"| Loki
+  Grafana -->|"queries"| Tempo
+
+  Promtail -->|"pushes logs"| Loki
 ```
 
 ## Formatting & linting
