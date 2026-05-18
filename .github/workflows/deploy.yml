@@ -28,6 +28,25 @@ jobs:
             exit 1
           }
 
+      - name: Run migrations on VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -euo pipefail
+            cd ${{ secrets.VPS_DIR }}
+
+            echo "→ Pulling latest image for migrations..."
+            docker pull ghcr.io/${{ github.repository }}:${{ github.event.inputs.version }}
+
+            echo "→ Running migrations..."
+            docker compose -f compose.yml \
+              --env-file .env.production \
+              --profile production \
+              run --rm migrate
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1
         with:
