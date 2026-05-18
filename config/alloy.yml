@@ -1,0 +1,116 @@
+logging {
+level = "info"
+}
+
+prometheus.remote_write "default" {
+endpoint {
+url = "http://prometheus:9090/api/v1/write"
+}
+}
+
+prometheus.scrape "prometheus" {
+targets = [
+{ "__address__" = "prometheus:9090" },
+]
+scrape_interval = "15s"
+scrape_timeout = "10s"
+forward_to = [prometheus.remote_write.default.receiver]
+}
+
+prometheus.scrape "tanstack_app" {
+targets = [
+{ "__address__" = "host.docker.internal:9464" },
+{ "__address__" = "app:9464" },
+]
+job_name = "tanstack-app"
+scrape_interval = "15s"
+scrape_timeout = "10s"
+forward_to = [prometheus.remote_write.default.receiver]
+}
+
+prometheus.scrape "tempo" {
+targets = [
+{ "__address__" = "tempo:3200" },
+]
+scrape_interval = "15s"
+scrape_timeout = "10s"
+forward_to = [prometheus.remote_write.default.receiver]
+}
+
+prometheus.scrape "node_exporter" {
+targets = [
+{ "__address__" = "node-exporter:9100" },
+]
+job_name = "node-exporter"
+scrape_interval = "15s"
+scrape_timeout = "10s"
+forward_to = [prometheus.remote_write.default.receiver]
+}
+
+loki.write "default" {
+endpoint {
+url = "http://loki:3100/loki/api/v1/push"
+}
+}
+
+discovery.docker "containers" {
+host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "docker_containers" {
+targets = discovery.docker.containers.targets
+
+rule {
+source_labels = ["__meta_docker_container_name"]
+target_label = "container_name"
+regex = "/(.*)"
+replacement = "$1"
+}
+
+rule {
+source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+target_label = "compose_service"
+}
+
+rule {
+source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+target_label = "compose_project"
+}
+
+rule {
+target_label = "job"
+replacement = "container_logs"
+}
+}
+
+loki.source.docker "containers" {
+host = "unix:///var/run/docker.sock"
+targets = discovery.relabel.docker_containers.output
+forward_to = [loki.process.docker.receiver]
+}
+
+loki.process "docker" {
+stage.docker {}
+forward_to = [loki.write.default.receiver]
+}
+
+otelcol.exporter.otlp "tempo" {
+client {
+endpoint = "tempo:4317"
+tls {
+insecure = true
+}
+}
+}
+
+otelcol.receiver.otlp "default" {
+grpc {
+endpoint = "0.0.0.0:4317"
+}
+http {
+endpoint = "0.0.0.0:4318"
+}
+output {
+traces = [otelcol.exporter.otlp.tempo.input]
+}
+}

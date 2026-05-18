@@ -3,19 +3,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
 import { Button } from "#/components/ui/button";
-import { testCounter } from "#/observability/counters";
-import { orpc } from "#/orpc/client";
+import { client, orpc } from "#/orpc/client";
 
 export const Route = createFileRoute("/")({ component: Home });
 
-const sre = createServerFn().handler(() => {
-  const randomError = Math.random() < 0.5;
+const sre = createServerFn().handler(async () => {
+  await client.listTodos({});
 
-  if (randomError) {
-    throw new Error("Random error occurred!");
-  }
-
-  testCounter.add(1, { route: "/" });
   return { message: "Hello from the server!" };
 });
 

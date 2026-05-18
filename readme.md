@@ -45,10 +45,11 @@ Database:
 
 Observability:
 
-- Prometheus — metrics collection
+- Grafana Alloy — metrics/logs/traces collection
+- Prometheus — metrics backend (remote write)
 - Grafana — dashboards & alerting
 - Tempo — distributed tracing
-- Loki + Promtail — log aggregation
+- Loki — log aggregation
 
 ## Environment variables
 
@@ -106,9 +107,12 @@ See `./drizzle/docs/db-diagram.dbml`.
 ## Running — development
 
 ```bash
-pnpm infra:up   # starts postgres, grafana, prometheus, tempo, loki
+pnpm infra:up   # starts postgres, grafana, prometheus, alloy, tempo, loki
 pnpm dev        # starts app → http://localhost:3000/
 ```
+
+> [!NOTE]
+> In development, the app runs on the host, so container log collection does not include app logs by default.
 
 ## Running — production
 
@@ -124,7 +128,8 @@ Starts the full stack including the app container and Caddy reverse proxy.
 | ---------- | ----------------------------- | ------------------- |
 | App        | `http(s)://localhost/`        | Proxied by Caddy    |
 | Grafana    | `http(s)://localhost/grafana` | Dashboards & alerts |
-| Prometheus | internal only                 | Metrics scraping    |
+| Prometheus | internal only                 | Metrics backend     |
+| Alloy      | internal only                 | Collector           |
 | Tempo      | internal only                 | Traces              |
 | Loki       | internal only                 | Logs                |
 
@@ -143,9 +148,9 @@ graph LR
     Postgres["PostgreSQL\npg18 + Drizzle"]
     Grafana["Grafana\ndashboards"]
     Prometheus["Prometheus\nmetrics"]
+    Alloy["Alloy\ncollector"]
     Tempo["Tempo\ntraces"]
     Loki["Loki\nlogs"]
-    Promtail["Promtail\nlog collector"]
     NodeExp["Node exporter\nhost metrics"]
   end
 
@@ -154,17 +159,17 @@ graph LR
   Caddy -->|"/grafana*"| Grafana
 
   App --> Postgres
-  App -->|"traces"| Tempo
-  App -->|"metrics export"| Prometheus
-
-  Prometheus --> App
-  Prometheus --> NodeExp
+  App -->|"traces"| Alloy
+  App -->|"metrics export"| Alloy
+  Alloy -->|"remote write"| Prometheus
+  Alloy -->|"logs"| Loki
+  Alloy -->|"traces"| Tempo
+  Alloy -->|"scrapes"| NodeExp
 
   Grafana -->|"queries"| Prometheus
   Grafana -->|"queries"| Loki
   Grafana -->|"queries"| Tempo
 
-  Promtail -->|"pushes logs"| Loki
 ```
 
 ## Formatting & linting

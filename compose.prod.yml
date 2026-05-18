@@ -19,6 +19,8 @@ services:
         condition: service_started
       loki:
         condition: service_started
+      alloy:
+        condition: service_started
 
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health/ready >/dev/null || exit 1"]
