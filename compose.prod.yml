@@ -1,4 +1,7 @@
 services:
+  postgres:
+    env_file:
+      - .env.production
   app:
     build:
       context: .

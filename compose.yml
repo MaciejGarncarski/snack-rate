@@ -8,9 +8,6 @@ services:
     environment:
       POSTGRES_INITDB_ARGS: "--encoding=UTF8"
 
-    env_file:
-      - .env.production
-
     volumes:
       - postgres_data:/var/lib/postgresql
 
