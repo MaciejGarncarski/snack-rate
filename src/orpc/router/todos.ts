@@ -1,6 +1,8 @@
 import { os } from "@orpc/server";
 import * as z from "zod";
 
+import { db } from "#/db";
+
 const todos = [
   { id: 1, name: "Get groceries" },
   { id: 2, name: "Buy a new phone" },
@@ -8,14 +10,12 @@ const todos = [
 ];
 
 export const listTodos = os.handler(async () => {
-  throw new Error("Something went wrong");
-
-  // try {
-  //   await db.query.users.findFirst();
-  // } catch (e) {
-  //   console.error("Error querying the database:", e);
-  // }
-  // return todos;
+  try {
+    await db.query.users.findFirst();
+  } catch (e) {
+    console.error("Error querying the database:", e);
+  }
+  return todos;
 });
 
 export const addTodo = os.input(z.object({ name: z.string() })).handler(({ input }) => {

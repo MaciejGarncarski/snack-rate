@@ -1,3 +1,4 @@
+// oxlint-disable max-lines
 // oxlint-disable no-inline-comments
 import { relations, sql } from "drizzle-orm";
 import {

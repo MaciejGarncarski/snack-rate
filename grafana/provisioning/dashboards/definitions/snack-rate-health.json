@@ -1,103 +1,99 @@
 {
-    "uid": "snack-rate-health",
-    "title": "Health & Readiness",
-    "tags": [
-        "snack-rate",
-        "health",
-        "readiness"
-    ],
-    "timezone": "browser",
-    "schemaVersion": 39,
-    "version": 1,
-    "refresh": "30s",
-    "time": {
-        "from": "now-6h",
-        "to": "now"
-    },
-    "templating": {
-        "list": []
-    },
-    "panels": [
+  "uid": "snack-rate-health",
+  "title": "Health & Readiness",
+  "tags": ["snack-rate", "health", "readiness"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "templating": {
+    "list": []
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Readiness Failures (1h)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "targets": [
         {
-            "type": "stat",
-            "title": "Readiness Failures (1h)",
-            "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-            },
-            "targets": [
-                {
-                    "expr": "sum(increase(readiness_failures_total[1h]))",
-                    "refId": "A"
-                }
-            ],
-            "fieldConfig": {
-                "defaults": {
-                    "unit": "none",
-                    "decimals": 0
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "x": 0,
-                "y": 0,
-                "w": 8,
-                "h": 4
-            }
-        },
-        {
-            "type": "stat",
-            "title": "DB Failures (1h)",
-            "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-            },
-            "targets": [
-                {
-                    "expr": "sum(increase(db_failures_total[1h]))",
-                    "refId": "A"
-                }
-            ],
-            "fieldConfig": {
-                "defaults": {
-                    "unit": "none",
-                    "decimals": 0
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "x": 8,
-                "y": 0,
-                "w": 8,
-                "h": 4
-            }
-        },
-        {
-            "type": "stat",
-            "title": "App Up",
-            "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-            },
-            "targets": [
-                {
-                    "expr": "up{job=\"tanstack-app\"}",
-                    "refId": "A"
-                }
-            ],
-            "fieldConfig": {
-                "defaults": {
-                    "unit": "none",
-                    "decimals": 0
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "x": 16,
-                "y": 0,
-                "w": 8,
-                "h": 4
-            }
+          "expr": "sum(increase(readiness_failures_total[1h]))",
+          "refId": "A"
         }
-    ]
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 8,
+        "h": 4
+      }
+    },
+    {
+      "type": "stat",
+      "title": "DB Failures (1h)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(db_failures_total[1h]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 0,
+        "w": 8,
+        "h": 4
+      }
+    },
+    {
+      "type": "stat",
+      "title": "App Up",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "targets": [
+        {
+          "expr": "up{job=\"tanstack-app\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 0,
+        "w": 8,
+        "h": 4
+      }
+    }
+  ]
 }
