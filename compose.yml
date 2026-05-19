@@ -63,6 +63,10 @@ services:
         max-size: "10m"
         max-file: "3"
 
+    depends_on:
+      node-exporter:
+        condition: service_healthy
+
   tempo:
     image: grafana/tempo:2.10.5
 
@@ -75,7 +79,6 @@ services:
     volumes:
       - ./config/tempo.yml:/etc/tempo.yml:ro
       - tempo_data:/var/tempo
-
     logging:
       driver: json-file
       options:
@@ -94,6 +97,13 @@ services:
     volumes:
       - ./config/loki.yml:/etc/loki/loki.yml:ro
       - loki_data:/loki
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3100/metrics || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
     logging:
       driver: json-file
@@ -119,7 +129,6 @@ services:
       - ./config/alloy-config.alloy:/etc/alloy/alloy-config.alloy:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
-
     logging:
       driver: json-file
       options:
@@ -145,6 +154,13 @@ services:
       - /:/host:ro
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:9100/metrics || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
     logging:
       driver: json-file
@@ -177,6 +193,8 @@ services:
 
     depends_on:
       prometheus:
+        condition: service_healthy
+      loki:
         condition: service_healthy
 
     healthcheck:

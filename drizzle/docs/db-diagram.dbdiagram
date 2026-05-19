@@ -89,6 +89,24 @@
         "schemaName": "public",
         "x": 944.9783924431742,
         "y": 3180.6589151438966
+      },
+      {
+        "name": "sessions",
+        "schemaName": "public",
+        "x": -1725.4748807814199,
+        "y": 4123.575057066342
+      },
+      {
+        "name": "password_resets",
+        "schemaName": "public",
+        "x": -1725.4748807814199,
+        "y": 4429.575057066342
+      },
+      {
+        "name": "email_verifications",
+        "schemaName": "public",
+        "x": -1725.4748807814199,
+        "y": 4703.575057066342
       }
     ],
     "tableGroupCollapseStates": [],
@@ -690,6 +708,51 @@
           "category_id"
         ],
         "secondTableName": "snack_item_categories",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "users",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "user_id"
+        ],
+        "secondTableName": "sessions",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "users",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "user_id"
+        ],
+        "secondTableName": "password_resets",
+        "secondSchemaName": "public",
+        "secondRelation": "*",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "id"
+        ],
+        "firstTableName": "users",
+        "firstSchemaName": "public",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "user_id"
+        ],
+        "secondTableName": "email_verifications",
         "secondSchemaName": "public",
         "secondRelation": "*",
         "checkPoints": []

@@ -7,8 +7,15 @@ const todos = [
   { id: 3, name: "Finish the project" },
 ];
 
-export const listTodos = os.input(z.object({})).handler(() => {
-  return todos;
+export const listTodos = os.handler(async () => {
+  throw new Error("Something went wrong");
+
+  // try {
+  //   await db.query.users.findFirst();
+  // } catch (e) {
+  //   console.error("Error querying the database:", e);
+  // }
+  // return todos;
 });
 
 export const addTodo = os.input(z.object({ name: z.string() })).handler(({ input }) => {

@@ -4,6 +4,7 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
+import { ORPCInstrumentation } from "@orpc/otel";
 
 import { serverEnv } from "#/env/server.env";
 import { logger } from "#/observability/logger/logger";
@@ -52,6 +53,9 @@ const otelSdk = new NodeSDK({
     [ATTR_SERVICE_VERSION]: "0.1.0",
   }),
   instrumentations: [
+    new ORPCInstrumentation({
+      enabled: true,
+    }),
     getNodeAutoInstrumentations({
       "@opentelemetry/instrumentation-pg": {
         enabled: false,
@@ -60,5 +64,5 @@ const otelSdk = new NodeSDK({
   ],
 });
 
-otelSdk.start();
+await otelSdk.start();
 logger.info({ endpoint: traceExporterUrl }, "OpenTelemetry SDK started");

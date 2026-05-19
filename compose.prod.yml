@@ -60,5 +60,5 @@ services:
 
   prometheus:
     volumes:
-      - ./config/prometheus.production.yml:/etc/prometheus/prometheus.yml:ro
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./config/alerts:/etc/prometheus/alerts:ro

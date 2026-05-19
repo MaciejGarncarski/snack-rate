@@ -4,6 +4,7 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
+import { ORPCInstrumentation } from "@orpc/otel";
 
 const enableTracing = process.env.OBSERVABILITY_TRACING_ENABLED !== "false";
 const enableMetrics = process.env.OBSERVABILITY_METRICS_ENABLED !== "false";
@@ -47,6 +48,7 @@ const otelSdk = new NodeSDK({
         enabled: false,
       },
     }),
+    new ORPCInstrumentation(),
   ],
 });
 
@@ -55,6 +57,7 @@ await otelSdk.start();
 console.log({ endpoint: traceExporterUrl }, "OpenTelemetry SDK started");
 
 function createTraceExporterUrl(endpoint: string) {
+  console.log({ endpoint }, process.env.OTEL_EXPORTER_OTLP_ENDPOINT);
   const url = new URL(endpoint);
 
   if (url.pathname === "/") {
