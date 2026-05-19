@@ -1,7 +1,4 @@
 services:
-  postgres:
-    env_file:
-      - .env.development
   prometheus:
     ports:
       - "127.0.0.1:9090:9090"
@@ -27,5 +24,7 @@ services:
     ports:
       - "127.0.0.1:3100:3100"
   postgres:
+    env_file:
+      - .env.development
     ports:
       - "5432:5432"
