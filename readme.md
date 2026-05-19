@@ -1,8 +1,6 @@
 # Snack Rating App
 
-## Project purpose
-
-### Why I created this project?
+## Why I created this project?
 
 This project was built as an exercise in doing things “properly” from end to end. The main goal was to learn how to integrate a full observability stack and design a production-like development experience. After seeing many poorly built production applications, I decided to create this repository as an example of a cleaner and more maintainable approach.
 
