@@ -1,10 +1,10 @@
-import pRetry from "p-retry";
 import { Pool } from "pg";
 
 import { serverEnv } from "#/env/server.env";
 import { readinessFailureCounter } from "#/observability/counters";
 import { logger } from "#/observability/logger/logger";
 import { checkDatabaseOnce } from "#/observability/readiness/check-db";
+import { exponentialBackoff } from "#/utils/exponential-backoff";
 
 export async function runPreStartChecks() {
   if (serverEnv.isTest) return;
@@ -17,21 +17,13 @@ export async function runPreStartChecks() {
   });
 
   try {
-    await pRetry(() => checkDatabaseOnce(pool, timeoutMs), {
-      retries: 2,
-      factor: 1,
-      minTimeout: 200,
-      maxTimeout: 200,
-      onFailedAttempt: (err) => {
-        logger.warn(
-          {
-            err,
-            attempt: err.attemptNumber,
-            retriesLeft: err.retriesLeft,
-          },
-          "Pre-start DB check attempt failed",
-        );
-      },
+    await exponentialBackoff(() => checkDatabaseOnce(pool, timeoutMs), {
+      factor: 2,
+      retries: 8,
+      minTimeout: 100,
+      maxTimeout: 5000,
+      logger,
+      fnName: "checkDatabaseOnce",
     });
 
     logger.info({

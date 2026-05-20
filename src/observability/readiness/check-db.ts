@@ -1,29 +1,21 @@
-import pRetry from "p-retry";
 import type { Pool } from "pg";
 
 import { dbPool } from "#/db";
 import { dbFailuresCounter } from "#/observability/counters";
 import { logger } from "#/observability/logger/logger";
+import { exponentialBackoff } from "#/utils/exponential-backoff";
 
 type DbCheckResult = { ok: true } | { ok: false; error: string };
 
 export async function checkDb(timeoutMs: number, retries = 2): Promise<DbCheckResult> {
   try {
-    await pRetry(() => checkDatabaseOnce(dbPool, timeoutMs), {
-      retries,
+    await exponentialBackoff(() => checkDatabaseOnce(dbPool, timeoutMs), {
+      factor: 2,
+      retries: 8,
       minTimeout: 100,
-      maxTimeout: 200,
-      factor: 1,
-      onFailedAttempt: (error) => {
-        logger.warn(
-          {
-            err: error,
-            attempt: error.attemptNumber,
-            retriesLeft: error.retriesLeft,
-          },
-          "Database readiness attempt failed",
-        );
-      },
+      maxTimeout: 5000,
+      logger,
+      fnName: "checkDatabaseOnce",
     });
 
     return { ok: true };
