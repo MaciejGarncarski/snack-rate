@@ -11,7 +11,28 @@ const config = defineConfig({
     host: true,
     allowedHosts: ["host.docker.internal"],
   },
-  plugins: [devtools(), nitro(), tailwindcss(), tanstackStart(), viteReact()],
+  plugins: [
+    devtools(),
+    nitro(),
+    tailwindcss(),
+    tanstackStart({
+      importProtection: {
+        client: {
+          specifiers: [
+            /^@opentelemetry\//,
+            /^drizzle-orm(?:\/|$)/,
+            /^drizzle-kit(?:\/|$)/,
+            /^pino(?:\/|$)/,
+            /^pg(?:\/|$)/,
+            /^nitro(?:\/|$)/,
+            "@kubiks/otel-drizzle",
+          ],
+          files: ["**/db/**", "**/observability/**"],
+        },
+      },
+    }),
+    viteReact(),
+  ],
 });
 
 export default config;

@@ -1,6 +1,6 @@
 import type { Pool } from "pg";
 
-import { dbPool } from "#/db";
+import { dbPool } from "#/db/db.server";
 import { dbFailuresCounter } from "#/observability/counters";
 import { logger } from "#/observability/logger/logger";
 import { exponentialBackoff } from "#/utils/exponential-backoff";

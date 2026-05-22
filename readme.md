@@ -176,3 +176,7 @@ graph LR
 pnpm fmt
 pnpm lint
 ```
+
+## File naming
+
+I used kebab-case for files. Some files have .server.ts end, because of [TanStack Start behaviour](https://tanstack.com/start/latest/docs/framework/react/guide/import-protection#default-rules).
