@@ -12,7 +12,9 @@ __unconfig*
 todos.json
 log-files
 coverage
-.env.production
 .env.development
+.env.staging
+.env.production
+.env.caddy
 caddy-root.crt
 .pnpm-store

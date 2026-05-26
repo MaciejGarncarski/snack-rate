@@ -115,10 +115,12 @@ pnpm dev        # starts app → http://localhost:3000/
 ## Running — production
 
 ```bash
+docker network create snack-rate-edge
+pnpm proxy:up
 pnpm prod:up
 ```
 
-Starts the full stack including the app container and Caddy reverse proxy.
+Starts the app stack for production. The shared Caddy proxy runs separately and serves both prod and staging.
 
 ### Services & URLs (production)
 
@@ -132,6 +134,20 @@ Starts the full stack including the app container and Caddy reverse proxy.
 | Loki       | internal only                 | Logs                |
 
 Caddy handles TLS automatically when `APP_DOMAIN` is set to a real domain. It also strips the `/grafana` prefix before forwarding to the Grafana container.
+
+## Running — staging
+
+```bash
+# You need to create this network once.
+docker network create snack-rate-edge
+pnpm proxy:up
+pnpm staging:up
+```
+
+Starts the staging app stack. The shared Caddy proxy must already be running and `.env.caddy` must define both hostnames.
+
+Copy `.env.example` to `.env.staging` first and copy [.env.caddy.example](/home/maciek/snack-rate/.env.caddy.example) to `.env.caddy` for the shared proxy.
+Set `STAGING_BASIC_AUTH_USER` and `STAGING_BASIC_AUTH_HASH` in `.env.caddy`; use `pnpm proxy:generate-hash -- your-plaintext-password` to generate the hash.
 
 ### Infrastructure diagram - production
 

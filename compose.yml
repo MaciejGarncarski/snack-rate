@@ -1,8 +1,6 @@
 services:
   postgres:
     image: postgres:18-alpine
-
-    container_name: postgres_db
     restart: unless-stopped
 
     environment:
@@ -27,9 +25,7 @@ services:
         max-file: "3"
 
   prometheus:
-    image: prom/prometheus:latest
-
-    container_name: prometheus
+    image: prom/prometheus:v3
     restart: unless-stopped
 
     extra_hosts:
@@ -65,8 +61,6 @@ services:
 
   tempo:
     image: grafana/tempo:2.10.5
-
-    container_name: tempo
     restart: unless-stopped
 
     command:
@@ -82,9 +76,7 @@ services:
         max-file: "3"
 
   loki:
-    image: grafana/loki:3.2.0
-
-    container_name: loki
+    image: grafana/loki:3.7.2
     restart: unless-stopped
 
     command:
@@ -95,11 +87,11 @@ services:
       - loki_data:/loki
 
     healthcheck:
-      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3100/metrics || exit 1"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+      test: ["CMD", "/usr/bin/loki", "-health"]
+      start_period: 30s
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
     logging:
       driver: json-file
@@ -108,9 +100,7 @@ services:
         max-file: "3"
 
   alloy:
-    image: grafana/alloy:latest
-
-    container_name: alloy
+    image: grafana/alloy:v1.16.1
     restart: unless-stopped
 
     command:
@@ -132,15 +122,15 @@ services:
         max-file: "3"
 
   node-exporter:
-    image: prom/node-exporter:latest
-
-    container_name: node_exporter
+    image: prom/node-exporter:v1
     restart: unless-stopped
 
     command:
       - --path.rootfs=/host
       - --path.procfs=/host/proc
       - --path.sysfs=/host/sys
+      - --no-collector.netstat
+      - --no-collector.softnet
       - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run/credentials/.+|var/lib/docker/.+|var/lib/containers/storage/.+)($|/)
       - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|squashfs|sysfs|tmpfs|tracefs|9p)$
 
@@ -152,7 +142,11 @@ services:
       - /sys:/host/sys:ro
 
     healthcheck:
-      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:9100/metrics || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --quiet --tries=1 -O - http://localhost:9100/metrics >/dev/null || exit 1",
+        ]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -165,8 +159,7 @@ services:
         max-file: "3"
 
   grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
+    image: grafana/grafana:13.0.1
     restart: unless-stopped
 
     environment:

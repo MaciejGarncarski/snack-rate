@@ -1,7 +1,7 @@
 services:
   postgres:
     env_file:
-      - .env.production
+      - .env.staging
   app:
     build:
       context: .
@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
 
     env_file:
-      - .env.production
+      - .env.staging
 
     depends_on:
       postgres:
@@ -40,11 +40,11 @@ services:
       default: null
       edge:
         aliases:
-          - prod-app
+          - staging-app
 
   grafana:
     env_file:
-      - .env.production
+      - .env.staging
     environment:
       GF_SERVER_ROOT_URL: "https://${APP_DOMAIN}/grafana/"
 
@@ -52,7 +52,7 @@ services:
       default: null
       edge:
         aliases:
-          - prod-grafana
+          - staging-grafana
 
   prometheus:
     volumes:

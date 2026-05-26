@@ -1,0 +1,24 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    env_file:
+      - .env.caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - edge
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  edge:
+    name: snack-rate-edge
+    external: true

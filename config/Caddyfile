@@ -1,9 +1,33 @@
 {$APP_DOMAIN} {
     handle /grafana* {
         uri strip_prefix /grafana
-        reverse_proxy grafana:3000
+        reverse_proxy prod-grafana:3000
     }
     handle {
-        reverse_proxy app:3000
+        reverse_proxy prod-app:3000
+    }
+}
+
+{$STAGING_APP_DOMAIN} {
+    route {
+        handle /robots.txt {
+            respond <<ROBOTS
+                User-agent: *
+                Disallow: /
+                ROBOTS 200
+        }
+
+        basic_auth {
+            {$STAGING_BASIC_AUTH_USER} {$STAGING_BASIC_AUTH_HASH}
+        }
+
+        handle /grafana* {
+            uri strip_prefix /grafana
+            reverse_proxy staging-grafana:3000
+        }
+
+        handle {
+            reverse_proxy staging-app:3000
+        }
     }
 }
