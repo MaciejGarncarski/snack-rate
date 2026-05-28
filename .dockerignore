@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# Dependencies (reinstalled in container)
+node_modules
+.pnpm-store
+
+# Build output
+.output
+
+# Framework cache
+.tanstack
+
+# Environment files (use runtime env vars or secrets instead)
+.env*
+
+# Certs (should be managed separately in production)
+caddy-root.crt
+
+# Docker files themselves
+.dockerignore
+Dockerfile*
+compose*
+
+# Misc
+*.log
+.DS_Store
+README*
+.vscode
