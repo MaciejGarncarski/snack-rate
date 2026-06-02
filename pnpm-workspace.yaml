@@ -1,1 +1,9 @@
 minimumReleaseAge: 1440
+blockExoticSubdeps: true
+allowBuilds:
+  electron: true
+  esbuild: true
+  lefthook: false
+  lightningcss: true
+  msw: false
+  protobufjs: false

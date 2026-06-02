@@ -18,3 +18,10 @@ coverage
 .env.caddy
 caddy-root.crt
 .pnpm-store
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
