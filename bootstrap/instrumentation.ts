@@ -45,7 +45,7 @@ const otelSdk = new NodeSDK({
   instrumentations: [
     getNodeAutoInstrumentations({
       "@opentelemetry/instrumentation-pg": {
-        enabled: false,
+        enabled: true,
       },
     }),
     new ORPCInstrumentation(),

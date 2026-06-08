@@ -1,10 +1,9 @@
-import { instrumentDrizzleClient } from "@kubiks/otel-drizzle";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
 import { serverEnv } from "#/env/server.env.ts";
 
-import * as schema from "./schema.ts";
+import { relations } from "./relations.ts";
 
 const url = new URL(serverEnv.DATABASE_URL);
 
@@ -16,9 +15,4 @@ export const dbPool = new Pool({
   database: url.pathname.slice(1),
 });
 
-export const db = drizzle(dbPool, { schema });
-instrumentDrizzleClient(db, {
-  dbSystem: "postgresql",
-  dbName: "snack-rate-db",
-  captureQueryText: true,
-});
+export const db = drizzle({ relations, client: dbPool });

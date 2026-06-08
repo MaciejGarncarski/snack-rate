@@ -1,17 +1,17 @@
 import pRetry, { type RetryContext } from "p-retry";
 
+import type { LoggerAdapter } from "#/observability/logger/logger";
+
 type Options = {
   retries: number;
   minTimeout: number;
   factor: number;
   maxTimeout?: number;
   fnName?: string;
-  logger?: {
-    warn: (obj: any, msg: string) => void;
-  };
+  logger?: LoggerAdapter;
 };
 
-export async function exponentialBackoff<T>(
+export function exponentialBackoff<T>(
   fn: () => Promise<T>,
   { retries, minTimeout, factor, maxTimeout = Infinity, logger, fnName }: Options,
 ): Promise<T> {
@@ -21,7 +21,7 @@ export async function exponentialBackoff<T>(
     factor,
     maxTimeout,
 
-    onFailedAttempt: async (context: RetryContext) => {
+    onFailedAttempt: (context: RetryContext) => {
       logger?.warn(
         {
           error: context.error,

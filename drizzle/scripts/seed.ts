@@ -1,3 +1,4 @@
+import { hash, argon2id } from "argon2";
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
 
@@ -12,12 +13,21 @@ async function seedDatabase() {
   // ---------------------------------------------------------------------------
   // Users
   // ---------------------------------------------------------------------------
+
+  const passwordHash = await hash("SnackRate#", {
+    type: argon2id,
+    memoryCost: 131072,
+    timeCost: 3,
+    parallelism: 2,
+    hashLength: 32,
+  });
+
   const [anna, alfred, celina, dawid, ewa] = await db
     .insert(schema.users)
     .values([
       {
         email: "anna@przyklad.pl",
-        passwordHash: "$2b$10$placeholderhashalice",
+        passwordHash: passwordHash,
         firstName: "Anna",
         lastName: "Kowalska",
         role: "admin",
@@ -25,15 +35,15 @@ async function seedDatabase() {
       },
       {
         email: "alfred@przyklad.pl",
-        passwordHash: "$2b$10$placeholderhashbob",
-        firstName: "alfred",
+        passwordHash: passwordHash,
+        firstName: "Alfred",
         lastName: "Nowak",
         role: "moderator",
         status: "active",
       },
       {
         email: "celina@przyklad.pl",
-        passwordHash: "$2b$10$placeholderhashcarol",
+        passwordHash: passwordHash,
         firstName: "Celina",
         lastName: "Wiśniewska",
         role: "user",
@@ -41,7 +51,7 @@ async function seedDatabase() {
       },
       {
         email: "dawid@przyklad.pl",
-        passwordHash: "$2b$10$placeholderhashdave",
+        passwordHash: passwordHash,
         firstName: "Dawid",
         lastName: "Wójcik",
         role: "user",
@@ -49,7 +59,7 @@ async function seedDatabase() {
       },
       {
         email: "ewa@przyklad.pl",
-        passwordHash: "$2b$10$placeholderhasheve",
+        passwordHash: passwordHash,
         firstName: "Ewa",
         lastName: "Kamińska",
         role: "user",
@@ -57,7 +67,7 @@ async function seedDatabase() {
       },
       {
         email: "maciejg0220@gmail.com",
-        passwordHash: "$2b$10$placeholderhashmaciek",
+        passwordHash: passwordHash,
         firstName: "Maciek",
         lastName: "G",
         role: "admin",

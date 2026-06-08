@@ -25,7 +25,6 @@ const config = defineConfig({
             /^pino(?:\/|$)/,
             /^pg(?:\/|$)/,
             /^nitro(?:\/|$)/,
-            "@kubiks/otel-drizzle",
           ],
           files: ["**/db/**", "**/observability/**"],
         },

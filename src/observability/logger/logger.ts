@@ -9,19 +9,19 @@ function withTrace(meta: object) {
   return { ...meta, traceId, spanId };
 }
 
-class LoggerFacade {
-  info(meta: object, message?: string, ...args: any[]) {
+export class LoggerAdapter {
+  info(meta: object, message?: string, ...args: unknown[]) {
     pinoLogger.info(withTrace(meta), message, ...args);
   }
-  error(meta: object, message?: string, ...args: any[]) {
+  error(meta: object, message?: string, ...args: unknown[]) {
     pinoLogger.error(withTrace(meta), message, ...args);
   }
-  debug(meta: object, message?: string, ...args: any[]) {
+  debug(meta: object, message?: string, ...args: unknown[]) {
     pinoLogger.debug(withTrace(meta), message, ...args);
   }
-  warn(meta: object, message?: string, ...args: any[]) {
+  warn(meta: object, message?: string, ...args: unknown[]) {
     pinoLogger.warn(withTrace(meta), message, ...args);
   }
 }
 
-export const logger = new LoggerFacade();
+export const logger = new LoggerAdapter();

@@ -11,7 +11,7 @@ export async function checkDb(timeoutMs: number, retries = 2): Promise<DbCheckRe
   try {
     await exponentialBackoff(() => checkDatabaseOnce(dbPool, timeoutMs), {
       factor: 2,
-      retries: 8,
+      retries: retries ?? 8,
       minTimeout: 100,
       maxTimeout: 5000,
       logger,
