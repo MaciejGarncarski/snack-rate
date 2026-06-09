@@ -88,11 +88,50 @@ loki.source.docker "containers" {
   host    = "unix:///var/run/docker.sock"
   targets = discovery.relabel.docker_containers.output
 
-  forward_to = [loki.process.docker.receiver]
+  forward_to = [loki.process.docker.receiver, loki.process.audit.receiver]
 }
 
 loki.process "docker" {
   stage.docker {}
+
+  stage.json {
+    expressions = {
+      logType = "logType",
+      level   = "level",
+    }
+  }
+
+  stage.labels {
+    values = {
+      logType = "logType",
+      level   = "level",
+    }
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.process "audit" {
+  stage.docker {}
+
+  stage.json {
+    expressions = {
+      logType = "logType",
+      level   = "level",
+    }
+  }
+
+  stage.labels {
+    values = {
+      logType = "logType",
+      level   = "level",
+    }
+  }
+
+  stage.match {
+    selector = "{logType!=\"audit\"}"  // drop everything that is NOT audit
+    action   = "drop"
+  }
 
   forward_to = [loki.write.default.receiver]
 }

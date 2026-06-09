@@ -1,7 +1,7 @@
 {
   "uid": "snack-rate-app-health",
   "title": "App Health",
-  "tags": ["snack-rate", "app-health"],
+  "tags": ["app-health"],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,

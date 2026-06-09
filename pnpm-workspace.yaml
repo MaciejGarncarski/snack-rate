@@ -1,7 +1,7 @@
 minimumReleaseAge: 1440
 blockExoticSubdeps: true
 allowBuilds:
-  argon2: set this to true or false
+  argon2: true
   electron: true
   esbuild: true
   lefthook: false

@@ -147,7 +147,7 @@ pnpm staging:up
 Starts the staging app stack. The shared Caddy proxy must already be running and `.env.caddy` must define both hostnames.
 
 Copy `.env.example` to `.env.staging` first and copy [.env.caddy.example](/home/maciek/snack-rate/.env.caddy.example) to `.env.caddy` for the shared proxy.
-Set `STAGING_BASIC_AUTH_USER` and `STAGING_BASIC_AUTH_HASH` in `.env.caddy`; use `pnpm proxy:generate-hash -- your-plaintext-password` to generate the hash.
+Set `STAGING_BASIC_AUTH_USER` and `STAGING_BASIC_AUTH_HASH` in `.env.caddy`; use `pnpm proxy:generate-hash yourpassword` to generate the hash.
 
 ### Infrastructure diagram - production
 

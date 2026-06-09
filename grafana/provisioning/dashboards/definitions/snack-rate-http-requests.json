@@ -1,7 +1,7 @@
 {
   "uid": "snack-rate-http-metrics",
   "title": "HTTP Metrics",
-  "tags": ["snack-rate", "http", "latency", "errors"],
+  "tags": ["http", "latency", "errors"],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 3,

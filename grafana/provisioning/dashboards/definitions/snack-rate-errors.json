@@ -1,7 +1,7 @@
 {
   "uid": "snack-rate-errors",
   "title": "Errors & Traces",
-  "tags": ["snack-rate", "errors", "traces"],
+  "tags": ["errors", "traces"],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,

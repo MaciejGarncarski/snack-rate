@@ -5,7 +5,7 @@ import { httpRequestsCounter, httpStatusCodesCounter } from "#/observability/cou
 import { httpDurationHistogram } from "#/observability/http-duration";
 import { logger } from "#/observability/logger/logger";
 
-const tracer = trace.getTracer("tanstack-start-app");
+const tracer = trace.getTracer("app");
 
 export const requestLoggerMiddleware = createMiddleware({ type: "request" }).server(
   ({ request, next }) => {

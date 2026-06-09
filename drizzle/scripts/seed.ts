@@ -1,8 +1,8 @@
-import { hash, argon2id } from "argon2";
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
 
-import * as schema from "../../src/db/schema.ts";
+import * as schema from "#/db/schema.ts";
+import { hashPassword } from "#/lib/crypto.ts";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -14,13 +14,7 @@ async function seedDatabase() {
   // Users
   // ---------------------------------------------------------------------------
 
-  const passwordHash = await hash("SnackRate#", {
-    type: argon2id,
-    memoryCost: 131072,
-    timeCost: 3,
-    parallelism: 2,
-    hashLength: 32,
-  });
+  const passwordHash = await hashPassword("SnackRate#");
 
   const [anna, alfred, celina, dawid, ewa] = await db
     .insert(schema.users)

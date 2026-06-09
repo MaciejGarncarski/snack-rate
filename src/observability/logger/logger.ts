@@ -11,16 +11,19 @@ function withTrace(meta: object) {
 
 export class LoggerAdapter {
   info(meta: object, message?: string, ...args: unknown[]) {
-    pinoLogger.info(withTrace(meta), message, ...args);
+    pinoLogger.child({ logType: "app" }).info(withTrace(meta), message, ...args);
   }
   error(meta: object, message?: string, ...args: unknown[]) {
-    pinoLogger.error(withTrace(meta), message, ...args);
+    pinoLogger.child({ logType: "app" }).error(withTrace(meta), message, ...args);
   }
   debug(meta: object, message?: string, ...args: unknown[]) {
-    pinoLogger.debug(withTrace(meta), message, ...args);
+    pinoLogger.child({ logType: "app" }).debug(withTrace(meta), message, ...args);
   }
   warn(meta: object, message?: string, ...args: unknown[]) {
-    pinoLogger.warn(withTrace(meta), message, ...args);
+    pinoLogger.child({ logType: "app" }).warn(withTrace(meta), message, ...args);
+  }
+  audit(meta: object, message?: string, ...args: unknown[]) {
+    pinoLogger.child({ logType: "audit" }).info(withTrace(meta), message, ...args);
   }
 }
 

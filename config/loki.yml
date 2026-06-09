@@ -15,7 +15,7 @@ common:
       store: inmemory
 
 schema_config:
-  configs:
+configs:
     - from: 2024-01-01
       store: tsdb
       object_store: filesystem
@@ -31,4 +31,8 @@ compactor:
   delete_request_store: filesystem
 
 limits_config:
-  retention_period: 168h
+  retention_period: 720h
+  retention_stream:
+    - selector: '{logType="app"}'
+      priority: 1
+      period: 168h

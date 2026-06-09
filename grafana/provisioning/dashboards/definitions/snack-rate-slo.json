@@ -1,7 +1,7 @@
 {
   "uid": "snack-rate-slo",
   "title": "SLO / Latency Budget",
-  "tags": ["snack-rate", "slo", "latency"],
+  "tags": ["slo", "latency"],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,

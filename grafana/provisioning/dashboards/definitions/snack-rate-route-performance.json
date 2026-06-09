@@ -1,7 +1,7 @@
 {
   "uid": "snack-rate-route-performance",
   "title": "Request Performance by Route",
-  "tags": ["snack-rate", "routes", "performance"],
+  "tags": ["routes", "performance"],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,

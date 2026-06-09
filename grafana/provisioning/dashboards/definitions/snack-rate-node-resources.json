@@ -1,7 +1,7 @@
 {
   "uid": "snack-rate-node-resources",
   "title": "Node Resources",
-  "tags": ["snack-rate", "node-exporter", "resources"],
+  "tags": ["node-exporter", "resources"],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,
