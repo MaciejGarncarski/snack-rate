@@ -131,6 +131,7 @@ async function seedDatabase() {
         description:
           "Klasyczny napój energetyczny Monster o intensywnym smaku z charakterystyczną zieloną puszką.",
         price: "6.49",
+        avgRating: "4.00",
         barcode: "070847011034",
       },
       {
@@ -138,6 +139,7 @@ async function seedDatabase() {
         name: "Monster Energy Ultra White",
         description: "Lekka wersja Monstera bez cukru, o subtelnym smaku cytrusowym.",
         price: "6.49",
+        avgRating: "4.50",
         barcode: "070847011041",
       },
       {
@@ -145,6 +147,7 @@ async function seedDatabase() {
         name: "Monster Mango Loco",
         description: "Tropikalny napój energetyczny z sokiem mangowym – owocowy hit lata.",
         price: "6.99",
+        avgRating: "4.50",
         barcode: "070847011058",
       },
       {
@@ -152,6 +155,7 @@ async function seedDatabase() {
         name: "Lay's Klasyczne",
         description: "Oryginalne chrupki ziemniaczane lekko solone – klasyka wśród chipsów.",
         price: "3.99",
+        avgRating: "3.50",
         barcode: "028400090100",
       },
       {
@@ -159,6 +163,7 @@ async function seedDatabase() {
         name: "Lay's Ketchup",
         description: "Chipsy o smaku ketchupowym, jeden z najpopularniejszych smaków w Polsce.",
         price: "3.99",
+        avgRating: "4.50",
         barcode: "028400090117",
       },
       {
@@ -166,6 +171,7 @@ async function seedDatabase() {
         name: "Pringles Original",
         description: "Kultowe chrupki w tubie o klasycznym, delikatnie słonym smaku.",
         price: "8.99",
+        avgRating: "3.50",
         barcode: "038000845000",
       },
       {
@@ -173,6 +179,7 @@ async function seedDatabase() {
         name: "Pringles Ser & Kebab",
         description: "Chrupki Pringles o intensywnym smaku sera i kebaba – ulubieniec imprezowy.",
         price: "8.99",
+        avgRating: "4.50",
         barcode: "038000845017",
       },
       {
@@ -180,6 +187,7 @@ async function seedDatabase() {
         name: "Tyrrell's Sól Morska",
         description: "Grube chipsy gotowane w kotle, z prostą solą morską. Wyjątkowa chrupkość.",
         price: "9.49",
+        avgRating: "5.00",
         barcode: "505555100016",
       },
       {
@@ -187,6 +195,7 @@ async function seedDatabase() {
         name: "Tyrrell's Słodka Papryka",
         description: "Chipsy z angielskich ziemniaków o smaku słodkiej papryki i przypraw.",
         price: "9.49",
+        avgRating: "3.50",
         barcode: "505555100023",
       },
       {
@@ -194,6 +203,7 @@ async function seedDatabase() {
         name: "Wedel Ptasie Mleczko",
         description: "Kultowa polska pianka w czekoladzie – delikatna, kremowa i waniliowa.",
         price: "7.99",
+        avgRating: "5.00",
         barcode: "059018200011",
       },
       {
@@ -201,6 +211,7 @@ async function seedDatabase() {
         name: "Wedel Gorzka Czekolada 70%",
         description: "Intensywna, polska czekolada gorzka z 70% kakao dla prawdziwych smakoszy.",
         price: "5.99",
+        avgRating: "4.50",
         barcode: "059018200028",
       },
     ])
@@ -260,67 +271,67 @@ async function seedDatabase() {
   await db.insert(schema.snackItemImages).values([
     {
       snackItemId: monsterOriginal.id,
-      url: "https://images.example.com/monster-original-1.jpg",
+      url: "https://upload.wikimedia.org/wikipedia/commons/0/06/Monster_Energy_drink_%28cropped%29.jpg",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: monsterUltra.id,
-      url: "https://images.example.com/monster-ultra-1.jpg",
+      url: "https://upload.wikimedia.org/wikipedia/commons/0/06/Monster_Energy_drink_%28cropped%29.jpg",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: monsterMango.id,
-      url: "https://images.example.com/monster-mango-1.jpg",
+      url: "https://source.unsplash.com/800x800/?monster,mango,energy,drink",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: laysClassic.id,
-      url: "https://images.example.com/lays-klasyczne-1.jpg",
+      url: "https://source.unsplash.com/800x800/?lays,potato,chips,classic",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: laysKetchup.id,
-      url: "https://images.example.com/lays-ketchup-1.jpg",
+      url: "https://source.unsplash.com/800x800/?lays,ketchup,chips",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: pringlesOriginal.id,
-      url: "https://images.example.com/pringles-original-1.jpg",
+      url: "https://source.unsplash.com/800x800/?pringles,original,chips,can",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: pringlesSerKebab.id,
-      url: "https://images.example.com/pringles-ser-kebab-1.jpg",
+      url: "https://source.unsplash.com/800x800/?pringles,kebab,chips",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: tyrrellsSeaSalt.id,
-      url: "https://images.example.com/tyrrells-sol-morska-1.jpg",
+      url: "https://source.unsplash.com/800x800/?tyrrells,chips,sea,salt",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: tyrrellsSweet.id,
-      url: "https://images.example.com/tyrrells-papryka-1.jpg",
+      url: "https://source.unsplash.com/800x800/?tyrrells,sweet,chilli,chips",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: wedelPtasie.id,
-      url: "https://images.example.com/wedel-ptasie-1.jpg",
+      url: "https://source.unsplash.com/800x800/?chocolate,marshmallow,polish,sweets",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: wedelGorzka.id,
-      url: "https://images.example.com/wedel-gorzka-1.jpg",
+      url: "https://source.unsplash.com/800x800/?dark,chocolate,bar,wedel",
       sortOrder: 0,
       isPrimary: true,
     },
@@ -496,25 +507,25 @@ async function seedDatabase() {
   await db.insert(schema.snackReviewImages).values([
     {
       reviewId: reviews[0].id,
-      url: "https://images.example.com/recenzja-monster-anna.jpg",
+      url: "https://images.pexels.com/photos/15086389/pexels-photo-15086389.jpeg?cs=srgb&dl=pexels-harryphotographer-15086389.jpg&fm=jpg",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       reviewId: reviews[5].id,
-      url: "https://images.example.com/recenzja-mango-celina.jpg",
+      url: "https://images.pexels.com/photos/14448646/pexels-photo-14448646.jpeg?cs=srgb&dl=pexels-breno-cardoso-149064345-14448646.jpg&fm=jpg",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       reviewId: reviews[15].id,
-      url: "https://images.example.com/recenzja-tyrrells-celina.jpg",
+      url: "https://images.pexels.com/photos/6485538/pexels-photo-6485538.jpeg?cs=srgb&dl=pexels-rebbit-visual-18905705-6485538.jpg&fm=jpg",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       reviewId: reviews[19].id,
-      url: "https://images.example.com/recenzja-ptasie-anna.jpg",
+      url: "https://images.pexels.com/photos/4113303/pexels-photo-4113303.jpeg?cs=srgb&dl=pexels-alleksana-4113303.jpg&fm=jpg",
       sortOrder: 0,
       isPrimary: true,
     },

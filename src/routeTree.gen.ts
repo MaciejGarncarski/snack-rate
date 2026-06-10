@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as HealthRouteImport } from './routes/health'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as LayoutRouteRouteImport } from './routes/_layout/route'
+import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as HealthReadyRouteImport } from './routes/health.ready'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
+import { Route as LayoutTestRouteImport } from './routes/_layout/test'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 
 const HealthRoute = HealthRouteImport.update({
@@ -20,10 +22,14 @@ const HealthRoute = HealthRouteImport.update({
   path: '/health',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const LayoutRouteRoute = LayoutRouteRouteImport.update({
+  id: '/_layout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LayoutIndexRoute = LayoutIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => LayoutRouteRoute,
 } as any)
 const HealthReadyRoute = HealthReadyRouteImport.update({
   id: '/ready',
@@ -35,6 +41,11 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LayoutTestRoute = LayoutTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => LayoutRouteRoute,
+} as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
   path: '/api/rpc/$',
@@ -42,37 +53,55 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof LayoutIndexRoute
   '/health': typeof HealthRouteWithChildren
+  '/test': typeof LayoutTestRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/health': typeof HealthRouteWithChildren
+  '/test': typeof LayoutTestRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
+  '/': typeof LayoutIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_layout': typeof LayoutRouteRouteWithChildren
   '/health': typeof HealthRouteWithChildren
+  '/_layout/test': typeof LayoutTestRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
+  '/_layout/': typeof LayoutIndexRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/health' | '/api/$' | '/health/ready' | '/api/rpc/$'
+  fullPaths:
+    | '/'
+    | '/health'
+    | '/test'
+    | '/api/$'
+    | '/health/ready'
+    | '/api/rpc/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/health' | '/api/$' | '/health/ready' | '/api/rpc/$'
-  id: '__root__' | '/' | '/health' | '/api/$' | '/health/ready' | '/api/rpc/$'
+  to: '/health' | '/test' | '/api/$' | '/health/ready' | '/' | '/api/rpc/$'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/health'
+    | '/_layout/test'
+    | '/api/$'
+    | '/health/ready'
+    | '/_layout/'
+    | '/api/rpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  LayoutRouteRoute: typeof LayoutRouteRouteWithChildren
   HealthRoute: typeof HealthRouteWithChildren
   ApiSplatRoute: typeof ApiSplatRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
@@ -87,12 +116,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HealthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_layout/': {
+      id: '/_layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof LayoutIndexRouteImport
+      parentRoute: typeof LayoutRouteRoute
     }
     '/health/ready': {
       id: '/health/ready'
@@ -108,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_layout/test': {
+      id: '/_layout/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof LayoutTestRouteImport
+      parentRoute: typeof LayoutRouteRoute
+    }
     '/api/rpc/$': {
       id: '/api/rpc/$'
       path: '/api/rpc/$'
@@ -117,6 +160,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface LayoutRouteRouteChildren {
+  LayoutTestRoute: typeof LayoutTestRoute
+  LayoutIndexRoute: typeof LayoutIndexRoute
+}
+
+const LayoutRouteRouteChildren: LayoutRouteRouteChildren = {
+  LayoutTestRoute: LayoutTestRoute,
+  LayoutIndexRoute: LayoutIndexRoute,
+}
+
+const LayoutRouteRouteWithChildren = LayoutRouteRoute._addFileChildren(
+  LayoutRouteRouteChildren,
+)
 
 interface HealthRouteChildren {
   HealthReadyRoute: typeof HealthReadyRoute
@@ -130,7 +187,7 @@ const HealthRouteWithChildren =
   HealthRoute._addFileChildren(HealthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  LayoutRouteRoute: LayoutRouteRouteWithChildren,
   HealthRoute: HealthRouteWithChildren,
   ApiSplatRoute: ApiSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
