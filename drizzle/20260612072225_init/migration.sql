@@ -86,7 +86,7 @@ CREATE TABLE "sessions" (
 CREATE TABLE "snack_item_images" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"snack_item_id" uuid NOT NULL,
-	"url" text NOT NULL,
+	"storage_key" text NOT NULL,
 	"sort_order" integer DEFAULT 0 NOT NULL,
 	"is_primary" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -98,6 +98,7 @@ CREATE TABLE "snack_items" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"brand_id" uuid,
 	"name" text NOT NULL,
+	"slug" text NOT NULL UNIQUE,
 	"description" text,
 	"price" numeric(10,2),
 	"barcode" text,
@@ -171,6 +172,7 @@ CREATE UNIQUE INDEX "review_reports_reporter_review_unique_idx" ON "review_repor
 CREATE INDEX "sessions_user_id_idx" ON "sessions" ("user_id");--> statement-breakpoint
 CREATE INDEX "snack_item_images_snack_item_id_idx" ON "snack_item_images" ("snack_item_id") WHERE deleted_at IS NULL;--> statement-breakpoint
 CREATE UNIQUE INDEX "snack_items_barcode_unique_idx" ON "snack_items" ("barcode") WHERE barcode IS NOT NULL AND deleted_at IS NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "snack_items_slug_unique_idx" ON "snack_items" ("slug") WHERE slug IS NOT NULL AND deleted_at IS NULL;--> statement-breakpoint
 CREATE INDEX "snack_review_images_review_id_idx" ON "snack_review_images" ("review_id") WHERE deleted_at IS NULL;--> statement-breakpoint
 CREATE UNIQUE INDEX "snack_reviews_snack_user_unique_idx" ON "snack_reviews" ("snack_item_id","user_id") WHERE deleted_at IS NULL;--> statement-breakpoint
 CREATE INDEX "snack_reviews_snack_item_id_idx" ON "snack_reviews" ("snack_item_id");--> statement-breakpoint

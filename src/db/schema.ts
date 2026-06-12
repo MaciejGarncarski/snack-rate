@@ -65,6 +65,7 @@ export const snackItems = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     brandId: uuid("brand_id").references(() => brands.id),
     name: text("name").notNull(),
+    slug: text("slug").notNull().unique(),
     description: text("description"),
     price: decimal("price", { precision: 10, scale: 2 }),
     barcode: text("barcode"),
@@ -79,6 +80,9 @@ export const snackItems = pgTable(
     uniqueIndex("snack_items_barcode_unique_idx")
       .on(t.barcode)
       .where(sql`barcode IS NOT NULL AND deleted_at IS NULL`),
+    uniqueIndex("snack_items_slug_unique_idx")
+      .on(t.slug)
+      .where(sql`slug IS NOT NULL AND deleted_at IS NULL`),
   ],
 );
 
@@ -177,7 +181,7 @@ export const snackItemImages = pgTable(
     snackItemId: uuid("snack_item_id")
       .notNull()
       .references(() => snackItems.id),
-    url: text("url").notNull(),
+    storageKey: text("storage_key").notNull(), // reference to the file in Garage
     sortOrder: integer("sort_order").notNull().default(0),
     isPrimary: boolean("is_primary").notNull().default(false),
     createdAt: timestamp("created_at").notNull().defaultNow(),

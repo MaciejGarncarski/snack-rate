@@ -49,6 +49,10 @@ Observability:
 - Tempo — distributed tracing
 - Loki — log aggregation
 
+Storage:
+
+- Garage — S3-compatible object storage for app uploads and bucket hosting
+
 ## Environment variables
 
 Copy the appropriate example file and fill in values before running anything.
@@ -65,6 +69,12 @@ Copy the appropriate example file and fill in values before running anything.
 | `GRAFANA_SMTP_USER`              | prod       | SMTP username                             |
 | `GRAFANA_SMTP_PASSWORD`          | prod       | SMTP password                             |
 | `GRAFANA_SMTP_FROM_ADDRESS`      | prod       | From address for alert emails             |
+| `GARAGE_RPC_SECRET`              | dev + prod | Cluster RPC secret                        |
+| `GARAGE_ADMIN_TOKEN`             | dev + prod | Garage admin API token                    |
+| `GARAGE_METRICS_TOKEN`           | dev + prod | Garage metrics endpoint token             |
+| `GARAGE_DEFAULT_ACCESS_KEY`      | dev + prod | Default S3 access key                     |
+| `GARAGE_DEFAULT_SECRET_KEY`      | dev + prod | Default S3 secret key                     |
+| `GARAGE_DEFAULT_BUCKET`          | dev + prod | Default bucket created on startup         |
 
 > [!IMPORTANT]
 > `GRAFANA_INITIAL_*` variables only work on a fresh Grafana volume. Changes made after Grafana has been initialized will not be applied. Use `grafana-cli` instead.
@@ -105,12 +115,12 @@ See `./drizzle/docs/db-diagram.dbml`.
 ## Running — development
 
 ```bash
-pnpm infra:up   # starts postgres, grafana, prometheus, alloy, tempo, loki
+pnpm infra:up   # starts garage, postgres, grafana, prometheus, alloy, tempo, loki
 pnpm dev        # starts app → http://localhost:3000/
 ```
 
 > [!NOTE]
-> In development, the app runs on the host, so container log collection does not include app logs by default.
+> Garage runs in a container with persistent volumes. Its S3 API is exposed on `http://localhost:3900`, the web endpoint on `http://localhost:3902`, and the admin API on `http://localhost:3903`.
 
 ## Running — production
 
@@ -127,6 +137,8 @@ Starts the app stack for production. The shared Caddy proxy runs separately and 
 | Service    | URL                           | Notes               |
 | ---------- | ----------------------------- | ------------------- |
 | App        | `http(s)://localhost/`        | Proxied by Caddy    |
+| Garage S3  | `http://localhost:3900`       | S3 API endpoint     |
+| Garage web | `http://localhost:3902`       | Bucket website host |
 | Grafana    | `http(s)://localhost/grafana` | Dashboards & alerts |
 | Prometheus | internal only                 | Metrics backend     |
 | Alloy      | internal only                 | Collector           |
@@ -134,6 +146,22 @@ Starts the app stack for production. The shared Caddy proxy runs separately and 
 | Loki       | internal only                 | Logs                |
 
 Caddy handles TLS automatically when `APP_DOMAIN` is set to a real domain. It also strips the `/grafana` prefix before forwarding to the Grafana container.
+
+### Running database scripts in staging/prod
+
+The staging and production compose overlays now include a one-off `db-tool` service that uses the build stage of the app image, so it has `drizzle-kit`, the source tree, and the correct `.env` file.
+
+```bash
+pnpm staging:db:migrate
+pnpm staging:db:seed
+pnpm prod:db:migrate
+```
+
+To run a different script, override the compose command, for example:
+
+```bash
+docker compose --profile tools -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging run --rm db-tool run db:seed
+```
 
 ## Running — staging
 

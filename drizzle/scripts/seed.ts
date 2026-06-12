@@ -4,6 +4,8 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "#/db/schema.ts";
 import { hashPassword } from "#/lib/crypto.ts";
 
+import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
+
 const db = drizzle(process.env.DATABASE_URL!);
 
 // oxlint-disable-next-line max-lines-per-function
@@ -132,6 +134,7 @@ async function seedDatabase() {
           "Klasyczny napój energetyczny Monster o intensywnym smaku z charakterystyczną zieloną puszką.",
         price: "6.49",
         avgRating: "4.00",
+        slug: "monster-energy-original",
         barcode: "070847011034",
       },
       {
@@ -140,6 +143,7 @@ async function seedDatabase() {
         description: "Lekka wersja Monstera bez cukru, o subtelnym smaku cytrusowym.",
         price: "6.49",
         avgRating: "4.50",
+        slug: "monster-energy-ultra-white",
         barcode: "070847011041",
       },
       {
@@ -148,6 +152,7 @@ async function seedDatabase() {
         description: "Tropikalny napój energetyczny z sokiem mangowym – owocowy hit lata.",
         price: "6.99",
         avgRating: "4.50",
+        slug: "monster-energy-mango-loco",
         barcode: "070847011058",
       },
       {
@@ -156,6 +161,7 @@ async function seedDatabase() {
         description: "Oryginalne chrupki ziemniaczane lekko solone – klasyka wśród chipsów.",
         price: "3.99",
         avgRating: "3.50",
+        slug: "lays-klasyczne",
         barcode: "028400090100",
       },
       {
@@ -164,6 +170,7 @@ async function seedDatabase() {
         description: "Chipsy o smaku ketchupowym, jeden z najpopularniejszych smaków w Polsce.",
         price: "3.99",
         avgRating: "4.50",
+        slug: "lays-ketchup",
         barcode: "028400090117",
       },
       {
@@ -172,6 +179,7 @@ async function seedDatabase() {
         description: "Kultowe chrupki w tubie o klasycznym, delikatnie słonym smaku.",
         price: "8.99",
         avgRating: "3.50",
+        slug: "pringles-original",
         barcode: "038000845000",
       },
       {
@@ -180,6 +188,7 @@ async function seedDatabase() {
         description: "Chrupki Pringles o intensywnym smaku sera i kebaba – ulubieniec imprezowy.",
         price: "8.99",
         avgRating: "4.50",
+        slug: "pringles-ser-kebab",
         barcode: "038000845017",
       },
       {
@@ -188,6 +197,7 @@ async function seedDatabase() {
         description: "Grube chipsy gotowane w kotle, z prostą solą morską. Wyjątkowa chrupkość.",
         price: "9.49",
         avgRating: "5.00",
+        slug: "tyrrells-sol-morska",
         barcode: "505555100016",
       },
       {
@@ -196,6 +206,7 @@ async function seedDatabase() {
         description: "Chipsy z angielskich ziemniaków o smaku słodkiej papryki i przypraw.",
         price: "9.49",
         avgRating: "3.50",
+        slug: "tyrrells-slodka-papryka",
         barcode: "505555100023",
       },
       {
@@ -204,6 +215,7 @@ async function seedDatabase() {
         description: "Kultowa polska pianka w czekoladzie – delikatna, kremowa i waniliowa.",
         price: "7.99",
         avgRating: "5.00",
+        slug: "wedel-ptasie-mleczko",
         barcode: "059018200011",
       },
       {
@@ -212,6 +224,7 @@ async function seedDatabase() {
         description: "Intensywna, polska czekolada gorzka z 70% kakao dla prawdziwych smakoszy.",
         price: "5.99",
         avgRating: "4.50",
+        slug: "wedel-gorzka-czekolada-70",
         barcode: "059018200028",
       },
     ])
@@ -268,70 +281,91 @@ async function seedDatabase() {
   // ---------------------------------------------------------------------------
   // Snack item images
   // ---------------------------------------------------------------------------
+
+  const monsterImageUrl =
+    "https://upload.wikimedia.org/wikipedia/commons/0/06/Monster_Energy_drink_%28cropped%29.jpg";
+  const monsterImageKey = "monster-energy-drink.jpg";
+  const monsterImageResponse = await fetch(monsterImageUrl);
+
+  const chipsImageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/df/Salt-and-Vinegar.JPG";
+  const chipsImageKey = "chips.jpg";
+  const chipsImageResponse = await fetch(chipsImageUrl);
+
+  if (!monsterImageResponse.ok || !chipsImageResponse.ok) {
+    throw new Error(`Failed to fetch image`);
+  }
+
+  await deleteAllObjectsFromBucket();
+
+  await Promise.all([
+    uploadFileToGarage(chipsImageKey, Buffer.from(await chipsImageResponse.arrayBuffer())),
+    uploadFileToGarage(monsterImageKey, Buffer.from(await monsterImageResponse.arrayBuffer())),
+  ]);
+
   await db.insert(schema.snackItemImages).values([
     {
       snackItemId: monsterOriginal.id,
-      url: "https://upload.wikimedia.org/wikipedia/commons/0/06/Monster_Energy_drink_%28cropped%29.jpg",
+      storageKey: monsterImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: monsterUltra.id,
-      url: "https://upload.wikimedia.org/wikipedia/commons/0/06/Monster_Energy_drink_%28cropped%29.jpg",
+      storageKey: monsterImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: monsterMango.id,
-      url: "https://source.unsplash.com/800x800/?monster,mango,energy,drink",
+      storageKey: monsterImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: laysClassic.id,
-      url: "https://source.unsplash.com/800x800/?lays,potato,chips,classic",
+      storageKey: chipsImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: laysKetchup.id,
-      url: "https://source.unsplash.com/800x800/?lays,ketchup,chips",
+      storageKey: chipsImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: pringlesOriginal.id,
-      url: "https://source.unsplash.com/800x800/?pringles,original,chips,can",
+      storageKey: chipsImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: pringlesSerKebab.id,
-      url: "https://source.unsplash.com/800x800/?pringles,kebab,chips",
+      storageKey: chipsImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: tyrrellsSeaSalt.id,
-      url: "https://source.unsplash.com/800x800/?tyrrells,chips,sea,salt",
+      storageKey: chipsImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: tyrrellsSweet.id,
-      url: "https://source.unsplash.com/800x800/?tyrrells,sweet,chilli,chips",
+      storageKey: chipsImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: wedelPtasie.id,
-      url: "https://source.unsplash.com/800x800/?chocolate,marshmallow,polish,sweets",
+      storageKey: monsterImageKey,
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: wedelGorzka.id,
-      url: "https://source.unsplash.com/800x800/?dark,chocolate,bar,wedel",
+      storageKey: monsterImageKey,
       sortOrder: 0,
       isPrimary: true,
     },

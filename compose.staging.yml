@@ -1,7 +1,38 @@
 services:
+  garage:
+    env_file:
+      - .env.staging
+    networks:
+      default: null
+      edge:
+        aliases:
+          - staging-garage
+
   postgres:
     env_file:
       - .env.staging
+
+  db-tool:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build
+    env_file:
+      - .env.staging
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint:
+      - pnpm
+    command:
+      - run
+      - db:migrate
+    profiles:
+      - tools
+    restart: "no"
+    stdin_open: true
+    tty: true
+
   app:
     build:
       context: .

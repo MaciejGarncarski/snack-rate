@@ -1,33 +1,45 @@
-import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect } from "react";
 
-export function ProductListItemImage({ url, alt }: { url: string; alt: string }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+type Status = "loading" | "loaded" | "error";
 
-  if (isError) {
-    return (
-      <div className="my-2 flex h-48 w-full items-center justify-center rounded bg-gray-300">
-        <span className="text-sm text-gray-500">Image failed to load</span>
-      </div>
-    );
-  }
+const IMAGE_LOAD_SKELETON_DELAY = 80;
+
+export function ProductListItemImage({ src, alt }: { src: string; alt: string }) {
+  const [status, setStatus] = useState<Status>("loading");
+  const [showSkeleton, setShowSkeleton] = useState(false);
+
+  useEffect(() => {
+    setStatus("loading");
+    setShowSkeleton(false);
+
+    const timer = setTimeout(() => {
+      setShowSkeleton(true);
+    }, IMAGE_LOAD_SKELETON_DELAY);
+
+    return () => clearTimeout(timer);
+  }, [src]);
 
   return (
-    <img
-      src={url}
-      width={400}
-      height={300}
-      alt={alt}
-      className={`my-2 h-48 w-full object-cover ${isLoading ? "blur-xs" : ""}`}
-      onLoad={() => {
-        setIsLoading(false);
-        setIsError(false);
-      }}
-      onError={() => {
-        console.log(`Failed to load image: ${url}`);
-        setIsLoading(false);
-        setIsError(true);
-      }}
-    />
+    <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden">
+      <AnimatePresence>
+        {status === "loading" && showSkeleton && (
+          <motion.div
+            key="placeholder"
+            className="h-full w-full animate-pulse rounded bg-muted"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+        )}
+      </AnimatePresence>
+
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setStatus("loaded")}
+        onError={() => setStatus("error")}
+      />
+    </div>
   );
 }

@@ -2,6 +2,7 @@ import { os } from "@orpc/server";
 import * as z from "zod";
 
 import { db } from "#/db/db.server";
+import { getFileUrl } from "#/lib/s3";
 
 export const listProducts = os
   .input(
@@ -30,8 +31,20 @@ export const listProducts = os
     const items = hasNextPage ? products.slice(0, limit) : products;
     const nextCursor = hasNextPage ? items.at(-1)?.id || null : null;
 
+    const itemsWithImages = await Promise.all(
+      items.map(async (item) => ({
+        ...item,
+        images: await Promise.all(
+          item.images.map(async (img) => ({
+            ...img,
+            url: await getFileUrl(img.storageKey),
+          })),
+        ),
+      })),
+    );
+
     return {
-      items,
+      items: itemsWithImages,
       nextCursor,
     };
   });

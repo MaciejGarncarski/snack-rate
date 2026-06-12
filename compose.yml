@@ -1,4 +1,35 @@
 services:
+  garage:
+    image: dxflrs/garage:v2.3.0
+    restart: unless-stopped
+
+    command:
+      - /garage
+      - server
+      - --single-node
+      - --default-bucket
+
+    environment:
+      GARAGE_CONFIG_FILE: /etc/garage.toml
+
+    volumes:
+      - ./config/garage.toml:/etc/garage.toml:ro
+      - garage_meta:/var/lib/garage/meta
+      - garage_data:/var/lib/garage/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "/garage health -q >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   postgres:
     image: postgres:18-alpine
     restart: unless-stopped
@@ -201,6 +232,8 @@ services:
         max-file: "3"
 
 volumes:
+  garage_meta:
+  garage_data:
   postgres_data:
   prometheus_data:
   grafana_data:

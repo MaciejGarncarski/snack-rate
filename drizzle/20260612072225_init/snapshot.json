@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "bd93f915-3ad6-4168-946d-58f5c387d1d0",
+  "id": "d5cf5df9-0194-45ce-be3e-53ee019efe27",
   "prevIds": ["00000000-0000-0000-0000-000000000000"],
   "ddl": [
     {
@@ -842,7 +842,7 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "url",
+      "name": "storage_key",
       "entityType": "columns",
       "schema": "public",
       "table": "snack_item_images"
@@ -947,6 +947,19 @@
       "generated": null,
       "identity": null,
       "name": "name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "snack_items"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "slug",
       "entityType": "columns",
       "schema": "public",
       "table": "snack_items"
@@ -1802,6 +1815,27 @@
       "nameExplicit": true,
       "columns": [
         {
+          "value": "slug",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": true,
+      "where": "slug IS NOT NULL AND deleted_at IS NULL",
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "snack_items_slug_unique_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "snack_items"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
           "value": "review_id",
           "isExpression": false,
           "asc": true,
@@ -2370,6 +2404,15 @@
       "name": "sessions_token_hash_key",
       "schema": "public",
       "table": "sessions",
+      "entityType": "uniques"
+    },
+    {
+      "nameExplicit": false,
+      "columns": ["slug"],
+      "nullsNotDistinct": false,
+      "name": "snack_items_slug_key",
+      "schema": "public",
+      "table": "snack_items",
       "entityType": "uniques"
     },
     {

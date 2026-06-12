@@ -15,7 +15,7 @@ common:
       store: inmemory
 
 schema_config:
-configs:
+  configs:
     - from: 2024-01-01
       store: tsdb
       object_store: filesystem
