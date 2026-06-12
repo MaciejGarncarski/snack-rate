@@ -8,9 +8,11 @@ export const Route = createFileRoute("/_layout")({
 
 function RouteComponent() {
   return (
-    <div className="p-8">
+    <div className="">
       <Navbar />
-      <Outlet />
+      <div className="mx-auto max-w-7xl p-8">
+        <Outlet />
+      </div>
     </div>
   );
 }

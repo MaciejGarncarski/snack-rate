@@ -15,7 +15,7 @@ export const listProducts = os
     const { limit, cursor } = input;
 
     const products = await db.query.snackItems.findMany({
-      orderBy: (snackItems, { asc }) => [asc(snackItems.id)],
+      orderBy: (snackItems, { asc }) => [asc(snackItems.createdAt)],
       limit: limit + 1,
       where: {
         id: { gt: cursor },

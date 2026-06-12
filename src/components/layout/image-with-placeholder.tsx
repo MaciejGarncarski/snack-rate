@@ -5,7 +5,7 @@ type Status = "loading" | "loaded" | "error";
 
 const IMAGE_LOAD_SKELETON_DELAY = 80;
 
-export function ProductListItemImage({ src, alt }: { src: string; alt: string }) {
+export function ImageWithPlaceholder({ src, alt }: { src: string; alt: string }) {
   const [status, setStatus] = useState<Status>("loading");
   const [showSkeleton, setShowSkeleton] = useState(false);
 

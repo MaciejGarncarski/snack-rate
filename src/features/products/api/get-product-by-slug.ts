@@ -23,7 +23,7 @@ export const getProductBySlug = createServerFn()
 export const getProductBySlugQueryOptions = (slug: string) =>
   queryOptions({
     queryKey: ["product", slug],
-    queryFn: async () => {
+    queryFn: () => {
       return getProductBySlug({
         data: { slug },
       });

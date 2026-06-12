@@ -2,8 +2,9 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useInView } from "react-intersection-observer";
 
+import { ProductListItemImage } from "#/components/layout/image-with-placeholder";
 import { Card } from "#/components/ui/card";
-import { ProductListItemImage } from "#/features/products/components/product-image";
+import { ProductListItem } from "#/features/products/components/product-list-item";
 import { orpc } from "#/orpc/client";
 
 const PRODUCTS_PER_PAGE = 12;
@@ -38,17 +39,14 @@ export function ProductsList() {
         {data.pages
           .flatMap((page) => page.items)
           .map((product) => (
-            <li key={product.id}>
-              <Link to="/product/$slug" params={{ slug: product.slug }}>
-                <Card key={product.id} className="p-4">
-                  <h3 className="text-lg font-semibold">{product.name}</h3>
-                  <div className="mx-auto max-h-48 w-72 overflow-hidden rounded-md">
-                    <ProductListItemImage src={product.images[0].url} alt={product.name} />
-                  </div>
-                  <p className="text-sm text-muted-foreground">{product.description}</p>
-                </Card>
-              </Link>
-            </li>
+            <ProductListItem
+              key={product.slug}
+              name={product.name}
+              description={product.description}
+              slug={product.slug}
+              rating={product.avgRating}
+              images={product.images}
+            />
           ))}
       </ul>
       <div ref={ref} />
