@@ -2,8 +2,8 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
-import { db } from "#/db/db.server";
-import { getFileUrl } from "#/lib/s3";
+import { db } from "#/server/db/db.server";
+import { hydrateSnackItemImages } from "#/server/modules/products/product-item.mapper";
 
 const searchInputSchema = z.object({
   query: z.string().max(100),
@@ -37,17 +37,7 @@ export const getSearchedItems = createServerFn()
       },
     });
 
-    const itemsWithImages = await Promise.all(
-      searched.map(async (item) => ({
-        ...item,
-        images: await Promise.all(
-          item.images.map(async (img) => ({
-            ...img,
-            url: await getFileUrl(img.storageKey),
-          })),
-        ),
-      })),
-    );
+    const itemsWithImages = await hydrateSnackItemImages(searched);
 
     return itemsWithImages;
   });

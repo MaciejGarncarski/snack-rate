@@ -16,6 +16,13 @@
     }
 }
 
+{$CDN_DOMAIN} {
+    handle {
+        header Cache-Control "public, max-age=31536000, immutable"
+        reverse_proxy garage:3902
+    }
+}
+
 {$STAGING_APP_DOMAIN} {
     route {
         handle /robots.txt {

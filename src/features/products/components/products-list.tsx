@@ -1,9 +1,6 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { useInView } from "react-intersection-observer";
 
-import { ProductListItemImage } from "#/components/layout/image-with-placeholder";
-import { Card } from "#/components/ui/card";
 import { ProductListItem } from "#/features/products/components/product-list-item";
 import { orpc } from "#/orpc/client";
 

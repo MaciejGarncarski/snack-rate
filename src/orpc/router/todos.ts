@@ -1,7 +1,7 @@
 import { os } from "@orpc/server";
 import * as z from "zod";
 
-import { db } from "#/db/db.server";
+import { db } from "#/server/db/db.server";
 
 const todos = [
   { id: 1, name: "Get groceries" },

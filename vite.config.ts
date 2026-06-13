@@ -19,14 +19,14 @@ const config = defineConfig({
       importProtection: {
         client: {
           specifiers: [
-            /^@opentelemetry\//,
-            /^drizzle-orm(?:\/|$)/,
-            /^drizzle-kit(?:\/|$)/,
-            /^pino(?:\/|$)/,
-            /^pg(?:\/|$)/,
-            /^nitro(?:\/|$)/,
+            /^@opentelemetry\//u,
+            /^drizzle-orm(?:\/|$)/u,
+            /^drizzle-kit(?:\/|$)/u,
+            /^pino(?:\/|$)/u,
+            /^pg(?:\/|$)/u,
+            /^nitro(?:\/|$)/u,
           ],
-          files: ["**/db/**", "**/observability/**"],
+          files: ["**/db/**", "**/observability/**", "**/server/**"],
         },
       },
     }),

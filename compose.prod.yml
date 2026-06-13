@@ -8,6 +8,10 @@ services:
         aliases:
           - prod-garage
 
+  garage-init:
+    env_file:
+      - .env.production
+
   postgres:
     env_file:
       - .env.production

@@ -15,15 +15,12 @@ const schema = z.object({
   OBSERVABILITY_METRICS_ENABLED: z.enum(["true", "false"]).default("true"),
   OBSERVABILITY_TRACING_ENABLED: z.enum(["true", "false"]).default("true"),
 
-  // Garage file storage
-  GARAGE_RPC_SECRET: z.string().min(1),
-  GARAGE_ADMIN_TOKEN: z.string().min(1),
-  GARAGE_METRICS_TOKEN: z.string().min(1),
-  GARAGE_DEFAULT_ACCESS_KEY: z.string().min(1),
-  GARAGE_DEFAULT_SECRET_KEY: z.string().min(1),
-  GARAGE_DEFAULT_BUCKET: z.string().min(1),
-  GARAGE_URL: z.url(),
-  GARAGE_PUBLIC_URL: z.url(),
+  S3_ACCESS_KEY: z.string().min(1),
+  S3_ENDPOINT: z.url(),
+  S3_REGION: z.string().min(1),
+  S3_SECRET_KEY: z.string().min(1),
+  S3_BUCKET_UPLOADS: z.string().min(1),
+  S3_BUCKET_PUBLIC: z.string().min(1),
 });
 
 const parsed = schema.safeParse(process.env);

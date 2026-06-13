@@ -7,16 +7,16 @@ import {
 } from "@aws-sdk/client-s3";
 
 const fileStorageClient = new S3Client({
-  region: "garage",
-  endpoint: process.env.GARAGE_PUBLIC_URL!,
+  region: process.env.S3_REGION!,
+  endpoint: process.env.S3_ENDPOINT!,
   credentials: {
-    accessKeyId: process.env.GARAGE_DEFAULT_ACCESS_KEY!,
-    secretAccessKey: process.env.GARAGE_DEFAULT_SECRET_KEY!,
+    accessKeyId: process.env.S3_ACCESS_KEY!,
+    secretAccessKey: process.env.S3_SECRET_KEY!,
   },
   forcePathStyle: true,
 });
 
-const bucket = process.env.GARAGE_DEFAULT_BUCKET!;
+const bucket = process.env.S3_BUCKET_UPLOADS!;
 
 export function uploadFileToGarage(key: string, body: Buffer | Uint8Array | Blob | string) {
   return fileStorageClient.send(

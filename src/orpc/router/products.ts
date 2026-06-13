@@ -1,8 +1,9 @@
 import { os } from "@orpc/server";
 import * as z from "zod";
 
-import { db } from "#/db/db.server";
-import { getFileUrl } from "#/lib/s3";
+import { getFileUrl } from "#/lib/s3.server";
+import { db } from "#/server/db/db.server";
+import { hydrateSnackItemImages } from "#/server/modules/products/product-item.mapper";
 
 export const listProducts = os
   .input(
@@ -31,17 +32,7 @@ export const listProducts = os
     const items = hasNextPage ? products.slice(0, limit) : products;
     const nextCursor = hasNextPage ? items.at(-1)?.id || null : null;
 
-    const itemsWithImages = await Promise.all(
-      items.map(async (item) => ({
-        ...item,
-        images: await Promise.all(
-          item.images.map(async (img) => ({
-            ...img,
-            url: await getFileUrl(img.storageKey),
-          })),
-        ),
-      })),
-    );
+    const itemsWithImages = await hydrateSnackItemImages(items);
 
     return {
       items: itemsWithImages,

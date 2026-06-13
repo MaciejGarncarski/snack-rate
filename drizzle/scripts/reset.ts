@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { reset } from "drizzle-seed";
 
-import * as schema from "../../src/db/schema.ts";
+import * as schema from "../../src/server/db/schema.ts";
 
 const db = drizzle(process.env.DATABASE_URL!);
 

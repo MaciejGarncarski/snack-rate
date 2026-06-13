@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
-import { db } from "#/db/db.server";
+import { db } from "#/server/db/db.server";
 
 const productSlugSchema = z.object({
   slug: z.string(),

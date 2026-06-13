@@ -57,24 +57,34 @@ Storage:
 
 Copy the appropriate example file and fill in values before running anything.
 
-| Variable                         | Used in    | Description                               |
-| -------------------------------- | ---------- | ----------------------------------------- |
-| `POSTGRES_USER`                  | dev + prod | Database user                             |
-| `POSTGRES_PASSWORD`              | dev + prod | Database password                         |
-| `POSTGRES_DB`                    | dev + prod | Database name                             |
-| `APP_DOMAIN`                     | prod       | Domain for Caddy TLS (e.g. `example.com`) |
-| `GRAFANA_INITIAL_ADMIN_USER`     | dev + prod | Initial grafana username                  |
-| `GRAFANA_INITIAL_ADMIN_PASSWORD` | dev + prod | Initial grafana password                  |
-| `GRAFANA_SMTP`                   | prod       | SMTP host for Grafana alerts              |
-| `GRAFANA_SMTP_USER`              | prod       | SMTP username                             |
-| `GRAFANA_SMTP_PASSWORD`          | prod       | SMTP password                             |
-| `GRAFANA_SMTP_FROM_ADDRESS`      | prod       | From address for alert emails             |
-| `GARAGE_RPC_SECRET`              | dev + prod | Cluster RPC secret                        |
-| `GARAGE_ADMIN_TOKEN`             | dev + prod | Garage admin API token                    |
-| `GARAGE_METRICS_TOKEN`           | dev + prod | Garage metrics endpoint token             |
-| `GARAGE_DEFAULT_ACCESS_KEY`      | dev + prod | Default S3 access key                     |
-| `GARAGE_DEFAULT_SECRET_KEY`      | dev + prod | Default S3 secret key                     |
-| `GARAGE_DEFAULT_BUCKET`          | dev + prod | Default bucket created on startup         |
+| Variable                         | Used in    | Description                                       |
+| -------------------------------- | ---------- | ------------------------------------------------- |
+| `PORT`                           | dev        | Application port                                  |
+| `NODE_ENV`                       | dev + prod | Runtime environment (`development`, `production`) |
+| `APP_DOMAIN`                     | prod       | Domain for Caddy TLS (e.g. `example.com`)         |
+| `POSTGRES_USER`                  | dev + prod | Database user                                     |
+| `POSTGRES_PASSWORD`              | dev + prod | Database password                                 |
+| `POSTGRES_DB`                    | dev + prod | Database name                                     |
+| `DATABASE_URL`                   | dev + prod | PostgreSQL connection string                      |
+| `GRAFANA_INITIAL_ADMIN_USER`     | dev + prod | Initial Grafana username                          |
+| `GRAFANA_INITIAL_ADMIN_PASSWORD` | dev + prod | Initial Grafana password                          |
+| `GRAFANA_SMTP`                   | prod       | SMTP host for Grafana alerts                      |
+| `GRAFANA_SMTP_USER`              | prod       | SMTP username                                     |
+| `GRAFANA_SMTP_PASSWORD`          | prod       | SMTP password                                     |
+| `GRAFANA_SMTP_FROM_ADDRESS`      | prod       | From address for alert emails                     |
+| `OTEL_EXPORTER_OTLP_ENDPOINT`    | dev + prod | OpenTelemetry collector endpoint                  |
+| `OBSERVABILITY_LOG_LEVEL`        | dev + prod | Log level (e.g. debug, info)                      |
+| `OBSERVABILITY_METRICS_ENABLED`  | dev + prod | Enable metrics collection                         |
+| `OBSERVABILITY_TRACING_ENABLED`  | dev + prod | Enable distributed tracing                        |
+| `GARAGE_RPC_SECRET`              | dev + prod | Cluster RPC secret                                |
+| `GARAGE_ADMIN_TOKEN`             | dev + prod | Garage admin API token                            |
+| `GARAGE_METRICS_TOKEN`           | dev + prod | Garage metrics endpoint token                     |
+| `S3_ACCESS_KEY`                  | dev + prod | Default S3 access key                             |
+| `S3_SECRET_KEY`                  | dev + prod | Default S3 secret key                             |
+| `S3_ENDPOINT`                    | dev + prod | S3-compatible endpoint (e.g. Garage)              |
+| `S3_REGION`                      | dev + prod | S3 region (e.g. `garage`)                         |
+| `S3_BUCKET_UPLOADS`              | dev + prod | Bucket for uploaded files                         |
+| `S3_BUCKET_PUBLIC`               | dev + prod | Bucket for public assets                          |
 
 > [!IMPORTANT]
 > `GRAFANA_INITIAL_*` variables only work on a fresh Grafana volume. Changes made after Grafana has been initialized will not be applied. Use `grafana-cli` instead.

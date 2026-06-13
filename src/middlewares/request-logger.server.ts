@@ -7,17 +7,24 @@ import { logger } from "#/observability/logger/logger";
 
 const tracer = trace.getTracer("app");
 
+const MAX_URL_LENGTH = 150;
+
 export const requestLoggerMiddleware = createMiddleware({ type: "request" }).server(
   ({ request, next }) => {
     httpRequestsCounter.add(1);
     const startTime = Date.now();
     const url = new URL(request.url);
 
+    const logUrl =
+      request.url.length > MAX_URL_LENGTH
+        ? request.url.slice(0, MAX_URL_LENGTH) + "..."
+        : request.url;
+
     return tracer.startActiveSpan(`${request.method} ${url.pathname}`, async (span) => {
       let statusCode: number | undefined;
       span.setAttributes({
         "http.method": request.method,
-        "http.url": request.url,
+        "http.url": logUrl,
         "http.route": url.pathname,
       });
 
@@ -33,7 +40,7 @@ export const requestLoggerMiddleware = createMiddleware({ type: "request" }).ser
         logger.info(
           {
             method: request.method,
-            url: request.url,
+            url: logUrl,
             status,
           },
           "Request completed",

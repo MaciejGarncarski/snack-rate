@@ -6,17 +6,16 @@ import { serverEnv } from "#/env/server.env";
 const THREE_HOURS_IN_SECONDS = 3 * 60 * 60;
 
 export const fileStorageClient = new S3Client({
-  region: "garage",
-  endpoint: serverEnv.GARAGE_PUBLIC_URL,
+  region: serverEnv.S3_REGION,
+  endpoint: serverEnv.S3_ENDPOINT,
   credentials: {
-    accessKeyId: serverEnv.GARAGE_DEFAULT_ACCESS_KEY,
-    secretAccessKey: serverEnv.GARAGE_DEFAULT_SECRET_KEY,
+    accessKeyId: serverEnv.S3_ACCESS_KEY,
+    secretAccessKey: serverEnv.S3_SECRET_KEY,
   },
-
   forcePathStyle: true,
 });
 
-export const bucket = serverEnv.GARAGE_DEFAULT_BUCKET!;
+export const bucket = serverEnv.S3_BUCKET_UPLOADS;
 
 export async function getFileUrl(key: string) {
   const command = new GetObjectCommand({

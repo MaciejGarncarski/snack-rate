@@ -8,6 +8,10 @@ services:
         aliases:
           - staging-garage
 
+  garage-init:
+    env_file:
+      - .env.staging
+
   postgres:
     env_file:
       - .env.staging

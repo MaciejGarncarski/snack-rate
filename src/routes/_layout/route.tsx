@@ -10,7 +10,7 @@ function RouteComponent() {
   return (
     <div className="">
       <Navbar />
-      <div className="mx-auto max-w-7xl p-8">
+      <div className="mx-auto min-h-[calc(100dvh-2rem)] max-w-7xl p-8">
         <Outlet />
       </div>
     </div>

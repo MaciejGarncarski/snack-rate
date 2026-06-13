@@ -8,6 +8,10 @@ services:
       - "127.0.0.1:3902:3902"
       - "127.0.0.1:3903:3903"
 
+  garage-init:
+    env_file:
+      - .env.development
+
   prometheus:
     ports:
       - "127.0.0.1:9090:9090"
