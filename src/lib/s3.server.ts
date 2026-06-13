@@ -15,11 +15,12 @@ export const fileStorageClient = new S3Client({
   forcePathStyle: true,
 });
 
-export const bucket = serverEnv.S3_BUCKET_UPLOADS;
+export const privateUploadsBucket = serverEnv.S3_BUCKET_UPLOADS;
+export const publicBucket = serverEnv.S3_BUCKET_PUBLIC;
 
 export async function getFileUrl(key: string) {
   const command = new GetObjectCommand({
-    Bucket: bucket,
+    Bucket: privateUploadsBucket,
     Key: key,
   });
 

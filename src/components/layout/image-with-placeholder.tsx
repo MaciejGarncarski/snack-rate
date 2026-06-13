@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
 
+import { cn } from "#/lib/utils";
+
 type Status = "loading" | "loaded" | "error";
 
 const IMAGE_LOAD_SKELETON_DELAY = 80;
@@ -37,6 +39,7 @@ export function ImageWithPlaceholder({ src, alt }: { src: string; alt: string })
       <img
         src={src}
         alt={alt}
+        className={cn(status === "loading" ? "absolute top-0 opacity-0" : "opacity-100")}
         onLoad={() => setStatus("loaded")}
         onError={() => setStatus("error")}
       />

@@ -17,6 +17,9 @@ services:
       - .env.staging
 
   db-tool:
+    volumes:
+      - pnpm_store:/pnpm/store
+
     build:
       context: .
       dockerfile: Dockerfile
