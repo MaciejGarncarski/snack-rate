@@ -2,23 +2,10 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 
 import { ProductListItem } from "#/features/products/components/product-list-item";
-import { orpc } from "#/orpc/client";
-
-const PRODUCTS_PER_PAGE = 12;
+import { listProductsQueryOptions } from "#/features/products/services/list-products.query";
 
 export function ProductsList() {
-  const { data, hasNextPage, fetchNextPage } = useSuspenseInfiniteQuery(
-    orpc.listProducts.infiniteOptions({
-      input: (pageParam: string | null) => ({
-        limit: PRODUCTS_PER_PAGE,
-        cursor: pageParam ?? undefined,
-      }),
-      initialPageParam: null,
-      getNextPageParam: (lastPage) => {
-        return lastPage.nextCursor;
-      },
-    }),
-  );
+  const { data, hasNextPage, fetchNextPage } = useSuspenseInfiniteQuery(listProductsQueryOptions());
 
   const { ref } = useInView({
     threshold: 0,
@@ -32,7 +19,7 @@ export function ProductsList() {
   return (
     <div>
       <h2 className="mb-4 text-2xl font-bold">Products</h2>
-      <ul className="mx-auto grid max-w-[80rem] gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+      <ul className="mx-auto grid max-w-4xl grid-cols-1 gap-4 lg:gap-14">
         {data.pages
           .flatMap((page) => page.items)
           .map((product) => (

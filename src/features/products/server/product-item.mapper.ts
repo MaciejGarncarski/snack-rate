@@ -1,7 +1,7 @@
 import type { InferSelectModel } from "drizzle-orm/table";
 
-import { getFileUrl } from "#/lib/s3.server";
-import type { snackItemImages, snackItems } from "#/server/db/schema";
+import type { snackItemImages, snackItems } from "#/infrastructure/db/schema";
+import { getFileUrl } from "#/infrastructure/s3-client";
 
 type SnackItem = InferSelectModel<typeof snackItems>;
 type ItemImage = InferSelectModel<typeof snackItemImages>;
@@ -10,7 +10,7 @@ type SnackItemWithImages = SnackItem & {
   images: ItemImage[];
 };
 
-export const hydrateSnackItemImages = async <T extends SnackItemWithImages>(items: T[]) => {
+export const productDTO = async <T extends SnackItemWithImages>(items: T[]) => {
   const cache = new Map<string, Promise<string>>();
 
   const getCachedUrl = (storageKey: string) => {

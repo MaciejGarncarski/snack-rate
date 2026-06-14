@@ -2,8 +2,8 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
-import { db } from "#/server/db/db.server";
-import { hydrateSnackItemImages } from "#/server/modules/products/product-item.mapper";
+import { productDTO } from "#/features/products/server/product-item.mapper";
+import { db } from "#/infrastructure/db/db";
 
 const searchInputSchema = z.object({
   query: z.string().max(100),
@@ -37,7 +37,7 @@ export const getSearchedItems = createServerFn()
       },
     });
 
-    const itemsWithImages = await hydrateSnackItemImages(searched);
+    const itemsWithImages = await productDTO(searched);
 
     return itemsWithImages;
   });
@@ -45,6 +45,7 @@ export const getSearchedItems = createServerFn()
 export const getSearchedItemsQueryOptions = (query: string) => {
   return queryOptions({
     queryKey: ["search", query],
+    staleTime: 5 * 60 * 1000,
     queryFn: () => {
       return getSearchedItems({
         data: { query },

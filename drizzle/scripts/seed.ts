@@ -1,8 +1,8 @@
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
 
+import * as schema from "#/infrastructure/db/schema.ts";
 import { hashPassword } from "#/lib/crypto.ts";
-import * as schema from "#/server/db/schema.ts";
 
 import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
 

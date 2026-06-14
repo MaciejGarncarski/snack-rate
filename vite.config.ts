@@ -26,6 +26,7 @@ const config = defineConfig({
             /^pg(?:\/|$)/u,
             /^nitro(?:\/|$)/u,
           ],
+          excludeFiles: ["**/node_modules/**", "**/orpc/**", "**/*.api.ts"],
           files: ["**/db/**", "**/observability/**", "**/server/**"],
         },
       },

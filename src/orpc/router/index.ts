@@ -1,9 +1,5 @@
-import { listProducts } from "#/orpc/router/products";
-
-import { addTodo, listTodos } from "./todos";
+import { listProducts } from "#/features/products/server/products.api";
 
 export default {
-  listTodos,
-  addTodo,
   listProducts,
 };

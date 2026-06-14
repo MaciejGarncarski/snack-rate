@@ -7,6 +7,7 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "#/components/ui/input-group";
+import { Spinner } from "#/components/ui/spinner";
 
 type Props = {
   onChange: (value: string) => void;
@@ -16,6 +17,7 @@ type Props = {
   inputValue: string;
   inputRef: RefObject<HTMLInputElement | null>;
   onResetClick?: () => void;
+  isLoading?: boolean;
 };
 
 export function SearchBoxInput({
@@ -26,10 +28,13 @@ export function SearchBoxInput({
   onFocus,
   onClick,
   inputRef,
+  isLoading = false,
 }: Props) {
   return (
     <InputGroup className="max-w-48 border border-input md:max-w-sm">
       <InputGroupInput
+        type="text"
+        autoComplete="off"
         placeholder="Szukaj..."
         value={inputValue}
         ref={inputRef}
@@ -38,11 +43,10 @@ export function SearchBoxInput({
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={onKeyDown}
       />
-      <InputGroupAddon>
-        <Search />
-      </InputGroupAddon>
+
+      <InputGroupAddon>{isLoading ? <Spinner /> : <Search />}</InputGroupAddon>
       <InputGroupAddon align="inline-end">
-        <InputGroupButton aria-label="Reset" title="Reset" size="icon-sm" onClick={onResetClick}>
+        <InputGroupButton aria-label="Reset" title="Reset" size="icon-xs" onClick={onResetClick}>
           <XIcon />
         </InputGroupButton>
       </InputGroupAddon>

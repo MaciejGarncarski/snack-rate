@@ -6,7 +6,7 @@ import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ORPCInstrumentation } from "@orpc/otel";
 
-import { serverEnv } from "#/env/server.env";
+import { serverEnv } from "#/lib/server.env";
 import { logger } from "#/observability/logger/logger";
 
 function createTraceExporterUrl(endpoint: string) {

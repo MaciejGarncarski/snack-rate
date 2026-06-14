@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { getProductBySlugQueryOptions } from "#/features/products/api/get-product-by-slug";
+import { getProductBySlugQueryOptions } from "#/features/products/services/get-product-by-slug.query";
 
 export const Route = createFileRoute("/_layout/product/$slug")({
   component: RouteComponent,

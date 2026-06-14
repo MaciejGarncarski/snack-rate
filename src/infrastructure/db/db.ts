@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
-import { serverEnv } from "#/env/server.env.ts";
+import { serverEnv } from "#/lib/server.env.ts";
 
 import { relations } from "./relations.ts";
 

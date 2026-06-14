@@ -13,7 +13,7 @@ export function NavbarSearchBox() {
   const { debouncedQuery, inputValue, setInputValue, suggestionsOpen, setSuggestionsOpen } =
     useSearchBoxInput();
 
-  const { data, isLoading } = useQuery(getSearchedItemsQueryOptions(debouncedQuery));
+  const { data, isLoading } = useQuery(getSearchedItemsQueryOptions(debouncedQuery || ""));
   const suggestionListContainerRef = useRef<HTMLUListElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isDebouncing = debouncedQuery !== inputValue;
@@ -52,13 +52,14 @@ export function NavbarSearchBox() {
         onClick={() => setSuggestionsOpen(true)}
         onResetClick={handleReset}
         inputRef={inputRef}
+        isLoading={isLoading || isDebouncing}
       />
 
       <AnimatePresence mode="wait">
         {suggestionsOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute -left-8 mt-1 w-58 rounded-lg border bg-accent p-1 text-sm shadow-lg md:top-11 md:-left-9 md:w-84 md:p-2"
           >

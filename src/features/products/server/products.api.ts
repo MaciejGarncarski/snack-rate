@@ -1,9 +1,9 @@
 import { os } from "@orpc/server";
+import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
-import { getFileUrl } from "#/lib/s3.server";
-import { db } from "#/server/db/db.server";
-import { hydrateSnackItemImages } from "#/server/modules/products/product-item.mapper";
+import { productDTO } from "#/features/products/server/product-item.mapper";
+import { db } from "#/infrastructure/db/db";
 
 export const listProducts = os
   .input(
@@ -32,10 +32,26 @@ export const listProducts = os
     const items = hasNextPage ? products.slice(0, limit) : products;
     const nextCursor = hasNextPage ? items.at(-1)?.id || null : null;
 
-    const itemsWithImages = await hydrateSnackItemImages(items);
+    const itemsWithImages = await productDTO(items);
 
     return {
       items: itemsWithImages,
       nextCursor,
     };
+  });
+
+const productSlugSchema = z.object({
+  slug: z.string(),
+});
+
+export const getProductBySlug = createServerFn()
+  .inputValidator(productSlugSchema)
+  .handler(async ({ data }) => {
+    const product = await db.query.snackItems.findFirst({
+      where: {
+        slug: data.slug,
+      },
+    });
+
+    return product;
   });

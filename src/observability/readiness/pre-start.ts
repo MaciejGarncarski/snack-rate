@@ -1,10 +1,10 @@
 import { Pool } from "pg";
 
-import { serverEnv } from "#/env/server.env";
+import { exponentialBackoff } from "#/lib/exponential-backoff";
+import { serverEnv } from "#/lib/server.env";
 import { readinessFailureCounter } from "#/observability/counters";
 import { logger } from "#/observability/logger/logger";
 import { checkDatabaseOnce } from "#/observability/readiness/check-db";
-import { exponentialBackoff } from "#/utils/exponential-backoff";
 
 export async function runPreStartChecks() {
   if (serverEnv.isTest) return;

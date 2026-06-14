@@ -1,7 +1,7 @@
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-import { serverEnv } from "#/env/server.env";
+import { serverEnv } from "#/lib/server.env";
 
 const THREE_HOURS_IN_SECONDS = 3 * 60 * 60;
 

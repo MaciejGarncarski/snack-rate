@@ -45,12 +45,19 @@ export function useSearchBoxNavigation({
 
       if (key === "ArrowDown") {
         keyboardEvent.preventDefault();
-        setSelectedIndex((current) => Math.min(current + 1, dataLength - 1));
+
+        setSelectedIndex((current) => {
+          const nextIndex = current + 1;
+          return nextIndex >= dataLength ? 0 : nextIndex;
+        });
       }
 
       if (key === "ArrowUp") {
         keyboardEvent.preventDefault();
-        setSelectedIndex((current) => Math.max(current - 1, 0));
+        setSelectedIndex((current) => {
+          const prevIndex = current - 1;
+          return prevIndex < 0 ? dataLength - 1 : prevIndex;
+        });
       }
 
       if (key === "Enter") {
