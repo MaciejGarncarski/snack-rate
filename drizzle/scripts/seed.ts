@@ -282,20 +282,25 @@ async function seedDatabase() {
   // Snack item images
   // ---------------------------------------------------------------------------
 
-  const monsterImageUrl =
-    "https://upload.wikimedia.org/wikipedia/commons/0/06/Monster_Energy_drink_%28cropped%29.jpg";
-  const monsterImageKey = "monster-energy-drink.jpg";
-  const monsterImageResponse = await fetch(monsterImageUrl);
+  const monsterImageUrl = "https://i.erli.pl/yb6ksh.1d22ba.xl.webp";
+  const monsterImageKey = "monster-energy-drink.webp";
 
   const chipsImageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/df/Salt-and-Vinegar.JPG";
   const chipsImageKey = "chips.jpg";
-  const chipsImageResponse = await fetch(chipsImageUrl);
+
+  const [monsterImageResponse, chipsImageResponse] = await Promise.all([
+    fetch(monsterImageUrl),
+    fetch(chipsImageUrl),
+  ]);
 
   if (!monsterImageResponse.ok || !chipsImageResponse.ok) {
     throw new Error(`Failed to fetch image`);
   }
 
-  await deleteAllObjectsFromBucket();
+  await Promise.all([
+    deleteAllObjectsFromBucket(process.env.S3_BUCKET_UPLOADS!),
+    deleteAllObjectsFromBucket(process.env.S3_BUCKET_PUBLIC!),
+  ]);
 
   await Promise.all([
     uploadFileToGarage(chipsImageKey, Buffer.from(await chipsImageResponse.arrayBuffer())),

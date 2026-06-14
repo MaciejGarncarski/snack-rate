@@ -28,13 +28,13 @@ export function uploadFileToGarage(key: string, body: Buffer | Uint8Array | Blob
   );
 }
 
-export async function deleteAllObjectsFromBucket() {
+export async function deleteAllObjectsFromBucket(bucketName: string) {
   let ContinuationToken;
 
   do {
     const listRes: ListObjectsV2CommandOutput = await fileStorageClient.send(
       new ListObjectsV2Command({
-        Bucket: bucket,
+        Bucket: bucketName,
         ContinuationToken,
       }),
     );
@@ -47,7 +47,7 @@ export async function deleteAllObjectsFromBucket() {
 
     await fileStorageClient.send(
       new DeleteObjectsCommand({
-        Bucket: bucket,
+        Bucket: bucketName,
         Delete: {
           Objects: objects,
           Quiet: true,

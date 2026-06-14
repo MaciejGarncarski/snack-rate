@@ -3,19 +3,19 @@ import { useCallback, useEffect, useState, type KeyboardEvent, type RefObject } 
 
 import { useClickOutside } from "#/hooks/use-click-outside";
 
-type UseSearchBoxControlsProps = {
+type UseSearchBoxNavigationProps = {
   setSuggestionsOpen: (open: boolean) => void;
   suggestionListContainerRef: RefObject<HTMLUListElement | null>;
   dataLength: number;
   inputRef: RefObject<HTMLInputElement | null>;
 };
 
-export function useSearchBoxControls({
+export function useSearchBoxNavigation({
   setSuggestionsOpen,
   suggestionListContainerRef,
   dataLength,
   inputRef,
-}: UseSearchBoxControlsProps) {
+}: UseSearchBoxNavigationProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useClickOutside(suggestionListContainerRef, () => {
@@ -40,30 +40,27 @@ export function useSearchBoxControls({
   }, []);
 
   const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
+    (keyboardEvent: KeyboardEvent<HTMLInputElement>) => {
+      const { key } = keyboardEvent;
 
+      if (key === "ArrowDown") {
+        keyboardEvent.preventDefault();
         setSelectedIndex((current) => Math.min(current + 1, dataLength - 1));
       }
 
-      if (e.key === "ArrowUp") {
-        e.preventDefault();
-
+      if (key === "ArrowUp") {
+        keyboardEvent.preventDefault();
         setSelectedIndex((current) => Math.max(current - 1, 0));
       }
 
-      if (e.key === "Enter") {
+      if (key === "Enter") {
         const selectedItem = suggestionListContainerRef.current;
         const allLinks = selectedItem?.querySelectorAll("li");
         const selectedLink = allLinks?.[selectedIndex]?.querySelector("a");
-
-        if (selectedLink) {
-          selectedLink.click();
-        }
+        selectedLink?.click();
       }
 
-      if (e.key === "Tab") {
+      if (key === "Tab") {
         setSuggestionsOpen(false);
         setSelectedIndex(0);
       }
