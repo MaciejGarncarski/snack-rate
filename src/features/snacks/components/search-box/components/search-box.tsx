@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
 import { useRef } from "react";
 
-import { getSearchedItemsQueryOptions } from "#/features/search-box/api/get-searched-items";
-import { SearchBoxInput } from "#/features/search-box/components/search-box-input";
-import { SearchBoxMessage } from "#/features/search-box/components/search-box-message";
-import { SearchBoxResults } from "#/features/search-box/components/search-box-results";
-import { useSearchBoxInput } from "#/features/search-box/hooks/use-search-box-input";
-import { useSearchBoxNavigation } from "#/features/search-box/hooks/use-search-box-navigation";
+import { getSearchedItemsQueryOptions } from "#/features/snacks/components/search-box/api/get-searched-items";
+import { SearchBoxInput } from "#/features/snacks/components/search-box/components/search-box-input";
+import { SearchBoxMessage } from "#/features/snacks/components/search-box/components/search-box-message";
+import { SearchBoxResults } from "#/features/snacks/components/search-box/components/search-box-results";
+import { useSearchBoxInput } from "#/features/snacks/components/search-box/hooks/use-search-box-input";
+import { useSearchBoxNavigation } from "#/features/snacks/components/search-box/hooks/use-search-box-navigation";
 
 export function NavbarSearchBox() {
   const { debouncedQuery, inputValue, setInputValue, suggestionsOpen, setSuggestionsOpen } =

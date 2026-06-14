@@ -2,8 +2,8 @@ import { os } from "@orpc/server";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
-import { snackDTO } from "#/features/snacks/server/snack-item.mapper";
-import { db } from "#/infrastructure/db/db";
+import { SnackMapper } from "#/features/snacks/server/snack-item.mapper";
+import { snacksRepository } from "#/features/snacks/server/snacks.repository";
 
 export const listSnacks = os
   .input(
@@ -15,27 +15,15 @@ export const listSnacks = os
   .handler(async ({ input }) => {
     const { limit, cursor } = input;
 
-    const snacks = await db.query.snackItems.findMany({
-      orderBy: (snackItems, { asc }) => [asc(snackItems.createdAt)],
-      limit: limit + 1,
-      where: {
-        id: { gt: cursor },
-      },
-      with: {
-        brand: true,
-        images: true,
-        tags: true,
-      },
-    });
-
-    const hasNextPage = snacks.length > limit;
-    const items = hasNextPage ? snacks.slice(0, limit) : snacks;
+    const searched = await snacksRepository.list(limit, cursor);
+    const hasNextPage = searched.length > limit;
+    const items = hasNextPage ? searched.slice(0, limit) : searched;
     const nextCursor = hasNextPage ? items.at(-1)?.id || null : null;
 
-    const itemsWithImages = await snackDTO(items);
+    const snacks = await SnackMapper.toDomain(searched);
 
     return {
-      items: itemsWithImages,
+      items: snacks.map((snack) => SnackMapper.toDTO(snack)),
       nextCursor,
     };
   });
@@ -47,11 +35,6 @@ const snackSlugSchema = z.object({
 export const getSnackBySlug = createServerFn()
   .inputValidator(snackSlugSchema)
   .handler(async ({ data }) => {
-    const snack = await db.query.snackItems.findFirst({
-      where: {
-        slug: data.slug,
-      },
-    });
-
+    const snack = await snacksRepository.getBySlug(data.slug);
     return snack;
   });

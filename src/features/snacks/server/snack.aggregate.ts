@@ -1,4 +1,5 @@
-import type { ImageEntity } from "#/features/snacks/server/image.entity";
+import type { TagEntity } from "#/features/snacks/server/tag.entity";
+import type { Image } from "#/features/snacks/server/value-objects/image.vo";
 import type { Price } from "#/features/snacks/server/value-objects/price.vo";
 import type { Rating } from "#/features/snacks/server/value-objects/rating.vo";
 import type { Slug } from "#/features/snacks/server/value-objects/slug.vo";
@@ -6,57 +7,77 @@ import type { Slug } from "#/features/snacks/server/value-objects/slug.vo";
 export class SnackAggregate {
   constructor(
     private id: string,
-    private _name: string,
-    private _description: string,
-    private _price: Price,
-    private _images: ImageEntity[],
-    private _createdAt: Date,
-    private _updatedAt: Date,
-    private _deletedAt: Date | null,
-    private _brandId: string | null,
-    private _snackTags: string[], // TODO: change to value object
-    private _slug: Slug,
-    private _barcode: string | null,
-    private _avgRating: Rating,
+    private name: string,
+    private description: string | null,
+    private price: Price,
+    private images: Image[],
+    private createdAt: Date,
+    private updatedAt: Date,
+    private deletedAt: Date | null,
+    private brandId: string | null,
+    private snackTags: TagEntity[],
+    private slug: Slug,
+    private barcode: string | null,
+    private avgRating: Rating,
   ) {}
 
-  get name() {
-    return this._name;
+  public getId() {
+    return this.id;
   }
 
-  get description() {
-    return this._description;
+  public getName() {
+    return this.name;
   }
 
-  get price() {
-    return this._price;
+  public getDescription() {
+    return this.description;
   }
 
-  get images() {
-    return [...this._images];
+  public getPrice() {
+    return this.price;
   }
 
-  get primaryImage() {
-    return this._images.find((img) => img.isPrimary) ?? null;
+  public getImages() {
+    return [...this.images];
   }
 
-  get createdAt() {
-    return this._createdAt;
+  public getPrimaryImage() {
+    return this.images.find((img) => img.getIsPrimary()) ?? null;
   }
 
-  get updatedAt() {
-    return this._updatedAt;
+  public getCreatedAt() {
+    return this.createdAt;
   }
 
-  get deletedAt() {
-    return this._deletedAt;
+  public getUpdatedAt() {
+    return this.updatedAt;
   }
 
-  get brand() {
-    return this._brandId;
+  public getDeletedAt() {
+    return this.deletedAt;
   }
 
-  touch() {
-    this._updatedAt = new Date();
+  public getBrandId() {
+    return this.brandId;
+  }
+
+  public getTags() {
+    return [...this.snackTags];
+  }
+
+  public getSlug() {
+    return this.slug.toString();
+  }
+
+  public getBarcode() {
+    return this.barcode;
+  }
+
+  public getRating() {
+    return this.avgRating.getValue().toString();
+  }
+
+  private touch() {
+    this.updatedAt = new Date();
   }
 }

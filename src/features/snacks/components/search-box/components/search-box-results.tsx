@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
 import { SnackRating } from "#/components/snacks/snack-rating";
-import { getSearchedItemsQueryOptions } from "#/features/search-box/api/get-searched-items";
+import { getSearchedItemsQueryOptions } from "#/features/snacks/components/search-box/api/get-searched-items";
 import { cn } from "#/lib/utils";
 
 type Props = {
