@@ -36,13 +36,13 @@ const Star = ({ fill = 0, size = "md" }: { fill?: number; size?: "xs" | "sm" | "
   );
 };
 
-type ProductRatingProps = {
+type SnackRatingProps = {
   rating: number;
   withText?: boolean;
   size?: "xs" | "sm" | "md" | "lg";
 };
 
-export function ProductRating({ rating, withText, size = "md" }: ProductRatingProps) {
+export function SnackRating({ rating, withText, size = "md" }: SnackRatingProps) {
   const value = Math.max(0, Math.min(5, rating));
 
   const gapClass =

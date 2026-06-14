@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { ProductsList } from "#/features/products/components/products-list";
+import { SnacksList } from "#/features/snacks/components/snacks-list";
 
 export const Route = createFileRoute("/_layout/")({
   component: RouteComponent,
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_layout/")({
 function RouteComponent() {
   return (
     <div>
-      <ProductsList />
+      <SnacksList />
     </div>
   );
 }

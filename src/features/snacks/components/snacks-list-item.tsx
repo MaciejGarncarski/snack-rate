@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
-import { ProductRating } from "#/components/product/product-rating";
+import { SnackRating } from "#/components/snacks/snack-rating";
 import { Card, CardContent } from "#/components/ui/card";
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
   }[];
 };
 
-export function ProductListItem({ name, description, slug, rating, images }: Props) {
+export function SnacksListItem({ name, description, slug, rating, images }: Props) {
   const ratingNumber = parseFloat(rating);
 
   return (
@@ -27,12 +27,12 @@ export function ProductListItem({ name, description, slug, rating, images }: Pro
               className="size-64 rounded-md object-cover"
             />
             <div className="flex flex-col gap-2">
-              <Link to="/product/$slug" params={{ slug: slug }}>
+              <Link to="/snack/$slug" params={{ slug: slug }}>
                 <h2 className="text-xl font-bold">{name}</h2>
               </Link>
               <p className="text-md text-muted-foreground">{description}</p>
               <div className="mt-auto">
-                <ProductRating rating={ratingNumber} withText />
+                <SnackRating rating={ratingNumber} withText />
               </div>
             </div>
           </div>

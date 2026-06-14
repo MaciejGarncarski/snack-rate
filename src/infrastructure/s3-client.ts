@@ -18,7 +18,7 @@ export const fileStorageClient = new S3Client({
 export const privateUploadsBucket = serverEnv.S3_BUCKET_UPLOADS;
 export const publicBucket = serverEnv.S3_BUCKET_PUBLIC;
 
-export async function getFileUrl(key: string) {
+export async function getPrivateFileUrl(key: string) {
   const command = new GetObjectCommand({
     Bucket: privateUploadsBucket,
     Key: key,

@@ -1,7 +1,7 @@
 import type { InferSelectModel } from "drizzle-orm/table";
 
 import type { snackItemImages, snackItems } from "#/infrastructure/db/schema";
-import { getFileUrl } from "#/infrastructure/s3-client";
+import { getPrivateFileUrl } from "#/infrastructure/s3-client";
 
 type SnackItem = InferSelectModel<typeof snackItems>;
 type ItemImage = InferSelectModel<typeof snackItemImages>;
@@ -10,14 +10,14 @@ type SnackItemWithImages = SnackItem & {
   images: ItemImage[];
 };
 
-export const productDTO = async <T extends SnackItemWithImages>(items: T[]) => {
+export const snackDTO = async <T extends SnackItemWithImages>(items: T[]) => {
   const cache = new Map<string, Promise<string>>();
 
   const getCachedUrl = (storageKey: string) => {
     const existing = cache.get(storageKey);
     if (existing) return existing;
 
-    const promise = getFileUrl(storageKey);
+    const promise = getPrivateFileUrl(storageKey);
     cache.set(storageKey, promise);
     return promise;
   };

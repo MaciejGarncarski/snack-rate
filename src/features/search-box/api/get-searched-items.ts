@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
-import { productDTO } from "#/features/products/server/product-item.mapper";
+import { snacksDTO } from "#/features/snacks/server/snacks-item.mapper";
 import { db } from "#/infrastructure/db/db";
 
 const searchInputSchema = z.object({
@@ -37,7 +37,7 @@ export const getSearchedItems = createServerFn()
       },
     });
 
-    const itemsWithImages = await productDTO(searched);
+    const itemsWithImages = await snacksDTO(searched);
 
     return itemsWithImages;
   });

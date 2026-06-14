@@ -1,5 +1,5 @@
-import { listProducts } from "#/features/products/server/products.api";
+import { listSnacks } from "#/features/snacks/server/snacks.api";
 
 export default {
-  listProducts,
+  listSnacks,
 };

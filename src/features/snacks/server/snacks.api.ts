@@ -2,10 +2,10 @@ import { os } from "@orpc/server";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
-import { productDTO } from "#/features/products/server/product-item.mapper";
+import { snackDTO } from "#/features/snacks/server/snack-item.mapper";
 import { db } from "#/infrastructure/db/db";
 
-export const listProducts = os
+export const listSnacks = os
   .input(
     z.object({
       limit: z.number().min(1).max(100).default(20),
@@ -15,7 +15,7 @@ export const listProducts = os
   .handler(async ({ input }) => {
     const { limit, cursor } = input;
 
-    const products = await db.query.snackItems.findMany({
+    const snacks = await db.query.snackItems.findMany({
       orderBy: (snackItems, { asc }) => [asc(snackItems.createdAt)],
       limit: limit + 1,
       where: {
@@ -28,11 +28,11 @@ export const listProducts = os
       },
     });
 
-    const hasNextPage = products.length > limit;
-    const items = hasNextPage ? products.slice(0, limit) : products;
+    const hasNextPage = snacks.length > limit;
+    const items = hasNextPage ? snacks.slice(0, limit) : snacks;
     const nextCursor = hasNextPage ? items.at(-1)?.id || null : null;
 
-    const itemsWithImages = await productDTO(items);
+    const itemsWithImages = await snackDTO(items);
 
     return {
       items: itemsWithImages,
@@ -40,18 +40,18 @@ export const listProducts = os
     };
   });
 
-const productSlugSchema = z.object({
+const snackSlugSchema = z.object({
   slug: z.string(),
 });
 
-export const getProductBySlug = createServerFn()
-  .inputValidator(productSlugSchema)
+export const getSnackBySlug = createServerFn()
+  .inputValidator(snackSlugSchema)
   .handler(async ({ data }) => {
-    const product = await db.query.snackItems.findFirst({
+    const snack = await db.query.snackItems.findFirst({
       where: {
         slug: data.slug,
       },
     });
 
-    return product;
+    return snack;
   });

@@ -2,7 +2,7 @@ import { db } from "#/infrastructure/db/db";
 
 const MAX_SEARCH_RESULTS = 6;
 
-export const productsRepository = {
+export const snacksRepository = {
   search: async (query: string) => {
     const searched = await db.query.snackItems.findMany({
       with: {

@@ -16,7 +16,7 @@ import { Route as HealthReadyRouteImport } from './routes/health.ready'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as LayoutTestRouteImport } from './routes/_layout/test'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
-import { Route as LayoutProductSlugRouteImport } from './routes/_layout/product/$slug'
+import { Route as LayoutSnackSlugRouteImport } from './routes/_layout/snack/$slug'
 
 const HealthRoute = HealthRouteImport.update({
   id: '/health',
@@ -52,9 +52,9 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   path: '/api/rpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutProductSlugRoute = LayoutProductSlugRouteImport.update({
-  id: '/product/$slug',
-  path: '/product/$slug',
+const LayoutSnackSlugRoute = LayoutSnackSlugRouteImport.update({
+  id: '/snack/$slug',
+  path: '/snack/$slug',
   getParentRoute: () => LayoutRouteRoute,
 } as any)
 
@@ -64,7 +64,7 @@ export interface FileRoutesByFullPath {
   '/test': typeof LayoutTestRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
-  '/product/$slug': typeof LayoutProductSlugRoute
+  '/snack/$slug': typeof LayoutSnackSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesByTo {
@@ -73,7 +73,7 @@ export interface FileRoutesByTo {
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/': typeof LayoutIndexRoute
-  '/product/$slug': typeof LayoutProductSlugRoute
+  '/snack/$slug': typeof LayoutSnackSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesById {
@@ -84,7 +84,7 @@ export interface FileRoutesById {
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/_layout/': typeof LayoutIndexRoute
-  '/_layout/product/$slug': typeof LayoutProductSlugRoute
+  '/_layout/snack/$slug': typeof LayoutSnackSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRouteTypes {
@@ -95,7 +95,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/api/$'
     | '/health/ready'
-    | '/product/$slug'
+    | '/snack/$slug'
     | '/api/rpc/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -104,7 +104,7 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/health/ready'
     | '/'
-    | '/product/$slug'
+    | '/snack/$slug'
     | '/api/rpc/$'
   id:
     | '__root__'
@@ -114,7 +114,7 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/health/ready'
     | '/_layout/'
-    | '/_layout/product/$slug'
+    | '/_layout/snack/$slug'
     | '/api/rpc/$'
   fileRoutesById: FileRoutesById
 }
@@ -176,11 +176,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiRpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_layout/product/$slug': {
-      id: '/_layout/product/$slug'
-      path: '/product/$slug'
-      fullPath: '/product/$slug'
-      preLoaderRoute: typeof LayoutProductSlugRouteImport
+    '/_layout/snack/$slug': {
+      id: '/_layout/snack/$slug'
+      path: '/snack/$slug'
+      fullPath: '/snack/$slug'
+      preLoaderRoute: typeof LayoutSnackSlugRouteImport
       parentRoute: typeof LayoutRouteRoute
     }
   }
@@ -189,13 +189,13 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteRouteChildren {
   LayoutTestRoute: typeof LayoutTestRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
-  LayoutProductSlugRoute: typeof LayoutProductSlugRoute
+  LayoutSnackSlugRoute: typeof LayoutSnackSlugRoute
 }
 
 const LayoutRouteRouteChildren: LayoutRouteRouteChildren = {
   LayoutTestRoute: LayoutTestRoute,
   LayoutIndexRoute: LayoutIndexRoute,
-  LayoutProductSlugRoute: LayoutProductSlugRoute,
+  LayoutSnackSlugRoute: LayoutSnackSlugRoute,
 }
 
 const LayoutRouteRouteWithChildren = LayoutRouteRoute._addFileChildren(

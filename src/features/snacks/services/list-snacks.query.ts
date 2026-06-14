@@ -1,12 +1,12 @@
 import { orpc } from "#/orpc/client";
 
-const PRODUCTS_PER_PAGE = 12;
+const SNACKS_PER_PAGE = 12;
 
-export const listProductsQueryOptions = () => {
-  return orpc.listProducts.infiniteOptions({
+export const listSnacksQueryOptions = () => {
+  return orpc.listSnacks.infiniteOptions({
     staleTime: 5 * 60 * 1000,
     input: (pageParam: string | null) => ({
-      limit: PRODUCTS_PER_PAGE,
+      limit: SNACKS_PER_PAGE,
       cursor: pageParam ?? undefined,
     }),
     initialPageParam: null,

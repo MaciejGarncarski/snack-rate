@@ -103,8 +103,6 @@ CREATE TABLE "snack_items" (
 	"price" numeric(10,2),
 	"barcode" text,
 	"avg_rating" numeric(3,2) DEFAULT '0' NOT NULL,
-	"review_count" integer DEFAULT 0 NOT NULL,
-	"bookmark_count" integer DEFAULT 0 NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp

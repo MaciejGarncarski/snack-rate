@@ -70,8 +70,6 @@ export const snackItems = pgTable(
     price: decimal("price", { precision: 10, scale: 2 }),
     barcode: text("barcode"),
     avgRating: decimal("avg_rating", { precision: 3, scale: 2 }).notNull().default("0"),
-    reviewCount: integer("review_count").notNull().default(0),
-    bookmarkCount: integer("bookmark_count").notNull().default(0),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),

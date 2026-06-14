@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "d5cf5df9-0194-45ce-be3e-53ee019efe27",
+  "id": "5d3a09cf-8052-40d1-8980-6958b138fdd2",
   "prevIds": ["00000000-0000-0000-0000-000000000000"],
   "ddl": [
     {
@@ -1012,32 +1012,6 @@
       "generated": null,
       "identity": null,
       "name": "avg_rating",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "0",
-      "generated": null,
-      "identity": null,
-      "name": "review_count",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "0",
-      "generated": null,
-      "identity": null,
-      "name": "bookmark_count",
       "entityType": "columns",
       "schema": "public",
       "table": "snack_items"

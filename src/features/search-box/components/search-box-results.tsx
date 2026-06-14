@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
 import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
-import { ProductRating } from "#/components/product/product-rating";
+import { SnackRating } from "#/components/snacks/snack-rating";
 import { getSearchedItemsQueryOptions } from "#/features/search-box/api/get-searched-items";
 import { cn } from "#/lib/utils";
 
@@ -28,7 +28,7 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, query }:
           )}
         >
           <Link
-            to="/product/$slug"
+            to="/snack/$slug"
             params={{ slug: item.slug }}
             className="flex items-center gap-4"
             {...(!index && { "data-first": "" })}
@@ -39,7 +39,7 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, query }:
             </div>
             <div>
               <span>{item.name}</span>
-              <ProductRating rating={parseFloat(item.avgRating)} size="xs" />
+              <SnackRating rating={parseFloat(item.avgRating)} size="xs" />
             </div>
           </Link>
         </li>

@@ -1,21 +1,21 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { getProductBySlugQueryOptions } from "#/features/products/services/get-product-by-slug.query";
+import { getSnackBySlugQueryOptions } from "#/features/snacks/services/get-snack-by-slug.query";
 
-export const Route = createFileRoute("/_layout/product/$slug")({
+export const Route = createFileRoute("/_layout/snack/$slug")({
   component: RouteComponent,
   loader: ({ params, context }) => {
-    context.queryClient.ensureQueryData(getProductBySlugQueryOptions(params.slug));
+    context.queryClient.ensureQueryData(getSnackBySlugQueryOptions(params.slug));
   },
 });
 
 function RouteComponent() {
   const { slug } = Route.useParams();
-  const { data } = useSuspenseQuery(getProductBySlugQueryOptions(slug));
+  const { data } = useSuspenseQuery(getSnackBySlugQueryOptions(slug));
 
   if (!data) {
-    return <div>Product not found</div>;
+    return <div>snack not found</div>;
   }
 
   return (
