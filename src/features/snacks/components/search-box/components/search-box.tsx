@@ -52,6 +52,7 @@ export function NavbarSearchBox() {
         onClick={() => setSuggestionsOpen(true)}
         onResetClick={handleReset}
         inputRef={inputRef}
+        isSearchBoxOpen={suggestionsOpen}
         isLoading={isLoading || isDebouncing}
       />
 

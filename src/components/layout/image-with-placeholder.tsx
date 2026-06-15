@@ -77,7 +77,7 @@ export function ImageWithPlaceholder({
         ref={imgRef}
         src={src}
         alt={alt}
-        className={cn("block", className)}
+        className={cn(status === "loaded" ? "block" : "absolute opacity-0", className)}
         onLoad={() => setStatus("loaded")}
         onError={() => setStatus("error")}
         {...imgProps}

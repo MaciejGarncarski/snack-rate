@@ -10,6 +10,30 @@ export class Image {
     private deletedAt: Date | null,
   ) {}
 
+  public static create(params: {
+    id: string;
+    url: string;
+    storageKey: string;
+    isPrimary?: boolean;
+    sortOrder: number;
+  }) {
+    return new Image(
+      params.id,
+      params.url,
+      params.storageKey,
+      params.isPrimary ?? false,
+      params.sortOrder,
+      new Date(),
+      new Date(),
+      null,
+    );
+  }
+
+  public makePrimary() {
+    this.isPrimary = true;
+    this.touch();
+  }
+
   public getId() {
     return this.id;
   }
@@ -40,5 +64,19 @@ export class Image {
 
   public getDeletedAt() {
     return this.deletedAt;
+  }
+
+  public touch() {
+    this.updatedAt = new Date();
+  }
+
+  public makeSecondary() {
+    this.isPrimary = false;
+    this.touch();
+  }
+
+  public setSortOrder(order: number) {
+    this.sortOrder = order;
+    this.touch();
   }
 }

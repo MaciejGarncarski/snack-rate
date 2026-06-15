@@ -38,7 +38,43 @@ export class SnackAggregate {
   }
 
   public getImages() {
-    return [...this.images];
+    return [...this.images].toSorted((a, b) => a.getSortOrder() - b.getSortOrder());
+  }
+
+  public addImage(image: Image) {
+    const nextOrder =
+      this.images.length === 0 ? 0 : Math.max(...this.images.map((i) => i.getSortOrder()), -1) + 1;
+
+    image.setSortOrder(nextOrder);
+
+    this.images.push(image);
+
+    this.touch();
+  }
+
+  public setPrimaryImage(imageId: string) {
+    this.images.forEach((img) => img.makeSecondary());
+
+    const img = this.images.find((i) => i.getId() === imageId);
+
+    if (!img) throw new Error("Image not found");
+
+    img.makePrimary();
+
+    this.touch();
+  }
+
+  public reorderImages(imageIdsInOrder: string[]) {
+    const imageMap = new Map(this.images.map((img) => [img.getId(), img]));
+
+    imageIdsInOrder.forEach((id, index) => {
+      const img = imageMap.get(id);
+      if (!img) return;
+
+      img.setSortOrder(index);
+    });
+
+    this.touch();
   }
 
   public getPrimaryImage() {
@@ -74,7 +110,28 @@ export class SnackAggregate {
   }
 
   public getRating() {
-    return this.avgRating.getValue().toString();
+    return this.avgRating;
+  }
+
+  public updateName(newName: string) {
+    this.name = newName;
+    this.touch();
+  }
+
+  public updateDescription(newDescription: string | null) {
+    this.description = newDescription;
+    this.touch();
+  }
+
+  public changePriceTo(newPrice: Price) {
+    if (newPrice.getValue() === this.price.getValue()) return;
+    this.price = newPrice;
+    this.touch();
+  }
+
+  public updateBrandId(newBrandId: string | null) {
+    this.brandId = newBrandId;
+    this.touch();
   }
 
   private touch() {

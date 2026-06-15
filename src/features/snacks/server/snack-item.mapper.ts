@@ -4,7 +4,6 @@ import { Image } from "#/features/snacks/server/value-objects/image.vo";
 import { Price } from "#/features/snacks/server/value-objects/price.vo";
 import { Rating } from "#/features/snacks/server/value-objects/rating.vo";
 import { Slug } from "#/features/snacks/server/value-objects/slug.vo";
-import { getPrivateFileUrl } from "#/infrastructure/s3-client";
 
 type DbImage = {
   id: string;
@@ -13,6 +12,7 @@ type DbImage = {
   deletedAt: Date | null;
   snackItemId: string;
   storageKey: string;
+  url: string;
   sortOrder: number;
   isPrimary: boolean;
 };
@@ -53,63 +53,72 @@ type DbSnackItem = DbBareSnackItem & {
   brand: DbBrand | null;
 };
 
-export type SnackItemForPersistence = {
-  snack: DbBareSnackItem;
-  tags: DbTag[] | null;
-  images: DbImage[] | null;
+export type SnackDTO = {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  images: { id: string; url: string; isPrimary: boolean; sortOrder: number }[];
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
   brandId: string | null;
+  tags: { id: string; name: string; slug: string }[];
+  slug: string;
+  barcode: string | null;
+  avgRating: string;
 };
 
-export class SnackMapper {
-  public static toDomain(snack: DbSnackItem[]): Promise<SnackAggregate[]> {
-    const snackPromises = snack.map(async (s) => {
-      if (!s.price) {
-        throw new Error("Invalid snack price");
-      }
+export type SnackItemForPersistence = {
+  snack: DbBareSnackItem;
+  tags: DbTag[];
+  images: DbImage[];
+};
 
-      const snackPrice = Price.create(parseFloat(s.price));
-      const snackTags =
-        s.tags?.map((t) => new TagEntity(t.tag!.id, t.tag!.name, t.tag!.slug)) || [];
-      const slug = Slug.create(s.slug);
-      const rating = Rating.create(parseFloat(s.avgRating));
+export const snackMapper = {
+  toDomain(snack: DbSnackItem): SnackAggregate {
+    const rawPrice = snack.price === null ? null : parseFloat(snack.price);
+    const snackPrice = Price.create(rawPrice);
 
-      const snackImages = await Promise.all(
-        s.images.map(async (img) => {
-          const url = await getPrivateFileUrl(img.storageKey);
-          return new Image(
-            img.id,
-            url,
-            img.storageKey,
-            img.isPrimary,
-            img.sortOrder,
-            img.createdAt,
-            img.updatedAt,
-            img.deletedAt,
-          );
-        }),
-      );
+    const snackTags = snack.tags
+      .filter((t): t is { tag: NonNullable<typeof t.tag> } => t.tag !== null)
+      .map((t) => new TagEntity(t.tag.id, t.tag.name, t.tag.slug));
 
-      return new SnackAggregate(
-        s.id,
-        s.name,
-        s.description,
-        snackPrice,
-        snackImages,
-        s.createdAt,
-        s.updatedAt,
-        s.deletedAt,
-        s.brandId,
-        snackTags,
-        slug,
-        s.barcode,
-        rating,
-      );
-    });
+    const slug = Slug.create(snack.slug);
+    const rating = Rating.create(snack.avgRating);
 
-    return Promise.all(snackPromises);
-  }
+    const snackImages = snack.images.map(
+      (img) =>
+        new Image(
+          img.id,
+          img.url,
+          img.storageKey,
+          img.isPrimary,
+          img.sortOrder,
+          img.createdAt,
+          img.updatedAt,
+          img.deletedAt,
+        ),
+    );
 
-  public static toPersistence(snack: SnackAggregate): SnackItemForPersistence {
+    return new SnackAggregate(
+      snack.id,
+      snack.name,
+      snack.description,
+      snackPrice,
+      snackImages,
+      snack.createdAt,
+      snack.updatedAt,
+      snack.deletedAt,
+      snack.brandId,
+      snackTags,
+      slug,
+      snack.barcode,
+      rating,
+    );
+  },
+
+  toPersistence(snack: SnackAggregate): SnackItemForPersistence {
     return {
       snack: {
         id: snack.getId(),
@@ -122,26 +131,26 @@ export class SnackMapper {
         brandId: snack.getBrandId(),
         slug: snack.getSlug(),
         barcode: snack.getBarcode(),
-        avgRating: snack.getRating(),
+        avgRating: snack.getRating().getValue().toString(),
       },
       tags: snack
         .getTags()
         .map((tag) => ({ tag: { id: tag.getId(), name: tag.getName(), slug: tag.getSlug() } })),
       images: snack.getImages().map((img) => ({
+        id: img.getId(),
         storageKey: img.getStorageKey(),
+        url: img.getUrl(),
         isPrimary: img.getIsPrimary(),
         sortOrder: img.getSortOrder(),
         createdAt: img.getCreatedAt(),
         updatedAt: img.getUpdatedAt(),
         deletedAt: img.getDeletedAt(),
-        id: img.getId(),
         snackItemId: snack.getId(),
       })),
-      brandId: snack.getBrandId(),
     };
-  }
+  },
 
-  public static toDTO(snack: SnackAggregate) {
+  toDTO(snack: SnackAggregate): SnackDTO {
     return {
       id: snack.getId(),
       name: snack.getName(),
@@ -164,7 +173,7 @@ export class SnackMapper {
       })),
       slug: snack.getSlug(),
       barcode: snack.getBarcode(),
-      avgRating: snack.getRating(),
+      avgRating: snack.getRating().getValue().toString(),
     };
-  }
-}
+  },
+};

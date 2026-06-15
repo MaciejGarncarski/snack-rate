@@ -18,6 +18,7 @@ type Props = {
   inputRef: RefObject<HTMLInputElement | null>;
   onResetClick?: () => void;
   isLoading?: boolean;
+  isSearchBoxOpen?: boolean;
 };
 
 export function SearchBoxInput({
@@ -29,6 +30,7 @@ export function SearchBoxInput({
   onClick,
   inputRef,
   isLoading = false,
+  isSearchBoxOpen = false,
 }: Props) {
   return (
     <InputGroup className="max-w-48 border border-input md:max-w-sm">
@@ -44,7 +46,7 @@ export function SearchBoxInput({
         onKeyDown={onKeyDown}
       />
 
-      <InputGroupAddon>{isLoading ? <Spinner /> : <Search />}</InputGroupAddon>
+      <InputGroupAddon>{isLoading && isSearchBoxOpen ? <Spinner /> : <Search />}</InputGroupAddon>
       <InputGroupAddon align="inline-end">
         <InputGroupButton aria-label="Reset" title="Reset" size="icon-xs" onClick={onResetClick}>
           <XIcon />

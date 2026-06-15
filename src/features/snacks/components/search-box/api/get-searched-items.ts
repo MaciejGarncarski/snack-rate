@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
-import { searchSnacksUseCase } from "#/features/snacks/server/search-snack.use-case";
+import { searchSnacksUseCase } from "#/features/snacks/server/use-cases/search-snack.use-case";
 
 const searchInputSchema = z.object({
   query: z.string().max(100),

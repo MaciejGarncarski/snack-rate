@@ -1,72 +1,82 @@
 import { sql } from "drizzle-orm";
 
 import type { SnackItemForPersistence } from "#/features/snacks/server/snack-item.mapper";
+import { snackMapper } from "#/features/snacks/server/snack-item.mapper";
 import { db } from "#/infrastructure/db/db";
-import { snackItems, snackItemImages, snackTags, brands } from "#/infrastructure/db/schema";
+import { snackItems, snackItemImages, snackTags } from "#/infrastructure/db/schema";
+import { getPrivateFileUrl } from "#/infrastructure/s3-client";
 
 const MAX_SEARCH_RESULTS = 6;
 
-export const snacksRepository = {
-  getBySlug: (slug: string) => {
-    return db.query.snackItems.findFirst({
-      where: {
-        slug: slug,
-      },
-    });
-  },
+async function resolveImageUrls<T extends { images: { storageKey: string }[] }>(
+  row: T,
+): Promise<T & { images: (T["images"][number] & { url: string })[] }> {
+  const images = await Promise.all(
+    row.images.map(async (img) => ({
+      ...img,
+      url: await getPrivateFileUrl(img.storageKey),
+    })),
+  );
+  return { ...row, images };
+}
 
-  list: (limit: number, cursor?: string) => {
-    return db.query.snackItems.findMany({
-      orderBy: (table, { asc }) => [asc(table.createdAt)],
-      limit: limit + 1,
-      where: {
-        id: { gt: cursor },
-      },
+export const snacksRepository = {
+  getBySlug: async (slug: string) => {
+    const foundSnack = await db.query.snackItems.findFirst({
+      where: { slug },
       with: {
         brand: true,
         images: true,
         tags: {
-          with: {
-            tag: true,
-          },
-          columns: {
-            snackItemId: false,
-            tagId: false,
-          },
+          with: { tag: true },
+          columns: { snackItemId: false, tagId: false },
         },
       },
     });
+
+    if (!foundSnack) return null;
+
+    const resolved = await resolveImageUrls(foundSnack);
+    return snackMapper.toDomain(resolved);
   },
 
-  search: (query: string) => {
-    return db.query.snackItems.findMany({
+  list: async (limit: number, cursor?: string) => {
+    const rows = await db.query.snackItems.findMany({
+      orderBy: (table, { desc }) => [desc(table.id)],
+      limit,
+      where: cursor ? { id: { lt: cursor } } : undefined,
+      with: {
+        brand: true,
+        images: true,
+        tags: {
+          with: { tag: true },
+          columns: { snackItemId: false, tagId: false },
+        },
+      },
+    });
+
+    const resolved = await Promise.all(rows.map((row) => resolveImageUrls(row)));
+    return resolved.map((row) => snackMapper.toDomain(row));
+  },
+
+  search: async (query: string) => {
+    const rows = await db.query.snackItems.findMany({
       with: {
         images: true,
         brand: true,
         tags: {
-          columns: {
-            snackItemId: false,
-            tagId: false,
-          },
+          columns: { snackItemId: false, tagId: false },
           with: { tag: true },
         },
       },
       limit: MAX_SEARCH_RESULTS,
       where: {
-        OR: [
-          {
-            name: {
-              ilike: `%${query}%`,
-            },
-          },
-          {
-            description: {
-              ilike: `%${query}%`,
-            },
-          },
-        ],
+        OR: [{ name: { ilike: `%${query}%` } }, { description: { ilike: `%${query}%` } }],
       },
     });
+
+    const resolved = await Promise.all(rows.map(resolveImageUrls));
+    return resolved.map((row) => snackMapper.toDomain(row));
   },
 
   save: (snackItem: SnackItemForPersistence) => {
@@ -76,12 +86,10 @@ export const snacksRepository = {
         .values(snackItem.snack)
         .onConflictDoUpdate({
           target: snackItems.id,
-          set: {
-            ...snackItem.snack,
-          },
+          set: { ...snackItem.snack },
         });
 
-      if (snackItem.images && snackItem.images.length > 0) {
+      if (snackItem.images.length > 0) {
         const imagesToInsert = snackItem.images.map((image) => ({
           ...image,
           snackItemId: snackItem.snack.id,
@@ -105,20 +113,11 @@ export const snacksRepository = {
           });
       }
 
-      if (snackItem.tags && snackItem.tags.length > 0) {
-        const tagsToInsert = snackItem.tags
-          .map((tag) => {
-            if (!tag.tag) {
-              return null;
-            }
-
-            return {
-              snackItemId: snackItem.snack.id,
-              tagId: tag.tag.id,
-            };
-          })
-          .filter((v): v is NonNullable<typeof v> => !!v);
-
+      if (snackItem.tags.length > 0) {
+        const tagsToInsert = snackItem.tags.flatMap((tag) =>
+          tag.tag ? [{ snackItemId: snackItem.snack.id, tagId: tag.tag.id }] : [],
+        );
+        
         await tx
           .insert(snackTags)
           .values(tagsToInsert)
@@ -127,26 +126,6 @@ export const snacksRepository = {
             set: {
               snackItemId: snackItem.snack.id,
               tagId: sql.raw(`excluded.${snackTags.tagId}`),
-            },
-          });
-      }
-
-      if (snackItem.brandId) {
-        await tx
-          .insert(brands)
-          .values({
-            id: snackItem.brandId,
-            name: "",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            deletedAt: null,
-          })
-          .onConflictDoUpdate({
-            target: brands.id,
-            set: {
-              name: "",
-              updatedAt: new Date(),
-              deletedAt: null,
             },
           });
       }

@@ -24,7 +24,8 @@ export function SnacksListItem({ name, description, slug, rating, images }: Prop
           <div className="flex flex-col gap-10 lg:flex-row">
             <ImageWithPlaceholder
               src={images[0]?.url}
-              className="size-64 rounded-md object-cover"
+              containerClassName="size-48 flex justify-center items-center rounded-md bg-muted shrink-0"
+              className="h-full w-full rounded-md object-cover"
             />
             <div className="flex flex-col gap-2">
               <Link to="/snack/$slug" params={{ slug: slug }}>

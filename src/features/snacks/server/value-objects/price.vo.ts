@@ -3,24 +3,30 @@ const MAX_PRICE = 999.99;
 export class Price {
   private constructor(private readonly value: number) {}
 
-  static create(value: number): Price {
-    if (Number.isNaN(value)) {
-      throw new TypeError("Price must be a number");
+  static create(value: number | null): Price {
+    const parsed = Number(value);
+
+    if (Number.isNaN(parsed)) {
+      throw new TypeError("Invalid snack price");
     }
 
-    if (!Number.isFinite(value)) {
+    if (!Number.isFinite(parsed)) {
       throw new TypeError("Invalid price");
     }
 
-    if (value < 0) {
+    if (parsed < 0) {
       throw new Error("Price cannot be negative");
     }
 
-    if (value > MAX_PRICE) {
+    if (parsed === 0) {
+      throw new Error("Price cannot be zero");
+    }
+
+    if (parsed > MAX_PRICE) {
       throw new Error(`Price cannot exceed ${MAX_PRICE}`);
     }
 
-    return new Price(value);
+    return new Price(parsed);
   }
 
   add(other: Price): Price {
