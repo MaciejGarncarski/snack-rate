@@ -39,6 +39,7 @@
     "react/jsx-key": "error",
     "react/react-in-jsx-scope": "off",
     "jsx-a11y/alt-text": "error",
+    "no-console": "warn",
 
     "tanstack-query/exhaustive-deps": "error",
     "tanstack-query/no-unstable-deps": "warn",

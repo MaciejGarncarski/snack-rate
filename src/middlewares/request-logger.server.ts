@@ -60,7 +60,17 @@ export const requestLoggerMiddleware = createMiddleware({ type: "request" }).ser
           "Request failed",
         );
 
-        throw err;
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "Internal Server Error",
+            traceId: span.spanContext().traceId,
+          }),
+          {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
       } finally {
         httpDurationHistogram.record(Date.now() - startTime, {
           "http.method": request.method,

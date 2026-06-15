@@ -9,6 +9,7 @@ export function Navbar() {
         <h1>Snack Rate</h1>
       </Link>
       <NavbarSearchBox />
+
       <div>MENU</div>
     </nav>
   );

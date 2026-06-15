@@ -53,7 +53,7 @@ type DbSnackItem = DbBareSnackItem & {
   brand: DbBrand | null;
 };
 
-type SnackItemForPersistence = {
+export type SnackItemForPersistence = {
   snack: DbBareSnackItem;
   tags: DbTag[] | null;
   images: DbImage[] | null;

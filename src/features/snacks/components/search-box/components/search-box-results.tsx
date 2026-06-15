@@ -35,7 +35,7 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, query }:
             onClick={onLinkClick}
           >
             <div className="flex size-8 items-center justify-center overflow-hidden rounded-xs md:size-11">
-              <ImageWithPlaceholder alt="" src={item.images[0].url} />
+              <ImageWithPlaceholder alt="" src={item.images[0]?.url} />
             </div>
             <div>
               <span>{item.name}</span>
