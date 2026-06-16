@@ -1,8 +1,8 @@
+import { Image } from "#/features/snacks/server/image.entity";
 import { SnackAggregate } from "#/features/snacks/server/snack.aggregate";
 import { TagEntity } from "#/features/snacks/server/tag.entity";
-import { Image } from "#/features/snacks/server/value-objects/image.vo";
+import { AvgRating } from "#/features/snacks/server/value-objects/avg-rating.vo";
 import { Price } from "#/features/snacks/server/value-objects/price.vo";
-import { Rating } from "#/features/snacks/server/value-objects/rating.vo";
 import { Slug } from "#/features/snacks/server/value-objects/slug.vo";
 
 type DbImage = {
@@ -85,7 +85,7 @@ export const snackMapper = {
       .map((t) => TagEntity.create({ id: t.tag.id, name: t.tag.name, slug: t.tag.slug }));
 
     const slug = Slug.create(snack.slug);
-    const rating = Rating.create(snack.avgRating);
+    const rating = AvgRating.create(snack.avgRating);
 
     const snackImages = snack.images.map((img) =>
       Image.fromPersistence({
@@ -136,14 +136,14 @@ export const snackMapper = {
         .getTags()
         .map((tag) => ({ tag: { id: tag.getId(), name: tag.getName(), slug: tag.getSlug() } })),
       images: snack.getImages().map((img) => ({
-        id: img.getId(),
-        storageKey: img.getStorageKey(),
-        url: img.getUrl(),
-        isPrimary: img.getIsPrimary(),
-        sortOrder: img.getSortOrder(),
-        createdAt: img.getCreatedAt(),
-        updatedAt: img.getUpdatedAt(),
-        deletedAt: img.getDeletedAt(),
+        id: img.id,
+        storageKey: img.storageKey,
+        url: img.url,
+        isPrimary: img.isPrimary,
+        sortOrder: img.sortOrder,
+        createdAt: img.createdAt,
+        updatedAt: img.updatedAt,
+        deletedAt: img.deletedAt,
         snackItemId: snack.getId(),
       })),
     };
@@ -156,10 +156,10 @@ export const snackMapper = {
       description: snack.getDescription(),
       price: snack.getPrice().getValue(),
       images: snack.getImages().map((img) => ({
-        id: img.getId(),
-        url: img.getUrl(),
-        isPrimary: img.getIsPrimary(),
-        sortOrder: img.getSortOrder(),
+        id: img.id,
+        url: img.url,
+        isPrimary: img.isPrimary,
+        sortOrder: img.sortOrder,
       })),
       createdAt: snack.getCreatedAt(),
       updatedAt: snack.getUpdatedAt(),

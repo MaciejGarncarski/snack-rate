@@ -11,6 +11,7 @@
     "start": "node --strip-types --import ./bootstrap/bootstrap.ts .output/server/index.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:watch": "vitest watch",
     "test:cov": "vitest run --coverage",
     "test:e2e": "playwright test",
     "lint": "oxlint",

@@ -9,8 +9,8 @@ export class Slug {
     const normalized = input
       .trim()
       .toLowerCase()
-      .replaceAll(/[^a-z0-9]+/g, "-")
-      .replaceAll(/(^-|-$)/g, "");
+      .replaceAll(/[^a-z0-9]+/gu, "-")
+      .replaceAll(/(^-|-$)/gu, "");
 
     if (!normalized) {
       throw new Error("Invalid slug");
@@ -19,7 +19,7 @@ export class Slug {
     return new Slug(normalized);
   }
 
-  toString() {
+  getValue() {
     return this.value;
   }
 

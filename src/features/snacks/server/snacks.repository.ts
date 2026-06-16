@@ -75,7 +75,7 @@ export const snacksRepository = {
       },
     });
 
-    const resolved = await Promise.all(rows.map(resolveImageUrls));
+    const resolved = await Promise.all(rows.map((row) => resolveImageUrls(row)));
     return resolved.map((row) => snackMapper.toDomain(row));
   },
 
@@ -117,7 +117,7 @@ export const snacksRepository = {
         const tagsToInsert = snackItem.tags.flatMap((tag) =>
           tag.tag ? [{ snackItemId: snackItem.snack.id, tagId: tag.tag.id }] : [],
         );
-        
+
         await tx
           .insert(snackTags)
           .values(tagsToInsert)
