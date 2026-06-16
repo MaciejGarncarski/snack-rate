@@ -7,7 +7,7 @@ export class Price {
     const parsed = Number(value);
 
     if (Number.isNaN(parsed)) {
-      throw new TypeError("Invalid snack price");
+      throw new TypeError("Invalid price");
     }
 
     if (!Number.isFinite(parsed)) {

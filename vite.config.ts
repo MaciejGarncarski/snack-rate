@@ -17,6 +17,9 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart({
       importProtection: {
+        server: {
+          files: ["**/tests/**"],
+        },
         client: {
           specifiers: [
             /^@opentelemetry\//u,
@@ -27,7 +30,7 @@ const config = defineConfig({
             /^nitro(?:\/|$)/u,
           ],
           excludeFiles: ["**/node_modules/**", "**/orpc/**", "**/*.api.ts"],
-          files: ["**/db/**", "**/observability/**", "**/server/**"],
+          files: ["**/tests/**", "**/db/**", "**/observability/**", "**/server/**"],
         },
       },
     }),

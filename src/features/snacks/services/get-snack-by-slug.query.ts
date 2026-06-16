@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { getSnackBySlug } from "#/features/snacks/server/snacks.api";
+import { getSnackBySlug } from "#/features/snacks/api/snacks.api";
 
 export const getSnackBySlugQueryOptions = (slug: string) =>
   queryOptions({

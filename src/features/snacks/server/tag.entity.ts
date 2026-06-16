@@ -1,9 +1,13 @@
 export class TagEntity {
-  constructor(
+  private constructor(
     private id: string,
     private name: string,
     private slug: string,
   ) {}
+
+  public static create(params: { id: string; name: string; slug: string }) {
+    return new TagEntity(params.id, params.name, params.slug);
+  }
 
   public getName() {
     return this.name;

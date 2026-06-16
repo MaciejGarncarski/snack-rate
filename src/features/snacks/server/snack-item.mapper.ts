@@ -82,23 +82,22 @@ export const snackMapper = {
 
     const snackTags = snack.tags
       .filter((t): t is { tag: NonNullable<typeof t.tag> } => t.tag !== null)
-      .map((t) => new TagEntity(t.tag.id, t.tag.name, t.tag.slug));
+      .map((t) => TagEntity.create({ id: t.tag.id, name: t.tag.name, slug: t.tag.slug }));
 
     const slug = Slug.create(snack.slug);
     const rating = Rating.create(snack.avgRating);
 
-    const snackImages = snack.images.map(
-      (img) =>
-        new Image(
-          img.id,
-          img.url,
-          img.storageKey,
-          img.isPrimary,
-          img.sortOrder,
-          img.createdAt,
-          img.updatedAt,
-          img.deletedAt,
-        ),
+    const snackImages = snack.images.map((img) =>
+      Image.fromPersistence({
+        id: img.id,
+        url: img.url,
+        storageKey: img.storageKey,
+        isPrimary: img.isPrimary,
+        sortOrder: img.sortOrder,
+        createdAt: img.createdAt,
+        updatedAt: img.updatedAt,
+        deletedAt: img.deletedAt,
+      }),
     );
 
     return new SnackAggregate(

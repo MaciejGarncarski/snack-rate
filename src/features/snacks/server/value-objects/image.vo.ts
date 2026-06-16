@@ -1,5 +1,7 @@
+// TODO: add validation + tests
+
 export class Image {
-  constructor(
+  private constructor(
     private id: string,
     private url: string,
     private storageKey: string,
@@ -26,6 +28,28 @@ export class Image {
       new Date(),
       new Date(),
       null,
+    );
+  }
+
+  public static fromPersistence(data: {
+    id: string;
+    url: string;
+    storageKey: string;
+    isPrimary: boolean;
+    sortOrder: number;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+  }) {
+    return new Image(
+      data.id,
+      data.url,
+      data.storageKey,
+      data.isPrimary,
+      data.sortOrder,
+      data.createdAt,
+      data.updatedAt,
+      data.deletedAt,
     );
   }
 

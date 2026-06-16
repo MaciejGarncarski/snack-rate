@@ -16,3 +16,4 @@ export const dbPool = new Pool({
 });
 
 export const db = drizzle({ relations, client: dbPool });
+export type Db = typeof db;
