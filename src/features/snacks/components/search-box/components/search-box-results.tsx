@@ -39,7 +39,7 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, query }:
             </div>
             <div>
               <span>{item.name}</span>
-              <SnackRating rating={parseFloat(item.avgRating)} size="xs" />
+              <SnackRating rating={item.avgRating} size="xs" />
             </div>
           </Link>
         </li>

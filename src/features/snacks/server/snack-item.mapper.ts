@@ -66,7 +66,7 @@ export type SnackDTO = {
   tags: { id: string; name: string; slug: string }[];
   slug: string;
   barcode: string | null;
-  avgRating: string;
+  avgRating: number;
 };
 
 export type SnackItemForPersistence = {
@@ -77,7 +77,7 @@ export type SnackItemForPersistence = {
 
 export const snackMapper = {
   toDomain(snack: DbSnackItem): SnackAggregate {
-    const rawPrice = snack.price === null ? null : parseFloat(snack.price);
+    const rawPrice = snack.price === null ? 0 : parseFloat(snack.price);
     const snackPrice = Price.create(rawPrice);
 
     const snackTags = snack.tags
@@ -128,7 +128,7 @@ export const snackMapper = {
         updatedAt: snack.getUpdatedAt(),
         deletedAt: snack.getDeletedAt(),
         brandId: snack.getBrandId(),
-        slug: snack.getSlug(),
+        slug: snack.getSlug().getValue(),
         barcode: snack.getBarcode(),
         avgRating: snack.getRating().getValue().toString(),
       },
@@ -170,9 +170,9 @@ export const snackMapper = {
         name: tag.getName(),
         slug: tag.getSlug(),
       })),
-      slug: snack.getSlug(),
+      slug: snack.getSlug().getValue(),
       barcode: snack.getBarcode(),
-      avgRating: snack.getRating().getValue().toString(),
+      avgRating: snack.getRating().getValue(),
     };
   },
 };

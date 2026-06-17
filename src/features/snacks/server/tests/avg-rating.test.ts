@@ -3,7 +3,12 @@ import { AvgRating } from "#/features/snacks/server/value-objects/avg-rating.vo"
 describe("avg rating value object", () => {
   it("should create an avg rating value object with a valid avg rating", () => {
     const avgRating = AvgRating.create("4.5");
-    expect(avgRating.getValue()).toBe("4.5");
+    expect(avgRating.getValue()).toBe(4.5);
+  });
+
+  it("should create from a number directly", () => {
+    const avgRating = AvgRating.create(3.2);
+    expect(avgRating.getValue()).toBe(3.2);
   });
 
   it("should throw an error if the avg rating is not a number", () => {

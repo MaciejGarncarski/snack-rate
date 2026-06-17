@@ -11,7 +11,7 @@ export class ImgUrl {
     return new ImgUrl(value);
   }
 
-  public toString() {
+  public getValue() {
     return this.value;
   }
 }

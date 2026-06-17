@@ -64,7 +64,7 @@ export class SnackAggregate {
   }
 
   public getSlug() {
-    return this.slug.getValue();
+    return this.slug;
   }
 
   public getBarcode() {

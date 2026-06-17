@@ -8,15 +8,13 @@ type Props = {
   name: string;
   description: string | null;
   slug: string;
-  rating: string;
+  rating: number;
   images: {
     url: string;
   }[];
 };
 
 export function SnacksListItem({ name, description, slug, rating, images }: Props) {
-  const ratingNumber = parseFloat(rating);
-
   return (
     <li>
       <Card>
@@ -33,7 +31,7 @@ export function SnacksListItem({ name, description, slug, rating, images }: Prop
               </Link>
               <p className="text-md text-muted-foreground">{description}</p>
               <div className="mt-auto">
-                <SnackRating rating={ratingNumber} withText />
+                <SnackRating rating={rating} withText />
               </div>
             </div>
           </div>

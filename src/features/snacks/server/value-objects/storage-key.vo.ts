@@ -9,7 +9,7 @@ export class StorageKey {
     return new StorageKey(value);
   }
 
-  public toString() {
+  public getValue() {
     return this.value;
   }
 }

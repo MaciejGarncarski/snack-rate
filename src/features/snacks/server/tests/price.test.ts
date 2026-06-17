@@ -1,7 +1,5 @@
 import { Price } from "#/features/snacks/server/value-objects/price.vo";
 
-export const DELETE_ME = "DELETE_ME";
-
 describe("Price value object", () => {
   it("should create a price from a valid number", () => {
     const price = Price.create(9.99);

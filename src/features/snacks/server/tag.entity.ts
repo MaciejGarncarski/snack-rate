@@ -1,20 +1,22 @@
+import { Slug } from "#/features/snacks/server/value-objects/slug.vo";
+
 export class TagEntity {
   private constructor(
     private id: string,
     private name: string,
-    private slug: string,
+    private slug: Slug,
   ) {}
 
   public static create(params: { id: string; name: string; slug: string }) {
-    return new TagEntity(params.id, params.name, params.slug);
+    return new TagEntity(params.id, params.name, Slug.create(params.slug));
   }
 
   public getName() {
     return this.name;
   }
 
-  public getSlug() {
-    return this.slug;
+  public getSlug(): string {
+    return this.slug.getValue();
   }
 
   public getId() {

@@ -13,7 +13,7 @@ export class SortOrder {
     return new SortOrder(value);
   }
 
-  public valueOf() {
+  public getValue() {
     return this.value;
   }
 }

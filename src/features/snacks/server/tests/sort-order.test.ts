@@ -4,7 +4,7 @@ describe("SortOrder value object", () => {
   describe("create", () => {
     it("should create a valid SortOrder", () => {
       const sortOrder = SortOrder.create(5);
-      expect(sortOrder.valueOf()).toBe(5);
+      expect(sortOrder.getValue()).toBe(5);
     });
 
     it("should throw when value is not an integer", () => {
@@ -13,6 +13,6 @@ describe("SortOrder value object", () => {
 
     it("should throw when value is negative", () => {
       expect(() => SortOrder.create(-1)).toThrow("SortOrder cannot be negative");
-    }); 
+    });
   });
 });

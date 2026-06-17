@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 
-import type { SnackItemForPersistence } from "#/features/snacks/server/snack-item.mapper";
+import type { SnackAggregate } from "#/features/snacks/server/snack.aggregate";
 import { snackMapper } from "#/features/snacks/server/snack-item.mapper";
 import { db } from "#/infrastructure/db/db";
 import { snackItems, snackItemImages, snackTags } from "#/infrastructure/db/schema";
@@ -79,7 +79,8 @@ export const snacksRepository = {
     return resolved.map((row) => snackMapper.toDomain(row));
   },
 
-  save: (snackItem: SnackItemForPersistence) => {
+  save: (snackAggregate: SnackAggregate) => {
+    const snackItem = snackMapper.toPersistence(snackAggregate);
     return db.transaction(async (tx) => {
       await tx
         .insert(snackItems)
@@ -122,7 +123,7 @@ export const snacksRepository = {
           .insert(snackTags)
           .values(tagsToInsert)
           .onConflictDoUpdate({
-            target: snackTags.tagId,
+            target: [snackTags.snackItemId, snackTags.tagId],
             set: {
               snackItemId: snackItem.snack.id,
               tagId: sql.raw(`excluded.${snackTags.tagId}`),

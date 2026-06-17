@@ -3,7 +3,7 @@ const MAX_PRICE = 999.99;
 export class Price {
   private constructor(private readonly value: number) {}
 
-  static create(value: number | null): Price {
+  static create(value: number): Price {
     const parsed = Number(value);
 
     if (Number.isNaN(parsed)) {

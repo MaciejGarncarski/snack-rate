@@ -91,11 +91,11 @@ export class Image {
   }
 
   public getUrl() {
-    return this.url.toString();
+    return this.url.getValue();
   }
 
   public getStorageKey() {
-    return this.storageKey.toString();
+    return this.storageKey.getValue();
   }
 
   public getIsPrimary() {
@@ -103,7 +103,7 @@ export class Image {
   }
 
   public getSortOrder() {
-    return this.sortOrder.valueOf();
+    return this.sortOrder.getValue();
   }
 
   public getCreatedAt() {

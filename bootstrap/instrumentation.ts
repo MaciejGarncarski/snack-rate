@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { PrometheusExporter } from "@opentelemetry/exporter-prometheus";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
