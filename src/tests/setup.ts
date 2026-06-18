@@ -1,20 +1,30 @@
-import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { reset } from "drizzle-seed";
 import { Pool } from "pg";
 import { inject } from "vitest";
 
-import type { Db } from "#/infrastructure/db/db";
-import { relations } from "#/infrastructure/db/relations";
+import { createDb, type Db } from "#/infrastructure/db/db";
 import * as schema from "#/infrastructure/db/schema.ts";
 
 let db: Db;
+let dbPool: Pool;
 
 beforeAll(async () => {
   const dbConfig = inject("pgConfig");
   const dbName = `test_db_${crypto.randomUUID().replaceAll("-", "_")}`;
 
-  const dbPool = new Pool({
+  const adminPool = new Pool({
+    host: "localhost",
+    port: dbConfig.port,
+    user: dbConfig.username,
+    password: dbConfig.password,
+    database: "postgres",
+  });
+
+  await adminPool.query(`CREATE DATABASE "${dbName}"`);
+  await adminPool.end();
+
+  dbPool = new Pool({
     host: "localhost",
     port: dbConfig.port,
     user: dbConfig.username,
@@ -22,10 +32,14 @@ beforeAll(async () => {
     database: dbName,
   });
 
-  db = drizzle({ relations: relations, client: dbPool });
-  await migrate(db, { migrationsFolder: "./drizzle/migrations" });
+  db = createDb(dbPool);
+  await migrate(db, { migrationsFolder: "./drizzle" });
 });
 
 beforeEach(async () => {
   await reset(db, schema);
 });
+
+export function getDb(): Db {
+  return db;
+}

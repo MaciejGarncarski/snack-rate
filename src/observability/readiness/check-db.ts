@@ -1,15 +1,14 @@
 import type { Pool } from "pg";
 
-import { dbPool } from "#/infrastructure/db/db";
 import { exponentialBackoff } from "#/lib/exponential-backoff";
 import { dbFailuresCounter } from "#/observability/counters";
 import { logger } from "#/observability/logger/logger";
 
 type DbCheckResult = { ok: true } | { ok: false; error: string };
 
-export async function checkDb(timeoutMs: number, retries = 2): Promise<DbCheckResult> {
+export async function checkDb(pool: Pool, timeoutMs: number, retries = 2): Promise<DbCheckResult> {
   try {
-    await exponentialBackoff(() => checkDatabaseOnce(dbPool, timeoutMs), {
+    await exponentialBackoff(() => checkDatabaseOnce(pool, timeoutMs), {
       factor: 2,
       retries: retries ?? 8,
       minTimeout: 100,

@@ -1,19 +1,15 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
-
-import { serverEnv } from "#/lib/server.env.ts";
+import type { Pool } from "pg";
 
 import { relations } from "./relations.ts";
+import * as schema from "./schema.ts";
 
-const url = new URL(serverEnv.DATABASE_URL);
+export function createDb(client: Pool) {
+  return drizzle({
+    client,
+    schema,
+    relations,
+  });
+}
 
-export const dbPool = new Pool({
-  host: url.hostname,
-  port: Number(url.port),
-  user: url.username,
-  password: decodeURIComponent(url.password),
-  database: url.pathname.slice(1),
-});
-
-export const db = drizzle({ relations, client: dbPool });
-export type Db = typeof db;
+export type Db = ReturnType<typeof createDb>;

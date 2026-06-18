@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
-import { NavbarSearchBox } from "#/features/snacks/components/search-box/components/search-box";
+import { NavbarSearchBox } from "#/features/catalogue/components/search-box/components/search-box";
 
 export function Navbar() {
   return (

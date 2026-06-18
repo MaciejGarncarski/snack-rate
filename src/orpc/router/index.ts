@@ -1,4 +1,4 @@
-import { listSnacks } from "#/features/snacks/api/snacks.server";
+import { listSnacks } from "#/features/catalogue/api/snacks.server";
 
 export default {
   listSnacks,

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { getPool } from "#/infrastructure/db/pool";
 import { readinessFailureCounter } from "#/observability/counters";
 import { checkDb } from "#/observability/readiness/check-db";
 
@@ -9,7 +10,7 @@ export const Route = createFileRoute("/health/ready")({
       GET: async () => {
         const startedAt = performance.now();
 
-        const dbResult = await checkDb(1000, 10);
+        const dbResult = await checkDb(getPool(), 1000, 10);
 
         const durationMs = Math.round(performance.now() - startedAt);
 

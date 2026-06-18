@@ -70,6 +70,7 @@ export const snackItems = pgTable(
     price: decimal("price", { precision: 10, scale: 2 }),
     barcode: text("barcode"),
     avgRating: decimal("avg_rating", { precision: 3, scale: 2 }).notNull().default("0"),
+    status: text("status").notNull().default("pending"), // 'pending' | 'published' | 'rejected'
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),

@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
 
@@ -136,6 +137,7 @@ async function seedDatabase() {
         avgRating: "4.00",
         slug: "monster-energy-original",
         barcode: "070847011034",
+        status: "published",
       },
       {
         brandId: monster.id,
@@ -145,6 +147,7 @@ async function seedDatabase() {
         avgRating: "4.50",
         slug: "monster-energy-ultra-white",
         barcode: "070847011041",
+        status: "published",
       },
       {
         brandId: monster.id,
@@ -154,6 +157,7 @@ async function seedDatabase() {
         avgRating: "4.50",
         slug: "monster-energy-mango-loco",
         barcode: "070847011058",
+        status: "published",
       },
       {
         brandId: lays.id,
@@ -163,6 +167,7 @@ async function seedDatabase() {
         avgRating: "3.50",
         slug: "lays-klasyczne",
         barcode: "028400090100",
+        status: "published",
       },
       {
         brandId: lays.id,
@@ -172,6 +177,7 @@ async function seedDatabase() {
         avgRating: "4.50",
         slug: "lays-ketchup",
         barcode: "028400090117",
+        status: "published",
       },
       {
         brandId: pringles.id,
@@ -181,6 +187,7 @@ async function seedDatabase() {
         avgRating: "3.50",
         slug: "pringles-original",
         barcode: "038000845000",
+        status: "published",
       },
       {
         brandId: pringles.id,
@@ -190,6 +197,7 @@ async function seedDatabase() {
         avgRating: "4.50",
         slug: "pringles-ser-kebab",
         barcode: "038000845017",
+        status: "rejected",
       },
       {
         brandId: tyrrells.id,
@@ -199,6 +207,7 @@ async function seedDatabase() {
         avgRating: "5.00",
         slug: "tyrrells-sol-morska",
         barcode: "505555100016",
+        status: "published",
       },
       {
         brandId: tyrrells.id,
@@ -208,6 +217,7 @@ async function seedDatabase() {
         avgRating: "3.50",
         slug: "tyrrells-slodka-papryka",
         barcode: "505555100023",
+        status: "published",
       },
       {
         brandId: wedel.id,
@@ -217,6 +227,7 @@ async function seedDatabase() {
         avgRating: "5.00",
         slug: "wedel-ptasie-mleczko",
         barcode: "059018200011",
+        status: "published",
       },
       {
         brandId: wedel.id,
@@ -226,6 +237,7 @@ async function seedDatabase() {
         avgRating: "4.50",
         slug: "wedel-gorzka-czekolada-70",
         barcode: "059018200028",
+        status: "pending",
       },
     ])
     .returning();

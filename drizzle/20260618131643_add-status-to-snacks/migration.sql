@@ -1,0 +1,1 @@
+ALTER TABLE "snack_items" ADD COLUMN "status" text DEFAULT 'pending' NOT NULL;

@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 import * as z from "zod";
 
 const schema = z.object({
@@ -24,17 +25,33 @@ const schema = z.object({
   S3_BUCKET_PUBLIC: z.string().min(1),
 });
 
-const parsed = schema.safeParse(process.env);
+let _data: z.infer<typeof schema> | undefined;
 
-if (!parsed.success) {
-  console.error("Invalid server environment variables:");
-  console.error(z.prettifyError(parsed.error));
-  process.exit(1);
+function ensureParsed(): z.infer<typeof schema> {
+  if (!_data) {
+    const parsed = schema.safeParse(process.env);
+    if (!parsed.success) {
+      console.error("Invalid server environment variables:");
+      console.error(z.prettifyError(parsed.error));
+      process.exit(1);
+    }
+    _data = parsed.data;
+  }
+  return _data;
 }
 
-export const serverEnv = {
-  ...parsed.data,
-  isProd: parsed.data.NODE_ENV === "production",
-  isDev: parsed.data.NODE_ENV === "development",
-  isTest: parsed.data.NODE_ENV === "test",
+type ServerEnv = z.infer<typeof schema> & {
+  isProd: boolean;
+  isDev: boolean;
+  isTest: boolean;
 };
+
+export const serverEnv: ServerEnv = new Proxy({} as ServerEnv, {
+  get(_, prop) {
+    const data = ensureParsed();
+    if (prop === "isProd") return data.NODE_ENV === "production";
+    if (prop === "isDev") return data.NODE_ENV === "development";
+    if (prop === "isTest") return data.NODE_ENV === "test";
+    return Reflect.get(data, prop);
+  },
+});

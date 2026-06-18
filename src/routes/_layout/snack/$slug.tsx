@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Badge } from "#/components/ui/badge";
-import { getSnackBySlugQueryOptions } from "#/features/snacks/services/get-snack-by-slug.query";
+import { getSnackBySlugQueryOptions } from "#/features/catalogue/services/get-snack-by-slug.query";
 
 export const Route = createFileRoute("/_layout/snack/$slug")({
   component: RouteComponent,

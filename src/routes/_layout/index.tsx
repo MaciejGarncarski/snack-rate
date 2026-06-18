@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { SnacksList } from "#/features/snacks/components/snacks-list";
+import { SnacksList } from "#/features/catalogue/components/snacks-list";
 
 export const Route = createFileRoute("/_layout/")({
   component: RouteComponent,
