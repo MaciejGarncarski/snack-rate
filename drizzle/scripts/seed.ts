@@ -92,23 +92,20 @@ async function seedDatabase() {
   console.log("  ✓ brands");
 
   // ---------------------------------------------------------------------------
-  // Tags
+  // Snack Types
   // ---------------------------------------------------------------------------
-  const [slony, slodki, kwasny, ostry, chrupiacy, musujacy, energetyczny, czekoladowy] = await db
-    .insert(schema.tags)
+  const [, chips, energyDrink, sweets, chocolate] = await db
+    .insert(schema.snackTypes)
     .values([
-      { name: "Słony", slug: "slony" },
-      { name: "Słodki", slug: "slodki" },
-      { name: "Kwaśny", slug: "kwasny" },
-      { name: "Ostry", slug: "ostry" },
-      { name: "Chrupiący", slug: "chrupacy" },
-      { name: "Musujący", slug: "musujacy" },
-      { name: "Energetyczny", slug: "energetyczny" },
-      { name: "Czekoladowy", slug: "czekoladowy" },
+      { name: "Drink", slug: "drink" },
+      { name: "Chips", slug: "chips" },
+      { name: "Energy Drink", slug: "energy-drink" },
+      { name: "Sweets", slug: "sweets" },
+      { name: "Chocolate", slug: "chocolate" },
     ])
     .returning();
 
-  console.log("  ✓ tags");
+  console.log("  ✓ snack types");
 
   // ---------------------------------------------------------------------------
   // Snack items
@@ -130,6 +127,7 @@ async function seedDatabase() {
     .values([
       {
         brandId: monster.id,
+        typeId: energyDrink.id,
         name: "Monster Energy Original",
         description:
           "Klasyczny napój energetyczny Monster o intensywnym smaku z charakterystyczną zieloną puszką.",
@@ -141,6 +139,7 @@ async function seedDatabase() {
       },
       {
         brandId: monster.id,
+        typeId: energyDrink.id,
         name: "Monster Energy Ultra White",
         description: "Lekka wersja Monstera bez cukru, o subtelnym smaku cytrusowym.",
         price: "6.49",
@@ -151,6 +150,7 @@ async function seedDatabase() {
       },
       {
         brandId: monster.id,
+        typeId: energyDrink.id,
         name: "Monster Mango Loco",
         description: "Tropikalny napój energetyczny z sokiem mangowym – owocowy hit lata.",
         price: "6.99",
@@ -161,6 +161,7 @@ async function seedDatabase() {
       },
       {
         brandId: lays.id,
+        typeId: chips.id,
         name: "Lay's Klasyczne",
         description: "Oryginalne chrupki ziemniaczane lekko solone – klasyka wśród chipsów.",
         price: "3.99",
@@ -171,6 +172,7 @@ async function seedDatabase() {
       },
       {
         brandId: lays.id,
+        typeId: chips.id,
         name: "Lay's Ketchup",
         description: "Chipsy o smaku ketchupowym, jeden z najpopularniejszych smaków w Polsce.",
         price: "3.99",
@@ -181,6 +183,7 @@ async function seedDatabase() {
       },
       {
         brandId: pringles.id,
+        typeId: chips.id,
         name: "Pringles Original",
         description: "Kultowe chrupki w tubie o klasycznym, delikatnie słonym smaku.",
         price: "8.99",
@@ -191,6 +194,7 @@ async function seedDatabase() {
       },
       {
         brandId: pringles.id,
+        typeId: chips.id,
         name: "Pringles Ser & Kebab",
         description: "Chrupki Pringles o intensywnym smaku sera i kebaba – ulubieniec imprezowy.",
         price: "8.99",
@@ -201,6 +205,7 @@ async function seedDatabase() {
       },
       {
         brandId: tyrrells.id,
+        typeId: chips.id,
         name: "Tyrrell's Sól Morska",
         description: "Grube chipsy gotowane w kotle, z prostą solą morską. Wyjątkowa chrupkość.",
         price: "9.49",
@@ -211,6 +216,7 @@ async function seedDatabase() {
       },
       {
         brandId: tyrrells.id,
+        typeId: chips.id,
         name: "Tyrrell's Słodka Papryka",
         description: "Chipsy z angielskich ziemniaków o smaku słodkiej papryki i przypraw.",
         price: "9.49",
@@ -221,6 +227,7 @@ async function seedDatabase() {
       },
       {
         brandId: wedel.id,
+        typeId: sweets.id,
         name: "Wedel Ptasie Mleczko",
         description: "Kultowa polska pianka w czekoladzie – delikatna, kremowa i waniliowa.",
         price: "7.99",
@@ -231,6 +238,7 @@ async function seedDatabase() {
       },
       {
         brandId: wedel.id,
+        typeId: chocolate.id,
         name: "Wedel Gorzka Czekolada 70%",
         description: "Intensywna, polska czekolada gorzka z 70% kakao dla prawdziwych smakoszy.",
         price: "5.99",
@@ -243,52 +251,6 @@ async function seedDatabase() {
     .returning();
 
   console.log("  ✓ snack items");
-
-  // ---------------------------------------------------------------------------
-  // Snack tags
-  // ---------------------------------------------------------------------------
-  await db.insert(schema.snackTags).values([
-    // Monster Original
-    { snackItemId: monsterOriginal.id, tagId: energetyczny.id },
-    { snackItemId: monsterOriginal.id, tagId: kwasny.id },
-    { snackItemId: monsterOriginal.id, tagId: musujacy.id },
-    // Monster Ultra
-    { snackItemId: monsterUltra.id, tagId: energetyczny.id },
-    { snackItemId: monsterUltra.id, tagId: musujacy.id },
-    // Monster Mango
-    { snackItemId: monsterMango.id, tagId: energetyczny.id },
-    { snackItemId: monsterMango.id, tagId: slodki.id },
-    { snackItemId: monsterMango.id, tagId: musujacy.id },
-    // Lay's Klasyczne
-    { snackItemId: laysClassic.id, tagId: slony.id },
-    { snackItemId: laysClassic.id, tagId: chrupiacy.id },
-    // Lay's Ketchup
-    { snackItemId: laysKetchup.id, tagId: slony.id },
-    { snackItemId: laysKetchup.id, tagId: slodki.id },
-    { snackItemId: laysKetchup.id, tagId: chrupiacy.id },
-    // Pringles Original
-    { snackItemId: pringlesOriginal.id, tagId: slony.id },
-    { snackItemId: pringlesOriginal.id, tagId: chrupiacy.id },
-    // Pringles Ser & Kebab
-    { snackItemId: pringlesSerKebab.id, tagId: slony.id },
-    { snackItemId: pringlesSerKebab.id, tagId: ostry.id },
-    { snackItemId: pringlesSerKebab.id, tagId: chrupiacy.id },
-    // Tyrrell's Sól Morska
-    { snackItemId: tyrrellsSeaSalt.id, tagId: slony.id },
-    { snackItemId: tyrrellsSeaSalt.id, tagId: chrupiacy.id },
-    // Tyrrell's Słodka Papryka
-    { snackItemId: tyrrellsSweet.id, tagId: slony.id },
-    { snackItemId: tyrrellsSweet.id, tagId: slodki.id },
-    { snackItemId: tyrrellsSweet.id, tagId: chrupiacy.id },
-    // Wedel Ptasie Mleczko
-    { snackItemId: wedelPtasie.id, tagId: slodki.id },
-    { snackItemId: wedelPtasie.id, tagId: czekoladowy.id },
-    // Wedel Gorzka
-    { snackItemId: wedelGorzka.id, tagId: czekoladowy.id },
-    { snackItemId: wedelGorzka.id, tagId: kwasny.id },
-  ]);
-
-  console.log("  ✓ snack tags");
 
   // ---------------------------------------------------------------------------
   // Snack item images

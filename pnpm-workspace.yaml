@@ -9,4 +9,5 @@ allowBuilds:
   lightningcss: true
   msw: false
   protobufjs: false
+  sharp: true
   ssh2: true

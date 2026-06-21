@@ -3,8 +3,7 @@ import { listSnacksFeed } from "#/features/catalogue/server/services/list-snacks
 import type { Db } from "#/infrastructure/db/db";
 import { createSnack } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup";
-
-const noopGetFileUrl = (key: string) => Promise.resolve(`https://test.com/${key}`);
+import { noopGetFileUrl } from "#/tests/utils";
 
 let db: Db;
 let repository: ReturnType<typeof createSnacksRepository>;
@@ -49,24 +48,32 @@ describe("list snacks feed", () => {
   });
 
   it("should paginate using cursor", async () => {
-    const snacks = [];
-    for (let i = 0; i < 5; i++) {
-      snacks.push(await createSnack({ name: `Cursor Snack ${i}` }));
-    }
+    const allItems = await Promise.all(
+      Array.from({ length: 5 }, (_, i) => createSnack({ name: `Cursor Snack ${i}` })),
+    );
 
-    const firstPage = await listSnacksFeed({ limit: 2, cursor: undefined }, repository);
-    expect(firstPage.items).toHaveLength(2);
-    expect(firstPage.nextCursor).not.toBeNull();
+    const allIds = allItems
+      .map((s) => s.id)
+      .toSorted()
+      .toReversed();
 
-    const secondPage = await listSnacksFeed(
-      { limit: 2, cursor: firstPage.nextCursor! },
+    const page1 = await listSnacksFeed({ limit: 2, cursor: undefined }, repository);
+    const page2 = await listSnacksFeed(
+      // oxlint-disable-next-line vitest/no-conditional-in-test
+      { limit: 2, cursor: page1.nextCursor ?? undefined },
       repository,
     );
-    expect(secondPage.items).toHaveLength(2);
+    const page3 = await listSnacksFeed(
+      // oxlint-disable-next-line vitest/no-conditional-in-test
+      { limit: 2, cursor: page2.nextCursor ?? undefined },
+      repository,
+    );
 
-    const firstIds = firstPage.items.map((s) => s.id);
-    const secondIds = secondPage.items.map((s) => s.id);
-    expect(firstIds).not.toEqual(expect.arrayContaining(secondIds));
+    const collected = [...page1.items, ...page2.items, ...page3.items].map((s) => s.id);
+
+    expect(collected).toHaveLength(5);
+    expect(new Set(collected).size).toBe(5);
+    expect(collected.toSorted()).toEqual(allIds.toSorted());
   });
 
   it("should return empty items when no snacks exist", async () => {

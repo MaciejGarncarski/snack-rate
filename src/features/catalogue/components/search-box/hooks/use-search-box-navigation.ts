@@ -36,8 +36,11 @@ export function useSearchBoxNavigation({
   });
 
   useEffect(() => {
-    setSelectedIndex(0);
-  }, []);
+    const list = suggestionListContainerRef.current;
+    if (!list) return;
+    const selectedItem = list.querySelectorAll("li")[selectedIndex];
+    selectedItem?.scrollIntoView({ block: "nearest" });
+  }, [selectedIndex, suggestionListContainerRef]);
 
   const handleKeyDown = useCallback(
     (keyboardEvent: KeyboardEvent<HTMLInputElement>) => {

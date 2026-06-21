@@ -1,4 +1,4 @@
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { serverEnv } from "#/lib/server.env";
@@ -29,4 +29,14 @@ export async function getPrivateFileUrl(key: string) {
   });
 
   return url;
+}
+
+export async function uploadPrivateFile(key: string, body: Buffer) {
+  await fileStorageClient.send(
+    new PutObjectCommand({
+      Bucket: privateUploadsBucket,
+      Key: key,
+      Body: body,
+    }),
+  );
 }

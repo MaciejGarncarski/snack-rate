@@ -15,6 +15,7 @@ import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as HealthReadyRouteImport } from './routes/health.ready'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as LayoutTestRouteImport } from './routes/_layout/test'
+import { Route as LayoutNewSnackIndexRouteImport } from './routes/_layout/new-snack/index'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 import { Route as LayoutSnackSlugRouteImport } from './routes/_layout/snack/$slug'
 
@@ -47,6 +48,11 @@ const LayoutTestRoute = LayoutTestRouteImport.update({
   path: '/test',
   getParentRoute: () => LayoutRouteRoute,
 } as any)
+const LayoutNewSnackIndexRoute = LayoutNewSnackIndexRouteImport.update({
+  id: '/new-snack/',
+  path: '/new-snack/',
+  getParentRoute: () => LayoutRouteRoute,
+} as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
   path: '/api/rpc/$',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/health/ready': typeof HealthReadyRoute
   '/snack/$slug': typeof LayoutSnackSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/new-snack/': typeof LayoutNewSnackIndexRoute
 }
 export interface FileRoutesByTo {
   '/health': typeof HealthRouteWithChildren
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/': typeof LayoutIndexRoute
   '/snack/$slug': typeof LayoutSnackSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/new-snack': typeof LayoutNewSnackIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/snack/$slug': typeof LayoutSnackSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/_layout/new-snack/': typeof LayoutNewSnackIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/health/ready'
     | '/snack/$slug'
     | '/api/rpc/$'
+    | '/new-snack/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/health'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/snack/$slug'
     | '/api/rpc/$'
+    | '/new-snack'
   id:
     | '__root__'
     | '/_layout'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/_layout/'
     | '/_layout/snack/$slug'
     | '/api/rpc/$'
+    | '/_layout/new-snack/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -169,6 +181,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutTestRouteImport
       parentRoute: typeof LayoutRouteRoute
     }
+    '/_layout/new-snack/': {
+      id: '/_layout/new-snack/'
+      path: '/new-snack'
+      fullPath: '/new-snack/'
+      preLoaderRoute: typeof LayoutNewSnackIndexRouteImport
+      parentRoute: typeof LayoutRouteRoute
+    }
     '/api/rpc/$': {
       id: '/api/rpc/$'
       path: '/api/rpc/$'
@@ -190,12 +209,14 @@ interface LayoutRouteRouteChildren {
   LayoutTestRoute: typeof LayoutTestRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutSnackSlugRoute: typeof LayoutSnackSlugRoute
+  LayoutNewSnackIndexRoute: typeof LayoutNewSnackIndexRoute
 }
 
 const LayoutRouteRouteChildren: LayoutRouteRouteChildren = {
   LayoutTestRoute: LayoutTestRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutSnackSlugRoute: LayoutSnackSlugRoute,
+  LayoutNewSnackIndexRoute: LayoutNewSnackIndexRoute,
 }
 
 const LayoutRouteRouteWithChildren = LayoutRouteRoute._addFileChildren(

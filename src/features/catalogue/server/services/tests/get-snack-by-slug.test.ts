@@ -3,8 +3,7 @@ import { getSnackBySlug } from "#/features/catalogue/server/services/get-snack-b
 import type { Db } from "#/infrastructure/db/db";
 import { createSnack } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup";
-
-const noopGetFileUrl = (key: string) => Promise.resolve(`https://test.com/${key}`);
+import { noopGetFileUrl } from "#/tests/utils";
 
 let db: Db;
 let repository: ReturnType<typeof createSnacksRepository>;
@@ -23,9 +22,9 @@ describe("get snack by slug", () => {
     const snack = await getSnackBySlug(createdSnack.slug, repository);
 
     expect(snack).not.toBeNull();
-    expect(snack!.id).toBe(createdSnack.id);
-    expect(snack!.name).toBe(createdSnack.name);
-    expect(snack!.slug).toBe(createdSnack.slug);
+    expect(snack?.id).toBe(createdSnack.id);
+    expect(snack?.name).toBe(createdSnack.name);
+    expect(snack?.slug).toBe(createdSnack.slug);
   });
 
   it("should return null when snack does not exist", async () => {

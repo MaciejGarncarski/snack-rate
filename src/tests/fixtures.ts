@@ -1,11 +1,11 @@
 import type { InferInsertModel } from "drizzle-orm";
 
-import { brands, snackItemImages, snackItems, snackTags, tags } from "#/infrastructure/db/schema";
+import { brands, snackItemImages, snackItems, snackTypes } from "#/infrastructure/db/schema";
 import { getDb } from "#/tests/setup";
 
 type BrandInsert = InferInsertModel<typeof brands>;
 type SnackInsert = InferInsertModel<typeof snackItems>;
-type TagInsert = InferInsertModel<typeof tags>;
+type SnackTypeInsert = InferInsertModel<typeof snackTypes>;
 type SnackImageInsert = InferInsertModel<typeof snackItemImages>;
 
 export async function createBrand(overrides?: Partial<BrandInsert>) {
@@ -15,6 +15,16 @@ export async function createBrand(overrides?: Partial<BrandInsert>) {
     .values({ name: "Test Brand", ...overrides })
     .returning();
   return brand;
+}
+
+export async function createSnackType(overrides?: Partial<SnackTypeInsert>) {
+  const db = getDb();
+  const uniqueSlug = `type-${crypto.randomUUID().slice(0, 8)}`;
+  const [type] = await db
+    .insert(snackTypes)
+    .values({ name: "Test Type", slug: uniqueSlug, ...overrides })
+    .returning();
+  return type;
 }
 
 export async function createSnack(overrides?: Partial<SnackInsert>) {
@@ -32,21 +42,12 @@ export async function createSnack(overrides?: Partial<SnackInsert>) {
       brandId,
       name: "Test Snack",
       slug: `test-snack-${crypto.randomUUID().slice(0, 8)}`,
+      status: "published",
       price: "2.99",
       ...overrides,
     })
     .returning();
   return snack;
-}
-
-export async function createTag(overrides?: Partial<TagInsert>) {
-  const db = getDb();
-  const uniqueSlug = `tag-${crypto.randomUUID().slice(0, 8)}`;
-  const [tag] = await db
-    .insert(tags)
-    .values({ name: "Test Tag", slug: uniqueSlug, ...overrides })
-    .returning();
-  return tag;
 }
 
 export async function createSnackImage(snackId: string, overrides?: Partial<SnackImageInsert>) {
@@ -62,27 +63,6 @@ export async function createSnackImage(snackId: string, overrides?: Partial<Snac
     })
     .returning();
   return image;
-}
-
-export async function createSnackWithTags(
-  tagNames: string[],
-  snackOverrides?: Partial<SnackInsert>,
-) {
-  const snack = await createSnack(snackOverrides);
-
-  const createdTags = await Promise.all(
-    tagNames.map((name) => createTag({ name, slug: name.toLowerCase().replaceAll(/\s+/gu, "-") })),
-  );
-
-  const db = getDb();
-  await db.insert(snackTags).values(
-    createdTags.map((tag) => ({
-      snackItemId: snack.id,
-      tagId: tag.id,
-    })),
-  );
-
-  return { snack, tags: createdTags };
 }
 
 export async function createSnackWithImages(

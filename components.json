@@ -1,15 +1,19 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "base-luma",
+  "style": "base-nova",
   "rsc": false,
   "tsx": true,
   "tailwind": {
     "config": "",
     "css": "src/styles.css",
-    "baseColor": "olive",
+    "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
+  "iconLibrary": "lucide",
+  "rtl": false,
+  "menuColor": "inverted-translucent",
+  "menuAccent": "subtle",
   "aliases": {
     "components": "#/components",
     "utils": "#/lib/utils",
@@ -17,9 +21,7 @@
     "lib": "#/lib",
     "hooks": "#/hooks"
   },
-  "iconLibrary": "lucide",
-  "rtl": false,
-  "menuColor": "default-translucent",
-  "menuAccent": "subtle",
-  "registries": {}
+  "registries": {
+    "@coss": "https://coss.com/ui/r/{name}.json"
+  }
 }

@@ -12,8 +12,7 @@ export async function listSnacksFeed(
   const pageItems = await repository.list(limit + 1, cursor);
   const hasNextPage = pageItems.length > limit;
   const items = hasNextPage ? pageItems.slice(0, limit) : pageItems;
-
-  const nextCursor = hasNextPage ? (items.at(-1)?.id ?? null) : null;
+  const nextCursor = hasNextPage ? (items.at(-1)?.createdAt?.toISOString() ?? null) : null;
 
   return {
     items,

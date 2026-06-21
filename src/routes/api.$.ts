@@ -8,12 +8,13 @@ import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { getActiveTraceId } from "#/observability/tracing";
+import { logger } from "#/observability/logger/logger";
 import router from "#/orpc/router";
 
 const handler = new OpenAPIHandler(router, {
   interceptors: [
     onError((error) => {
-      console.error(error);
+      logger.error({ err: error }, "API handler error");
     }),
   ],
   plugins: [

@@ -25,3 +25,6 @@ caddy-root.crt
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# agents
+.mimocode

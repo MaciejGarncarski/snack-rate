@@ -56,6 +56,16 @@ export const brands = pgTable("brands", {
 });
 
 // ---------------------------------------------------------------------------
+// snack_types
+// ---------------------------------------------------------------------------
+
+export const snackTypes = pgTable("snack_types", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull().unique(),
+  slug: text("slug").notNull().unique(),
+});
+
+// ---------------------------------------------------------------------------
 // snack_items
 // ---------------------------------------------------------------------------
 
@@ -64,6 +74,7 @@ export const snackItems = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     brandId: uuid("brand_id").references(() => brands.id),
+    typeId: uuid("type_id").references(() => snackTypes.id),
     name: text("name").notNull(),
     slug: text("slug").notNull().unique(),
     description: text("description"),
@@ -83,33 +94,6 @@ export const snackItems = pgTable(
       .on(t.slug)
       .where(sql`slug IS NOT NULL AND deleted_at IS NULL`),
   ],
-);
-
-// ---------------------------------------------------------------------------
-// tags
-// ---------------------------------------------------------------------------
-
-export const tags = pgTable("tags", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  name: text("name").notNull().unique(),
-  slug: text("slug").notNull().unique(), // lowercase, hyphenated e.g. sour-cream
-});
-
-// ---------------------------------------------------------------------------
-// snack_tags  (join table)
-// ---------------------------------------------------------------------------
-
-export const snackTags = pgTable(
-  "snack_tags",
-  {
-    snackItemId: uuid("snack_item_id")
-      .notNull()
-      .references(() => snackItems.id),
-    tagId: uuid("tag_id")
-      .notNull()
-      .references(() => tags.id),
-  },
-  (t) => [primaryKey({ columns: [t.snackItemId, t.tagId] })],
 );
 
 // ---------------------------------------------------------------------------

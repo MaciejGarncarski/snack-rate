@@ -1,12 +1,9 @@
 import { Search, XIcon } from "lucide-react";
+import { AnimatePresence } from "motion/react";
 import type { RefObject } from "react";
 
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "#/components/ui/input-group";
+import { Button } from "#/components/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "#/components/ui/input-group";
 import { Spinner } from "#/components/ui/spinner";
 
 type Props = {
@@ -46,11 +43,19 @@ export function SearchBoxInput({
         onKeyDown={onKeyDown}
       />
 
-      <InputGroupAddon>{isLoading && isSearchBoxOpen ? <Spinner /> : <Search />}</InputGroupAddon>
+      <InputGroupAddon>
+        <AnimatePresence>{isLoading && isSearchBoxOpen ? <Spinner /> : <Search />}</AnimatePresence>
+      </InputGroupAddon>
       <InputGroupAddon align="inline-end">
-        <InputGroupButton aria-label="Reset" title="Reset" size="icon-xs" onClick={onResetClick}>
+        <Button
+          aria-label="Reset"
+          variant={"ghost"}
+          title="Reset"
+          size="icon-xs"
+          onClick={onResetClick}
+        >
           <XIcon />
-        </InputGroupButton>
+        </Button>
       </InputGroupAddon>
     </InputGroup>
   );

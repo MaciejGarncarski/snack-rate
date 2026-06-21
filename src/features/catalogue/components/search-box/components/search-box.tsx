@@ -13,7 +13,7 @@ export function NavbarSearchBox() {
   const { debouncedQuery, inputValue, setInputValue, suggestionsOpen, setSuggestionsOpen } =
     useSearchBoxInput();
 
-  const { data, isLoading } = useQuery(getSearchedItemsQueryOptions(debouncedQuery || ""));
+  const { data, isLoading } = useQuery(getSearchedItemsQueryOptions(debouncedQuery));
   const suggestionListContainerRef = useRef<HTMLUListElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isDebouncing = debouncedQuery !== inputValue;
@@ -25,21 +25,16 @@ export function NavbarSearchBox() {
     dataLength: data?.length ?? 0,
   });
 
+  const handleClose = () => {
+    setInputValue("");
+    setSuggestionsOpen(false);
+    setSelectedIndex(0);
+    inputRef.current?.blur();
+  };
+
   const handleInputChange = (value: string) => {
     setInputValue(value);
     setSuggestionsOpen(true);
-  };
-
-  const handleReset = () => {
-    setInputValue("");
-    setSuggestionsOpen(false);
-    setSelectedIndex(0);
-  };
-
-  const handleListItemClick = () => {
-    setSuggestionsOpen(false);
-    setInputValue("");
-    setSelectedIndex(0);
   };
 
   return (
@@ -50,7 +45,7 @@ export function NavbarSearchBox() {
         onKeyDown={handleKeyDown}
         onFocus={() => setSuggestionsOpen(true)}
         onClick={() => setSuggestionsOpen(true)}
-        onResetClick={handleReset}
+        onResetClick={handleClose}
         inputRef={inputRef}
         isSearchBoxOpen={suggestionsOpen}
         isLoading={isLoading || isDebouncing}
@@ -62,22 +57,20 @@ export function NavbarSearchBox() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute -left-8 mt-1 w-58 rounded-lg border bg-accent p-1 text-sm shadow-lg md:top-11 md:-left-9 md:w-84 md:p-2"
+            className="absolute -left-8 mt-1 w-58 rounded-lg border border-accent bg-popover text-sm shadow-lg md:top-11 md:-left-9 md:w-84"
           >
-            <AnimatePresence mode="wait">
-              {data?.length === 0 ? (
-                <SearchBoxMessage message="Brak wyników" />
-              ) : isLoading || isDebouncing ? (
-                <SearchBoxMessage message="Ładowanie..." />
-              ) : (
-                <SearchBoxResults
-                  onLinkClick={handleListItemClick}
-                  listRef={suggestionListContainerRef}
-                  selectedIndex={selectedIndex}
-                  query={debouncedQuery}
-                />
-              )}
-            </AnimatePresence>
+            {data?.length === 0 ? (
+              <SearchBoxMessage message="Brak wyników" />
+            ) : isLoading || isDebouncing ? (
+              <SearchBoxMessage message="Ładowanie..." />
+            ) : (
+              <SearchBoxResults
+                onLinkClick={handleClose}
+                listRef={suggestionListContainerRef}
+                selectedIndex={selectedIndex}
+                items={data ?? []}
+              />
+            )}
           </motion.div>
         )}
       </AnimatePresence>

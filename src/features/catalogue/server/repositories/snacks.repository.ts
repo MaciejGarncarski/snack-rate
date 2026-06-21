@@ -1,4 +1,6 @@
+import type { SnackStatus } from "#/features/shared/value-objects/status.vo";
 import type { Db } from "#/infrastructure/db/db";
+import { snackItemImages, snackItems } from "#/infrastructure/db/schema";
 
 export type SnackItem = {
   id: string;
@@ -6,9 +8,11 @@ export type SnackItem = {
   description: string | null;
   price: number;
   slug: string;
+  status: SnackStatus;
   barcode: string | null;
   avgRating: number;
   brandId: string | null;
+  typeId: string | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -22,14 +26,14 @@ export type SnackItem = {
     updatedAt: Date;
     deletedAt: Date | null;
   }[];
-  tags: {
+  type: {
     id: string;
     name: string;
     slug: string;
-  }[];
+  } | null;
 };
 
-const MAX_SEARCH_RESULTS = 6;
+const MAX_SEARCH_RESULTS = 8;
 
 type SnacksRepositoryDeps = {
   db: Db;
@@ -42,9 +46,11 @@ type DbSnackItem = {
   description: string | null;
   price: string | null;
   slug: string;
+  status: string;
   barcode: string | null;
   avgRating: string;
   brandId: string | null;
+  typeId: string | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -57,13 +63,11 @@ type DbSnackItem = {
     updatedAt: Date;
     deletedAt: Date | null;
   }[];
-  tags: {
-    tag: {
-      id: string;
-      name: string;
-      slug: string;
-    } | null;
-  }[];
+  type: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
 };
 
 async function toSnackItem(
@@ -83,6 +87,11 @@ async function toSnackItem(
     })),
   );
 
+  const parsedStatus =
+    row.status === "pending" || row.status === "published" || row.status === "rejected"
+      ? row.status
+      : "pending";
+
   return {
     id: row.id,
     name: row.name,
@@ -92,32 +101,81 @@ async function toSnackItem(
     barcode: row.barcode,
     avgRating: parseFloat(row.avgRating),
     brandId: row.brandId,
+    typeId: row.typeId,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
+    status: parsedStatus,
     deletedAt: row.deletedAt,
     images,
-    tags: row.tags
-      .filter((t): t is { tag: NonNullable<typeof t.tag> } => t.tag !== null)
-      .map((t) => ({
-        id: t.tag.id,
-        name: t.tag.name,
-        slug: t.tag.slug,
-      })),
+    type: row.type,
   };
 }
 
+type CreateSnackData = {
+  name: string;
+  slug: string;
+  description?: string;
+  price?: number;
+  barcode?: string;
+  brandId?: string;
+  typeId?: string;
+  status: SnackStatus;
+};
+
+type AddImageData = {
+  snackItemId: string;
+  storageKey: string;
+  sortOrder: number;
+  isPrimary: boolean;
+};
+
+export type TransactionClient = Parameters<Db["transaction"]>[0] extends (tx: infer T) => unknown
+  ? T
+  : never;
+
 export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps) {
   return {
+    create: async (data: CreateSnackData, tx?: TransactionClient) => {
+      const client = tx ?? db;
+      const [created] = await client
+        .insert(snackItems)
+        .values({
+          name: data.name,
+          slug: data.slug,
+          description: data.description || null,
+          price: data.price === null ? null : String(data.price),
+          barcode: data.barcode || null,
+          brandId: data.brandId || null,
+          typeId: data.typeId || null,
+          status: data.status,
+        })
+        .returning();
+
+      return created;
+    },
+
+    addImage: async (data: AddImageData, tx?: TransactionClient) => {
+      const client = tx ?? db;
+      const [created] = await client
+        .insert(snackItemImages)
+        .values({
+          snackItemId: data.snackItemId,
+          storageKey: data.storageKey,
+          sortOrder: data.sortOrder,
+          isPrimary: data.isPrimary,
+        })
+        .returning();
+
+      return created;
+    },
+
     getBySlug: async (slug: string): Promise<SnackItem | null> => {
       const foundSnack = await db.query.snackItems.findFirst({
-        where: { slug },
+        where: { slug, status: "published" },
         with: {
           brand: true,
+          type: true,
           images: true,
-          tags: {
-            with: { tag: true },
-            columns: { snackItemId: false, tagId: false },
-          },
         },
       });
 
@@ -128,16 +186,15 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
 
     list: async (limit: number, cursor?: string): Promise<SnackItem[]> => {
       const rows = await db.query.snackItems.findMany({
-        orderBy: (table, { desc }) => [desc(table.id)],
+        orderBy: (table, { desc }) => [desc(table.createdAt)],
         limit,
-        where: cursor ? { id: { lt: cursor } } : undefined,
+        where: cursor
+          ? { createdAt: { lt: new Date(cursor) }, status: "published" }
+          : { status: "published" },
         with: {
           brand: true,
+          type: true,
           images: true,
-          tags: {
-            with: { tag: true },
-            columns: { snackItemId: false, tagId: false },
-          },
         },
       });
 
@@ -149,19 +206,35 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
         with: {
           images: true,
           brand: true,
-          tags: {
-            columns: { snackItemId: false, tagId: false },
-            with: { tag: true },
-          },
+          type: true,
         },
         limit: MAX_SEARCH_RESULTS,
         where: {
-          OR: [{ name: { ilike: `%${query}%` } }, { description: { ilike: `%${query}%` } }],
+          AND: [
+            { status: "published" },
+            {
+              OR: [{ name: { ilike: `%${query}%` } }, { description: { ilike: `%${query}%` } }],
+            },
+          ],
         },
       });
 
       return Promise.all(rows.map((row) => toSnackItem(row, getFileUrl)));
     },
+
+    listBrands: () => {
+      return db.query.brands.findMany({
+        orderBy: (table, { asc }) => [asc(table.name)],
+      });
+    },
+
+    listTypes: () => {
+      return db.query.snackTypes.findMany({
+        orderBy: (table, { asc }) => [asc(table.name)],
+      });
+    },
+
+    transaction: db.transaction.bind(db),
   };
 }
 

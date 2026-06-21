@@ -1,5 +1,4 @@
 const STATUSES = ["pending", "published", "rejected"] as const;
-
 export type SnackStatus = (typeof STATUSES)[number];
 
 export class Status {

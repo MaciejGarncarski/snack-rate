@@ -3,8 +3,7 @@ import { searchSnacks } from "#/features/catalogue/server/services/search-snacks
 import type { Db } from "#/infrastructure/db/db";
 import { createSnack } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup";
-
-const noopGetFileUrl = (key: string) => Promise.resolve(`https://test.com/${key}`);
+import { noopGetFileUrl } from "#/tests/utils";
 
 let db: Db;
 let repository: ReturnType<typeof createSnacksRepository>;

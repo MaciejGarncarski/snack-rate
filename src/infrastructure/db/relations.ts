@@ -23,19 +23,14 @@ export const relations = defineRelations(schema, (r) => ({
 
   snackItems: {
     brand: r.one.brands({ from: r.snackItems.brandId, to: r.brands.id }),
+    type: r.one.snackTypes({ from: r.snackItems.typeId, to: r.snackTypes.id }),
     images: r.many.snackItemImages({ from: r.snackItems.id, to: r.snackItemImages.snackItemId }),
-    tags: r.many.snackTags({ from: r.snackItems.id, to: r.snackTags.snackItemId }),
     reviews: r.many.snackReviews({ from: r.snackItems.id, to: r.snackReviews.snackItemId }),
     bookmarks: r.many.bookmarks({ from: r.snackItems.id, to: r.bookmarks.snackItemId }),
   },
 
-  tags: {
-    snackTags: r.many.snackTags({ from: r.tags.id, to: r.snackTags.tagId }),
-  },
-
-  snackTags: {
-    snackItem: r.one.snackItems({ from: r.snackTags.snackItemId, to: r.snackItems.id }),
-    tag: r.one.tags({ from: r.snackTags.tagId, to: r.tags.id }),
+  snackTypes: {
+    snackItems: r.many.snackItems({ from: r.snackTypes.id, to: r.snackItems.typeId }),
   },
 
   snackReviews: {

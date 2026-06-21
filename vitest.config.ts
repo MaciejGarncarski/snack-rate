@@ -8,7 +8,7 @@ export default defineConfig({
       provider: "v8",
       include: ["src/features/**/server/**/*.{ts,tsx}"],
     },
-    setupFiles: ["./src/tests/setup.ts"],
+    setupFiles: ["./src/tests/mocks.ts", "./src/tests/setup.ts"],
     globalSetup: "./src/tests/global-setup.ts",
     exclude: [...configDefaults.exclude, "**/e2e/**"],
   },
