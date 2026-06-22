@@ -76,32 +76,16 @@ async function seedDatabase() {
   console.log("  ✓ users");
 
   // ---------------------------------------------------------------------------
-  // Brands
-  // ---------------------------------------------------------------------------
-  const [monster, lays, pringles, tyrrells, wedel] = await db
-    .insert(schema.brands)
-    .values([
-      { name: "Monster Energy" },
-      { name: "Lay's" },
-      { name: "Pringles" },
-      { name: "Tyrrell's" },
-      { name: "E. Wedel" },
-    ])
-    .returning();
-
-  console.log("  ✓ brands");
-
-  // ---------------------------------------------------------------------------
   // Snack Types
   // ---------------------------------------------------------------------------
   const [, chips, energyDrink, sweets, chocolate] = await db
     .insert(schema.snackTypes)
     .values([
-      { name: "Drink", slug: "drink" },
-      { name: "Chips", slug: "chips" },
-      { name: "Energy Drink", slug: "energy-drink" },
-      { name: "Sweets", slug: "sweets" },
-      { name: "Chocolate", slug: "chocolate" },
+      { name: "Napój", slug: "napoj" },
+      { name: "Chipsy", slug: "chipsy" },
+      { name: "Energetyk", slug: "energetyk" },
+      { name: "Słodycze", slug: "slodycze" },
+      { name: "Czekolada", slug: "czekolada" },
     ])
     .returning();
 
@@ -126,7 +110,6 @@ async function seedDatabase() {
     .insert(schema.snackItems)
     .values([
       {
-        brandId: monster.id,
         typeId: energyDrink.id,
         name: "Monster Energy Original",
         description:
@@ -138,7 +121,6 @@ async function seedDatabase() {
         status: "published",
       },
       {
-        brandId: monster.id,
         typeId: energyDrink.id,
         name: "Monster Energy Ultra White",
         description: "Lekka wersja Monstera bez cukru, o subtelnym smaku cytrusowym.",
@@ -149,7 +131,6 @@ async function seedDatabase() {
         status: "published",
       },
       {
-        brandId: monster.id,
         typeId: energyDrink.id,
         name: "Monster Mango Loco",
         description: "Tropikalny napój energetyczny z sokiem mangowym – owocowy hit lata.",
@@ -160,7 +141,6 @@ async function seedDatabase() {
         status: "published",
       },
       {
-        brandId: lays.id,
         typeId: chips.id,
         name: "Lay's Klasyczne",
         description: "Oryginalne chrupki ziemniaczane lekko solone – klasyka wśród chipsów.",
@@ -171,7 +151,6 @@ async function seedDatabase() {
         status: "published",
       },
       {
-        brandId: lays.id,
         typeId: chips.id,
         name: "Lay's Ketchup",
         description: "Chipsy o smaku ketchupowym, jeden z najpopularniejszych smaków w Polsce.",
@@ -182,7 +161,6 @@ async function seedDatabase() {
         status: "published",
       },
       {
-        brandId: pringles.id,
         typeId: chips.id,
         name: "Pringles Original",
         description: "Kultowe chrupki w tubie o klasycznym, delikatnie słonym smaku.",
@@ -193,7 +171,6 @@ async function seedDatabase() {
         status: "published",
       },
       {
-        brandId: pringles.id,
         typeId: chips.id,
         name: "Pringles Ser & Kebab",
         description: "Chrupki Pringles o intensywnym smaku sera i kebaba – ulubieniec imprezowy.",
@@ -204,7 +181,6 @@ async function seedDatabase() {
         status: "rejected",
       },
       {
-        brandId: tyrrells.id,
         typeId: chips.id,
         name: "Tyrrell's Sól Morska",
         description: "Grube chipsy gotowane w kotle, z prostą solą morską. Wyjątkowa chrupkość.",
@@ -215,7 +191,6 @@ async function seedDatabase() {
         status: "published",
       },
       {
-        brandId: tyrrells.id,
         typeId: chips.id,
         name: "Tyrrell's Słodka Papryka",
         description: "Chipsy z angielskich ziemniaków o smaku słodkiej papryki i przypraw.",
@@ -226,7 +201,6 @@ async function seedDatabase() {
         status: "published",
       },
       {
-        brandId: wedel.id,
         typeId: sweets.id,
         name: "Wedel Ptasie Mleczko",
         description: "Kultowa polska pianka w czekoladzie – delikatna, kremowa i waniliowa.",
@@ -237,7 +211,6 @@ async function seedDatabase() {
         status: "published",
       },
       {
-        brandId: wedel.id,
         typeId: chocolate.id,
         name: "Wedel Gorzka Czekolada 70%",
         description: "Intensywna, polska czekolada gorzka z 70% kakao dla prawdziwych smakoszy.",

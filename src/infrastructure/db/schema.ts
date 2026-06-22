@@ -44,18 +44,6 @@ export const users = pgTable(
 );
 
 // ---------------------------------------------------------------------------
-// brands
-// ---------------------------------------------------------------------------
-
-export const brands = pgTable("brands", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  name: text("name").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-  deletedAt: timestamp("deleted_at"),
-});
-
-// ---------------------------------------------------------------------------
 // snack_types
 // ---------------------------------------------------------------------------
 
@@ -73,8 +61,9 @@ export const snackItems = pgTable(
   "snack_items",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    brandId: uuid("brand_id").references(() => brands.id),
-    typeId: uuid("type_id").references(() => snackTypes.id),
+    typeId: uuid("type_id")
+      .notNull()
+      .references(() => snackTypes.id),
     name: text("name").notNull(),
     slug: text("slug").notNull().unique(),
     description: text("description"),

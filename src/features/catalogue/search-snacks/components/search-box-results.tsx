@@ -5,45 +5,44 @@ import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { ScrollArea } from "#/components/ui/scroll-area";
 import { cn } from "#/lib/utils";
-
-import type { SnackSearchResult } from "../api/get-searched-items";
+import type { SnackItem } from "#/features/catalogue/server/repositories/snacks.repository";
 
 type Props = {
   onLinkClick: () => void;
   listRef: React.RefObject<HTMLUListElement | null>;
   selectedIndex: number;
-  items: SnackSearchResult[];
+  items: SnackItem[];
 };
 
 export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }: Props) {
   return (
-    <ScrollArea className="h-72">
+    <ScrollArea className="h-72" scrollFade>
       <motion.ul
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         ref={listRef}
-        className="flex flex-col gap-0"
+        className="flex flex-col gap-0.5 p-1"
       >
         {items.map((item, index) => (
-          <li
-            key={item.slug}
-            className={cn(
-              "border-b px-4 py-2 last:border-b-0 hover:bg-accent/60",
-              index === selectedIndex && "md:bg-accent/60",
-            )}
-          >
+          <li key={item.slug}>
             <Link
               to="/snack/$slug"
               params={{ slug: item.slug }}
-              className="flex items-center gap-4"
+              className={cn(
+                "flex items-center gap-3 rounded-md px-3 py-2 transition-colors outline-none hover:bg-accent/50",
+                index === selectedIndex && "bg-accent/50",
+              )}
               {...(index === 0 && { "data-first": "" })}
               onClick={onLinkClick}
             >
-              <div className="flex size-8 items-center justify-center overflow-hidden rounded-xs md:size-11">
-                <ImageWithPlaceholder alt="" src={item.images[0]?.url} />
-              </div>
-              <div>
-                <span>{item.name}</span>
+              <ImageWithPlaceholder
+                alt=""
+                src={item.images[0]?.url}
+                containerClassName="size-9 shrink-0 overflow-hidden rounded-md bg-muted md:size-10"
+                className="h-full w-full object-cover"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{item.name}</p>
                 <SnackRating rating={item.avgRating} size="xs" />
               </div>
             </Link>

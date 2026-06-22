@@ -11,8 +11,7 @@ export type SnackItem = {
   status: SnackStatus;
   barcode: string | null;
   avgRating: number;
-  brandId: string | null;
-  typeId: string | null;
+  typeId: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -49,8 +48,7 @@ type DbSnackItem = {
   status: string;
   barcode: string | null;
   avgRating: string;
-  brandId: string | null;
-  typeId: string | null;
+  typeId: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -100,7 +98,6 @@ async function toSnackItem(
     slug: row.slug,
     barcode: row.barcode,
     avgRating: parseFloat(row.avgRating),
-    brandId: row.brandId,
     typeId: row.typeId,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
@@ -117,8 +114,7 @@ type CreateSnackData = {
   description?: string;
   price?: number;
   barcode?: string;
-  brandId?: string;
-  typeId?: string;
+  typeSlug: string;
   status: SnackStatus;
 };
 
@@ -137,6 +133,15 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
   return {
     create: async (data: CreateSnackData, tx?: TransactionClient) => {
       const client = tx ?? db;
+
+      const snackType = await client.query.snackTypes.findFirst({
+        where: { slug: data.typeSlug },
+      });
+
+      if (!snackType) {
+        throw new Error(`Snack type with slug ${data.typeSlug} not found`);
+      }
+
       const [created] = await client
         .insert(snackItems)
         .values({
@@ -145,8 +150,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
           description: data.description || null,
           price: data.price === null ? null : String(data.price),
           barcode: data.barcode || null,
-          brandId: data.brandId || null,
-          typeId: data.typeId || null,
+          typeId: snackType.id,
           status: data.status,
         })
         .returning();
@@ -173,7 +177,6 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
       const foundSnack = await db.query.snackItems.findFirst({
         where: { slug, status: "published" },
         with: {
-          brand: true,
           type: true,
           images: true,
         },
@@ -192,7 +195,6 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
           ? { createdAt: { lt: new Date(cursor) }, status: "published" }
           : { status: "published" },
         with: {
-          brand: true,
           type: true,
           images: true,
         },
@@ -205,7 +207,6 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
       const rows = await db.query.snackItems.findMany({
         with: {
           images: true,
-          brand: true,
           type: true,
         },
         limit: MAX_SEARCH_RESULTS,
@@ -222,15 +223,13 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
       return Promise.all(rows.map((row) => toSnackItem(row, getFileUrl)));
     },
 
-    listBrands: () => {
-      return db.query.brands.findMany({
-        orderBy: (table, { asc }) => [asc(table.name)],
-      });
-    },
-
     listTypes: () => {
       return db.query.snackTypes.findMany({
         orderBy: (table, { asc }) => [asc(table.name)],
+        columns: {
+          name: true,
+          slug: true,
+        },
       });
     },
 

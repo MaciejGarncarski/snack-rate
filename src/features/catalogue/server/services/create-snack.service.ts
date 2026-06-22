@@ -12,8 +12,7 @@ type CreateSnackInput = {
   description?: string;
   price?: number;
   barcode?: string;
-  brandId?: string;
-  typeId?: string;
+  typeSlug: string;
   images: Blob[];
 };
 
@@ -99,8 +98,7 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
             description: input.description,
             price: input.price,
             barcode: input.barcode,
-            brandId: input.brandId,
-            typeId: input.typeId,
+            typeSlug: input.typeSlug,
             status: snackStatus,
           },
           tx,

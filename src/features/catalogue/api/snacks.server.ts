@@ -21,8 +21,7 @@ const createSnackInput = z.object({
   description: z.string().max(2000).optional(),
   price: z.number().positive().optional(),
   barcode: z.string().optional(),
-  brandId: z.string().uuid().optional(),
-  typeId: z.string().uuid().optional(),
+  typeSlug: z.string(),
   images: z.array(z.file()).min(1).max(5),
 });
 
@@ -36,10 +35,6 @@ export const createSnackProcedure = os.input(createSnackInput).handler(({ input 
   );
 });
 
-export const listBrands = os.handler(async () => {
-  return snacksRepository.listBrands();
-});
-
-export const listTypes = os.handler(async () => {
+export const listTypes = os.handler(() => {
   return snacksRepository.listTypes();
 });

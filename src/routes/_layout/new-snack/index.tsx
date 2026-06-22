@@ -1,27 +1,26 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { CreateSnackForm } from "#/features/catalogue/components/create-snack-form";
+import { CreateSnackForm } from "#/features/catalogue/create-snack/components/create-snack-form";
 import { client } from "#/orpc/client";
 
 export const Route = createFileRoute("/_layout/new-snack/")({
   component: RouteComponent,
   loader: async () => {
-    const [brands, types] = await Promise.all([client.listBrands(), client.listTypes()]);
-    return { brands, types };
+    const types = await client.listTypes();
+    return { types };
   },
 });
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const { brands, types } = Route.useLoaderData();
+  const { types } = Route.useLoaderData();
 
   const handleSubmit = async (formData: FormData) => {
     const name = formData.get("name");
     const description = formData.get("description");
     const price = formData.get("price");
     const barcode = formData.get("barcode");
-    const brandId = formData.get("brandId");
-    const typeId = formData.get("typeId");
+    const typeSlug = formData.get("typeSlug");
 
     const images: File[] = [];
     for (const [key, value] of formData.entries()) {
@@ -35,8 +34,7 @@ function RouteComponent() {
       description: description ? String(description) : undefined,
       price: price ? Number(price) : undefined,
       barcode: barcode ? String(barcode) : undefined,
-      brandId: brandId ? String(brandId) : undefined,
-      typeId: typeId ? String(typeId) : undefined,
+      typeSlug: typeSlug?.toString() || "",
       images,
     });
 
@@ -44,9 +42,9 @@ function RouteComponent() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div>
       <h1 className="mb-8 text-2xl font-bold">New Snack</h1>
-      <CreateSnackForm onSubmit={handleSubmit} brands={brands} types={types} />
+      <CreateSnackForm onSubmit={handleSubmit} types={types} />
     </div>
   );
 }

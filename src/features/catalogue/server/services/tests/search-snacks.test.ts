@@ -46,12 +46,12 @@ describe("search snacks", () => {
     expect(results).toEqual([]);
   });
 
-  it("should limit results to 6", async () => {
-    for (let i = 0; i < 8; i++) {
+  it("should limit results to MAX_SEARCH_RESULTS", async () => {
+    for (let i = 0; i < 10; i++) {
       await createSnack({ name: `Unique Snack ${i}` });
     }
 
     const results = await searchSnacks("Unique Snack", repository);
-    expect(results).toHaveLength(6);
+    expect(results).toHaveLength(8);
   });
 });

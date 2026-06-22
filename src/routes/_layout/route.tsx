@@ -2,7 +2,8 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import * as z from "zod";
 
 import { Navbar } from "#/components/layout/navbar";
-import { getSearchedItemsQueryOptions } from "#/features/catalogue/components/search-box/api/get-searched-items";
+import { AnchoredToastProvider, ToastProvider } from "#/components/ui/toast";
+import { getSearchedItemsQueryOptions } from "#/features/catalogue/search-snacks/api/get-searched-items";
 
 const sharedParamsSchema = z.object({
   page: z.number().optional(),
@@ -24,7 +25,11 @@ function RouteComponent() {
       <Navbar />
       <div className="relative isolate flex min-h-svh flex-col">
         <div className="mx-auto max-w-7xl p-8">
-          <Outlet />
+          <ToastProvider>
+            <AnchoredToastProvider>
+              <Outlet />
+            </AnchoredToastProvider>
+          </ToastProvider>
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { PlusIcon } from "lucide-react";
 
 import { buttonVariants } from "#/components/ui/button";
-import { NavbarSearchBox } from "#/features/catalogue/components/search-box/components/search-box";
+import { NavbarSearchBox } from "#/features/catalogue/search-snacks/components/search-box";
 
 export function Navbar() {
   return (
@@ -12,7 +13,8 @@ export function Navbar() {
       <NavbarSearchBox />
 
       <div>
-        <Link to="/new-snack" className={buttonVariants({ variant: "default", size: "sm" })}>
+        <Link to="/new-snack" className={buttonVariants({ variant: "outline", size: "sm" })}>
+          <PlusIcon className="mr-2 h-4 w-4" />
           Add Snack
         </Link>
       </div>

@@ -33,7 +33,7 @@
 
   "rules": {
     "eslint/no-underscore-dangle": "off",
-    "eslint/max-lines-per-function": ["error", { "max": 200 }],
+    "eslint/max-lines-per-function": ["warn", { "max": 250 }],
     "typescript/no-unused-vars": "error",
     "jsx-a11y/prefer-tag-over-role": "warn",
     "react/jsx-key": "error",

@@ -17,12 +17,7 @@ export const relations = defineRelations(schema, (r) => ({
     commentReports: r.many.commentReports({ from: r.users.id, to: r.commentReports.reporterId }),
   },
 
-  brands: {
-    snackItems: r.many.snackItems({ from: r.brands.id, to: r.snackItems.brandId }),
-  },
-
   snackItems: {
-    brand: r.one.brands({ from: r.snackItems.brandId, to: r.brands.id }),
     type: r.one.snackTypes({ from: r.snackItems.typeId, to: r.snackTypes.id }),
     images: r.many.snackItemImages({ from: r.snackItems.id, to: r.snackItemImages.snackItemId }),
     reviews: r.many.snackReviews({ from: r.snackItems.id, to: r.snackReviews.snackItemId }),

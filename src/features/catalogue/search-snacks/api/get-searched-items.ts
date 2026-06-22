@@ -2,18 +2,15 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
-import type { SnackItem } from "../../../server/repositories/snacks.repository";
-import { snacksRepository } from "../../../server/repositories/snacks.repository.instance";
-import { searchSnacks } from "../../../server/services/search-snacks.service";
+import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
+import { searchSnacks } from "#/features/catalogue/server/services/search-snacks.service";
 
 const searchInputSchema = z.object({
   query: z.string().max(100),
 });
 
-export type SnackSearchResult = SnackItem;
-
 export const getSearchedItems = createServerFn()
-  .inputValidator(searchInputSchema)
+  .validator(searchInputSchema)
   .handler(({ data }) => searchSnacks(data.query, snacksRepository));
 
 export const getSearchedItemsQueryOptions = (query: string) => {
