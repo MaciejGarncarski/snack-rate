@@ -1,17 +1,17 @@
-import { CropIcon, ImageOffIcon, TrashIcon } from "lucide-react";
+import { ImageOffIcon } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useCallback, useState } from "react";
 
 import { Badge } from "#/components/ui/badge";
-import { Button } from "#/components/ui/button";
 import { ImageCropDialog } from "#/features/catalogue/create-snack/components/image-crop-dialog";
+import { ImageDropzone } from "#/features/catalogue/create-snack/components/image-dropzone";
 import { ImageSlot } from "#/features/catalogue/create-snack/components/image-slot";
 import { ImageSlotEmpty } from "#/features/catalogue/create-snack/components/image-slot-empty";
+import { MainImageToolbar } from "#/features/catalogue/create-snack/components/main-image-toolbar";
 import { useAddImage, type ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
 import { useCropQueue } from "#/features/catalogue/create-snack/hooks/use-crop-queue";
 import { useObjectUrl } from "#/features/catalogue/create-snack/hooks/use-object-url";
-
-const MotionBadge = motion.create(Badge);
+import { useReorder } from "#/features/catalogue/create-snack/hooks/use-reorder";
 
 type Props = {
   value: File[];
@@ -32,6 +32,13 @@ export function ImagePicker({ onChange, totalImages = 3 }: Props) {
     handleRecrop,
     isCropDialogOpen,
   } = useCropQueue({ foundSelectedImage, images, setImages, onChange });
+
+  const { handleMove } = useReorder({
+    images,
+    setImages,
+    setSelectedIndex,
+    onChange,
+  });
 
   const { uploadOnClick } = useAddImage({
     onAddToQueue: handleAddToQueue,
@@ -56,7 +63,7 @@ export function ImagePicker({ onChange, totalImages = 3 }: Props) {
   return (
     <div className="flex flex-col gap-4">
       <div className="relative">
-        <div className="flex size-94 items-center justify-center overflow-hidden rounded-lg border border-accent bg-secondary">
+        <ImageDropzone handleAddToQueue={handleAddToQueue} images={images}>
           <AnimatePresence>
             {foundSelectedImage ? (
               <motion.img
@@ -80,53 +87,48 @@ export function ImagePicker({ onChange, totalImages = 3 }: Props) {
               </motion.button>
             )}
           </AnimatePresence>
-        </div>
+        </ImageDropzone>
 
         <AnimatePresence>
           {foundSelectedImage && (
             <>
               <div className="absolute bottom-2 left-2 flex items-center justify-center gap-2">
-                <MotionBadge>Podgląd</MotionBadge>
+                <Badge>Podgląd</Badge>
                 {selectedIndex === 0 && (
-                  <MotionBadge
-                    initial={{ y: 15 }}
-                    animate={{ y: 0 }}
-                    exit={{ y: 15 }}
-                    variant="info"
-                    className="backdrop-blur-3xl"
-                  >
+                  <Badge variant="info" className="backdrop-blur-3xl">
                     Główne zdjęcie
-                  </MotionBadge>
+                  </Badge>
                 )}
               </div>
 
               <div className="absolute top-2 right-2 flex items-center justify-center gap-4">
-                <Button size="icon" variant="default" onClick={handleRecrop}>
-                  <CropIcon />
-                </Button>
-                <Button size="icon" variant="destructive" onClick={handleDelete}>
-                  <TrashIcon />
-                </Button>
+                <MainImageToolbar handleRecrop={handleRecrop} handleDelete={handleDelete} />
               </div>
             </>
           )}
         </AnimatePresence>
       </div>
       <LayoutGroup>
-        <div className="flex gap-2">
-          {images.map((image, index) => {
-            return (
-              <ImageSlot
-                key={image.id}
-                isSelected={index === selectedIndex}
-                onClick={() => setSelectedIndex(index)}
-                imageSrc={image.croppedFileUrl}
-              />
-            );
-          })}
-          {Array.from({ length: emptySpaces }).map((_, index) => {
-            return <ImageSlotEmpty key={index} onClick={uploadOnClick} />;
-          })}
+        <div className="flex max-w-76 gap-2 overflow-hidden md:max-w-94">
+          <AnimatePresence mode="sync">
+            {images.map((image, index) => {
+              return (
+                <ImageSlot
+                  key={image.id}
+                  isSelected={index === selectedIndex}
+                  onClick={() => setSelectedIndex(index)}
+                  onMoveLeft={index > 0 ? () => handleMove(index, "left") : undefined}
+                  onMoveRight={
+                    index < images.length - 1 ? () => handleMove(index, "right") : undefined
+                  }
+                  imageSrc={image.croppedFileUrl}
+                />
+              );
+            })}
+            {Array.from({ length: emptySpaces }).map((_, index) => {
+              return <ImageSlotEmpty key={`empty-${index}`} onClick={uploadOnClick} />;
+            })}
+          </AnimatePresence>
         </div>
       </LayoutGroup>
 

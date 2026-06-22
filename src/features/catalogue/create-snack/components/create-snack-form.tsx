@@ -1,3 +1,5 @@
+import { Block } from "@tanstack/react-router";
+
 import { Button } from "#/components/ui/button";
 import {
   Combobox,
@@ -41,8 +43,6 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
   const form = useCreateSnackForm({ onSubmit });
   const typesFormMapped = types.map((t): SnackTypeFormatted => ({ value: t.slug, label: t.name }));
 
-  console.log(form.state);
-
   return (
     <form
       onSubmit={(e) => {
@@ -52,6 +52,17 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
       }}
       className="mx-auto flex flex-col gap-10"
     >
+      <Block
+        shouldBlockFn={() => {
+          if (!form.state.isDirty) return false;
+
+          const shouldLeave = confirm(
+            "Czy na pewno chcesz opuścić stronę? Wprowadzone zmiany zostaną utracone.",
+          );
+          return !shouldLeave;
+        }}
+        enableBeforeUnload={form.state.isDirty}
+      />
       <div className="flex flex-col gap-20 md:flex-row">
         <form.Field name="images">
           {(field) => {
@@ -181,9 +192,14 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
                 {hasSubmitError && (
                   <p className="text-sm text-destructive">{String(submitError)}</p>
                 )}
-                <Button type="submit" disabled={!canSubmit || isSubmitting}>
-                  {isSubmitting ? "Dodawanie..." : "Dodaj"}
-                </Button>
+                <div className="flex flex-col justify-between gap-4 md:flex-row">
+                  <Button type="button" disabled={true} variant={"outline"}>
+                    Podgląd produktu (wkrótce)
+                  </Button>
+                  <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                    {isSubmitting ? "Dodawanie..." : "Dodaj"}
+                  </Button>
+                </div>
               </>
             )}
           />

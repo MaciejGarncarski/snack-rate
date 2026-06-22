@@ -4,8 +4,8 @@ import { motion } from "motion/react";
 import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { ScrollArea } from "#/components/ui/scroll-area";
-import { cn } from "#/lib/utils";
 import type { SnackItem } from "#/features/catalogue/server/repositories/snacks.repository";
+import { cn } from "#/lib/utils";
 
 type Props = {
   onLinkClick: () => void;
@@ -26,7 +26,7 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }:
         {items.map((item, index) => (
           <li key={item.slug}>
             <Link
-              to="/snack/$slug"
+              to="/produkt/$slug"
               params={{ slug: item.slug }}
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 transition-colors outline-none hover:bg-accent/50",

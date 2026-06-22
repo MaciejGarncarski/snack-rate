@@ -15,9 +15,9 @@ import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as HealthReadyRouteImport } from './routes/health.ready'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as LayoutTestRouteImport } from './routes/_layout/test'
-import { Route as LayoutNewSnackIndexRouteImport } from './routes/_layout/new-snack/index'
+import { Route as LayoutDodajProduktIndexRouteImport } from './routes/_layout/dodaj-produkt/index'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
-import { Route as LayoutSnackSlugRouteImport } from './routes/_layout/snack/$slug'
+import { Route as LayoutProduktSlugRouteImport } from './routes/_layout/produkt/$slug'
 
 const HealthRoute = HealthRouteImport.update({
   id: '/health',
@@ -48,9 +48,9 @@ const LayoutTestRoute = LayoutTestRouteImport.update({
   path: '/test',
   getParentRoute: () => LayoutRouteRoute,
 } as any)
-const LayoutNewSnackIndexRoute = LayoutNewSnackIndexRouteImport.update({
-  id: '/new-snack/',
-  path: '/new-snack/',
+const LayoutDodajProduktIndexRoute = LayoutDodajProduktIndexRouteImport.update({
+  id: '/dodaj-produkt/',
+  path: '/dodaj-produkt/',
   getParentRoute: () => LayoutRouteRoute,
 } as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
@@ -58,9 +58,9 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   path: '/api/rpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutSnackSlugRoute = LayoutSnackSlugRouteImport.update({
-  id: '/snack/$slug',
-  path: '/snack/$slug',
+const LayoutProduktSlugRoute = LayoutProduktSlugRouteImport.update({
+  id: '/produkt/$slug',
+  path: '/produkt/$slug',
   getParentRoute: () => LayoutRouteRoute,
 } as any)
 
@@ -70,9 +70,9 @@ export interface FileRoutesByFullPath {
   '/test': typeof LayoutTestRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
-  '/snack/$slug': typeof LayoutSnackSlugRoute
+  '/produkt/$slug': typeof LayoutProduktSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
-  '/new-snack/': typeof LayoutNewSnackIndexRoute
+  '/dodaj-produkt/': typeof LayoutDodajProduktIndexRoute
 }
 export interface FileRoutesByTo {
   '/health': typeof HealthRouteWithChildren
@@ -80,9 +80,9 @@ export interface FileRoutesByTo {
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/': typeof LayoutIndexRoute
-  '/snack/$slug': typeof LayoutSnackSlugRoute
+  '/produkt/$slug': typeof LayoutProduktSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
-  '/new-snack': typeof LayoutNewSnackIndexRoute
+  '/dodaj-produkt': typeof LayoutDodajProduktIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -92,9 +92,9 @@ export interface FileRoutesById {
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/_layout/': typeof LayoutIndexRoute
-  '/_layout/snack/$slug': typeof LayoutSnackSlugRoute
+  '/_layout/produkt/$slug': typeof LayoutProduktSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
-  '/_layout/new-snack/': typeof LayoutNewSnackIndexRoute
+  '/_layout/dodaj-produkt/': typeof LayoutDodajProduktIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -104,9 +104,9 @@ export interface FileRouteTypes {
     | '/test'
     | '/api/$'
     | '/health/ready'
-    | '/snack/$slug'
+    | '/produkt/$slug'
     | '/api/rpc/$'
-    | '/new-snack/'
+    | '/dodaj-produkt/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/health'
@@ -114,9 +114,9 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/health/ready'
     | '/'
-    | '/snack/$slug'
+    | '/produkt/$slug'
     | '/api/rpc/$'
-    | '/new-snack'
+    | '/dodaj-produkt'
   id:
     | '__root__'
     | '/_layout'
@@ -125,9 +125,9 @@ export interface FileRouteTypes {
     | '/api/$'
     | '/health/ready'
     | '/_layout/'
-    | '/_layout/snack/$slug'
+    | '/_layout/produkt/$slug'
     | '/api/rpc/$'
-    | '/_layout/new-snack/'
+    | '/_layout/dodaj-produkt/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -181,11 +181,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutTestRouteImport
       parentRoute: typeof LayoutRouteRoute
     }
-    '/_layout/new-snack/': {
-      id: '/_layout/new-snack/'
-      path: '/new-snack'
-      fullPath: '/new-snack/'
-      preLoaderRoute: typeof LayoutNewSnackIndexRouteImport
+    '/_layout/dodaj-produkt/': {
+      id: '/_layout/dodaj-produkt/'
+      path: '/dodaj-produkt'
+      fullPath: '/dodaj-produkt/'
+      preLoaderRoute: typeof LayoutDodajProduktIndexRouteImport
       parentRoute: typeof LayoutRouteRoute
     }
     '/api/rpc/$': {
@@ -195,11 +195,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiRpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_layout/snack/$slug': {
-      id: '/_layout/snack/$slug'
-      path: '/snack/$slug'
-      fullPath: '/snack/$slug'
-      preLoaderRoute: typeof LayoutSnackSlugRouteImport
+    '/_layout/produkt/$slug': {
+      id: '/_layout/produkt/$slug'
+      path: '/produkt/$slug'
+      fullPath: '/produkt/$slug'
+      preLoaderRoute: typeof LayoutProduktSlugRouteImport
       parentRoute: typeof LayoutRouteRoute
     }
   }
@@ -208,15 +208,15 @@ declare module '@tanstack/react-router' {
 interface LayoutRouteRouteChildren {
   LayoutTestRoute: typeof LayoutTestRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
-  LayoutSnackSlugRoute: typeof LayoutSnackSlugRoute
-  LayoutNewSnackIndexRoute: typeof LayoutNewSnackIndexRoute
+  LayoutProduktSlugRoute: typeof LayoutProduktSlugRoute
+  LayoutDodajProduktIndexRoute: typeof LayoutDodajProduktIndexRoute
 }
 
 const LayoutRouteRouteChildren: LayoutRouteRouteChildren = {
   LayoutTestRoute: LayoutTestRoute,
   LayoutIndexRoute: LayoutIndexRoute,
-  LayoutSnackSlugRoute: LayoutSnackSlugRoute,
-  LayoutNewSnackIndexRoute: LayoutNewSnackIndexRoute,
+  LayoutProduktSlugRoute: LayoutProduktSlugRoute,
+  LayoutDodajProduktIndexRoute: LayoutDodajProduktIndexRoute,
 }
 
 const LayoutRouteRouteWithChildren = LayoutRouteRoute._addFileChildren(

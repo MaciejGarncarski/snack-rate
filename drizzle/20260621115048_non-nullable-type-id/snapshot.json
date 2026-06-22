@@ -2,9 +2,7 @@
   "version": "8",
   "dialect": "postgres",
   "id": "ce58a46d-60f9-447f-9739-4b8de5664cb1",
-  "prevIds": [
-    "86308a9c-c46c-4021-8cea-5c1b525edf41"
-  ],
+  "prevIds": ["86308a9c-c46c-4021-8cea-5c1b525edf41"],
   "ddl": [
     {
       "isRlsEnabled": false,
@@ -1916,14 +1914,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "bookmarks_user_id_users_id_fkey",
@@ -1933,14 +1927,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "snack_item_id"
-      ],
+      "columns": ["snack_item_id"],
       "schemaTo": "public",
       "tableTo": "snack_items",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "bookmarks_snack_item_id_snack_items_id_fkey",
@@ -1950,14 +1940,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "comment_reactions_user_id_users_id_fkey",
@@ -1967,14 +1953,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "comment_id"
-      ],
+      "columns": ["comment_id"],
       "schemaTo": "public",
       "tableTo": "comments",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "comment_reactions_comment_id_comments_id_fkey",
@@ -1984,14 +1966,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "reporter_id"
-      ],
+      "columns": ["reporter_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "comment_reports_reporter_id_users_id_fkey",
@@ -2001,14 +1979,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "comment_id"
-      ],
+      "columns": ["comment_id"],
       "schemaTo": "public",
       "tableTo": "comments",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "comment_reports_comment_id_comments_id_fkey",
@@ -2018,14 +1992,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "review_id"
-      ],
+      "columns": ["review_id"],
       "schemaTo": "public",
       "tableTo": "snack_reviews",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "comments_review_id_snack_reviews_id_fkey",
@@ -2035,14 +2005,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "comments_user_id_users_id_fkey",
@@ -2052,14 +2018,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "parent_comment_id"
-      ],
+      "columns": ["parent_comment_id"],
       "schemaTo": "public",
       "tableTo": "comments",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "comments_parent_comment_id_comments_id_fkey",
@@ -2069,14 +2031,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "email_verifications_user_id_users_id_fkey",
@@ -2086,14 +2044,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "password_resets_user_id_users_id_fkey",
@@ -2103,14 +2057,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "review_reactions_user_id_users_id_fkey",
@@ -2120,14 +2070,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "review_id"
-      ],
+      "columns": ["review_id"],
       "schemaTo": "public",
       "tableTo": "snack_reviews",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "review_reactions_review_id_snack_reviews_id_fkey",
@@ -2137,14 +2083,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "reporter_id"
-      ],
+      "columns": ["reporter_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "review_reports_reporter_id_users_id_fkey",
@@ -2154,14 +2096,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "review_id"
-      ],
+      "columns": ["review_id"],
       "schemaTo": "public",
       "tableTo": "snack_reviews",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "review_reports_review_id_snack_reviews_id_fkey",
@@ -2171,14 +2109,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "sessions_user_id_users_id_fkey",
@@ -2188,14 +2122,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "snack_item_id"
-      ],
+      "columns": ["snack_item_id"],
       "schemaTo": "public",
       "tableTo": "snack_items",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "snack_item_images_snack_item_id_snack_items_id_fkey",
@@ -2205,14 +2135,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "brand_id"
-      ],
+      "columns": ["brand_id"],
       "schemaTo": "public",
       "tableTo": "brands",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "snack_items_brand_id_brands_id_fkey",
@@ -2222,14 +2148,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "type_id"
-      ],
+      "columns": ["type_id"],
       "schemaTo": "public",
       "tableTo": "snack_types",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "snack_items_type_id_snack_types_id_fkey",
@@ -2239,14 +2161,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "review_id"
-      ],
+      "columns": ["review_id"],
       "schemaTo": "public",
       "tableTo": "snack_reviews",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "snack_review_images_review_id_snack_reviews_id_fkey",
@@ -2256,14 +2174,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "snack_item_id"
-      ],
+      "columns": ["snack_item_id"],
       "schemaTo": "public",
       "tableTo": "snack_items",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "snack_reviews_snack_item_id_snack_items_id_fkey",
@@ -2273,14 +2187,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "users",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "snack_reviews_user_id_users_id_fkey",
@@ -2289,10 +2199,7 @@
       "table": "snack_reviews"
     },
     {
-      "columns": [
-        "user_id",
-        "snack_item_id"
-      ],
+      "columns": ["user_id", "snack_item_id"],
       "nameExplicit": false,
       "name": "bookmarks_pkey",
       "entityType": "pks",
@@ -2300,9 +2207,7 @@
       "table": "bookmarks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "brands_pkey",
       "schema": "public",
@@ -2310,9 +2215,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "comment_reactions_pkey",
       "schema": "public",
@@ -2320,9 +2223,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "comment_reports_pkey",
       "schema": "public",
@@ -2330,9 +2231,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "comments_pkey",
       "schema": "public",
@@ -2340,9 +2239,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "email_verifications_pkey",
       "schema": "public",
@@ -2350,9 +2247,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "password_resets_pkey",
       "schema": "public",
@@ -2360,9 +2255,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "review_reactions_pkey",
       "schema": "public",
@@ -2370,9 +2263,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "review_reports_pkey",
       "schema": "public",
@@ -2380,9 +2271,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "sessions_pkey",
       "schema": "public",
@@ -2390,9 +2279,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "snack_item_images_pkey",
       "schema": "public",
@@ -2400,9 +2287,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "snack_items_pkey",
       "schema": "public",
@@ -2410,9 +2295,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "snack_review_images_pkey",
       "schema": "public",
@@ -2420,9 +2303,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "snack_reviews_pkey",
       "schema": "public",
@@ -2430,9 +2311,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "snack_types_pkey",
       "schema": "public",
@@ -2440,9 +2319,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "users_pkey",
       "schema": "public",
@@ -2451,9 +2328,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "token_hash"
-      ],
+      "columns": ["token_hash"],
       "nullsNotDistinct": false,
       "name": "email_verifications_token_hash_key",
       "schema": "public",
@@ -2462,9 +2337,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "token_hash"
-      ],
+      "columns": ["token_hash"],
       "nullsNotDistinct": false,
       "name": "password_resets_token_hash_key",
       "schema": "public",
@@ -2473,9 +2346,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "token_hash"
-      ],
+      "columns": ["token_hash"],
       "nullsNotDistinct": false,
       "name": "sessions_token_hash_key",
       "schema": "public",
@@ -2484,9 +2355,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "slug"
-      ],
+      "columns": ["slug"],
       "nullsNotDistinct": false,
       "name": "snack_items_slug_key",
       "schema": "public",
@@ -2495,9 +2364,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "name"
-      ],
+      "columns": ["name"],
       "nullsNotDistinct": false,
       "name": "snack_types_name_key",
       "schema": "public",
@@ -2506,9 +2373,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "slug"
-      ],
+      "columns": ["slug"],
       "nullsNotDistinct": false,
       "name": "snack_types_slug_key",
       "schema": "public",

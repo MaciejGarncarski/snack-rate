@@ -7,8 +7,8 @@ import { onError } from "@orpc/server";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { getActiveTraceId } from "#/observability/tracing";
 import { logger } from "#/observability/logger/logger";
+import { getActiveTraceId } from "#/observability/tracing";
 import router from "#/orpc/router";
 
 const handler = new OpenAPIHandler(router, {

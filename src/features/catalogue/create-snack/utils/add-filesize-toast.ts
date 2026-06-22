@@ -4,10 +4,12 @@ import {
   MAX_FILE_SIZE,
 } from "#/features/catalogue/create-snack/consts/image-const";
 
+const toastId = "filesize-toast";
+
 export function addFilesizeToast() {
   toastManager.add({
     timeout: IMAGE_TOAST_TIMEOUT,
-    id: "filesize-toast",
+    id: toastId,
     title: "Plik zbyt duży",
     description: `Niektóre z dodanych plików przekraczają maksymalny rozmiar ${MAX_FILE_SIZE / (1024 * 1024)} MB i zostały pominięte.`,
   });

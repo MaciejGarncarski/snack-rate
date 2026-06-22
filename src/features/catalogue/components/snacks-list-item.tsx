@@ -26,7 +26,7 @@ export function SnacksListItem({ name, description, slug, rating, images }: Prop
               className="h-full w-full rounded-md object-cover"
             />
             <div className="flex flex-col gap-2">
-              <Link to="/snack/$slug" params={{ slug: slug }}>
+              <Link to="/produkt/$slug" params={{ slug: slug }}>
                 <h2 className="text-xl font-bold">{name}</h2>
               </Link>
               <p className="text-md text-muted-foreground">{description}</p>

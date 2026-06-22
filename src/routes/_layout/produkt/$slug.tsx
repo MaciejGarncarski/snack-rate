@@ -12,7 +12,7 @@ import {
 } from "#/components/ui/empty";
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/services/get-snack-by-slug.query";
 
-export const Route = createFileRoute("/_layout/snack/$slug")({
+export const Route = createFileRoute("/_layout/produkt/$slug")({
   component: RouteComponent,
   notFoundComponent: () => {
     return (
@@ -28,7 +28,9 @@ export const Route = createFileRoute("/_layout/snack/$slug")({
     );
   },
   loader: async ({ params, context }) => {
-    const snack = await context.queryClient.ensureQueryData(getSnackBySlugQueryOptions(params.slug));
+    const snack = await context.queryClient.ensureQueryData(
+      getSnackBySlugQueryOptions(params.slug),
+    );
 
     if (!snack) {
       throw notFound();

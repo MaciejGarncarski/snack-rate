@@ -13,9 +13,9 @@ export function Navbar() {
       <NavbarSearchBox />
 
       <div>
-        <Link to="/new-snack" className={buttonVariants({ variant: "outline", size: "sm" })}>
+        <Link to="/dodaj-produkt" className={buttonVariants({ variant: "outline", size: "sm" })}>
           <PlusIcon className="mr-2 h-4 w-4" />
-          Add Snack
+          Dodaj produkt
         </Link>
       </div>
     </nav>

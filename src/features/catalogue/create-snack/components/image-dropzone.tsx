@@ -1,0 +1,101 @@
+import { ImageUpIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useRef, useState } from "react";
+
+import type { ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
+import {
+  showToastForValidationError,
+  validateImage,
+} from "#/features/catalogue/create-snack/utils/validate-image";
+
+type Props = {
+  images: ImagePair[];
+  handleAddToQueue: (file: File) => void;
+
+  children: React.ReactNode;
+};
+
+export const ImageDropzone = ({ images, handleAddToQueue, children }: Props) => {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const dragCounter = useRef(0);
+
+  const processDroppedFiles = useCallback(
+    (files: File[]) => {
+      for (const file of files) {
+        const validationResult = validateImage(
+          file,
+          images.map((img) => img.file),
+        );
+
+        if (validationResult instanceof File) {
+          handleAddToQueue(validationResult);
+          return;
+        }
+        showToastForValidationError(validationResult, file.name);
+      }
+    },
+    [handleAddToQueue, images],
+  );
+
+  const handleDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current++;
+    if (dragCounter.current === 1) {
+      setIsDragOver(true);
+    }
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current--;
+    if (dragCounter.current === 0) {
+      setIsDragOver(false);
+    }
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter.current = 0;
+      setIsDragOver(false);
+
+      const files = Array.from(e.dataTransfer.files);
+      processDroppedFiles(files);
+    },
+    [processDroppedFiles],
+  );
+
+  return (
+    <motion.div
+      className="flex size-76 items-center justify-center overflow-hidden rounded-lg border border-accent bg-secondary md:size-94"
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
+      {children}
+
+      <AnimatePresence>
+        {isDragOver && (
+          <motion.div
+            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-lg border border-accent bg-background/80"
+          >
+            <ImageUpIcon className="size-12 text-foreground" />
+            <p className="text-sm font-medium text-foreground">Upuść obraz tutaj</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
