@@ -1,7 +1,7 @@
 pre-commit:
   commands:
     format:
-      glob: "*.{ts,tsx,js,jsx,json}"
+      glob: "*.{ts,tsx,js,jsx,json,md}"
       run: pnpm fmt
       stage_fixed: true
 
