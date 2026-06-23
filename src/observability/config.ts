@@ -19,4 +19,5 @@ const observabilityConfigData = {
 } as const;
 
 export const observabilityConfig = observabilityConfigData[serverEnv.NODE_ENV];
+// oxlint-disable-next-line no-console
 console.log("Observability configuration:", observabilityConfig, { nodeEnv: serverEnv.NODE_ENV });

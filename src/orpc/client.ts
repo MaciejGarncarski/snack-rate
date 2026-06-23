@@ -1,4 +1,4 @@
-import { createORPCClient } from "@orpc/client";
+import { createORPCClient, createSafeClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import type { RouterClient } from "@orpc/server";
 import { createRouterClient } from "@orpc/server";
@@ -24,5 +24,5 @@ const getORPCClient = createIsomorphicFn()
   });
 
 export const client: RouterClient<typeof router> = getORPCClient();
-
+export const safeClient = createSafeClient(client);
 export const orpc = createTanstackQueryUtils(client);

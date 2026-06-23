@@ -1,6 +1,8 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
 
+  "ignorePatterns": ["src/components/ui/**"],
+
   "plugins": [
     "typescript",
     "unicorn",
@@ -38,6 +40,9 @@
     "typescript/no-unused-vars": "error",
     "jsx-a11y/prefer-tag-over-role": "warn",
     "react/jsx-key": "error",
+    "unicorn/no-negated-condition": "off",
+    "no-negated-condition": "off",
+    "max-lines": ["warn", { "max": 500, "skipBlankLines": true, "skipComments": true }],
     "react/react-in-jsx-scope": "off",
     "jsx-a11y/alt-text": "error",
     "no-console": "warn",

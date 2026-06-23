@@ -1,7 +1,7 @@
 import { trace } from "@opentelemetry/api";
-import sharp from "sharp";
 
 import type { SnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
+import { createThumbnail, validateImage } from "#/features/catalogue/server/utils/snack-image";
 import { getExtensionFromBlob } from "#/features/catalogue/utils/get-extension-from-blob.ts";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 import { StorageKey } from "#/features/shared/value-objects/storage-key.vo";
@@ -17,51 +17,7 @@ type CreateSnackInput = {
   images: Blob[];
 };
 
-const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const THUMBNAIL_SIZE = 200;
-
 const tracer = trace.getTracer("catalogue-service");
-
-function validateImage(img: Blob, index: number): void {
-  if (!ALLOWED_MIME_TYPES.has(img.type)) {
-    throw new Error(`Image ${index}: unsupported type "${img.type}". Allowed: jpg, png, webp`);
-  }
-
-  if (img.size > MAX_FILE_SIZE) {
-    throw new Error(
-      `Image ${index}: file too large (${(img.size / 1024 / 1024).toFixed(1)} MB). Max: 10 MB`,
-    );
-  }
-}
-
-function createThumbnail(buffer: Buffer, ext: string): Promise<Buffer> {
-  const sharpInstance = sharp(buffer);
-
-  let pipeline = sharpInstance.resize({
-    width: THUMBNAIL_SIZE,
-    height: THUMBNAIL_SIZE,
-    fit: "inside",
-    withoutEnlargement: true,
-  });
-
-  switch (ext) {
-    case "jpg":
-    case "jpeg":
-      pipeline = pipeline.jpeg({ quality: 85 });
-      break;
-    case "png":
-      pipeline = pipeline.png();
-      break;
-    case "webp":
-      pipeline = pipeline.webp({ quality: 85 });
-      break;
-    default:
-      pipeline = pipeline.jpeg({ quality: 85 });
-  }
-
-  return pipeline.toBuffer();
-}
 
 export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepository) {
   // TODO: After auth added, check if user is admin, if user is admin, then snack is published, otherwise snack is unpublished and needs to be approved by admin

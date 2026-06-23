@@ -1,7 +1,10 @@
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
+import { toastManager } from "#/components/ui/toast";
 import { CreateSnackForm } from "#/features/catalogue/create-snack/components/create-snack-form";
-import { client } from "#/orpc/client";
+import { extractORPCError } from "#/lib/extract-orpc-error";
+import { client, orpc } from "#/orpc/client";
 
 export const Route = createFileRoute("/_layout/dodaj-produkt/")({
   component: RouteComponent,
@@ -14,6 +17,35 @@ export const Route = createFileRoute("/_layout/dodaj-produkt/")({
 function RouteComponent() {
   const navigate = useNavigate();
   const { types } = Route.useLoaderData();
+
+  const { mutate } = useMutation(
+    orpc.createSnack.mutationOptions({
+      onError: (mutationError) => {
+        const errorMessage = extractORPCError(mutationError)?.message;
+
+        if (!errorMessage) {
+          toastManager.add({
+            type: "error",
+            title: "Wystąpił nieoczekiwany błąd",
+          });
+          return;
+        }
+
+        toastManager.add({
+          type: "error",
+          title: `Błąd: ${errorMessage}`,
+        });
+      },
+
+      onSuccess: () => {
+        toastManager.add({
+          type: "success",
+          title: "Produkt został dodany pomyślnie",
+        });
+        navigate({ to: "/" });
+      },
+    }),
+  );
 
   const handleSubmit = async (formData: FormData) => {
     const name = formData.get("name");
@@ -29,7 +61,7 @@ function RouteComponent() {
       }
     }
 
-    await client.createSnack({
+    await mutate({
       name: String(name),
       description: description ? String(description) : undefined,
       price: price ? Number(price) : undefined,
@@ -37,8 +69,6 @@ function RouteComponent() {
       typeSlug: typeSlug?.toString() || "",
       images,
     });
-
-    navigate({ to: "/" });
   };
 
   return (

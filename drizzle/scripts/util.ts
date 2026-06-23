@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 import {
   DeleteObjectsCommand,
   ListObjectsV2Command,

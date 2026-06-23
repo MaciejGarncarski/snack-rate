@@ -12,7 +12,7 @@ const db = drizzle(process.env.DATABASE_URL!);
 
 const THUMBNAIL_SIZE = 120;
 
-async function createThumbnail(buffer: Buffer, ext: string): Promise<Buffer> {
+function createThumbnail(buffer: Buffer, ext: string): Promise<Buffer> {
   const sharpInstance = sharp(buffer);
   let pipeline = sharpInstance.resize({
     width: THUMBNAIL_SIZE,

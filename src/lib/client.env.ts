@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 import { z } from "zod";
 
 const schema = z.object({

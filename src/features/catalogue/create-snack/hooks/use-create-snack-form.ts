@@ -2,20 +2,21 @@ import { useForm } from "@tanstack/react-form";
 import * as z from "zod";
 
 export const createSnackSchema = z.object({
-  name: z.string().min(1, "Name is required").max(200),
+  name: z.string().min(1, "Nazwa jest wymagana").max(200),
   description: z.string().max(2000),
   price: z
     .string()
     .refine(
-      (v) => v === "" || (!Number.isNaN(Number.parseFloat(v)) && Number.parseFloat(v) > 0),
-      "Price must be a positive number",
-    ),
+      (v) => v === "" || (!Number.isNaN(Number(v)) && Number(v) > 0),
+      "Cena musi być liczbą większą od 0",
+    )
+    .refine((v) => Number(v) <= 1000, "Cena nie może być większa niż 100"),
   barcode: z.string(),
-  typeSlug: z.string().min(1, "Type is required"),
+  typeSlug: z.string().min(1, "Typ jest wymagany"),
   images: z
     .array(z.instanceof(File))
-    .min(1, "At least one image is required")
-    .max(3, "Maximum 3 images"),
+    .min(1, "Wymagana jest przynajmniej jedna grafika")
+    .max(3, "Maksymalnie 3 grafiki"),
 });
 
 export type FormValues = z.infer<typeof createSnackSchema>;

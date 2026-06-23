@@ -9,13 +9,12 @@ type QueueItem = {
 };
 
 type Props = {
-  images: ImagePair[];
   setImages: React.Dispatch<React.SetStateAction<ImagePair[]>>;
   onChange: (files: File[]) => void;
   foundSelectedImage: ImagePair | null;
 };
 
-export function useCropQueue({ images, setImages, onChange, foundSelectedImage }: Props) {
+export function useCropQueue({ setImages, onChange, foundSelectedImage }: Props) {
   const [cropQueue, setCropQueue] = useState<QueueItem[]>([]);
   const currentQueueItem = cropQueue[0] || null;
   const isCropDialogOpen = currentQueueItem !== null;
@@ -24,19 +23,22 @@ export function useCropQueue({ images, setImages, onChange, foundSelectedImage }
     (croppedFile: File) => {
       if (!currentQueueItem) return;
 
-      const currentImage = images.find((img) => img.id === currentQueueItem.originalImageId);
-
-      if (currentQueueItem.originalImageId && currentImage) {
+      if (currentQueueItem.originalImageId) {
         setImages((prevImages) => {
-          const newImages = prevImages.map((img) =>
-            img.id === currentQueueItem.originalImageId
-              ? {
-                  ...img,
-                  croppedFileUrl: URL.createObjectURL(croppedFile),
-                  croppedFile: croppedFile,
-                }
-              : img,
-          );
+          const newImages = prevImages.map((img) => {
+            const isOriginalImage = img.id === currentQueueItem.originalImageId;
+
+            if (isOriginalImage) {
+              return {
+                ...img,
+                croppedFileUrl: URL.createObjectURL(croppedFile),
+                croppedFile,
+              };
+            }
+
+            return img;
+          });
+
           onChange(newImages.map((img) => img.croppedFile || img.file));
           return newImages;
         });
@@ -48,7 +50,7 @@ export function useCropQueue({ images, setImages, onChange, foundSelectedImage }
         id: crypto.randomUUID(),
         file: currentQueueItem.file,
         croppedFileUrl: URL.createObjectURL(croppedFile),
-        croppedFile: croppedFile,
+        croppedFile,
       };
 
       setImages((prevImages) => {
@@ -56,10 +58,8 @@ export function useCropQueue({ images, setImages, onChange, foundSelectedImage }
         onChange(newImages.map((img) => img.croppedFile || img.file));
         return newImages;
       });
-
-      setCropQueue((prev) => prev.slice(1));
     },
-    [currentQueueItem, images, onChange, setImages],
+    [currentQueueItem, onChange, setImages],
   );
 
   const handleCropCancel = useCallback(() => {

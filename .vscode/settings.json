@@ -16,7 +16,10 @@
     "**/routeTree.gen.ts": true
   },
   "search.exclude": {
-    "**/routeTree.gen.ts": true
+    "**/routeTree.gen.ts": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.agents/**": true
   },
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true

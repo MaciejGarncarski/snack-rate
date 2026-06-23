@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 
 import {
+  MAXIMUM_IMAGES,
+  SUPPORTED_FORMATS,
+} from "#/features/catalogue/create-snack/consts/image-const";
+import {
   showToastForValidationError,
   validateImage,
 } from "#/features/catalogue/create-snack/utils/validate-image";
@@ -47,26 +51,31 @@ export function useAddImage({ onAddToQueue, allFiles }: UseAddImageProps) {
   const uploadOnClick = () => {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = "image/*";
-    input.multiple = false;
+    input.accept = SUPPORTED_FORMATS.join(",");
+    input.multiple = allFiles.length < MAXIMUM_IMAGES;
     input.click();
 
     input.addEventListener("change", (event) => {
       const target = event.target as HTMLInputElement;
+
       if (!target.files) return;
 
-      const newFile = Array.from(target.files).at(0);
+      const newFiles = Array.from(target.files);
 
-      if (!newFile) return;
+      newFiles.forEach((newFile, index) => {
+        const validationResult = validateImage(newFile, allFiles);
 
-      const validationResult = validateImage(newFile, allFiles);
+        if (validationResult instanceof File) {
+          if (allFiles.length + index >= MAXIMUM_IMAGES) {
+            return;
+          }
 
-      if (validationResult instanceof File) {
-        onAddToQueue(validationResult);
-        return;
-      }
+          onAddToQueue(validationResult);
+          return;
+        }
 
-      showToastForValidationError(validationResult, newFile.name);
+        showToastForValidationError(validationResult, newFile.name);
+      });
     });
   };
 

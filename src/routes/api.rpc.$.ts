@@ -7,6 +7,7 @@ import { RPCHandler } from "@orpc/server/fetch";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { logger } from "#/observability/logger/logger";
+import { mapError } from "#/orpc/map-error";
 import router from "#/orpc/router";
 
 const OVERRIDE_BODY_CONTEXT = Symbol("OVERRIDE_BODY_CONTEXT");
@@ -58,6 +59,13 @@ const handler = new RPCHandler(router, {
     onError((error) => {
       logger.error({ err: error }, "RPC handler error");
     }),
+    async ({ next }) => {
+      try {
+        return await next();
+      } catch (error) {
+        throw mapError(error);
+      }
+    },
     ({ request, next }) => {
       const span = trace.getActiveSpan();
 

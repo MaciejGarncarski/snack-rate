@@ -8,6 +8,7 @@ import { ImageSlot } from "#/features/catalogue/create-snack/components/image-sl
 import { ImageSlotEmpty } from "#/features/catalogue/create-snack/components/image-slot-empty";
 import { MainImageBadges } from "#/features/catalogue/create-snack/components/main-image-badges";
 import { MainImageToolbar } from "#/features/catalogue/create-snack/components/main-image-toolbar";
+import { MAXIMUM_IMAGES } from "#/features/catalogue/create-snack/consts/image-const";
 import { useAddImage, type ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
 import { useCropQueue } from "#/features/catalogue/create-snack/hooks/use-crop-queue";
 import { useObjectUrl } from "#/features/catalogue/create-snack/hooks/use-object-url";
@@ -19,7 +20,7 @@ type Props = {
   totalImages?: number;
 };
 
-export function ImagePicker({ onChange, totalImages = 3 }: Props) {
+export function ImagePicker({ onChange, totalImages = MAXIMUM_IMAGES }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [images, setImages] = useState<ImagePair[]>([]);
   const foundSelectedImage = images[selectedIndex] || null;
@@ -31,7 +32,7 @@ export function ImagePicker({ onChange, totalImages = 3 }: Props) {
     handleCropComplete,
     handleRecrop,
     isCropDialogOpen,
-  } = useCropQueue({ foundSelectedImage, images, setImages, onChange });
+  } = useCropQueue({ foundSelectedImage, setImages, onChange });
 
   const { handleMove } = useReorder({
     images,
@@ -104,7 +105,7 @@ export function ImagePicker({ onChange, totalImages = 3 }: Props) {
         </AnimatePresence>
       </div>
       <LayoutGroup>
-        <div className="flex max-w-76 gap-2 overflow-hidden md:max-w-94">
+        <div className="flex max-w-76 gap-2 overflow-hidden py-0.5 md:max-w-94">
           <AnimatePresence mode="sync">
             {images.map((image, index) => {
               return (

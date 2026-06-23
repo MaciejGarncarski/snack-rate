@@ -14,15 +14,6 @@ import { Textarea } from "#/components/ui/textarea";
 import { ImagePicker } from "#/features/catalogue/create-snack/components/image-picker";
 import { useCreateSnackForm } from "#/features/catalogue/create-snack/hooks/use-create-snack-form";
 
-function getErrorMessage(errors: unknown[]): string | undefined {
-  if (errors.length === 0) return undefined;
-  const first = errors[0];
-  if (typeof first === "string") return first;
-  if (first && typeof first === "object" && "message" in first)
-    return String((first as { message: unknown }).message);
-  return String(first);
-}
-
 type SnackType = {
   name: string;
   slug: string;
@@ -37,6 +28,10 @@ type Props = {
   onSubmit: (formData: FormData) => Promise<void>;
   types: SnackType[];
 };
+
+function getErrorMessage(errors: unknown[]): string {
+  return errors.map((e: any) => e?.message ?? String(e)).join(", ");
+}
 
 export function CreateSnackForm({ onSubmit, types }: Props) {
   const form = useCreateSnackForm({ onSubmit });
@@ -54,53 +49,66 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
       <div className="flex flex-col gap-20 md:flex-row">
         <form.Field name="images">
           {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            const hasError = field.state.meta.errors.length > 0;
             return (
-              <Field data-invalid={isInvalid}>
+              <Field invalid={hasError}>
                 <ImagePicker
                   value={field.state.value}
                   onChange={(files) => field.handleChange(files)}
-                  aria-invalid={isInvalid}
                 />
-                {isInvalid && <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>}
+                <FieldError match={hasError}>{getErrorMessage(field.state.meta.errors)}</FieldError>
               </Field>
             );
           }}
         </form.Field>
         <div className="flex flex-col gap-6 md:w-[20rem]">
           <form.Field name="name">
-            {(field) => (
-              <Field>
-                <FieldLabel>Nazwa</FieldLabel>
-                <Input
-                  size="lg"
-                  placeholder="Nazwa"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </Field>
-            )}
+            {(field) => {
+              const hasError = field.state.meta.errors.length > 0;
+              return (
+                <Field invalid={hasError}>
+                  <FieldLabel>Nazwa</FieldLabel>
+                  <Input
+                    size="lg"
+                    placeholder="Nazwa"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
+                  />
+                  <FieldError match={hasError}>
+                    {getErrorMessage(field.state.meta.errors)}
+                  </FieldError>
+                </Field>
+              );
+            }}
           </form.Field>
 
           <form.Field name="description">
-            {(field) => (
-              <Field>
-                <FieldLabel>Opis (opcjonalnie)</FieldLabel>
-                <Textarea
-                  size="lg"
-                  placeholder="Opis (opcjonalnie)"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </Field>
-            )}
+            {(field) => {
+              const hasError = field.state.meta.errors.length > 0;
+              return (
+                <Field invalid={hasError}>
+                  <FieldLabel>Opis (opcjonalnie)</FieldLabel>
+                  <Textarea
+                    size="lg"
+                    placeholder="Opis (opcjonalnie)"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
+                  />
+                  <FieldError match={hasError}>
+                    {getErrorMessage(field.state.meta.errors)}
+                  </FieldError>
+                </Field>
+              );
+            }}
           </form.Field>
 
           <form.Field name="price">
             {(field) => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+              const hasError = field.state.meta.errors.length > 0;
               return (
-                <Field data-invalid={isInvalid}>
+                <Field invalid={hasError}>
                   <FieldLabel>Cena (opcjonalnie)</FieldLabel>
                   <Input
                     size="lg"
@@ -108,48 +116,61 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
                     placeholder="Cena (opcjonalnie)"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
                     step="0.01"
                     min="0"
-                    aria-invalid={isInvalid}
                   />
-                  {isInvalid && <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>}
+                  <FieldError match={hasError}>
+                    {getErrorMessage(field.state.meta.errors)}
+                  </FieldError>
                 </Field>
               );
             }}
           </form.Field>
 
           <form.Field name="barcode">
-            {(field) => (
-              <Field>
-                <FieldLabel>Kod kreskowy (opcjonalnie)</FieldLabel>
-                <Input
-                  type="text"
-                  size="lg"
-                  placeholder="Kod kreskowy - numer"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </Field>
-            )}
+            {(field) => {
+              const hasError = field.state.meta.errors.length > 0;
+              return (
+                <Field invalid={hasError}>
+                  <FieldLabel>Kod kreskowy (opcjonalnie)</FieldLabel>
+                  <Input
+                    type="text"
+                    size="lg"
+                    placeholder="Kod kreskowy - numer"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
+                  />
+                  <FieldError match={hasError}>
+                    {getErrorMessage(field.state.meta.errors)}
+                  </FieldError>
+                </Field>
+              );
+            }}
           </form.Field>
 
           <form.Field name="typeSlug">
             {(field) => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+              const hasError = field.state.meta.errors.length > 0;
               return (
-                <Field data-invalid={isInvalid}>
+                <Field invalid={hasError}>
                   <FieldLabel>Rodzaj</FieldLabel>
                   <Combobox
-                    aria-invalid={isInvalid}
                     items={typesFormMapped}
-                    value={typesFormMapped.find((t) => t.value === form.state.values.typeSlug)}
+                    value={
+                      typesFormMapped.find((t) => t.value === field.state.value) || {
+                        label: "",
+                        value: "",
+                      }
+                    }
                     onValueChange={(value) => {
                       if (value?.value) {
                         field.handleChange(value?.value);
                       }
                     }}
                   >
-                    <ComboboxInput size="lg" placeholder="Rodzaj" />
+                    <ComboboxInput size="lg" placeholder="Rodzaj" onBlur={field.handleBlur} />
                     <ComboboxPopup>
                       <ComboboxEmpty>Brak typów.</ComboboxEmpty>
                       <ComboboxList>
@@ -161,7 +182,9 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
                       </ComboboxList>
                     </ComboboxPopup>
                   </Combobox>
-                  {isInvalid && <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>}
+                  <FieldError match={hasError}>
+                    {getErrorMessage(field.state.meta.errors)}
+                  </FieldError>
                 </Field>
               );
             }}
@@ -169,30 +192,20 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
 
           <form.Subscribe
             selector={(state) => ({
-              hasSubmitError: "onSubmit" in state.errorMap && state.errorMap.onSubmit !== undefined,
-              submitError: "onSubmit" in state.errorMap ? state.errorMap.onSubmit : undefined,
               canSubmit: state.canSubmit,
               isSubmitting: state.isSubmitting,
               shouldBlockNavigation: state.isDirty && !state.isSubmitting,
+              isSubmitted: state.isSubmitted,
             })}
             // oxlint-disable-next-line react/no-children-prop
-            children={({
-              hasSubmitError,
-              submitError,
-              canSubmit,
-              isSubmitting,
-              shouldBlockNavigation,
-            }) => (
+            children={({ canSubmit, isSubmitting, shouldBlockNavigation, isSubmitted }) => (
               <>
-                <NavigationBlock shouldBlock={shouldBlockNavigation} />
-                {hasSubmitError && (
-                  <p className="text-sm text-destructive">{String(submitError)}</p>
-                )}
+                <NavigationBlock shouldBlock={shouldBlockNavigation && !isSubmitted} />
                 <div className="flex flex-col justify-between gap-4 md:flex-row">
                   <Button type="button" disabled={true} variant={"outline"}>
                     Podgląd produktu (wkrótce)
                   </Button>
-                  <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                  <Button type="submit" disabled={!canSubmit}>
                     {isSubmitting ? "Dodawanie..." : "Dodaj"}
                   </Button>
                 </div>
