@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import Cropper from "react-easy-crop";
+import { useCallback, useEffect, useState } from "react";
+import Cropper, { type Area } from "react-easy-crop";
 
 import { Button } from "#/components/ui/button";
 import {
@@ -15,12 +15,7 @@ import {
 import { Field, FieldLabel } from "#/components/ui/field";
 import { Slider, SliderValue } from "#/components/ui/slider";
 
-type PixelCrop = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
+const MAX_OUTPUT_DIMENSION = 1024;
 
 function createImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -32,19 +27,20 @@ function createImage(url: string): Promise<HTMLImageElement> {
   });
 }
 
-async function getCroppedImg(
-  imageSrc: string,
-  pixelCrop: PixelCrop,
-  fileName: string,
-): Promise<File> {
+async function getCroppedImg(imageSrc: string, pixelCrop: Area, fileName: string): Promise<File> {
   const image = await createImage(imageSrc);
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
-  canvas.width = pixelCrop.width;
-  canvas.height = pixelCrop.height;
+  if (!ctx) {
+    throw new Error("Could not get canvas context");
+  }
 
-  ctx?.drawImage(
+  const scale = Math.min(1, MAX_OUTPUT_DIMENSION / Math.max(pixelCrop.width, pixelCrop.height));
+  canvas.width = pixelCrop.width * scale;
+  canvas.height = pixelCrop.height * scale;
+
+  ctx.drawImage(
     image,
     pixelCrop.x,
     pixelCrop.y,
@@ -52,8 +48,8 @@ async function getCroppedImg(
     pixelCrop.height,
     0,
     0,
-    pixelCrop.width,
-    pixelCrop.height,
+    canvas.width,
+    canvas.height,
   );
 
   return new Promise((resolve, reject) => {
@@ -86,18 +82,38 @@ export function ImageCropDialog({
 }: ImageCropDialogProps) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<PixelCrop | null>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [isCropping, setIsCropping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleCropComplete = useCallback((_: PixelCrop, cropped: PixelCrop) => {
+  useEffect(() => {
+    if (open) {
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+      setCroppedAreaPixels(null);
+      setError(null);
+    }
+  }, [open, imageSrc]);
+
+  const handleCropComplete = useCallback((_: Area, cropped: Area) => {
     setCroppedAreaPixels(cropped);
   }, []);
 
   const handleCrop = async () => {
     if (!croppedAreaPixels) return;
-    const croppedFile = await getCroppedImg(imageSrc, croppedAreaPixels, "cropped.jpg");
-    onCropComplete(croppedFile);
-    onOpenChange(false);
-    setZoom(1);
+    setIsCropping(true);
+    setError(null);
+    try {
+      const croppedFile = await getCroppedImg(imageSrc, croppedAreaPixels, "cropped.jpg");
+      onCropComplete(croppedFile);
+      onOpenChange(false);
+    } catch (err) {
+      setError("Nie udało się przyciąć obrazu. Spróbuj ponownie.");
+      // oxlint-disable-next-line no-console
+      console.error("Crop failed", err);
+    } finally {
+      setIsCropping(false);
+    }
   };
 
   return (
@@ -110,6 +126,7 @@ export function ImageCropDialog({
         <DialogPanel className="flex flex-col items-center gap-4">
           <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-muted">
             <Cropper
+              key={imageSrc}
               image={imageSrc}
               crop={crop}
               zoom={zoom}
@@ -140,12 +157,16 @@ export function ImageCropDialog({
               </div>
             </Slider>
           </Field>
+
+          {error && <p className="text-sm text-destructive">{error}</p>}
         </DialogPanel>
 
         <DialogFooter>
-          <DialogClose render={<Button variant="ghost" />}>Anuluj</DialogClose>
-          <Button type="button" onClick={handleCrop}>
-            Przytnij
+          <DialogClose render={<Button variant="ghost" disabled={isCropping} />}>
+            Anuluj
+          </DialogClose>
+          <Button type="button" onClick={handleCrop} disabled={!croppedAreaPixels || isCropping}>
+            {isCropping ? "Przycinanie..." : "Przytnij"}
           </Button>
         </DialogFooter>
       </DialogPopup>

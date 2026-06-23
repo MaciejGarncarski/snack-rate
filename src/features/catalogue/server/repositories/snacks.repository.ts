@@ -15,6 +15,7 @@ export type SnackItem = {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
+  thumbnailUrl: string | null;
   images: {
     id: string;
     url: string;
@@ -55,6 +56,7 @@ type DbSnackItem = {
   images: {
     id: string;
     storageKey: string;
+    type: string;
     isPrimary: boolean;
     sortOrder: number;
     createdAt: Date;
@@ -85,6 +87,9 @@ async function toSnackItem(
     })),
   );
 
+  const thumbnailImage = row.images.find((img) => img.type === "thumbnail");
+  const thumbnailUrl = thumbnailImage ? await getFileUrl(thumbnailImage.storageKey) : null;
+
   const parsedStatus =
     row.status === "pending" || row.status === "published" || row.status === "rejected"
       ? row.status
@@ -103,6 +108,7 @@ async function toSnackItem(
     updatedAt: row.updatedAt,
     status: parsedStatus,
     deletedAt: row.deletedAt,
+    thumbnailUrl,
     images,
     type: row.type,
   };
@@ -121,6 +127,7 @@ type CreateSnackData = {
 type AddImageData = {
   snackItemId: string;
   storageKey: string;
+  type?: "default" | "thumbnail";
   sortOrder: number;
   isPrimary: boolean;
 };
@@ -148,7 +155,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
           name: data.name,
           slug: data.slug,
           description: data.description || null,
-          price: data.price === null ? null : String(data.price),
+          price: data.price ? data.price.toString() : null,
           barcode: data.barcode || null,
           typeId: snackType.id,
           status: data.status,
@@ -165,6 +172,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
         .values({
           snackItemId: data.snackItemId,
           storageKey: data.storageKey,
+          type: data.type ?? "default",
           sortOrder: data.sortOrder,
           isPrimary: data.isPrimary,
         })

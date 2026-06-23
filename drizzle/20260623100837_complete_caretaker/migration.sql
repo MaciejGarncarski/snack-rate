@@ -1,0 +1,1 @@
+ALTER TABLE "snack_item_images" ADD COLUMN "type" text DEFAULT 'default' NOT NULL;

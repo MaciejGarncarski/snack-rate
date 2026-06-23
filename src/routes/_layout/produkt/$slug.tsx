@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { XCircleIcon } from "lucide-react";
 
+import { SnackRating } from "#/components/snacks/snack-rating";
 import { Badge } from "#/components/ui/badge";
 import {
   Empty,
@@ -48,11 +49,20 @@ function RouteComponent() {
 
   return (
     <div>
-      <h1 className="mb-4 text-3xl font-bold">{data.name}</h1>
-      <p className="mb-2 text-lg">{data.description}</p>
-      <p className="mb-2 text-xl font-semibold">{data.price} zł</p>
-      <p className="text-sm text-muted-foreground">Average rating: {data.avgRating}</p>
+      <div className="mb-4 flex items-center justify-between">
+        <img src={data.images[0].url} alt={data.name} className="mr-4 h-32 w-32 object-cover" />
+        <div>
+          <h1 className="mb-4 text-3xl font-bold">{data.name}</h1>
+          <p className="mb-2 text-lg">{data.description}</p>
+          <p className="mb-2 text-xl font-semibold">{data.price} zł</p>
+          <SnackRating rating={data.avgRating} />
+        </div>
+      </div>
       <div>{data.type && <Badge>{data.type.name}</Badge>}</div>
+      <div>
+        <h2 className="mb-2 text-2xl font-bold">Oceny</h2>
+        dodac fetcha
+      </div>
     </div>
   );
 }

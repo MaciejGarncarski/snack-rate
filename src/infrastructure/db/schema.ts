@@ -154,6 +154,7 @@ export const snackItemImages = pgTable(
       .notNull()
       .references(() => snackItems.id),
     storageKey: text("storage_key").notNull(), // reference to the file in Garage
+    type: text("type").notNull().default("default"), // 'default' | 'thumbnail'
     sortOrder: integer("sort_order").notNull().default(0),
     isPrimary: boolean("is_primary").notNull().default(false),
     createdAt: timestamp("created_at").notNull().defaultNow(),

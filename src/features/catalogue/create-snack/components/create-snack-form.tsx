@@ -1,5 +1,4 @@
-import { Block } from "@tanstack/react-router";
-
+import { NavigationBlock } from "#/components/layout/navigation-block";
 import { Button } from "#/components/ui/button";
 import {
   Combobox,
@@ -52,17 +51,6 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
       }}
       className="mx-auto flex flex-col gap-10"
     >
-      <Block
-        shouldBlockFn={() => {
-          if (!form.state.isDirty) return false;
-
-          const shouldLeave = confirm(
-            "Czy na pewno chcesz opuścić stronę? Wprowadzone zmiany zostaną utracone.",
-          );
-          return !shouldLeave;
-        }}
-        enableBeforeUnload={form.state.isDirty}
-      />
       <div className="flex flex-col gap-20 md:flex-row">
         <form.Field name="images">
           {(field) => {
@@ -185,10 +173,18 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
               submitError: "onSubmit" in state.errorMap ? state.errorMap.onSubmit : undefined,
               canSubmit: state.canSubmit,
               isSubmitting: state.isSubmitting,
+              shouldBlockNavigation: state.isDirty && !state.isSubmitting,
             })}
             // oxlint-disable-next-line react/no-children-prop
-            children={({ hasSubmitError, submitError, canSubmit, isSubmitting }) => (
+            children={({
+              hasSubmitError,
+              submitError,
+              canSubmit,
+              isSubmitting,
+              shouldBlockNavigation,
+            }) => (
               <>
+                <NavigationBlock shouldBlock={shouldBlockNavigation} />
                 {hasSubmitError && (
                   <p className="text-sm text-destructive">{String(submitError)}</p>
                 )}

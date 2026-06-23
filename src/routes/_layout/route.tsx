@@ -23,15 +23,15 @@ function RouteComponent() {
   return (
     <div className="">
       <Navbar />
-      <div className="relative isolate flex min-h-svh flex-col">
-        <div className="mx-auto max-w-7xl p-8">
-          <ToastProvider>
-            <AnchoredToastProvider>
+      <ToastProvider>
+        <AnchoredToastProvider>
+          <div className="relative isolate flex min-h-svh flex-col">
+            <div className="mx-auto max-w-7xl p-8">
               <Outlet />
-            </AnchoredToastProvider>
-          </ToastProvider>
-        </div>
-      </div>
+            </div>
+          </div>
+        </AnchoredToastProvider>
+      </ToastProvider>
     </div>
   );
 }

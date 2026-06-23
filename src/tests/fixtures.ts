@@ -48,6 +48,7 @@ export async function createSnackImage(snackId: string, overrides?: Partial<Snac
     .values({
       snackItemId: snackId,
       storageKey: `images/${crypto.randomUUID().slice(0, 8)}.jpg`,
+      type: "default",
       sortOrder: 0,
       isPrimary: false,
       ...overrides,

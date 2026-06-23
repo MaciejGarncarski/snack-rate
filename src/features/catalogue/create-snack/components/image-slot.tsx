@@ -44,7 +44,15 @@ export function ImageSlot({ isSelected, onClick, onMoveLeft, onMoveRight, imageS
       >
         <Tooltip>
           <TooltipTrigger
-            render={<Button size="icon-xs" onClick={onMoveLeft} disabled={!onMoveLeft} />}
+            render={
+              <Button
+                size="icon-xs"
+                className="disabled:opacity-50"
+                variant="outline"
+                onClick={onMoveLeft}
+                disabled={!onMoveLeft}
+              />
+            }
           >
             <ArrowLeft />
           </TooltipTrigger>
@@ -53,7 +61,15 @@ export function ImageSlot({ isSelected, onClick, onMoveLeft, onMoveRight, imageS
 
         <Tooltip>
           <TooltipTrigger
-            render={<Button size="icon-xs" onClick={onMoveRight} disabled={!onMoveRight} />}
+            render={
+              <Button
+                size="icon-xs"
+                className="disabled:opacity-50"
+                variant="outline"
+                onClick={onMoveRight}
+                disabled={!onMoveRight}
+              />
+            }
           >
             <ArrowRight />
           </TooltipTrigger>

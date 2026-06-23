@@ -2,11 +2,11 @@ import { ImageOffIcon } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useCallback, useState } from "react";
 
-import { Badge } from "#/components/ui/badge";
 import { ImageCropDialog } from "#/features/catalogue/create-snack/components/image-crop-dialog";
 import { ImageDropzone } from "#/features/catalogue/create-snack/components/image-dropzone";
 import { ImageSlot } from "#/features/catalogue/create-snack/components/image-slot";
 import { ImageSlotEmpty } from "#/features/catalogue/create-snack/components/image-slot-empty";
+import { MainImageBadges } from "#/features/catalogue/create-snack/components/main-image-badges";
 import { MainImageToolbar } from "#/features/catalogue/create-snack/components/main-image-toolbar";
 import { useAddImage, type ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
 import { useCropQueue } from "#/features/catalogue/create-snack/hooks/use-crop-queue";
@@ -93,12 +93,7 @@ export function ImagePicker({ onChange, totalImages = 3 }: Props) {
           {foundSelectedImage && (
             <>
               <div className="absolute bottom-2 left-2 flex items-center justify-center gap-2">
-                <Badge>Podgląd</Badge>
-                {selectedIndex === 0 && (
-                  <Badge variant="info" className="backdrop-blur-3xl">
-                    Główne zdjęcie
-                  </Badge>
-                )}
+                <MainImageBadges isPrimaryImage={selectedIndex === 0} />
               </div>
 
               <div className="absolute top-2 right-2 flex items-center justify-center gap-4">

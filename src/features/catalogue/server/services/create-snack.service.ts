@@ -1,4 +1,5 @@
 import { trace } from "@opentelemetry/api";
+import sharp from "sharp";
 
 import type { SnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
 import { getExtensionFromBlob } from "#/features/catalogue/utils/get-extension-from-blob.ts";
@@ -18,6 +19,7 @@ type CreateSnackInput = {
 
 const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const THUMBNAIL_SIZE = 200;
 
 const tracer = trace.getTracer("catalogue-service");
 
@@ -31,6 +33,34 @@ function validateImage(img: Blob, index: number): void {
       `Image ${index}: file too large (${(img.size / 1024 / 1024).toFixed(1)} MB). Max: 10 MB`,
     );
   }
+}
+
+function createThumbnail(buffer: Buffer, ext: string): Promise<Buffer> {
+  const sharpInstance = sharp(buffer);
+
+  let pipeline = sharpInstance.resize({
+    width: THUMBNAIL_SIZE,
+    height: THUMBNAIL_SIZE,
+    fit: "inside",
+    withoutEnlargement: true,
+  });
+
+  switch (ext) {
+    case "jpg":
+    case "jpeg":
+      pipeline = pipeline.jpeg({ quality: 85 });
+      break;
+    case "png":
+      pipeline = pipeline.png();
+      break;
+    case "webp":
+      pipeline = pipeline.webp({ quality: 85 });
+      break;
+    default:
+      pipeline = pipeline.jpeg({ quality: 85 });
+  }
+
+  return pipeline.toBuffer();
 }
 
 export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepository) {
@@ -64,16 +94,21 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
             try {
               const ext = getExtensionFromBlob(img);
               const key = StorageKey.create(slug, ext).getValue();
+              const thumbKey = StorageKey.createThumb(slug, ext).getValue();
 
               imgSpan.setAttributes({
                 "image.index": index,
                 "image.extension": ext,
                 "s3.key": key,
+                "s3.thumb_key": thumbKey,
               });
 
               const buffer = Buffer.from(await img.arrayBuffer());
 
-              await uploadPrivateFile(key, buffer);
+              await Promise.all([
+                uploadPrivateFile(key, buffer),
+                createThumbnail(buffer, ext).then((thumb) => uploadPrivateFile(thumbKey, thumb)),
+              ]);
 
               const duration = Date.now() - imgStart;
 
@@ -82,7 +117,7 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
                 "upload.duration_ms": duration,
               });
 
-              return { key, index };
+              return { key, thumbKey, index };
             } finally {
               imgSpan.end();
             }
@@ -109,8 +144,20 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
             {
               snackItemId: snack.id,
               storageKey: uploaded.key,
+              type: "default",
               sortOrder: uploaded.index,
               isPrimary: uploaded.index === 0,
+            },
+            tx,
+          );
+
+          await snackRepository.addImage(
+            {
+              snackItemId: snack.id,
+              storageKey: uploaded.thumbKey,
+              type: "thumbnail",
+              sortOrder: uploaded.index,
+              isPrimary: false,
             },
             tx,
           );

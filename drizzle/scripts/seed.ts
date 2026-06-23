@@ -1,6 +1,7 @@
 // oxlint-disable no-console
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
+import sharp from "sharp";
 
 import * as schema from "#/infrastructure/db/schema.ts";
 import { hashPassword } from "#/lib/crypto.ts";
@@ -8,6 +9,35 @@ import { hashPassword } from "#/lib/crypto.ts";
 import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
 
 const db = drizzle(process.env.DATABASE_URL!);
+
+const THUMBNAIL_SIZE = 120;
+
+async function createThumbnail(buffer: Buffer, ext: string): Promise<Buffer> {
+  const sharpInstance = sharp(buffer);
+  let pipeline = sharpInstance.resize({
+    width: THUMBNAIL_SIZE,
+    height: THUMBNAIL_SIZE,
+    fit: "inside",
+    withoutEnlargement: true,
+  });
+
+  switch (ext) {
+    case "jpg":
+    case "jpeg":
+      pipeline = pipeline.jpeg({ quality: 85 });
+      break;
+    case "png":
+      pipeline = pipeline.png();
+      break;
+    case "webp":
+      pipeline = pipeline.webp({ quality: 85 });
+      break;
+    default:
+      pipeline = pipeline.jpeg({ quality: 85 });
+  }
+
+  return pipeline.toBuffer();
+}
 
 // oxlint-disable-next-line max-lines-per-function
 async function seedDatabase() {
@@ -231,9 +261,11 @@ async function seedDatabase() {
 
   const monsterImageUrl = "https://i.erli.pl/yb6ksh.1d22ba.xl.webp";
   const monsterImageKey = "monster-energy-drink.webp";
+  const monsterThumbKey = "monster-energy-drink-thumb.webp";
 
   const chipsImageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/df/Salt-and-Vinegar.JPG";
   const chipsImageKey = "chips.jpg";
+  const chipsThumbKey = "chips-thumb.jpg";
 
   const [monsterImageResponse, chipsImageResponse] = await Promise.all([
     fetch(monsterImageUrl),
@@ -244,82 +276,180 @@ async function seedDatabase() {
     throw new Error(`Failed to fetch image`);
   }
 
+  const monsterBuffer = Buffer.from(await monsterImageResponse.arrayBuffer());
+  const chipsBuffer = Buffer.from(await chipsImageResponse.arrayBuffer());
+
+  const [monsterThumbBuffer, chipsThumbBuffer] = await Promise.all([
+    createThumbnail(monsterBuffer, "webp"),
+    createThumbnail(chipsBuffer, "jpg"),
+  ]);
+
   await Promise.all([
     deleteAllObjectsFromBucket(process.env.S3_BUCKET_UPLOADS!),
     deleteAllObjectsFromBucket(process.env.S3_BUCKET_PUBLIC!),
   ]);
 
   await Promise.all([
-    uploadFileToGarage(chipsImageKey, Buffer.from(await chipsImageResponse.arrayBuffer())),
-    uploadFileToGarage(monsterImageKey, Buffer.from(await monsterImageResponse.arrayBuffer())),
+    uploadFileToGarage(chipsImageKey, chipsBuffer),
+    uploadFileToGarage(chipsThumbKey, chipsThumbBuffer),
+    uploadFileToGarage(monsterImageKey, monsterBuffer),
+    uploadFileToGarage(monsterThumbKey, monsterThumbBuffer),
   ]);
 
   await db.insert(schema.snackItemImages).values([
     {
       snackItemId: monsterOriginal.id,
       storageKey: monsterImageKey,
+      type: "default",
+      sortOrder: 0,
+      isPrimary: true,
+    },
+    {
+      snackItemId: monsterOriginal.id,
+      storageKey: monsterThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: monsterUltra.id,
+      storageKey: monsterImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: monsterUltra.id,
+      storageKey: monsterThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: monsterMango.id,
       storageKey: monsterImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: monsterMango.id,
-      storageKey: monsterImageKey,
+      storageKey: monsterThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: laysClassic.id,
+      storageKey: chipsImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: laysClassic.id,
+      storageKey: chipsThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: laysKetchup.id,
       storageKey: chipsImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: laysKetchup.id,
+      storageKey: chipsThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: pringlesOriginal.id,
       storageKey: chipsImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: pringlesOriginal.id,
+      storageKey: chipsThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: pringlesSerKebab.id,
       storageKey: chipsImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: pringlesSerKebab.id,
+      storageKey: chipsThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: tyrrellsSeaSalt.id,
       storageKey: chipsImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: tyrrellsSeaSalt.id,
+      storageKey: chipsThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: tyrrellsSweet.id,
       storageKey: chipsImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: tyrrellsSweet.id,
-      storageKey: chipsImageKey,
+      storageKey: chipsThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: wedelPtasie.id,
+      storageKey: monsterImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: wedelPtasie.id,
+      storageKey: monsterThumbKey,
+      type: "thumbnail",
+      sortOrder: 0,
+      isPrimary: false,
+    },
+    {
+      snackItemId: wedelGorzka.id,
       storageKey: monsterImageKey,
+      type: "default",
       sortOrder: 0,
       isPrimary: true,
     },
     {
       snackItemId: wedelGorzka.id,
-      storageKey: monsterImageKey,
+      storageKey: monsterThumbKey,
+      type: "thumbnail",
       sortOrder: 0,
-      isPrimary: true,
+      isPrimary: false,
     },
   ]);
 
