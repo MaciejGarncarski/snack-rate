@@ -8,7 +8,6 @@ import {
   timestamp,
   decimal,
   integer,
-  boolean,
   primaryKey,
   uniqueIndex,
   index,
@@ -156,7 +155,6 @@ export const snackItemImages = pgTable(
     storageKey: text("storage_key").notNull(), // reference to the file in Garage
     type: text("type").notNull().default("default"), // 'default' | 'thumbnail'
     sortOrder: integer("sort_order").notNull().default(0),
-    isPrimary: boolean("is_primary").notNull().default(false),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
@@ -181,7 +179,6 @@ export const snackReviewImages = pgTable(
       .references(() => snackReviews.id),
     url: text("url").notNull(),
     sortOrder: integer("sort_order").notNull().default(0),
-    isPrimary: boolean("is_primary").notNull().default(false),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),

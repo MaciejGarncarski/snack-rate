@@ -50,7 +50,6 @@ export async function createSnackImage(snackId: string, overrides?: Partial<Snac
       storageKey: `images/${crypto.randomUUID().slice(0, 8)}.jpg`,
       type: "default",
       sortOrder: 0,
-      isPrimary: false,
       ...overrides,
     })
     .returning();
@@ -67,7 +66,6 @@ export async function createSnackWithImages(
     Array.from({ length: imageCount }, (_, i) =>
       createSnackImage(snack.id, {
         sortOrder: i,
-        isPrimary: i === 0,
       }),
     ),
   );

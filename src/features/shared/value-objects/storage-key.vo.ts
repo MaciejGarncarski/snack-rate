@@ -1,3 +1,5 @@
+import { nanoid } from "nanoid";
+
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 
 export class StorageKey {
@@ -12,7 +14,7 @@ export class StorageKey {
       throw new Error("StorageKey slug cannot be empty");
     }
 
-    const storageKey = `${slug.getValue()}.${imageExtension}`;
+    const storageKey = `${slug.getValue()}.${nanoid()}.${imageExtension}`;
 
     return new StorageKey(storageKey);
   }
@@ -26,7 +28,7 @@ export class StorageKey {
       throw new Error("StorageKey slug cannot be empty");
     }
 
-    const storageKey = `${slug.getValue()}-thumb.${imageExtension}`;
+    const storageKey = `${slug.getValue()}.${nanoid()}-thumb.${imageExtension}`;
 
     return new StorageKey(storageKey);
   }

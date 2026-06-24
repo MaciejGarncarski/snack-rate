@@ -8,7 +8,7 @@ describe("StorageKey value object", () => {
       const storageKey = StorageKey.create(slug, "jpg");
       const value = storageKey.getValue();
 
-      expect(value).toBe(`monster-energy.jpg`);
+      expect(value).toMatch(/^monster-energy\.[a-zA-Z0-9_-]{21}\.jpg$/u);
     });
 
     it("should throw when imageExtension is empty", () => {
@@ -32,7 +32,7 @@ describe("StorageKey value object", () => {
       const storageKey = StorageKey.createThumb(slug, "jpg");
       const value = storageKey.getValue();
 
-      expect(value).toBe(`monster-energy-thumb.jpg`);
+      expect(value).toMatch(/^monster-energy\.[a-zA-Z0-9_-]{21}-thumb\.jpg$/u);
     });
 
     it("should throw when imageExtension is empty", () => {

@@ -20,11 +20,8 @@ export type SnackItem = {
     id: string;
     url: string;
     storageKey: string;
-    isPrimary: boolean;
     sortOrder: number;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
+    type: "default" | "thumbnail";
   }[];
   type: {
     id: string;
@@ -57,7 +54,6 @@ type DbSnackItem = {
     id: string;
     storageKey: string;
     type: string;
-    isPrimary: boolean;
     sortOrder: number;
     createdAt: Date;
     updatedAt: Date;
@@ -75,16 +71,15 @@ async function toSnackItem(
   getFileUrl: (storageKey: string) => Promise<string>,
 ): Promise<SnackItem> {
   const images = await Promise.all(
-    row.images.map(async (img) => ({
-      id: img.id,
-      url: await getFileUrl(img.storageKey),
-      storageKey: img.storageKey,
-      isPrimary: img.isPrimary,
-      sortOrder: img.sortOrder,
-      createdAt: img.createdAt,
-      updatedAt: img.updatedAt,
-      deletedAt: img.deletedAt,
-    })),
+    row.images.map(
+      async (img): Promise<SnackItem["images"][0]> => ({
+        id: img.id,
+        url: await getFileUrl(img.storageKey),
+        storageKey: img.storageKey,
+        sortOrder: img.sortOrder,
+        type: img.type === "default" || img.type === "thumbnail" ? img.type : "default",
+      }),
+    ),
   );
 
   const thumbnailImage = row.images.find((img) => img.type === "thumbnail");
@@ -129,7 +124,6 @@ type AddImageData = {
   storageKey: string;
   type?: "default" | "thumbnail";
   sortOrder: number;
-  isPrimary: boolean;
 };
 
 export type TransactionClient = Parameters<Db["transaction"]>[0] extends (tx: infer T) => unknown
@@ -174,7 +168,6 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
           storageKey: data.storageKey,
           type: data.type ?? "default",
           sortOrder: data.sortOrder,
-          isPrimary: data.isPrimary,
         })
         .returning();
 

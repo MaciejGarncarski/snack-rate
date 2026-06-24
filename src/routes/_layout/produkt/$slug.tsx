@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { XCircleIcon } from "lucide-react";
 
-import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
+import SnackImageSlider from "#/components/snacks/snack-image-slider";
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { Badge } from "#/components/ui/badge";
 import {
@@ -48,11 +48,13 @@ function RouteComponent() {
     return null;
   }
 
+  const imageUrls = data.images.filter((img) => img.type === "default").map((img) => img.url);
+
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <div className="relative aspect-4/5 w-32 overflow-hidden rounded">
-          <ImageWithPlaceholder src={data.images[0].url} alt={data.name} />
+        <div className="w-[20rem]">
+          <SnackImageSlider images={imageUrls} />
         </div>
         <div>
           <h1 className="mb-4 text-3xl font-bold">{data.name}</h1>

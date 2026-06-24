@@ -102,7 +102,6 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
               storageKey: uploaded.key,
               type: "default",
               sortOrder: uploaded.index,
-              isPrimary: uploaded.index === 0,
             },
             tx,
           );
@@ -113,7 +112,6 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
               storageKey: uploaded.thumbKey,
               type: "thumbnail",
               sortOrder: uploaded.index,
-              isPrimary: false,
             },
             tx,
           );

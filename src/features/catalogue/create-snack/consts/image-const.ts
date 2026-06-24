@@ -1,4 +1,4 @@
-export const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp", "image/avif"] as const;
+export const SUPPORTED_FORMATS = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 export const supportedFormatsList = SUPPORTED_FORMATS.map((type) =>
   type.split("/")[1].toUpperCase(),
 ).join(", ");
