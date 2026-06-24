@@ -38,7 +38,7 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }:
               <ImageWithPlaceholder
                 alt=""
                 src={item.thumbnailUrl ?? item.images[0]?.url}
-                containerClassName="size-9 shrink-0 overflow-hidden rounded-md bg-muted md:size-10"
+                containerClassName="w-9 aspect-4/5 shrink-0 overflow-hidden rounded-md bg-muted md:w-10"
                 className="h-full w-full object-cover"
               />
               <div className="min-w-0 flex-1">

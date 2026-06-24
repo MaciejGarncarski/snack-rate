@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 
 import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
-import { searchSnacks } from "#/features/catalogue/server/services/search-snacks.service";
+import { searchSnacks } from "#/features/catalogue/server/use-cases/search-snacks.use-case";
 
 const searchInputSchema = z.object({
   query: z.string().max(100),

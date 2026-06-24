@@ -11,7 +11,7 @@ vi.mock("sharp", () => {
   const sharpInstance = {
     metadata: vi
       .fn<() => Promise<{ width: number; height: number; format: string }>>()
-      .mockResolvedValue({ width: 1024, height: 768, format: "jpeg" }),
+      .mockResolvedValue({ width: 1024, height: 768, format: "png" }),
     resize: vi.fn<() => unknown>().mockReturnThis(),
     jpeg: vi.fn<() => unknown>().mockReturnThis(),
     png: vi.fn<() => unknown>().mockReturnThis(),

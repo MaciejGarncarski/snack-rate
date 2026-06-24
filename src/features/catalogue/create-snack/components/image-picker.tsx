@@ -17,10 +17,9 @@ import { useReorder } from "#/features/catalogue/create-snack/hooks/use-reorder"
 type Props = {
   value: File[];
   onChange: (files: File[]) => void;
-  totalImages?: number;
 };
 
-export function ImagePicker({ onChange, totalImages = MAXIMUM_IMAGES }: Props) {
+export function ImagePicker({ onChange }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [images, setImages] = useState<ImagePair[]>([]);
   const foundSelectedImage = images[selectedIndex] || null;
@@ -59,7 +58,7 @@ export function ImagePicker({ onChange, totalImages = MAXIMUM_IMAGES }: Props) {
     setSelectedIndex(0);
   }, [foundSelectedImage, onChange]);
 
-  const emptySpaces = totalImages - images.length;
+  const emptySpaces = MAXIMUM_IMAGES - images.length;
 
   return (
     <div className="flex flex-col gap-4">
@@ -81,7 +80,7 @@ export function ImagePicker({ onChange, totalImages = MAXIMUM_IMAGES }: Props) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={uploadOnClick}
-                className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-lg text-muted-foreground ring-accent focus:ring-2 focus:outline-none"
+                className="absolute left-0 flex h-full w-full flex-col items-center justify-center gap-4 rounded-lg text-muted-foreground ring-accent focus:ring-2 focus:outline-none"
               >
                 <ImageOffIcon />
                 <p>Brak obrazu</p>
@@ -105,7 +104,7 @@ export function ImagePicker({ onChange, totalImages = MAXIMUM_IMAGES }: Props) {
         </AnimatePresence>
       </div>
       <LayoutGroup>
-        <div className="flex max-w-76 gap-2 overflow-hidden py-0.5 md:max-w-94">
+        <div className="flex max-w-76 gap-2 overflow-hidden py-0.5 md:max-w-88">
           <AnimatePresence mode="sync">
             {images.map((image, index) => {
               return (

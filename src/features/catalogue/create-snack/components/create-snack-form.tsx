@@ -25,7 +25,6 @@ type SnackTypeFormatted = {
 };
 
 type Props = {
-  onSubmit: (formData: FormData) => Promise<void>;
   types: SnackType[];
 };
 
@@ -33,8 +32,8 @@ function getErrorMessage(errors: unknown[]): string {
   return errors.map((e: any) => e?.message ?? String(e)).join(", ");
 }
 
-export function CreateSnackForm({ onSubmit, types }: Props) {
-  const form = useCreateSnackForm({ onSubmit });
+export function CreateSnackForm({ types }: Props) {
+  const form = useCreateSnackForm();
   const typesFormMapped = types.map((t): SnackTypeFormatted => ({ value: t.slug, label: t.name }));
 
   return (
@@ -44,9 +43,9 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
         e.stopPropagation();
         form.handleSubmit();
       }}
-      className="mx-auto flex flex-col gap-10"
+      className="mx-auto flex flex-col gap-12"
     >
-      <div className="flex flex-col gap-20 md:flex-row">
+      <div className="flex flex-col gap-24 md:flex-row">
         <form.Field name="images">
           {(field) => {
             const hasError = field.state.meta.errors.length > 0;
@@ -61,7 +60,47 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
             );
           }}
         </form.Field>
-        <div className="flex flex-col gap-6 md:w-[20rem]">
+        <div className="flex flex-col gap-10 md:w-[20rem]">
+          <form.Field name="typeSlug">
+            {(field) => {
+              const hasError = field.state.meta.errors.length > 0;
+              return (
+                <Field invalid={hasError}>
+                  <FieldLabel>Rodzaj</FieldLabel>
+                  <Combobox
+                    items={typesFormMapped}
+                    value={
+                      typesFormMapped.find((t) => t.value === field.state.value) || {
+                        label: "",
+                        value: "",
+                      }
+                    }
+                    onValueChange={(value) => {
+                      if (value?.value) {
+                        field.handleChange(value?.value);
+                      }
+                    }}
+                  >
+                    <ComboboxInput size="lg" placeholder="Rodzaj" onBlur={field.handleBlur} />
+                    <ComboboxPopup>
+                      <ComboboxEmpty>Brak typów.</ComboboxEmpty>
+                      <ComboboxList>
+                        {(item) => (
+                          <ComboboxItem key={item.value} value={item}>
+                            {item.label}
+                          </ComboboxItem>
+                        )}
+                      </ComboboxList>
+                    </ComboboxPopup>
+                  </Combobox>
+                  <FieldError match={hasError}>
+                    {getErrorMessage(field.state.meta.errors)}
+                  </FieldError>
+                </Field>
+              );
+            }}
+          </form.Field>
+
           <form.Field name="name">
             {(field) => {
               const hasError = field.state.meta.errors.length > 0;
@@ -150,57 +189,16 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
             }}
           </form.Field>
 
-          <form.Field name="typeSlug">
-            {(field) => {
-              const hasError = field.state.meta.errors.length > 0;
-              return (
-                <Field invalid={hasError}>
-                  <FieldLabel>Rodzaj</FieldLabel>
-                  <Combobox
-                    items={typesFormMapped}
-                    value={
-                      typesFormMapped.find((t) => t.value === field.state.value) || {
-                        label: "",
-                        value: "",
-                      }
-                    }
-                    onValueChange={(value) => {
-                      if (value?.value) {
-                        field.handleChange(value?.value);
-                      }
-                    }}
-                  >
-                    <ComboboxInput size="lg" placeholder="Rodzaj" onBlur={field.handleBlur} />
-                    <ComboboxPopup>
-                      <ComboboxEmpty>Brak typów.</ComboboxEmpty>
-                      <ComboboxList>
-                        {(item) => (
-                          <ComboboxItem key={item.value} value={item}>
-                            {item.label}
-                          </ComboboxItem>
-                        )}
-                      </ComboboxList>
-                    </ComboboxPopup>
-                  </Combobox>
-                  <FieldError match={hasError}>
-                    {getErrorMessage(field.state.meta.errors)}
-                  </FieldError>
-                </Field>
-              );
-            }}
-          </form.Field>
-
           <form.Subscribe
             selector={(state) => ({
               canSubmit: state.canSubmit,
               isSubmitting: state.isSubmitting,
               shouldBlockNavigation: state.isDirty && !state.isSubmitting,
-              isSubmitted: state.isSubmitted,
             })}
-            // oxlint-disable-next-line react/no-children-prop
-            children={({ canSubmit, isSubmitting, shouldBlockNavigation, isSubmitted }) => (
+          >
+            {({ canSubmit, isSubmitting, shouldBlockNavigation }) => (
               <>
-                <NavigationBlock shouldBlock={shouldBlockNavigation && !isSubmitted} />
+                <NavigationBlock shouldBlock={shouldBlockNavigation} />
                 <div className="flex flex-col justify-between gap-4 md:flex-row">
                   <Button type="button" disabled={true} variant={"outline"}>
                     Podgląd produktu (wkrótce)
@@ -211,7 +209,7 @@ export function CreateSnackForm({ onSubmit, types }: Props) {
                 </div>
               </>
             )}
-          />
+          </form.Subscribe>
         </div>
       </div>
     </form>

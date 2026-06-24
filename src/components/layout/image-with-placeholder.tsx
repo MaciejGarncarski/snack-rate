@@ -19,6 +19,7 @@ function DefaultFallback() {
 }
 
 type Status = "loading" | "loaded" | "error";
+
 const IMAGE_LOAD_SKELETON_DELAY = 50;
 
 export function ImageWithPlaceholder({
@@ -68,7 +69,7 @@ export function ImageWithPlaceholder({
             exit={{ opacity: 0 }}
             transition={{ delay: IMAGE_LOAD_SKELETON_DELAY / 1000 }}
           >
-            {placeholder ?? <div className="h-full w-full animate-pulse bg-muted" />}
+            {placeholder ?? <div className="h-full w-full animate-pulse bg-neutral-600" />}
           </motion.div>
         )}
       </AnimatePresence>

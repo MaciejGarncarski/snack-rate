@@ -16,7 +16,8 @@ export function ImageSlotEmpty({ onClick }: Props) {
       transition={{ duration: 0.1 }}
     >
       <motion.button
-        className="flex size-24 items-center justify-center rounded-lg border border-dashed border-accent bg-secondary outline-0 focus:border-solid focus:ring focus:ring-accent md:size-30"
+        type="button"
+        className="flex aspect-4/5 h-auto w-24 items-center justify-center rounded-lg border border-dashed border-accent bg-secondary outline-0 focus:border-solid focus:ring focus:ring-accent md:w-28"
         onClick={onClick}
       >
         <ImagePlusIcon className="text-muted-foreground" />

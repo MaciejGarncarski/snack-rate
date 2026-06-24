@@ -1,43 +1,14 @@
 // oxlint-disable no-console
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
-import sharp from "sharp";
 
+import { createThumbnail } from "#/features/catalogue/server/utils/snack-image.ts";
 import * as schema from "#/infrastructure/db/schema.ts";
 import { hashPassword } from "#/lib/crypto.ts";
 
 import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
 
 const db = drizzle(process.env.DATABASE_URL!);
-
-const THUMBNAIL_SIZE = 120;
-
-function createThumbnail(buffer: Buffer, ext: string): Promise<Buffer> {
-  const sharpInstance = sharp(buffer);
-  let pipeline = sharpInstance.resize({
-    width: THUMBNAIL_SIZE,
-    height: THUMBNAIL_SIZE,
-    fit: "inside",
-    withoutEnlargement: true,
-  });
-
-  switch (ext) {
-    case "jpg":
-    case "jpeg":
-      pipeline = pipeline.jpeg({ quality: 85 });
-      break;
-    case "png":
-      pipeline = pipeline.png();
-      break;
-    case "webp":
-      pipeline = pipeline.webp({ quality: 85 });
-      break;
-    default:
-      pipeline = pipeline.jpeg({ quality: 85 });
-  }
-
-  return pipeline.toBuffer();
-}
 
 // oxlint-disable-next-line max-lines-per-function
 async function seedDatabase() {
@@ -279,10 +250,13 @@ async function seedDatabase() {
   const monsterBuffer = Buffer.from(await monsterImageResponse.arrayBuffer());
   const chipsBuffer = Buffer.from(await chipsImageResponse.arrayBuffer());
 
-  const [monsterThumbBuffer, chipsThumbBuffer] = await Promise.all([
-    createThumbnail(monsterBuffer, "webp"),
-    createThumbnail(chipsBuffer, "jpg"),
-  ]);
+  const [monsterNormalImg, chipsNormalImg, monsterThumbBuffer, chipsThumbBuffer] =
+    await Promise.all([
+      createThumbnail(monsterBuffer, "webp", 800),
+      createThumbnail(chipsBuffer, "webp", 800),
+      createThumbnail(monsterBuffer, "webp"),
+      createThumbnail(chipsBuffer, "jpg"),
+    ]);
 
   await Promise.all([
     deleteAllObjectsFromBucket(process.env.S3_BUCKET_UPLOADS!),
@@ -290,9 +264,9 @@ async function seedDatabase() {
   ]);
 
   await Promise.all([
-    uploadFileToGarage(chipsImageKey, chipsBuffer),
+    uploadFileToGarage(monsterImageKey, monsterNormalImg),
+    uploadFileToGarage(chipsImageKey, chipsNormalImg),
     uploadFileToGarage(chipsThumbKey, chipsThumbBuffer),
-    uploadFileToGarage(monsterImageKey, monsterBuffer),
     uploadFileToGarage(monsterThumbKey, monsterThumbBuffer),
   ]);
 

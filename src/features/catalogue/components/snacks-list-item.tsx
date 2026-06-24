@@ -19,10 +19,10 @@ export function SnacksListItem({ name, description, slug, rating, images }: Prop
     <li>
       <Card>
         <CardContent>
-          <div className="flex flex-col gap-10 lg:flex-row">
+          <div className="flex w-180 flex-col gap-10 lg:flex-row">
             <ImageWithPlaceholder
               src={images[0]?.url}
-              containerClassName="size-48 flex justify-center items-center rounded-md bg-muted shrink-0"
+              containerClassName="w-48 aspect-4/5 flex justify-center items-center rounded-md bg-muted shrink-0"
               className="h-full w-full rounded-md object-cover"
             />
             <div className="flex flex-col gap-2">

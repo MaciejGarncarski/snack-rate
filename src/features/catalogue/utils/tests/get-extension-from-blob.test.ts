@@ -2,9 +2,9 @@ import { getExtensionFromBlob } from "#/features/catalogue/utils/get-extension-f
 
 describe("getExtensionFromBlob", () => {
   it("should return the correct file ending for a given Blob", () => {
-    const blob = new Blob([""], { type: "image/jpeg" });
+    const blob = new Blob([""], { type: "image/png" });
     const result = getExtensionFromBlob(blob);
-    expect(result).toBe("jpg");
+    expect(result).toBe("png");
   });
 
   it("should not return the file ending for an unknown Blob type", () => {

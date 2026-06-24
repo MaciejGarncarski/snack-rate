@@ -75,14 +75,13 @@ export const ImageDropzone = ({ images, handleAddToQueue, children }: Props) => 
 
   return (
     <motion.div
-      className="flex size-76 items-center justify-center overflow-hidden rounded-lg border border-accent bg-secondary md:size-94"
+      className="relative flex aspect-4/5 h-auto w-76 items-center justify-center overflow-hidden rounded-lg border border-accent bg-secondary md:w-88"
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
       {children}
-
       <AnimatePresence>
         {isDragOver && (
           <motion.div

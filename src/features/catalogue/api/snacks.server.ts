@@ -2,15 +2,15 @@ import { os } from "@orpc/server";
 import * as z from "zod";
 
 import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
-import { createSnack } from "#/features/catalogue/server/services/create-snack.service";
-import { listSnacksFeed } from "#/features/catalogue/server/services/list-snacks.service";
+import { createSnack } from "#/features/catalogue/server/use-cases/create-snack.use-case";
+import { listSnacksFeed } from "#/features/catalogue/server/use-cases/list-snacks.use-case";
 
 const listSnacksInputSchema = z.object({
   limit: z.number().min(1).max(100).default(20),
   cursor: z.string().optional(),
 });
 
-export const listSnacks = os.input(listSnacksInputSchema).handler(({ input }) => {
+export const listSnacksProcedure = os.input(listSnacksInputSchema).handler(({ input }) => {
   const { limit, cursor } = input;
 
   return listSnacksFeed({ limit, cursor }, snacksRepository);
@@ -35,6 +35,6 @@ export const createSnackProcedure = os.input(createSnackInput).handler(({ input 
   );
 });
 
-export const listTypes = os.handler(() => {
+export const listTypesProcedure = os.handler(() => {
   return snacksRepository.listTypes();
 });

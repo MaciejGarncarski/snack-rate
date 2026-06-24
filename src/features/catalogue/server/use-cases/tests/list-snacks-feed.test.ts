@@ -1,5 +1,5 @@
 import { createSnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
-import { listSnacksFeed } from "#/features/catalogue/server/services/list-snacks.service";
+import { listSnacksFeed } from "#/features/catalogue/server/use-cases/list-snacks.use-case";
 import type { Db } from "#/infrastructure/db/db";
 import { createSnack } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup";

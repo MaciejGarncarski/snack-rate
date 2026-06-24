@@ -131,7 +131,7 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
       });
 
       span.setStatus({ code: 1 });
-      return { snackId };
+      return { slug: slug.getValue() };
     } catch (err) {
       span.recordException(err as Error);
       span.setStatus({ code: 2 });

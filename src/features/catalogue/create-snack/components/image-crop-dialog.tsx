@@ -59,9 +59,9 @@ async function getCroppedImg(imageSrc: string, pixelCrop: Area, fileName: string
           reject(new Error("Canvas to blob failed"));
           return;
         }
-        resolve(new File([blob], fileName, { type: "image/jpeg", lastModified: Date.now() }));
+        resolve(new File([blob], fileName, { type: "image/png", lastModified: Date.now() }));
       },
-      "image/jpeg",
+      "image/png",
       0.95,
     );
   });
@@ -104,7 +104,7 @@ export function ImageCropDialog({
     setIsCropping(true);
     setError(null);
     try {
-      const croppedFile = await getCroppedImg(imageSrc, croppedAreaPixels, "cropped.jpg");
+      const croppedFile = await getCroppedImg(imageSrc, croppedAreaPixels, "cropped.png");
       onCropComplete(croppedFile);
       onOpenChange(false);
     } catch (err) {
@@ -124,13 +124,13 @@ export function ImageCropDialog({
           <DialogDescription>Przycinaj obraz do wybranego obszaru.</DialogDescription>
         </DialogHeader>
         <DialogPanel className="flex flex-col items-center gap-4">
-          <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-muted">
+          <div className="relative aspect-4/5 w-full overflow-hidden rounded-xl bg-muted">
             <Cropper
               key={imageSrc}
               image={imageSrc}
               crop={crop}
               zoom={zoom}
-              aspect={1}
+              aspect={4 / 5}
               cropShape="rect"
               showGrid
               onCropChange={setCrop}

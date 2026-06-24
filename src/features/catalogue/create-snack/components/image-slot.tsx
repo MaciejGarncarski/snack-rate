@@ -24,8 +24,9 @@ export function ImageSlot({ isSelected, onClick, onMoveLeft, onMoveRight, imageS
       transition={{ duration: 0.1 }}
     >
       <motion.button
+        type="button"
         className={cn(
-          "flex size-24 items-center justify-center overflow-hidden rounded-lg border border-dashed border-accent bg-secondary outline-0 focus:border-solid focus:ring focus:ring-accent md:size-30",
+          "flex aspect-4/5 h-auto w-24 items-center justify-center overflow-hidden rounded-lg border border-dashed border-accent bg-secondary outline-0 focus:border-solid focus:ring focus:ring-accent md:w-28",
           isSelected && "border-solid ring ring-accent",
         )}
         onClick={onClick}

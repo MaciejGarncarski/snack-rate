@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { XCircleIcon } from "lucide-react";
 
+import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { Badge } from "#/components/ui/badge";
 import {
@@ -11,7 +12,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "#/components/ui/empty";
-import { getSnackBySlugQueryOptions } from "#/features/catalogue/services/get-snack-by-slug.query";
+import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query";
 
 export const Route = createFileRoute("/_layout/produkt/$slug")({
   component: RouteComponent,
@@ -50,7 +51,9 @@ function RouteComponent() {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <img src={data.images[0].url} alt={data.name} className="mr-4 h-32 w-32 object-cover" />
+        <div className="relative aspect-4/5 w-32 overflow-hidden rounded">
+          <ImageWithPlaceholder src={data.images[0].url} alt={data.name} />
+        </div>
         <div>
           <h1 className="mb-4 text-3xl font-bold">{data.name}</h1>
           <p className="mb-2 text-lg">{data.description}</p>

@@ -2,7 +2,8 @@ import sharp from "sharp";
 
 const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const THUMBNAIL_SIZE = 200;
+const THUMBNAIL_WIDTH = 120;
+const THUMNAIL_ASPECT_RATIO = 4 / 5;
 
 export function validateImage(img: Blob, index: number): void {
   if (!ALLOWED_MIME_TYPES.has(img.type)) {
@@ -16,14 +17,18 @@ export function validateImage(img: Blob, index: number): void {
   }
 }
 
-export function createThumbnail(buffer: Buffer, ext: string): Promise<Buffer> {
+export function createThumbnail(
+  buffer: Buffer,
+  ext: string,
+  width = THUMBNAIL_WIDTH,
+): Promise<Buffer> {
   const sharpInstance = sharp(buffer);
 
   let pipeline = sharpInstance.resize({
-    width: THUMBNAIL_SIZE,
-    height: THUMBNAIL_SIZE,
-    fit: "inside",
-    withoutEnlargement: true,
+    width: width,
+    height: Math.round(width / THUMNAIL_ASPECT_RATIO),
+    fit: "cover",
+    position: "entropy",
   });
 
   switch (ext) {
@@ -38,7 +43,7 @@ export function createThumbnail(buffer: Buffer, ext: string): Promise<Buffer> {
       pipeline = pipeline.webp({ quality: 85 });
       break;
     default:
-      pipeline = pipeline.jpeg({ quality: 85 });
+      pipeline = pipeline.png();
   }
 
   return pipeline.toBuffer();

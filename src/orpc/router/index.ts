@@ -1,11 +1,13 @@
 import {
   createSnackProcedure,
-  listSnacks,
-  listTypes,
+  listSnacksProcedure,
+  listTypesProcedure,
 } from "#/features/catalogue/api/snacks.server";
 
 export default {
-  listSnacks,
-  createSnack: createSnackProcedure,
-  listTypes,
+  snacks: {
+    list: listSnacksProcedure,
+    create: createSnackProcedure,
+    listTypes: listTypesProcedure,
+  },
 };

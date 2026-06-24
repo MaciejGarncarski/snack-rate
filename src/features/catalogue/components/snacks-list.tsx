@@ -1,7 +1,7 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 
-import { listSnacksQueryOptions } from "../services/list-snacks.query";
+import { listSnacksQueryOptions } from "../queries/list-snacks.query";
 import { SnacksListItem } from "./snacks-list-item";
 
 export function SnacksList() {

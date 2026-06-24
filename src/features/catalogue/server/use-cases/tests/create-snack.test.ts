@@ -2,7 +2,7 @@ import {
   createSnacksRepository,
   type SnacksRepository,
 } from "#/features/catalogue/server/repositories/snacks.repository";
-import { createSnack } from "#/features/catalogue/server/services/create-snack.service";
+import { createSnack } from "#/features/catalogue/server/use-cases/create-snack.use-case";
 import type { Db } from "#/infrastructure/db/db";
 import { createSnackType } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup";
@@ -43,7 +43,7 @@ describe("create snack", () => {
     );
 
     const dbSnack = await db.query.snackItems.findFirst({
-      where: { id: snack.snackId },
+      where: { slug: snack.slug },
       with: {
         images: true,
         type: true,
@@ -60,7 +60,7 @@ describe("create snack", () => {
 
   it("should create default and thumbnail images when uploading an image", async () => {
     const type = await createSnackType();
-    const mockImage = new Blob([new Uint8Array(100)], { type: "image/jpeg" });
+    const mockImage = new Blob([new Uint8Array(100)], { type: "image/png" });
 
     const snack = await createSnack(
       {
@@ -74,7 +74,7 @@ describe("create snack", () => {
     );
 
     const dbSnack = await db.query.snackItems.findFirst({
-      where: { id: snack.snackId },
+      where: { slug: snack.slug },
       with: {
         images: true,
       },
