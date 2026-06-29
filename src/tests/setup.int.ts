@@ -1,5 +1,6 @@
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { reset } from "drizzle-seed";
+import { nanoid } from "nanoid";
 import { Pool } from "pg";
 import { inject } from "vitest";
 
@@ -9,9 +10,13 @@ import * as schema from "#/infrastructure/db/schema.ts";
 let db: Db;
 let dbPool: Pool;
 
+export function getDb(): Db {
+  return db;
+}
+
 beforeAll(async () => {
   const dbConfig = inject("pgConfig");
-  const dbName = `test_db_${crypto.randomUUID().replaceAll("-", "_")}`;
+  const dbName = `test_db_${nanoid()}`;
 
   const adminPool = new Pool({
     host: "localhost",
@@ -39,7 +44,3 @@ beforeAll(async () => {
 beforeEach(async () => {
   await reset(db, schema);
 });
-
-export function getDb(): Db {
-  return db;
-}

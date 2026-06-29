@@ -1,3 +1,4 @@
+import { useHotkey } from "@tanstack/react-hotkeys";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
@@ -24,6 +25,9 @@ export default function SnackImageSlider({ images }: Props) {
     setDirection(newIndex > index ? 1 : -1);
     setIndex(newIndex);
   };
+
+  useHotkey("ArrowLeft", () => goTo((index - 1 + images.length) % images.length));
+  useHotkey("ArrowRight", () => goTo((index + 1) % images.length));
 
   return (
     <div className="mx-auto w-full">

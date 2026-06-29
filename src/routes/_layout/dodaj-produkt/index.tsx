@@ -15,7 +15,7 @@ function RouteComponent() {
   const { types } = Route.useLoaderData();
 
   return (
-    <div>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
       <h1 className="mb-8 text-2xl font-bold">Zaproponuj nowy produkt</h1>
       <CreateSnackForm types={types} />
     </div>

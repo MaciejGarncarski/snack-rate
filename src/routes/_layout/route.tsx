@@ -25,10 +25,8 @@ function RouteComponent() {
       <Navbar />
       <ToastProvider>
         <AnchoredToastProvider>
-          <div className="relative isolate flex min-h-svh flex-col">
-            <div className="mx-auto max-w-7xl p-8">
-              <Outlet />
-            </div>
+          <div className="relative isolate mx-auto flex min-h-svh max-w-5xl flex-col p-8">
+            <Outlet />
           </div>
         </AnchoredToastProvider>
       </ToastProvider>

@@ -43,9 +43,9 @@ export function CreateSnackForm({ types }: Props) {
         e.stopPropagation();
         form.handleSubmit();
       }}
-      className="mx-auto flex flex-col gap-12"
+      className="flex w-full flex-col gap-12 "
     >
-      <div className="flex flex-col gap-24 md:flex-row">
+      <div className="flex flex-col justify-between md:flex-row">
         <form.Field name="images">
           {(field) => {
             const hasError = field.state.meta.errors.length > 0;

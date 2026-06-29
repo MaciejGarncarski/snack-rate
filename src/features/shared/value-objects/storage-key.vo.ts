@@ -10,10 +10,6 @@ export class StorageKey {
       throw new Error("StorageKey imageExtension cannot be empty");
     }
 
-    if (slug.getValue().trim().length === 0) {
-      throw new Error("StorageKey slug cannot be empty");
-    }
-
     const storageKey = `${slug.getValue()}.${nanoid()}.${imageExtension}`;
 
     return new StorageKey(storageKey);

@@ -51,19 +51,19 @@ function RouteComponent() {
   const imageUrls = data.images.filter((img) => img.type === "default").map((img) => img.url);
 
   return (
-    <div>
-      <div className="mb-4 flex items-center justify-between">
+    <div className="flex flex-col gap-4">
+      <div className="mb-4 flex gap-30">
         <div className="w-[20rem]">
           <SnackImageSlider images={imageUrls} />
         </div>
         <div>
           <h1 className="mb-4 text-3xl font-bold">{data.name}</h1>
-          <p className="mb-2 text-lg">{data.description}</p>
+          <p className="mb-2 text-lg text-muted-foreground">{data.description || "Brak opisu"}</p>
           <p className="mb-2 text-xl font-semibold">{data.price} zł</p>
           <SnackRating rating={data.avgRating} />
+          <div>{data.type && <Badge>{data.type.name}</Badge>}</div>
         </div>
       </div>
-      <div>{data.type && <Badge>{data.type.name}</Badge>}</div>
       <div>
         <h2 className="mb-2 text-2xl font-bold">Oceny</h2>
         dodac fetcha

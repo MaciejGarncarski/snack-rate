@@ -1,7 +1,7 @@
 import type { InferInsertModel } from "drizzle-orm";
 
 import { snackItemImages, snackItems, snackTypes } from "#/infrastructure/db/schema";
-import { getDb } from "#/tests/setup";
+import { getDb } from "#/tests/setup.int";
 
 type SnackInsert = InferInsertModel<typeof snackItems>;
 type SnackTypeInsert = InferInsertModel<typeof snackTypes>;

@@ -6,7 +6,7 @@ export type SnackItem = {
   id: string;
   name: string;
   description: string | null;
-  price: number;
+  price: number | null;
   slug: string;
   status: SnackStatus;
   barcode: string | null;
@@ -94,10 +94,10 @@ async function toSnackItem(
     id: row.id,
     name: row.name,
     description: row.description,
-    price: row.price ? parseFloat(row.price) : 0,
+    price: row.price ? Number(row.price) : null,
     slug: row.slug,
     barcode: row.barcode,
-    avgRating: parseFloat(row.avgRating),
+    avgRating: Number(row.avgRating),
     typeId: row.typeId,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
