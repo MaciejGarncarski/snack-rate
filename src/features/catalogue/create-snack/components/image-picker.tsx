@@ -80,7 +80,7 @@ export function ImagePicker({ onChange }: Props) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={uploadOnClick}
-                className="absolute left-0 flex h-full w-full flex-col items-center justify-center gap-4 rounded-lg text-muted-foreground ring-accent focus:ring-2 focus:outline-none"
+                className="absolute left-0 flex h-full w-full flex-col items-center justify-center gap-4 rounded-lg text-muted-foreground"
               >
                 <ImageOffIcon />
                 <p>Brak obrazu</p>

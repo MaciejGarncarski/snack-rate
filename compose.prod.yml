@@ -33,9 +33,7 @@ services:
       - pnpm
     command:
       - run
-      - db:migrate
-    profiles:
-      - tools
+      - db:migrate-and-seed-prod
     restart: "no"
     stdin_open: true
     tty: true
@@ -53,6 +51,8 @@ services:
       - .env.production
 
     depends_on:
+      db-tool:
+        condition: service_completed_successfully
       postgres:
         condition: service_healthy
       prometheus:

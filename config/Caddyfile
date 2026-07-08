@@ -1,3 +1,10 @@
+{
+    log {
+        output stdout
+        format json
+    }
+}
+
 {$APP_DOMAIN} {
     handle /grafana* {
         uri strip_prefix /grafana
@@ -5,7 +12,9 @@
     }
     
     handle {
-        reverse_proxy prod-app:3000
+        reverse_proxy prod-app:3000 {
+
+        }
     }
 }
 
@@ -47,7 +56,16 @@
         }
 
         handle {
-            reverse_proxy staging-app:3000
+            reverse_proxy staging-app:3000 {
+                lb_try_duration 30s
+                lb_try_interval 1s
+
+                transport http {
+                    dial_timeout 10s
+                    read_timeout 120s
+                    write_timeout 120s
+                }
+            }
         }
     }
 }

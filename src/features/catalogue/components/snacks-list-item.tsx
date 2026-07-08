@@ -16,27 +16,27 @@ type Props = {
 
 export function SnacksListItem({ name, description, slug, rating, images }: Props) {
   return (
-    <li>
-      <Card>
-        <CardContent>
-          <div className="flex w-180 flex-col gap-10 lg:flex-row">
-            <ImageWithPlaceholder
-              src={images[0]?.url}
-              containerClassName="w-48 aspect-4/5 flex justify-center items-center rounded-md bg-muted shrink-0"
-              className="h-full w-full rounded-md object-cover"
-            />
-            <div className="flex flex-col gap-2">
-              <Link to="/produkt/$slug" params={{ slug: slug }}>
+    <li className="mx-auto w-full max-w-sm">
+      <Link to="/produkt/$slug" params={{ slug: slug }}>
+        <Card>
+          <CardContent>
+            <div className="flex flex-col items-center justify-center gap-10">
+              <ImageWithPlaceholder
+                src={images[0]?.url}
+                containerClassName="w-full aspect-4/5 flex justify-center items-center rounded-md bg-muted shrink-0"
+                className="h-full w-full rounded-md object-cover"
+              />
+              <div className="flex flex-col gap-2">
                 <h2 className="text-xl font-bold">{name}</h2>
-              </Link>
-              <p className="text-md text-muted-foreground">{description}</p>
-              <div className="mt-auto">
-                <SnackRating rating={rating} withText />
+                <p className="text-md text-muted-foreground">{description}</p>
+                <div className="mt-auto">
+                  <SnackRating rating={rating} withText />
+                </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </Link>
     </li>
   );
 }

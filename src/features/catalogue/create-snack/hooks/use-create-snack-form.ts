@@ -38,7 +38,7 @@ export const useCreateSnackForm = () => {
     validators: {
       onChange: createSnackSchema,
     },
-    onSubmit: ({ value }) => {
+    onSubmit: async ({ value, formApi }) => {
       const formData = new FormData();
       formData.append("name", value.name);
       formData.append("description", value.description);
@@ -59,7 +59,8 @@ export const useCreateSnackForm = () => {
         formData.append("images", image);
       }
 
-      createSnack(formData);
+      await createSnack(formData);
+      formApi.reset();
     },
   });
 

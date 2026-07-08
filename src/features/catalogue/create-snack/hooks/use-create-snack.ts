@@ -9,7 +9,7 @@ import { orpc } from "#/orpc/client";
 export function useCreateSnack() {
   const navigate = useNavigate({ from: "/dodaj-produkt/" });
 
-  const { mutate } = useMutation(
+  const { mutateAsync } = useMutation(
     orpc.snacks.create.mutationOptions({
       onError: (mutationError) => {
         const errorMessage = extractORPCError(mutationError)?.message;
@@ -36,9 +36,9 @@ export function useCreateSnack() {
     }),
   );
 
-  const createSnack = (formData: FormData) => {
+  const createSnack = async (formData: FormData) => {
     const payload = buildCreateSnackPayload(formData);
-    mutate(payload);
+    await mutateAsync(payload);
   };
 
   return {

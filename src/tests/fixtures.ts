@@ -1,4 +1,5 @@
 import type { InferInsertModel } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 import { snackItemImages, snackItems, snackTypes } from "#/infrastructure/db/schema";
 import { getDb } from "#/tests/setup.int";
@@ -9,8 +10,8 @@ type SnackImageInsert = InferInsertModel<typeof snackItemImages>;
 
 export async function createSnackType(overrides?: Partial<SnackTypeInsert>) {
   const db = getDb();
-  const uniqueSlug = `type-${crypto.randomUUID().slice(0, 8)}`;
-  const uniqueName = `Test Type ${crypto.randomUUID().slice(0, 8)}`;
+  const uniqueSlug = `type-${nanoid(8)}`;
+  const uniqueName = `Test Type ${nanoid(8)}`;
   const [type] = await db
     .insert(snackTypes)
     .values({ name: uniqueName, slug: uniqueSlug, ...overrides })
@@ -31,7 +32,7 @@ export async function createSnack(overrides?: Partial<SnackInsert>) {
     .insert(snackItems)
     .values({
       name: "Test Snack",
-      slug: `test-snack-${crypto.randomUUID().slice(0, 8)}`,
+      slug: `test-snack-${nanoid(8)}`,
       status: "published",
       price: "2.99",
       typeId,
@@ -47,7 +48,7 @@ export async function createSnackImage(snackId: string, overrides?: Partial<Snac
     .insert(snackItemImages)
     .values({
       snackItemId: snackId,
-      storageKey: `images/${crypto.randomUUID().slice(0, 8)}.jpg`,
+      storageKey: `images/${nanoid(8)}.jpg`,
       type: "default",
       sortOrder: 0,
       ...overrides,

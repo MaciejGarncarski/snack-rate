@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
 
 import type { ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
@@ -47,7 +48,7 @@ export function useCropQueue({ setImages, onChange, foundSelectedImage }: Props)
       }
 
       const newImagePair: ImagePair = {
-        id: crypto.randomUUID(),
+        id: nanoid(),
         file: currentQueueItem.file,
         croppedFileUrl: URL.createObjectURL(croppedFile),
         croppedFile,
@@ -70,7 +71,7 @@ export function useCropQueue({ setImages, onChange, foundSelectedImage }: Props)
     setCropQueue((prev) => [
       ...prev,
       {
-        id: crypto.randomUUID(),
+        id: nanoid(),
         file,
       },
     ]);
@@ -82,7 +83,7 @@ export function useCropQueue({ setImages, onChange, foundSelectedImage }: Props)
     setCropQueue((prev) => [
       ...prev,
       {
-        id: crypto.randomUUID(),
+        id: nanoid(),
         file: foundSelectedImage.file,
         originalImageId: foundSelectedImage.id,
       },

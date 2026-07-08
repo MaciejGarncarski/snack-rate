@@ -25,6 +25,8 @@
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
     "db:seed": "node --env-file=.env.development ./drizzle/scripts/seed.ts",
+    "db:seed-prod": "node ./drizzle/scripts/seed-prod.ts",
+    "db:migrate-and-seed-prod": "pnpm run db:migrate && pnpm run db:seed-prod",
     "db:reset": "node --env-file=.env.development ./drizzle/scripts/reset.ts",
     "db:studio": "drizzle-kit studio",
     "infra:up": "docker compose -p snack-rate-dev -f compose.yml -f compose.dev.yml --env-file .env.development up -d",
@@ -40,13 +42,9 @@
     "staging:down": "docker compose -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging down",
     "staging:logs": "docker compose -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging logs -f",
     "staging:restart": "pnpm run staging:down && pnpm run staging:up",
-    "staging:db:migrate": "docker compose --profile tools -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging run --rm db-tool",
-    "staging:db:seed": "docker compose --profile tools -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging run --rm db-tool node ./drizzle/scripts/seed.ts",
-    "staging:db:reset": "docker compose --profile tools -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging run --rm db-tool node ./drizzle/scripts/reset.ts",
     "prod:up": "docker compose -p snack-rate-prod -f compose.yml -f compose.prod.yml --env-file .env.production up -d",
     "prod:down": "docker compose -p snack-rate-prod -f compose.yml -f compose.prod.yml --env-file .env.production down",
     "prod:logs": "docker compose -p snack-rate-prod -f compose.yml -f compose.prod.yml --env-file .env.production logs -f",
-    "prod:db:migrate": "docker compose --profile tools -p snack-rate-prod -f compose.yml -f compose.prod.yml --env-file .env.production run --rm db-tool",
     "prod:restart": "pnpm run prod:down && pnpm run prod:up"
   },
   "dependencies": {

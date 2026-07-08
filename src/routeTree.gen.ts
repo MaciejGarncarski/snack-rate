@@ -14,7 +14,6 @@ import { Route as LayoutRouteRouteImport } from './routes/_layout/route'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as HealthReadyRouteImport } from './routes/health.ready'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
-import { Route as LayoutTestRouteImport } from './routes/_layout/test'
 import { Route as LayoutDodajProduktIndexRouteImport } from './routes/_layout/dodaj-produkt/index'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 import { Route as LayoutProduktSlugRouteImport } from './routes/_layout/produkt/$slug'
@@ -43,11 +42,6 @@ const ApiSplatRoute = ApiSplatRouteImport.update({
   path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutTestRoute = LayoutTestRouteImport.update({
-  id: '/test',
-  path: '/test',
-  getParentRoute: () => LayoutRouteRoute,
-} as any)
 const LayoutDodajProduktIndexRoute = LayoutDodajProduktIndexRouteImport.update({
   id: '/dodaj-produkt/',
   path: '/dodaj-produkt/',
@@ -67,7 +61,6 @@ const LayoutProduktSlugRoute = LayoutProduktSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
   '/health': typeof HealthRouteWithChildren
-  '/test': typeof LayoutTestRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/produkt/$slug': typeof LayoutProduktSlugRoute
@@ -76,7 +69,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/health': typeof HealthRouteWithChildren
-  '/test': typeof LayoutTestRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/': typeof LayoutIndexRoute
@@ -88,7 +80,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteRouteWithChildren
   '/health': typeof HealthRouteWithChildren
-  '/_layout/test': typeof LayoutTestRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/_layout/': typeof LayoutIndexRoute
@@ -101,7 +92,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/health'
-    | '/test'
     | '/api/$'
     | '/health/ready'
     | '/produkt/$slug'
@@ -110,7 +100,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/health'
-    | '/test'
     | '/api/$'
     | '/health/ready'
     | '/'
@@ -121,7 +110,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_layout'
     | '/health'
-    | '/_layout/test'
     | '/api/$'
     | '/health/ready'
     | '/_layout/'
@@ -174,13 +162,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_layout/test': {
-      id: '/_layout/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof LayoutTestRouteImport
-      parentRoute: typeof LayoutRouteRoute
-    }
     '/_layout/dodaj-produkt/': {
       id: '/_layout/dodaj-produkt/'
       path: '/dodaj-produkt'
@@ -206,14 +187,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface LayoutRouteRouteChildren {
-  LayoutTestRoute: typeof LayoutTestRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutProduktSlugRoute: typeof LayoutProduktSlugRoute
   LayoutDodajProduktIndexRoute: typeof LayoutDodajProduktIndexRoute
 }
 
 const LayoutRouteRouteChildren: LayoutRouteRouteChildren = {
-  LayoutTestRoute: LayoutTestRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutProduktSlugRoute: LayoutProduktSlugRoute,
   LayoutDodajProduktIndexRoute: LayoutDodajProduktIndexRoute,

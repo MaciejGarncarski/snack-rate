@@ -12,13 +12,13 @@ export function MainImageBadges({ isPrimaryImage }: Props) {
     <TooltipProvider>
       <Toolbar>
         <ToggleGroup className="border-none p-0">
-          <Badge size="lg">Podgląd</Badge>
+          <Badge size="default">Podgląd</Badge>
         </ToggleGroup>
         {isPrimaryImage && (
           <>
             <ToolbarSeparator />
             <ToggleGroup className="border-none p-0">
-              <Badge size="lg" variant="info">
+              <Badge size="default" variant="info">
                 Główne zdjęcie
               </Badge>
             </ToggleGroup>
