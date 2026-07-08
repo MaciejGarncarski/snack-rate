@@ -7,8 +7,10 @@ RUN pnpm config set store-dir /pnpm/store
 COPY . /app
 WORKDIR /app
 
-FROM base AS build
+FROM base AS deps
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+FROM deps AS build
 RUN pnpm run build
 
 FROM base

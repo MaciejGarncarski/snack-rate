@@ -23,17 +23,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: build
+      target: deps
     env_file:
       - .env.production
     depends_on:
       postgres:
         condition: service_healthy
     entrypoint:
-      - pnpm
+      - sh
+      - -c
     command:
-      - run
-      - db:migrate-and-seed-prod
+      - pnpm run db:migrate && pnpm run db:seed-prod
     restart: "no"
     stdin_open: true
     tty: true
