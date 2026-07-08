@@ -5,4 +5,4 @@ pre-commit:
       run: pnpm fmt
       stage_fixed: true
     lint:
-      run: pnpm lint {staged_files}
+      run: pnpm lint

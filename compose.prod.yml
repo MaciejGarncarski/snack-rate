@@ -86,8 +86,6 @@ services:
   grafana:
     env_file:
       - .env.production
-    environment:
-      GF_SERVER_ROOT_URL: "https://${APP_DOMAIN}/grafana/"
 
     networks:
       default: null
