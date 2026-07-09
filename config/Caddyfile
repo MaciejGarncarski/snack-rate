@@ -12,7 +12,7 @@
     }
     
     handle {
-        reverse_proxy prod-app:3000 {
+        reverse_proxy prod-app:{$APP_PORT} {
 
         }
     }
@@ -56,7 +56,7 @@
         }
 
         handle {
-            reverse_proxy staging-app:3000 {
+            reverse_proxy staging-app:{$APP_PORT} {
                 lb_try_duration 30s
                 lb_try_interval 1s
 

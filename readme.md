@@ -19,7 +19,7 @@ cp .env.example .env.development
 pnpm install
 pnpm infra:up
 pnpm db:migrate && pnpm db:seed
-pnpm dev # → http://localhost:3000/
+pnpm dev # → http://localhost:3000/  (or whatever PORT is set to)
 ```
 
 ## Tech stack
@@ -59,9 +59,12 @@ Copy the appropriate example file and fill in values before running anything.
 
 | Variable                         | Used in    | Description                                       |
 | -------------------------------- | ---------- | ------------------------------------------------- |
-| `PORT`                           | dev        | Application port                                  |
+| `PORT`                           | dev + prod | Application port (default 3000)                   |
 | `NODE_ENV`                       | dev + prod | Runtime environment (`development`, `production`) |
+| `S3_ENDPOINT_INTERNAL`           | dev + prod | S3 endpoint used from inside Docker network       |
 | `APP_DOMAIN`                     | prod       | Domain for Caddy TLS (e.g. `example.com`)         |
+| `GRAFANA_DOMAIN`                 | prod       | Grafana domain (`GF_SERVER_DOMAIN`)               |
+| `GRAFANA_SERVER_ROOT_URL`        | prod       | Grafana root URL (`GF_SERVER_ROOT_URL`)           |
 | `POSTGRES_USER`                  | dev + prod | Database user                                     |
 | `POSTGRES_PASSWORD`              | dev + prod | Database password                                 |
 | `POSTGRES_DB`                    | dev + prod | Database name                                     |
@@ -89,24 +92,32 @@ Copy the appropriate example file and fill in values before running anything.
 > [!IMPORTANT]
 > `GRAFANA_INITIAL_*` variables only work on a fresh Grafana volume. Changes made after Grafana has been initialized will not be applied. Use `grafana-cli` instead.
 
-Dev: `.env.development` - Prod: `.env.production`
+| File               | Used for           |
+| ------------------ | ------------------ |
+| `.env.development` | Local development  |
+| `.env.production`  | Production stack   |
+| `.env.staging`     | Staging stack      |
+| `.env.caddy`       | Shared Caddy proxy |
 
 ## Database
 
 ### Migrations
 
 ```bash
-pnpm db:generate   # generate migration files from schema changes
-pnpm db:migrate    # apply pending migrations
+pnpm db:generate          # generate migration files from schema changes
+pnpm db:migrate           # apply pending migrations to local dev DB
+pnpm db:push              # push schema directly (dev only)
+pnpm db:pull              # pull schema from DB
 ```
 
 ### Seeding
 
 ```bash
-pnpm db:seed
+pnpm db:seed               # seed local dev DB
+pnpm db:seed-prod          # seed prod/staging DB (runs directly, no Docker)
 ```
 
-Runs `./drizzle/scripts/seed.ts` - feel free to edit it for your own purposes.
+Runs the script in `./drizzle/scripts/`. Edit them for your own purposes.
 
 ### Resetting
 
@@ -118,6 +129,21 @@ pnpm db:reset
 docker compose down && docker volume rm snack-rate_postgres_data
 ```
 
+### Running database scripts in staging/prod
+
+The staging and production compose overlays include a one-off `db-tool` service that uses the build stage of the app image.
+
+```bash
+pnpm db:migrate-and-seed-prod      # migrate + seed production
+pnpm db:migrate-and-seed-staging   # migrate + seed staging
+```
+
+To run a different script, override the compose command:
+
+```bash
+docker compose -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging run --rm db-tool pnpm db:seed-prod
+```
+
 ### Schema diagram
 
 See `./drizzle/docs/db-diagram.dbml`.
@@ -126,7 +152,7 @@ See `./drizzle/docs/db-diagram.dbml`.
 
 ```bash
 pnpm infra:up   # starts garage, postgres, grafana, prometheus, alloy, tempo, loki
-pnpm dev        # starts app → http://localhost:3000/
+pnpm dev        # starts app — port from PORT env (default 3000)
 ```
 
 > [!NOTE]
@@ -157,22 +183,6 @@ Starts the app stack for production. The shared Caddy proxy runs separately and 
 
 Caddy handles TLS automatically when `APP_DOMAIN` is set to a real domain. It also strips the `/grafana` prefix before forwarding to the Grafana container.
 
-### Running database scripts in staging/prod
-
-The staging and production compose overlays now include a one-off `db-tool` service that uses the build stage of the app image, so it has `drizzle-kit`, the source tree, and the correct `.env` file.
-
-```bash
-pnpm staging:db:migrate
-pnpm staging:db:seed
-pnpm prod:db:migrate
-```
-
-To run a different script, override the compose command, for example:
-
-```bash
-docker compose --profile tools -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging run --rm db-tool run db:seed
-```
-
 ## Running — staging
 
 ```bash
@@ -186,6 +196,19 @@ Starts the staging app stack. The shared Caddy proxy must already be running and
 
 Copy `.env.example` to `.env.staging` first and copy [.env.caddy.example](/home/maciek/snack-rate/.env.caddy.example) to `.env.caddy` for the shared proxy.
 Set `STAGING_BASIC_AUTH_USER` and `STAGING_BASIC_AUTH_HASH` in `.env.caddy`; use `pnpm proxy:generate-hash yourpassword` to generate the hash.
+
+| `.env.caddy` variable     | Description                                             |
+| ------------------------- | ------------------------------------------------------- |
+| `CADDY_HTTP_PORT`         | Caddy HTTP bind port (default 80)                       |
+| `CADDY_HTTPS_PORT`        | Caddy HTTPS bind port (default 443)                     |
+| `APP_PORT`                | App container port (must match `PORT` in the app's env) |
+| `APP_DOMAIN`              | Production app domain                                   |
+| `STORAGE_DOMAIN`          | S3 storage domain                                       |
+| `CDN_DOMAIN`              | CDN domain                                              |
+| `CDN_PROXY_URL`           | Upstream CDN proxy URL                                  |
+| `STAGING_APP_DOMAIN`      | Staging app domain                                      |
+| `STAGING_BASIC_AUTH_USER` | Staging basic auth username                             |
+| `STAGING_BASIC_AUTH_HASH` | Staging basic auth bcrypt hash                          |
 
 ### Infrastructure diagram - production
 

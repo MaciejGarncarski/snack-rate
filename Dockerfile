@@ -1,3 +1,5 @@
+ARG APP_PORT=3000
+
 FROM node:26-alpine AS base
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
@@ -16,5 +18,5 @@ RUN pnpm run build
 FROM base
 COPY --from=build /app/.output ./.output
 COPY --from=build /app/package.json ./
-EXPOSE 3000
+EXPOSE ${APP_PORT}
 CMD ["pnpm", "run", "start"]
