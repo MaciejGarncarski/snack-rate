@@ -12,9 +12,7 @@
     }
     
     handle {
-        reverse_proxy prod-app:{$APP_PORT} {
-
-        }
+        reverse_proxy prod-app:{$APP_PORT}
     }
 }
 

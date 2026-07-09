@@ -5,7 +5,17 @@ import { serverEnv } from "#/lib/server.env";
 
 const THREE_HOURS_IN_SECONDS = 3 * 60 * 60;
 
-export const fileStorageClient = new S3Client({
+const s3UploadClient = new S3Client({
+  region: serverEnv.S3_REGION,
+  endpoint: serverEnv.S3_ENDPOINT_INTERNAL,
+  credentials: {
+    accessKeyId: serverEnv.S3_ACCESS_KEY,
+    secretAccessKey: serverEnv.S3_SECRET_KEY,
+  },
+  forcePathStyle: true,
+});
+
+const s3SigningClient = new S3Client({
   region: serverEnv.S3_REGION,
   endpoint: serverEnv.S3_ENDPOINT,
   credentials: {
@@ -24,7 +34,7 @@ export async function getPrivateFileUrl(key: string) {
     Key: key,
   });
 
-  const url = await getSignedUrl(fileStorageClient, command, {
+  const url = await getSignedUrl(s3SigningClient, command, {
     expiresIn: THREE_HOURS_IN_SECONDS,
   });
 
@@ -32,7 +42,7 @@ export async function getPrivateFileUrl(key: string) {
 }
 
 export async function uploadPrivateFile(key: string, body: Buffer) {
-  await fileStorageClient.send(
+  await s3UploadClient.send(
     new PutObjectCommand({
       Bucket: privateUploadsBucket,
       Key: key,
