@@ -39,9 +39,7 @@ services:
     tty: true
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/maciejgarncarski/snack-rate:staging
     restart: unless-stopped
 
     volumes:
