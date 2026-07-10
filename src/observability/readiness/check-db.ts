@@ -12,7 +12,7 @@ export async function checkDb(pool: Pool, timeoutMs: number, retries = 2): Promi
       factor: 2,
       retries: retries ?? 8,
       minTimeout: 100,
-      maxTimeout: 5000,
+      maxTimeout: 1000,
       logger,
       fnName: "checkDatabaseOnce",
     });

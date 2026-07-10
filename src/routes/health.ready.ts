@@ -10,7 +10,7 @@ export const Route = createFileRoute("/health/ready")({
       GET: async () => {
         const startedAt = performance.now();
 
-        const dbResult = await checkDb(getPool(), 1000, 10);
+        const dbResult = await checkDb(getPool(), 1000, 3);
 
         const durationMs = Math.round(performance.now() - startedAt);
 

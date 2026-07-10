@@ -19,9 +19,9 @@ export async function runPreStartChecks() {
   try {
     await exponentialBackoff(() => checkDatabaseOnce(pool, timeoutMs), {
       factor: 2,
-      retries: 8,
+      retries: 4,
       minTimeout: 100,
-      maxTimeout: 5000,
+      maxTimeout: 2000,
       logger,
       fnName: "checkDatabaseOnce",
     });
