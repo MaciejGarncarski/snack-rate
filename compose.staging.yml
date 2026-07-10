@@ -2,11 +2,6 @@ services:
   garage:
     env_file:
       - .env.staging
-    networks:
-      default: null
-      edge:
-        aliases:
-          - staging-garage
 
   garage-init:
     env_file:
@@ -64,7 +59,10 @@ services:
 
     healthcheck:
       test:
-        ["CMD-SHELL", "wget -qO- http://localhost:${PORT:-3000}/health/ready >/dev/null || exit 1"]
+        [
+          "CMD-SHELL",
+          "wget -qO- http://localhost:${APP_PORT:-3000}/health/ready >/dev/null || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -76,28 +74,25 @@ services:
         max-size: "10m"
         max-file: "3"
 
-    networks:
-      default: null
-      edge:
-        aliases:
-          - staging-app
-
   grafana:
     env_file:
       - .env.staging
 
-    networks:
-      default: null
-      edge:
-        aliases:
-          - staging-grafana
+  caddy:
+    image: caddy:2-alpine
+    env_file:
+      - .env.staging
+    restart: unless-stopped
+    ports:
+      - "${CADDY_HOST_HTTP_PORT:-8080}:80"
+      - "${CADDY_HOST_HTTPS_PORT:-8443}:443"
+      - "${CADDY_HOST_HTTPS_PORT:-8443}:443/udp"
+    volumes:
+      - ./config/Caddyfile.staging:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
 
   prometheus:
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./config/alerts:/etc/prometheus/alerts:ro
-
-networks:
-  edge:
-    name: snack-rate-edge
-    external: true

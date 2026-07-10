@@ -2,11 +2,6 @@ services:
   garage:
     env_file:
       - .env.production
-    networks:
-      default: null
-      edge:
-        aliases:
-          - prod-garage
 
   garage-init:
     env_file:
@@ -39,7 +34,8 @@ services:
     tty: true
 
   app:
-    image: ghcr.io/maciejgarncarski/snack-rate:latest
+    # Use staging image for early iteration and testing, replace with production image when ready
+    image: ghcr.io/maciejgarncarski/snack-rate:staging
     restart: unless-stopped
 
     volumes:
@@ -64,7 +60,10 @@ services:
 
     healthcheck:
       test:
-        ["CMD-SHELL", "wget -qO- http://localhost:${PORT:-3000}/health/ready >/dev/null || exit 1"]
+        [
+          "CMD-SHELL",
+          "wget -qO- http://localhost:${APP_PORT:-3000}/health/ready >/dev/null || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -76,28 +75,25 @@ services:
         max-size: "10m"
         max-file: "3"
 
-    networks:
-      default: null
-      edge:
-        aliases:
-          - prod-app
-
   grafana:
     env_file:
       - .env.production
 
-    networks:
-      default: null
-      edge:
-        aliases:
-          - prod-grafana
+  caddy:
+    image: caddy:2-alpine
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    ports:
+      - "${CADDY_HOST_HTTP_PORT:-80}:80"
+      - "${CADDY_HOST_HTTPS_PORT:-443}:443"
+      - "${CADDY_HOST_HTTPS_PORT:-443}:443/udp"
+    volumes:
+      - ./config/Caddyfile.prod:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
 
   prometheus:
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./config/alerts:/etc/prometheus/alerts:ro
-
-networks:
-  edge:
-    name: snack-rate-edge
-    external: true

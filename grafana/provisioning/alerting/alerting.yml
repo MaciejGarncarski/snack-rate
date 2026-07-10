@@ -8,7 +8,7 @@ contactPoints:
         type: email
         disableResolveMessage: false
         settings:
-          addresses: $GRAFANA_SMTP_USER
+          addresses: $GF_SMTP_USER
           singleEmail: true
 
 policies:

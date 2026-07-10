@@ -19,7 +19,7 @@ cp .env.example .env.development
 pnpm install
 pnpm infra:up
 pnpm db:migrate && pnpm db:seed
-pnpm dev # → http://localhost:3000/  (or whatever PORT is set to)
+pnpm dev # → http://localhost:3000/  (or whatever APP_PORT is set to)
 ```
 
 ## Tech stack
@@ -57,47 +57,73 @@ Storage:
 
 Copy the appropriate example file and fill in values before running anything.
 
-| Variable                         | Used in    | Description                                       |
-| -------------------------------- | ---------- | ------------------------------------------------- |
-| `PORT`                           | dev + prod | Application port (default 3000)                   |
-| `NODE_ENV`                       | dev + prod | Runtime environment (`development`, `production`) |
-| `S3_ENDPOINT_INTERNAL`           | dev + prod | S3 endpoint used from inside Docker network       |
-| `APP_DOMAIN`                     | prod       | Domain for Caddy TLS (e.g. `example.com`)         |
-| `GRAFANA_DOMAIN`                 | prod       | Grafana domain (`GF_SERVER_DOMAIN`)               |
-| `GRAFANA_SERVER_ROOT_URL`        | prod       | Grafana root URL (`GF_SERVER_ROOT_URL`)           |
-| `POSTGRES_USER`                  | dev + prod | Database user                                     |
-| `POSTGRES_PASSWORD`              | dev + prod | Database password                                 |
-| `POSTGRES_DB`                    | dev + prod | Database name                                     |
-| `DATABASE_URL`                   | dev + prod | PostgreSQL connection string                      |
-| `GRAFANA_INITIAL_ADMIN_USER`     | dev + prod | Initial Grafana username                          |
-| `GRAFANA_INITIAL_ADMIN_PASSWORD` | dev + prod | Initial Grafana password                          |
-| `GRAFANA_SMTP`                   | prod       | SMTP host for Grafana alerts                      |
-| `GRAFANA_SMTP_USER`              | prod       | SMTP username                                     |
-| `GRAFANA_SMTP_PASSWORD`          | prod       | SMTP password                                     |
-| `GRAFANA_SMTP_FROM_ADDRESS`      | prod       | From address for alert emails                     |
-| `OTEL_EXPORTER_OTLP_ENDPOINT`    | dev + prod | OpenTelemetry collector endpoint                  |
-| `OBSERVABILITY_LOG_LEVEL`        | dev + prod | Log level (e.g. debug, info)                      |
-| `OBSERVABILITY_METRICS_ENABLED`  | dev + prod | Enable metrics collection                         |
-| `OBSERVABILITY_TRACING_ENABLED`  | dev + prod | Enable distributed tracing                        |
-| `GARAGE_RPC_SECRET`              | dev + prod | Cluster RPC secret                                |
-| `GARAGE_ADMIN_TOKEN`             | dev + prod | Garage admin API token                            |
-| `GARAGE_METRICS_TOKEN`           | dev + prod | Garage metrics endpoint token                     |
-| `S3_ACCESS_KEY`                  | dev + prod | Default S3 access key                             |
-| `S3_SECRET_KEY`                  | dev + prod | Default S3 secret key                             |
-| `S3_ENDPOINT`                    | dev + prod | S3-compatible endpoint (e.g. Garage)              |
-| `S3_REGION`                      | dev + prod | S3 region (e.g. `garage`)                         |
-| `S3_BUCKET_UPLOADS`              | dev + prod | Bucket for uploaded files                         |
-| `S3_BUCKET_PUBLIC`               | dev + prod | Bucket for public assets                          |
+### Application
+
+| Variable     | Used in    | Description                                       |
+| ------------ | ---------- | ------------------------------------------------- |
+| `APP_PORT`   | dev + prod | Application port (default 3000)                   |
+| `NODE_ENV`   | dev + prod | Runtime environment (`development`, `production`) |
+| `APP_DOMAIN` | prod       | Domain for Caddy TLS (e.g. `example.com`)         |
+
+### Database
+
+| Variable            | Used in    | Description                  |
+| ------------------- | ---------- | ---------------------------- |
+| `POSTGRES_USER`     | dev + prod | Database user                |
+| `POSTGRES_PASSWORD` | dev + prod | Database password            |
+| `POSTGRES_DB`       | dev + prod | Database name                |
+| `DATABASE_URL`      | dev + prod | PostgreSQL connection string |
+
+### S3 / Storage
+
+| Variable               | Used in    | Description                                 |
+| ---------------------- | ---------- | ------------------------------------------- |
+| `S3_ENDPOINT_INTERNAL` | dev + prod | S3 endpoint used from inside Docker network |
+| `S3_ACCESS_KEY`        | dev + prod | Default S3 access key                       |
+| `S3_SECRET_KEY`        | dev + prod | Default S3 secret key                       |
+| `S3_ENDPOINT`          | dev + prod | S3-compatible endpoint (e.g. Garage)        |
+| `S3_REGION`            | dev + prod | S3 region (e.g. `garage`)                   |
+| `S3_BUCKET_UPLOADS`    | dev + prod | Bucket for uploaded files                   |
+| `S3_BUCKET_PUBLIC`     | dev + prod | Bucket for public assets                    |
+
+### Garage
+
+| Variable               | Used in    | Description                   |
+| ---------------------- | ---------- | ----------------------------- |
+| `GARAGE_RPC_SECRET`    | dev + prod | Cluster RPC secret            |
+| `GARAGE_ADMIN_TOKEN`   | dev + prod | Garage admin API token        |
+| `GARAGE_METRICS_TOKEN` | dev + prod | Garage metrics endpoint token |
+
+### Observability
+
+| Variable                        | Used in    | Description                      |
+| ------------------------------- | ---------- | -------------------------------- |
+| `OTEL_EXPORTER_OTLP_ENDPOINT`   | dev + prod | OpenTelemetry collector endpoint |
+| `OBSERVABILITY_LOG_LEVEL`       | dev + prod | Log level (e.g. debug, info)     |
+| `OBSERVABILITY_METRICS_ENABLED` | dev + prod | Enable metrics collection        |
+| `OBSERVABILITY_TRACING_ENABLED` | dev + prod | Enable distributed tracing       |
+
+### Grafana
+
+| Variable                    | Used in    | Description                         |
+| --------------------------- | ---------- | ----------------------------------- |
+| `GF_DOMAIN`                 | prod       | Grafana domain (`GF_SERVER_DOMAIN`) |
+| `GF_SERVER_ROOT_URL`        | prod       | Grafana root URL                    |
+| `GF_INITIAL_ADMIN_USER`     | dev + prod | Initial Grafana username            |
+| `GF_INITIAL_ADMIN_PASSWORD` | dev + prod | Initial Grafana password            |
+| `GF_SMTP`                   | prod       | SMTP host for Grafana alerts        |
+| `GF_SMTP_USER`              | prod       | SMTP username                       |
+| `GF_SMTP_PASSWORD`          | prod       | SMTP password                       |
+| `GF_SMTP_FROM_ADDRESS`      | prod       | From address for alert emails       |
 
 > [!IMPORTANT]
-> `GRAFANA_INITIAL_*` variables only work on a fresh Grafana volume. Changes made after Grafana has been initialized will not be applied. Use `grafana-cli` instead.
+> `GF_INITIAL_*` variables only work on a fresh Grafana volume. Changes made after Grafana has been initialized will not be applied. Use `grafana-cli` instead.
 
-| File               | Used for           |
-| ------------------ | ------------------ |
-| `.env.development` | Local development  |
-| `.env.production`  | Production stack   |
-| `.env.staging`     | Staging stack      |
-| `.env.caddy`       | Shared Caddy proxy |
+| File               | Used for          |
+| ------------------ | ----------------- |
+| `.env.development` | Local development |
+| `.env.production`  | Production stack  |
+| `.env.staging`     | Staging stack     |
 
 ## Database
 
@@ -152,7 +178,7 @@ See `./drizzle/docs/db-diagram.dbml`.
 
 ```bash
 pnpm infra:up   # starts garage, postgres, grafana, prometheus, alloy, tempo, loki
-pnpm dev        # starts app — port from PORT env (default 3000)
+pnpm dev        # starts app — port from APP_PORT env (default 3000)
 ```
 
 > [!NOTE]
@@ -160,13 +186,11 @@ pnpm dev        # starts app — port from PORT env (default 3000)
 
 ## Running — production
 
+Each environment is self-contained with its own Caddy reverse proxy. No shared networks or services between stacks.
+
 ```bash
-docker network create snack-rate-edge
-pnpm proxy:up
 pnpm prod:up
 ```
-
-Starts the app stack for production. The shared Caddy proxy runs separately and serves both prod and staging.
 
 ### Services & URLs (production)
 
@@ -186,29 +210,10 @@ Caddy handles TLS automatically when `APP_DOMAIN` is set to a real domain. It al
 ## Running — staging
 
 ```bash
-# You need to create this network once.
-docker network create snack-rate-edge
-pnpm proxy:up
 pnpm staging:up
 ```
 
-Starts the staging app stack. The shared Caddy proxy must already be running and `.env.caddy` must define both hostnames.
-
-Copy `.env.example` to `.env.staging` first and copy [.env.caddy.example](/home/maciek/snack-rate/.env.caddy.example) to `.env.caddy` for the shared proxy.
-Set `STAGING_BASIC_AUTH_USER` and `STAGING_BASIC_AUTH_HASH` in `.env.caddy`; use `pnpm proxy:generate-hash yourpassword` to generate the hash.
-
-| `.env.caddy` variable     | Description                                             |
-| ------------------------- | ------------------------------------------------------- |
-| `CADDY_HTTP_PORT`         | Caddy HTTP bind port (default 80)                       |
-| `CADDY_HTTPS_PORT`        | Caddy HTTPS bind port (default 443)                     |
-| `APP_PORT`                | App container port (must match `PORT` in the app's env) |
-| `APP_DOMAIN`              | Production app domain                                   |
-| `STORAGE_DOMAIN`          | S3 storage domain                                       |
-| `CDN_DOMAIN`              | CDN domain                                              |
-| `CDN_PROXY_URL`           | Upstream CDN proxy URL                                  |
-| `STAGING_APP_DOMAIN`      | Staging app domain                                      |
-| `STAGING_BASIC_AUTH_USER` | Staging basic auth username                             |
-| `STAGING_BASIC_AUTH_HASH` | Staging basic auth bcrypt hash                          |
+Copy `.env.example` to `.env.staging` first. Use `pnpm hash-password yourpassword` to generate the bcrypt hash for `STAGING_BASIC_AUTH_HASH`.
 
 ### Infrastructure diagram - production
 
