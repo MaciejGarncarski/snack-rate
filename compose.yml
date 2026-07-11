@@ -21,39 +21,6 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  garage-init:
-    image: alpine:3.24
-    depends_on:
-      garage:
-        condition: service_started
-    network_mode: service:garage
-    pid: service:garage
-    entrypoint:
-      - /bin/sh
-      - -eu
-      - -c
-      - |
-        chroot /proc/1/root /garage key import -n snackrate-app "$S3_ACCESS_KEY" "$S3_SECRET_KEY" --yes || true
-
-        chroot /proc/1/root /garage bucket create "$S3_BUCKET_PUBLIC" || true
-
-        chroot /proc/1/root /garage bucket allow "$S3_BUCKET_PUBLIC" \
-          --read || true
-
-        chroot /proc/1/root /garage bucket allow "$S3_BUCKET_PUBLIC" \
-          --key "$S3_ACCESS_KEY" \
-          --read --write --owner || true
-
-        chroot /proc/1/root /garage bucket website --allow "$S3_BUCKET_PUBLIC" || true
-
-        echo "Garage buckets configured (public bucket exposed)."
-    environment:
-      GARAGE_CONFIG_FILE: /etc/garage.toml
-      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-snackrate-app}
-      S3_SECRET_KEY: ${S3_SECRET_KEY:-}
-      S3_BUCKET_PUBLIC: ${S3_BUCKET_PUBLIC:-snack-rate-public}
-    restart: "on-failure:3"
-
   postgres:
     image: postgres:18-alpine
     restart: unless-stopped

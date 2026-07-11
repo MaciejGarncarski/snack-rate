@@ -3,10 +3,6 @@ services:
     env_file:
       - .env.staging
 
-  garage-init:
-    env_file:
-      - .env.staging
-
   postgres:
     env_file:
       - .env.staging

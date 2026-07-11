@@ -34,6 +34,7 @@
     "infra:down": "docker compose -p snack-rate-dev -f compose.yml -f compose.dev.yml --env-file .env.development down",
     "infra:logs": "docker compose -p snack-rate-dev -f compose.yml -f compose.dev.yml --env-file .env.development logs -f",
     "infra:restart": "pnpm run infra:down && pnpm run infra:up",
+    "garage:init": "sh scripts/garage-init.sh",
     "hash-password": "docker run --rm -it caddy:2-alpine caddy hash-password --plaintext",
     "staging:up": "docker compose -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging up -d",
     "staging:down": "docker compose -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging down",

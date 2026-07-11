@@ -18,6 +18,7 @@ The second goal was to build something people could actually use on a daily basi
 cp .env.example .env.development
 pnpm install
 pnpm infra:up
+pnpm garage:init
 pnpm db:migrate && pnpm db:seed
 pnpm dev # → http://localhost:3000/  (or whatever APP_PORT is set to)
 ```
@@ -189,12 +190,15 @@ See `./drizzle/docs/db-diagram.dbml`.
 ## Running — development
 
 ```bash
-pnpm infra:up   # starts garage, postgres, grafana, prometheus, alloy, tempo, loki
-pnpm dev        # starts app — port from APP_PORT env (default 3000)
+pnpm infra:up     # starts garage, postgres, grafana, prometheus, alloy, tempo, loki
+pnpm garage:init  # configure garage key, bucket, and website hosting
+pnpm dev          # starts app — port from APP_PORT env (default 3000)
 ```
 
 > [!NOTE]
 > Garage runs in a container with persistent volumes. Its S3 API is exposed on `http://localhost:3900`, the web endpoint on `http://localhost:3902`, and the admin API on `http://localhost:3903`.
+>
+> On first run (or after wiping Garage volumes), run `pnpm garage:init` to import the S3 access key, create the public bucket, set permissions, and enable website hosting.
 
 ## Running — production
 
@@ -202,6 +206,7 @@ Each environment is self-contained with its own Caddy reverse proxy. No shared n
 
 ```bash
 pnpm prod:up
+pnpm garage:init prod
 ```
 
 ### Services & URLs (production)
@@ -223,6 +228,7 @@ Caddy handles TLS automatically when `APP_DOMAIN` is set to a real domain. It al
 
 ```bash
 pnpm staging:up
+pnpm garage:init staging
 ```
 
 Copy `.env.example` to `.env.staging` first. Use `pnpm hash-password yourpassword` to generate the bcrypt hash for `STAGING_BASIC_AUTH_HASH`.
