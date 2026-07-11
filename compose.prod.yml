@@ -71,6 +71,12 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  backup:
+    env_file:
+      - .env.production
+    volumes:
+      - /var/backups/snack-rate:/backups
+
   grafana:
     env_file:
       - .env.production

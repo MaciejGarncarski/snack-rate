@@ -143,6 +143,14 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  backup:
+    build:
+      context: .
+      dockerfile: Dockerfile.backup
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   node-exporter:
     image: prom/node-exporter:v1
     restart: unless-stopped
