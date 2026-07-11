@@ -16,10 +16,11 @@
     }
 }
 
-{$CDN_DOMAIN} {
+{$PUBLIC_BUCKET_DOMAIN} {
     handle {
-        header Host "snack-rate-public.localhost"
-        reverse_proxy {$CDN_PROXY_URL}
+        reverse_proxy {$PUBLIC_BUCKET_BACKEND} {
+            header_up Host {$PUBLIC_BUCKET_HOST}
+        }
     }
 
     @static {

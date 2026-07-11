@@ -55,15 +55,20 @@ Storage:
 
 ## Environment variables
 
-Copy the appropriate example file and fill in values before running anything.
+Copy `.env.example` to the appropriate file and fill in values before running anything.
+
+| File               | Used for          |
+| ------------------ | ----------------- |
+| `.env.development` | Local development |
+| `.env.production`  | Production stack  |
+| `.env.staging`     | Staging stack     |
 
 ### Application
 
-| Variable     | Used in    | Description                                       |
-| ------------ | ---------- | ------------------------------------------------- |
-| `APP_PORT`   | dev + prod | Application port (default 3000)                   |
-| `NODE_ENV`   | dev + prod | Runtime environment (`development`, `production`) |
-| `APP_DOMAIN` | prod       | Domain for Caddy TLS (e.g. `example.com`)         |
+| Variable   | Used in    | Description                                       |
+| ---------- | ---------- | ------------------------------------------------- |
+| `APP_PORT` | dev + prod | Application port (default 3000)                   |
+| `NODE_ENV` | dev + prod | Runtime environment (`development`, `production`) |
 
 ### Database
 
@@ -78,12 +83,11 @@ Copy the appropriate example file and fill in values before running anything.
 
 | Variable               | Used in    | Description                                 |
 | ---------------------- | ---------- | ------------------------------------------- |
-| `S3_ENDPOINT_INTERNAL` | dev + prod | S3 endpoint used from inside Docker network |
-| `S3_ACCESS_KEY`        | dev + prod | Default S3 access key                       |
-| `S3_SECRET_KEY`        | dev + prod | Default S3 secret key                       |
 | `S3_ENDPOINT`          | dev + prod | S3-compatible endpoint (e.g. Garage)        |
+| `S3_ENDPOINT_INTERNAL` | dev + prod | S3 endpoint used from inside Docker network |
+| `S3_ACCESS_KEY`        | dev + prod | S3 access key                               |
+| `S3_SECRET_KEY`        | dev + prod | S3 secret key                               |
 | `S3_REGION`            | dev + prod | S3 region (e.g. `garage`)                   |
-| `S3_BUCKET_UPLOADS`    | dev + prod | Bucket for uploaded files                   |
 | `S3_BUCKET_PUBLIC`     | dev + prod | Bucket for public assets                    |
 
 ### Garage
@@ -107,23 +111,31 @@ Copy the appropriate example file and fill in values before running anything.
 
 | Variable                    | Used in    | Description                         |
 | --------------------------- | ---------- | ----------------------------------- |
-| `GF_DOMAIN`                 | prod       | Grafana domain (`GF_SERVER_DOMAIN`) |
-| `GF_SERVER_ROOT_URL`        | prod       | Grafana root URL                    |
+| `GF_DOMAIN`                 | dev + prod | Grafana domain (`GF_SERVER_DOMAIN`) |
+| `GF_SERVER_ROOT_URL`        | dev + prod | Grafana root URL                    |
 | `GF_INITIAL_ADMIN_USER`     | dev + prod | Initial Grafana username            |
 | `GF_INITIAL_ADMIN_PASSWORD` | dev + prod | Initial Grafana password            |
-| `GF_SMTP`                   | prod       | SMTP host for Grafana alerts        |
-| `GF_SMTP_USER`              | prod       | SMTP username                       |
-| `GF_SMTP_PASSWORD`          | prod       | SMTP password                       |
-| `GF_SMTP_FROM_ADDRESS`      | prod       | From address for alert emails       |
+| `GF_SMTP`                   | dev + prod | SMTP host for Grafana alerts        |
+| `GF_SMTP_USER`              | dev + prod | SMTP username                       |
+| `GF_SMTP_PASSWORD`          | dev + prod | SMTP password                       |
+| `GF_SMTP_FROM_ADDRESS`      | dev + prod | From address for alert emails       |
 
 > [!IMPORTANT]
 > `GF_INITIAL_*` variables only work on a fresh Grafana volume. Changes made after Grafana has been initialized will not be applied. Use `grafana-cli` instead.
 
-| File               | Used for          |
-| ------------------ | ----------------- |
-| `.env.development` | Local development |
-| `.env.production`  | Production stack  |
-| `.env.staging`     | Staging stack     |
+### Caddy
+
+| Variable                  | Used in        | Description                                                     |
+| ------------------------- | -------------- | --------------------------------------------------------------- |
+| `CADDY_HOST_HTTP_PORT`    | prod + staging | Host-side HTTP port (default 80)                                |
+| `CADDY_HOST_HTTPS_PORT`   | prod + staging | Host-side HTTPS port (default 443)                              |
+| `APP_DOMAIN`              | prod           | Domain for app TLS (e.g. `app.example.com`)                     |
+| `PUBLIC_BUCKET_DOMAIN`    | prod + staging | Public bucket domain (e.g. `s3.example.com`)                    |
+| `PUBLIC_BUCKET_BACKEND`   | prod + staging | Internal Garage web endpoint to proxy to                        |
+| `PUBLIC_BUCKET_HOST`      | prod + staging | Host header sent to Garage (e.g. `snack-rate-public.localhost`) |
+| `STAGING_APP_DOMAIN`      | staging        | Domain for staging app (e.g. `staging.app.example.com`)         |
+| `STAGING_BASIC_AUTH_USER` | staging        | Basic auth username for staging                                 |
+| `STAGING_BASIC_AUTH_HASH` | staging        | Bcrypt hash for staging basic auth (use `pnpm hash-password`)   |
 
 ## Database
 
