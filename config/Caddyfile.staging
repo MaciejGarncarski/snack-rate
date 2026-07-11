@@ -1,52 +1,52 @@
 {
-    log {
-        output stdout
-        format json
-    }
+        log {
+                output stdout
+                format json
+        }
 }
 
 {$PUBLIC_BUCKET_DOMAIN} {
-    handle {
-        header Host "{$PUBLIC_BUCKET_HOST}"
-        reverse_proxy {$PUBLIC_BUCKET_BACKEND}
-    }
+        handle {
+                header Host "{$PUBLIC_BUCKET_HOST}"
+                reverse_proxy {$PUBLIC_BUCKET_BACKEND}
+        }
 
-    @static {
-        path *.js *.css *.png *.jpg *.webp *.svg *.woff2
-    }
+        @static {
+                path *.js *.css *.png *.jpg *.webp *.svg *.woff2
+        }
 
-    header @static Cache-Control "public, max-age=31536000, immutable"
+        header @static Cache-Control "public, max-age=31536000, immutable"
 }
 
 {$STAGING_APP_DOMAIN} {
-    route {
-        handle /robots.txt {
-            respond <<ROBOTS
-                User-agent: *
-                Disallow: /
-                ROBOTS 200
-        }
-
-        basic_auth {
-            {$STAGING_BASIC_AUTH_USER} {$STAGING_BASIC_AUTH_HASH}
-        }
-
-        handle /grafana* {
-            uri strip_prefix /grafana
-            reverse_proxy grafana:3000
-        }
-
-        handle {
-            reverse_proxy app:{$APP_PORT} {
-                lb_try_duration 30s
-                lb_try_interval 1s
-
-                transport http {
-                    dial_timeout 10s
-                    read_timeout 120s
-                    write_timeout 120s
+        route {
+                handle /robots.txt {
+                        respond <<ROBOTS
+                        User-agent: *
+                        Disallow: /
+                        ROBOTS 200
                 }
-            }
+
+                basic_auth {
+                        {$STAGING_BASIC_AUTH_USER} {$STAGING_BASIC_AUTH_HASH}
+                }
+
+                handle /grafana* {
+                        uri strip_prefix /grafana
+                        reverse_proxy grafana:3000
+                }
+
+                handle {
+                        reverse_proxy app:{$APP_PORT} {
+                                lb_try_duration 30s
+                                lb_try_interval 1s
+
+                                transport http {
+                                        dial_timeout 10s
+                                        read_timeout 120s
+                                        write_timeout 120s
+                                }
+                        }
+                }
         }
-    }
 }
