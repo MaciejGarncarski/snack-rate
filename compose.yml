@@ -49,6 +49,7 @@ services:
         echo "Garage buckets configured (public bucket exposed)."
     environment:
       S3_ACCESS_KEY: ${S3_ACCESS_KEY:-snackrate-app}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:-}
       S3_BUCKET_PUBLIC: ${S3_BUCKET_PUBLIC:-snack-rate-public}
     restart: "on-failure:3"
 

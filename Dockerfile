@@ -19,4 +19,4 @@ FROM base
 COPY --from=build /app/.output ./.output
 COPY --from=build /app/package.json ./
 EXPOSE ${APP_PORT}
-CMD ["pnpm", "run", "start"]
+CMD ["node", "--strip-types", "--import", "./bootstrap/bootstrap.ts", ".output/server/index.mjs"]
