@@ -38,7 +38,7 @@ services:
         chroot /proc/1/root /garage bucket create "$S3_BUCKET_PUBLIC" || true
 
         chroot /proc/1/root /garage bucket allow "$S3_BUCKET_PUBLIC" \
-          --read --anonymous || true
+          --read || true
 
         chroot /proc/1/root /garage bucket allow "$S3_BUCKET_PUBLIC" \
           --key "$S3_ACCESS_KEY" \
@@ -48,6 +48,7 @@ services:
 
         echo "Garage buckets configured (public bucket exposed)."
     environment:
+      GARAGE_CONFIG_FILE: /etc/garage.toml
       S3_ACCESS_KEY: ${S3_ACCESS_KEY:-snackrate-app}
       S3_SECRET_KEY: ${S3_SECRET_KEY:-}
       S3_BUCKET_PUBLIC: ${S3_BUCKET_PUBLIC:-snack-rate-public}
