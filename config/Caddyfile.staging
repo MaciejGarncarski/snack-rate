@@ -5,15 +5,9 @@
     }
 }
 
-{$STORAGE_DOMAIN} {
-    handle {
-        header Cache-Control "public, max-age=31536000, immutable"
-        reverse_proxy garage:3900
-    }
-}
-
 {$CDN_DOMAIN} {
     handle {
+        header Host "snack-rate-public.localhost"
         reverse_proxy {$CDN_PROXY_URL}
     }
 

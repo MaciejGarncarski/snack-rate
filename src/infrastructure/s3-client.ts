@@ -1,9 +1,6 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 import { serverEnv } from "#/lib/server.env";
-
-const THREE_HOURS_IN_SECONDS = 3 * 60 * 60;
 
 const s3UploadClient = new S3Client({
   region: serverEnv.S3_REGION,
@@ -15,38 +12,18 @@ const s3UploadClient = new S3Client({
   forcePathStyle: true,
 });
 
-const s3SigningClient = new S3Client({
-  region: serverEnv.S3_REGION,
-  endpoint: serverEnv.S3_ENDPOINT,
-  credentials: {
-    accessKeyId: serverEnv.S3_ACCESS_KEY,
-    secretAccessKey: serverEnv.S3_SECRET_KEY,
-  },
-  forcePathStyle: true,
-});
-
-export const privateUploadsBucket = serverEnv.S3_BUCKET_UPLOADS;
 export const publicBucket = serverEnv.S3_BUCKET_PUBLIC;
 
-export async function getPrivateFileUrl(key: string) {
-  const command = new GetObjectCommand({
-    Bucket: privateUploadsBucket,
-    Key: key,
-  });
-
-  const url = await getSignedUrl(s3SigningClient, command, {
-    expiresIn: THREE_HOURS_IN_SECONDS,
-  });
-
-  return url;
-}
-
-export async function uploadPrivateFile(key: string, body: Buffer) {
+export async function uploadPublicFile(key: string, body: Buffer) {
   await s3UploadClient.send(
     new PutObjectCommand({
-      Bucket: privateUploadsBucket,
+      Bucket: publicBucket,
       Key: key,
       Body: body,
     }),
   );
+}
+
+export function getPublicFileUrl(key: string): string {
+  return `${serverEnv.S3_ENDPOINT}/${key}`;
 }

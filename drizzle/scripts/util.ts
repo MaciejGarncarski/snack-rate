@@ -17,7 +17,7 @@ const fileStorageClient = new S3Client({
   forcePathStyle: true,
 });
 
-const bucket = process.env.S3_BUCKET_UPLOADS!;
+const bucket = process.env.S3_BUCKET_PUBLIC!;
 
 export function uploadFileToGarage(key: string, body: Buffer | Uint8Array | Blob | string) {
   return fileStorageClient.send(

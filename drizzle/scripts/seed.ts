@@ -258,10 +258,7 @@ async function seedDatabase() {
       createThumbnail(chipsBuffer, "jpg"),
     ]);
 
-  await Promise.all([
-    deleteAllObjectsFromBucket(process.env.S3_BUCKET_UPLOADS!),
-    deleteAllObjectsFromBucket(process.env.S3_BUCKET_PUBLIC!),
-  ]);
+  await deleteAllObjectsFromBucket(process.env.S3_BUCKET_PUBLIC!);
 
   await Promise.all([
     uploadFileToGarage(monsterImageKey, monsterNormalImg),

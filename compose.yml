@@ -35,12 +35,7 @@ services:
       - |
         chroot /proc/1/root /garage key import -n snackrate-app "$S3_ACCESS_KEY" "$S3_SECRET_KEY" --yes || true
 
-        chroot /proc/1/root /garage bucket create "$S3_BUCKET_UPLOADS" || true
         chroot /proc/1/root /garage bucket create "$S3_BUCKET_PUBLIC" || true
-
-        chroot /proc/1/root /garage bucket allow "$S3_BUCKET_UPLOADS" \
-          --key "$S3_ACCESS_KEY" \
-          --read --write --owner || true
 
         chroot /proc/1/root /garage bucket allow "$S3_BUCKET_PUBLIC" \
           --read --anonymous || true
@@ -49,10 +44,11 @@ services:
           --key "$S3_ACCESS_KEY" \
           --read --write --owner || true
 
-        echo "Garage buckets configured (uploads private, public bucket exposed)."
+        chroot /proc/1/root /garage bucket website --allow "$S3_BUCKET_PUBLIC" || true
+
+        echo "Garage buckets configured (public bucket exposed)."
     environment:
       S3_ACCESS_KEY: ${S3_ACCESS_KEY:-snackrate-app}
-      S3_BUCKET_UPLOADS: ${S3_BUCKET_UPLOADS:-snack-rate-uploads}
       S3_BUCKET_PUBLIC: ${S3_BUCKET_PUBLIC:-snack-rate-public}
     restart: "on-failure:3"
 

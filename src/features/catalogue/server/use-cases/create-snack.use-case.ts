@@ -5,7 +5,7 @@ import { createThumbnail, validateImage } from "#/features/catalogue/server/util
 import { getExtensionFromBlob } from "#/features/catalogue/utils/get-extension-from-blob.ts";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 import { StorageKey } from "#/features/shared/value-objects/storage-key.vo";
-import { uploadPrivateFile } from "#/infrastructure/s3-client";
+import { uploadPublicFile } from "#/infrastructure/s3-client";
 import { logger } from "#/observability/logger/logger";
 
 type CreateSnackInput = {
@@ -62,8 +62,8 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
               const buffer = Buffer.from(await img.arrayBuffer());
 
               await Promise.all([
-                uploadPrivateFile(key, buffer),
-                createThumbnail(buffer, ext).then((thumb) => uploadPrivateFile(thumbKey, thumb)),
+                uploadPublicFile(key, buffer),
+                createThumbnail(buffer, ext).then((thumb) => uploadPublicFile(thumbKey, thumb)),
               ]);
 
               const duration = Date.now() - imgStart;

@@ -1,9 +1,9 @@
 import { createSnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
 import { createDb } from "#/infrastructure/db/db";
 import { getPool } from "#/infrastructure/db/pool";
-import { getPrivateFileUrl } from "#/infrastructure/s3-client";
+import { getPublicFileUrl } from "#/infrastructure/s3-client";
 
 export const snacksRepository = createSnacksRepository({
   db: createDb(getPool()),
-  getFileUrl: getPrivateFileUrl,
+  getFileUrl: (key) => Promise.resolve(getPublicFileUrl(key)),
 });
