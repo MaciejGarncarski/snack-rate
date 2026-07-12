@@ -29,6 +29,9 @@ importers:
       '@fontsource-variable/inter':
         specifier: ^5.2.8
         version: 5.2.8
+      '@mjackson/form-data-parser':
+        specifier: ^0.9.1
+        version: 0.9.1
       '@opentelemetry/api':
         specifier: ^1.9.1
         version: 1.9.1
@@ -1455,6 +1458,15 @@ packages:
 
   '@kwsites/file-exists@1.1.1':
     resolution: {integrity: sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==}
+
+  '@mjackson/form-data-parser@0.9.1':
+    resolution: {integrity: sha512-GQqet5qTAm8LfUOsMdfdInqnOBpuDO5GK/y7tBgpXs+DQhJY9Rf1fxMuFXiXczoNMRu8UIG5/RFSBDeaF1bbrw==}
+
+  '@mjackson/headers@0.11.1':
+    resolution: {integrity: sha512-uXXhd4rtDdDwkqAuGef1nuafkCa1NlTmEc1Jzc0NL4YiA1yON1NFXuqJ3hOuKvNKQwkiDwdD+JJlKVyz4dunFA==}
+
+  '@mjackson/multipart-parser@0.10.1':
+    resolution: {integrity: sha512-cHMD6+ErH/DrEfC0N6Ru/+1eAdavxdV0C35PzSb5/SD7z3XoaDMc16xPJcb8CahWjSpqHY+Too9sAb6/UNuq7A==}
 
   '@modelcontextprotocol/sdk@1.29.0':
     resolution: {integrity: sha512-zo37mZA9hJWpULgkRpowewez1y6ML5GsXJPY8FI0tBBCd77HEvza4jDqRKOXgHNn867PVGCyTdzqpz0izu5ZjQ==}
@@ -7884,6 +7896,16 @@ snapshots:
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
+
+  '@mjackson/form-data-parser@0.9.1':
+    dependencies:
+      '@mjackson/multipart-parser': 0.10.1
+
+  '@mjackson/headers@0.11.1': {}
+
+  '@mjackson/multipart-parser@0.10.1':
+    dependencies:
+      '@mjackson/headers': 0.11.1
 
   '@modelcontextprotocol/sdk@1.29.0(zod@3.25.76)':
     dependencies:

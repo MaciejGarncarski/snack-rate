@@ -34,6 +34,7 @@
   },
 
   "rules": {
+    "typescript/no-explicit-any": "warn",
     "eslint/no-underscore-dangle": "off",
     "import/max-dependencies": ["warn", { "max": 15 }],
     "eslint/max-lines-per-function": ["warn", { "max": 250 }],

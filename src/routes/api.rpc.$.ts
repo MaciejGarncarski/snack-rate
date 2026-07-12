@@ -19,6 +19,7 @@ const handler = new RPCHandler(router, {
         ...options,
         context: {
           ...options.context,
+          // oxlint-disable-next-line typescript/no-explicit-any
           [OVERRIDE_BODY_CONTEXT as any]: {
             fetchRequest: options.request,
           },
@@ -28,6 +29,7 @@ const handler = new RPCHandler(router, {
   ],
   rootInterceptors: [
     (options) => {
+      // oxlint-disable-next-line typescript/no-explicit-any
       const { fetchRequest } = ((options.context as any)[OVERRIDE_BODY_CONTEXT] as
         | {
             fetchRequest: Request;
