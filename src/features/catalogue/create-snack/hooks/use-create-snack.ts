@@ -38,6 +38,9 @@ export function useCreateSnack() {
 
   const createSnack = async (formData: FormData) => {
     const payload = buildCreateSnackPayload(formData);
+    // @ts-expect-error We need to expect error, because the payload cannot be typed correctly, because of interceptor.
+    // We send form data as we should, the interceptor transforms images to image keys.
+    // There is no way to type this correctly
     await mutateAsync(payload);
   };
 

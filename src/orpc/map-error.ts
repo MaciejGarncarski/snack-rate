@@ -40,6 +40,7 @@ export function mapError(err: unknown): never {
 
   throw new ORPCError("INTERNAL_SERVER_ERROR", {
     message: "Nieznany błąd",
+    cause: err,
   });
 }
 

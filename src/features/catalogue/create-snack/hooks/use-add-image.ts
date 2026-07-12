@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
 import {
+  ALLOWED_MIME_TYPES,
   MAXIMUM_IMAGES,
-  SUPPORTED_FORMATS,
 } from "#/features/catalogue/create-snack/consts/image-const";
 import {
   showToastForValidationError,
@@ -51,7 +51,7 @@ export function useAddImage({ onAddToQueue, allFiles }: UseAddImageProps) {
   const uploadOnClick = () => {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = SUPPORTED_FORMATS.join(",");
+    input.accept = Array.from(ALLOWED_MIME_TYPES).join(",");
     input.multiple = allFiles.length < MAXIMUM_IMAGES;
     input.click();
 

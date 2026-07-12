@@ -1,30 +1,25 @@
 import { trace } from "@opentelemetry/api";
+import pLimit from "p-limit";
 
 import type { SnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
+import type { UploadedImage } from "#/features/catalogue/server/services/snack-image.service";
 import {
-  cleanupOrphanFiles,
-  uploadSnackImages,
-  validateSnackImages,
-} from "#/features/catalogue/server/services/snack-image.service";
-import {
-  createSnackRecord,
   type CreateSnackInput,
+  createSnackRecord,
 } from "#/features/catalogue/server/services/snack-record.service";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
+import type { SnackStatus } from "#/features/shared/value-objects/status.vo.ts";
+import { StorageKey } from "#/features/shared/value-objects/storage-key.vo";
+import { copyPublicFile, deletePublicFile } from "#/infrastructure/s3-client";
 import { logger } from "#/observability/logger/logger";
 
-const SNACK_STATUS = {
-  PENDING: "pending",
-  PUBLISHED: "published",
-} as const;
+const UPLOAD_CONCURRENCY = 3;
 
 const tracer = trace.getTracer("catalogue-service");
 
 export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepository) {
-  // TODO: After auth added, check if user is admin, if user is admin, then snack is published, otherwise snack is unpublished and needs to be approved by admin
-
   const isAdminOrModerator = true;
-  const snackStatus = isAdminOrModerator ? SNACK_STATUS.PUBLISHED : SNACK_STATUS.PENDING;
+  const snackStatus: SnackStatus = isAdminOrModerator ? "published" : "pending";
 
   return tracer.startActiveSpan("createSnack", async (span) => {
     const start = Date.now();
@@ -35,36 +30,51 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
       "snack.image_count": input.images.length,
     });
 
+    const uploadedKeys: string[] = [];
+    const limit = pLimit(UPLOAD_CONCURRENCY);
+
     try {
       const slug = Slug.create(input.name);
+      const uploadedImages: UploadedImage[] = [];
 
-      const dimensions = await validateSnackImages(input.images);
-      const uploadedImages = await uploadSnackImages(input.images, slug, dimensions);
-      const allUploadedKeys = uploadedImages.flatMap((img) => [img.key, img.thumbKey]);
+      await Promise.all(
+        input.images.map(({ key, thumbKey, fileExt }, index) =>
+          limit(async () => {
+            const permImageKey = StorageKey.create(slug, fileExt).getValue();
+            const permThumbKey = StorageKey.createThumb(slug, fileExt).getValue();
 
-      let snackId: string;
+            await Promise.all([
+              copyPublicFile(key, permImageKey),
+              copyPublicFile(thumbKey, permThumbKey),
+            ]);
 
-      try {
-        snackId = await createSnackRecord(
-          input,
-          slug,
-          snackStatus,
-          uploadedImages,
-          snackRepository,
-        );
-      } catch (err) {
-        await cleanupOrphanFiles(allUploadedKeys);
-        throw err;
-      }
+            uploadedKeys.push(permImageKey, permThumbKey);
+            uploadedImages.push({ key: permImageKey, thumbKey: permThumbKey, index });
+          }),
+        ),
+      );
+
+      const snackId = await createSnackRecord(
+        input,
+        slug,
+        snackStatus,
+        uploadedImages,
+        snackRepository,
+      );
+
+      await Promise.allSettled(
+        input.images.flatMap(({ key, thumbKey }) => [
+          deletePublicFile(key),
+          deletePublicFile(thumbKey),
+        ]),
+      );
 
       const duration = Date.now() - start;
 
       span.setAttributes({
         "snack.id": snackId,
         "createSnack.duration_ms": duration,
-        "upload.success_count": uploadedImages.length,
-        "upload.total_original_size": uploadedImages.reduce((s, i) => s + i.originalSize, 0),
-        "upload.total_optimized_size": uploadedImages.reduce((s, i) => s + i.optimizedSize, 0),
+        "upload.success_count": input.images.length,
       });
 
       span.setStatus({ code: 1 });
@@ -72,6 +82,15 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
     } catch (err) {
       span.recordException(err as Error);
       span.setStatus({ code: 2 });
+
+      await Promise.allSettled(uploadedKeys.map((key) => deletePublicFile(key)));
+      await Promise.allSettled(
+        input.images.flatMap(({ key, thumbKey }) => [
+          deletePublicFile(key),
+          deletePublicFile(thumbKey),
+        ]),
+      );
+
       logger.error({ err, snackName: input.name }, "Failed to create snack");
       throw err;
     } finally {

@@ -9,7 +9,7 @@ export type CreateSnackInput = {
   price?: number;
   barcode?: string;
   typeSlug: string;
-  images: Blob[];
+  images: { key: string; thumbKey: string; filename: string; fileExt: string }[];
 };
 
 export function createSnackRecord(

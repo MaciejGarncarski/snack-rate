@@ -1,4 +1,11 @@
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  CopyObjectCommand,
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
+import { Readable } from "node:stream";
 
 import { serverEnv } from "#/lib/server.env";
 
@@ -10,16 +17,34 @@ const s3UploadClient = new S3Client({
     secretAccessKey: serverEnv.S3_SECRET_KEY,
   },
   forcePathStyle: true,
+  requestChecksumCalculation: "WHEN_REQUIRED",
 });
 
-export const publicBucket = serverEnv.S3_BUCKET_PUBLIC;
+export const PUBLIC_BUCKET = serverEnv.S3_BUCKET_PUBLIC;
 
 export async function uploadPublicFile(key: string, body: Buffer) {
   await s3UploadClient.send(
     new PutObjectCommand({
-      Bucket: publicBucket,
+      Bucket: PUBLIC_BUCKET,
       Key: key,
       Body: body,
+    }),
+  );
+}
+
+export async function uploadPublicFileStream(
+  key: string,
+  stream: ReadableStream<Uint8Array<ArrayBuffer>>,
+  options?: { contentType?: string },
+) {
+  const body = Readable.fromWeb(stream as unknown as import("node:stream/web").ReadableStream);
+
+  await s3UploadClient.send(
+    new PutObjectCommand({
+      Bucket: PUBLIC_BUCKET,
+      Key: key,
+      Body: body,
+      ContentType: options?.contentType,
     }),
   );
 }
@@ -27,10 +52,44 @@ export async function uploadPublicFile(key: string, body: Buffer) {
 export async function deletePublicFile(key: string) {
   await s3UploadClient.send(
     new DeleteObjectCommand({
-      Bucket: publicBucket,
+      Bucket: PUBLIC_BUCKET,
       Key: key,
     }),
   );
+}
+
+export async function getPublicFileStream(key: string) {
+  const { Body, ContentType, ContentLength } = await s3UploadClient.send(
+    new GetObjectCommand({
+      Bucket: PUBLIC_BUCKET,
+      Key: key,
+    }),
+  );
+
+  if (!Body) {
+    throw new Error("Object has no body");
+  }
+
+  return {
+    stream: Readable.toWeb(Body as Readable) as ReadableStream,
+    contentType: ContentType,
+    contentLength: ContentLength,
+  };
+}
+
+export async function copyPublicFile(oldKey: string, newKey: string) {
+  await s3UploadClient.send(
+    new CopyObjectCommand({
+      Bucket: PUBLIC_BUCKET,
+      CopySource: `${PUBLIC_BUCKET}/${encodeURIComponent(oldKey)}`,
+      Key: newKey,
+    }),
+  );
+}
+
+export async function movePublicFile(oldKey: string, newKey: string) {
+  await copyPublicFile(oldKey, newKey);
+  await deletePublicFile(oldKey);
 }
 
 export function getPublicFileUrl(key: string): string {

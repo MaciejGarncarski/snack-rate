@@ -1,6 +1,6 @@
 import {
+  ALLOWED_MIME_TYPES,
   MAX_FILE_SIZE,
-  SUPPORTED_FORMATS,
 } from "#/features/catalogue/create-snack/consts/image-const";
 import { addFilesizeToast } from "#/features/catalogue/create-snack/utils/add-filesize-toast";
 import { addUnsupportedFileToast } from "#/features/catalogue/create-snack/utils/add-unsupported-file-toast";
@@ -26,7 +26,7 @@ export function validateImage(file: File, allFiles: File[]): ImageValidationResu
     return "unsupported-file-type";
   }
 
-  if (!SUPPORTED_FORMATS.includes(file.type)) {
+  if (!ALLOWED_MIME_TYPES.has(file.type)) {
     return "unsupported-file-type";
   }
 

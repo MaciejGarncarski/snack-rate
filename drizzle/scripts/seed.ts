@@ -2,7 +2,7 @@
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
 
-import { createThumbnail } from "#/features/catalogue/server/utils/snack-image.ts";
+import { createThumbnailFromBuffer } from "#/features/catalogue/server/utils/create-thumbnail.ts";
 import * as schema from "#/infrastructure/db/schema.ts";
 import { hashPassword } from "#/lib/crypto.ts";
 
@@ -252,19 +252,19 @@ async function seedDatabase() {
 
   const [monsterNormalImg, chipsNormalImg, monsterThumbBuffer, chipsThumbBuffer] =
     await Promise.all([
-      createThumbnail(monsterBuffer, "webp", 800),
-      createThumbnail(chipsBuffer, "webp", 800),
-      createThumbnail(monsterBuffer, "webp"),
-      createThumbnail(chipsBuffer, "jpg"),
+      createThumbnailFromBuffer(monsterBuffer, 800),
+      createThumbnailFromBuffer(chipsBuffer, 800),
+      createThumbnailFromBuffer(monsterBuffer),
+      createThumbnailFromBuffer(chipsBuffer),
     ]);
 
   await deleteAllObjectsFromBucket(process.env.S3_BUCKET_PUBLIC!);
 
   await Promise.all([
-    uploadFileToGarage(monsterImageKey, monsterNormalImg),
-    uploadFileToGarage(chipsImageKey, chipsNormalImg),
-    uploadFileToGarage(chipsThumbKey, chipsThumbBuffer),
-    uploadFileToGarage(monsterThumbKey, monsterThumbBuffer),
+    uploadFileToGarage(monsterImageKey, monsterNormalImg.buffer),
+    uploadFileToGarage(chipsImageKey, chipsNormalImg.buffer),
+    uploadFileToGarage(chipsThumbKey, chipsThumbBuffer.buffer),
+    uploadFileToGarage(monsterThumbKey, monsterThumbBuffer.buffer),
   ]);
 
   await db.insert(schema.snackItemImages).values([
