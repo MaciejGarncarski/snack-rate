@@ -1,3 +1,5 @@
+import sharp from "sharp";
+
 import {
   createSnacksRepository,
   type SnacksRepository,
@@ -60,7 +62,12 @@ describe("create snack", () => {
 
   it("should create default and thumbnail images when uploading an image", async () => {
     const type = await createSnackType();
-    const mockImage = new Blob([new Uint8Array(100)], { type: "image/png" });
+    const imageBuffer = await sharp({
+      create: { width: 200, height: 200, channels: 3, background: { r: 255, g: 0, b: 0 } },
+    })
+      .png()
+      .toBuffer();
+    const mockImage = new Blob([new Uint8Array(imageBuffer)], { type: "image/png" });
 
     const snack = await createSnack(
       {

@@ -1,8 +1,11 @@
 import { trace } from "@opentelemetry/api";
 
 import type { SnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
-import { createThumbnail, validateImage } from "#/features/catalogue/server/utils/snack-image";
-import { getExtensionFromBlob } from "#/features/catalogue/utils/get-extension-from-blob.ts";
+import {
+  createThumbnail,
+  optimizeImage,
+  validateImage,
+} from "#/features/catalogue/server/utils/snack-image";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 import { StorageKey } from "#/features/shared/value-objects/storage-key.vo";
 import { uploadPublicFile } from "#/infrastructure/s3-client";
@@ -48,22 +51,23 @@ export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepo
             const imgStart = Date.now();
 
             try {
-              const ext = getExtensionFromBlob(img);
+              const buffer = Buffer.from(await img.arrayBuffer());
+              const { buffer: optimized, ext } = await optimizeImage(buffer);
               const key = StorageKey.create(slug, ext).getValue();
               const thumbKey = StorageKey.createThumb(slug, ext).getValue();
 
               imgSpan.setAttributes({
                 "image.index": index,
                 "image.extension": ext,
+                "image.original_size": buffer.length,
+                "image.optimized_size": optimized.length,
                 "s3.key": key,
                 "s3.thumb_key": thumbKey,
               });
 
-              const buffer = Buffer.from(await img.arrayBuffer());
-
               await Promise.all([
-                uploadPublicFile(key, buffer),
-                createThumbnail(buffer, ext).then((thumb) => uploadPublicFile(thumbKey, thumb)),
+                uploadPublicFile(key, optimized),
+                createThumbnail(optimized, ext).then((thumb) => uploadPublicFile(thumbKey, thumb)),
               ]);
 
               const duration = Date.now() - imgStart;
