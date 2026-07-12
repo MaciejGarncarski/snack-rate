@@ -233,6 +233,27 @@ pnpm garage:init staging
 
 Copy `.env.example` to `.env.staging` first. Use `pnpm hash-password yourpassword` to generate the bcrypt hash for `STAGING_BASIC_AUTH_HASH`.
 
+## Backups
+
+The `backup` service creates a PostgreSQL dump and uploads it to a local directory. It's designed to run as a one-off task (not a long-running service).
+
+```bash
+# Production
+pnpm backup:run
+
+# Staging
+pnpm backup:run-staging
+```
+
+### Automated backups (cron)
+
+```bash
+pnpm backup:cron           # install cron job for production
+pnpm backup:cron-staging   # install cron job for staging
+```
+
+This installs a system cron job that runs the backup daily. Backups are stored at `/var/backups/snack-rate/` on the host.
+
 ### Infrastructure diagram - production
 
 ```mermaid

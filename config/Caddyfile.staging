@@ -7,12 +7,13 @@
 
 {$PUBLIC_BUCKET_DOMAIN} {
         handle {
-                header Host "{$PUBLIC_BUCKET_HOST}"
-                reverse_proxy {$PUBLIC_BUCKET_BACKEND}
+                reverse_proxy {$PUBLIC_BUCKET_BACKEND} {
+                        header_up Host {$PUBLIC_BUCKET_HOST}
+                }
         }
 
         @static {
-                path *.js *.css *.png *.jpg *.webp *.svg *.woff2
+                path *.js *.css *.png *.jpg *.jpeg *.webp *.svg *.avif *.woff2
         }
 
         header @static Cache-Control "public, max-age=31536000, immutable"
