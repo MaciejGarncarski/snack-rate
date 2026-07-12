@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 import { serverEnv } from "#/lib/server.env";
 
@@ -20,6 +20,15 @@ export async function uploadPublicFile(key: string, body: Buffer) {
       Bucket: publicBucket,
       Key: key,
       Body: body,
+    }),
+  );
+}
+
+export async function deletePublicFile(key: string) {
+  await s3UploadClient.send(
+    new DeleteObjectCommand({
+      Bucket: publicBucket,
+      Key: key,
     }),
   );
 }

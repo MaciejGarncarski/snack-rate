@@ -2,6 +2,7 @@ import {
   MAX_FILE_SIZE,
   SUPPORTED_FORMATS,
 } from "#/features/catalogue/create-snack/consts/image-const";
+import { addFilesizeToast } from "#/features/catalogue/create-snack/utils/add-filesize-toast";
 import { addUnsupportedFileToast } from "#/features/catalogue/create-snack/utils/add-unsupported-file-toast";
 import { addAlreadyAddedToast } from "#/features/catalogue/create-snack/utils/already-added-toast";
 
@@ -35,7 +36,7 @@ export function validateImage(file: File, allFiles: File[]): ImageValidationResu
 export function showToastForValidationError(error: ImageValidationError, fileName: string) {
   switch (error) {
     case "file-too-large":
-      addUnsupportedFileToast();
+      addFilesizeToast();
       break;
     case "unsupported-file-type":
       addUnsupportedFileToast();

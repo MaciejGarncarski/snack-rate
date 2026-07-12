@@ -91,6 +91,7 @@
     "motion": "^12.40.0",
     "nanoid": "5.1.15",
     "nitro": "npm:nitro-nightly@3.0.260610-beta",
+    "p-limit": "^7.3.0",
     "p-retry": "^8.0.0",
     "pg": "^8.22.0",
     "pino": "^10.3.1",
