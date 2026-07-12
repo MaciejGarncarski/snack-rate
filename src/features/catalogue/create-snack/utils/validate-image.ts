@@ -1,7 +1,4 @@
-import {
-  ALLOWED_MIME_TYPES,
-  MAX_FILE_SIZE,
-} from "#/features/catalogue/create-snack/consts/image-const";
+import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "#/const/image-const";
 import { addFilesizeToast } from "#/features/catalogue/create-snack/utils/add-filesize-toast";
 import { addUnsupportedFileToast } from "#/features/catalogue/create-snack/utils/add-unsupported-file-toast";
 import { addAlreadyAddedToast } from "#/features/catalogue/create-snack/utils/already-added-toast";

@@ -1,8 +1,5 @@
 import { toastManager } from "#/components/ui/toast";
-import {
-  IMAGE_TOAST_TIMEOUT,
-  MAX_FILE_SIZE,
-} from "#/features/catalogue/create-snack/consts/image-const";
+import { IMAGE_TOAST_TIMEOUT, MAX_FILE_SIZE } from "#/const/image-const";
 
 const toastId = "filesize-toast";
 

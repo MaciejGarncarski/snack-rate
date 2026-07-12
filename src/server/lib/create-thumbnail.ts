@@ -1,4 +1,4 @@
-import { Readable } from "node:stream";
+import { type Readable } from "node:stream";
 import sharp from "sharp";
 
 import {
@@ -7,12 +7,12 @@ import {
   OPTIMIZED_QUALITY,
   THUMBNAIL_ASPECT_RATIO,
   THUMBNAIL_WIDTH,
-} from "#/features/catalogue/create-snack/consts/image-const.ts";
+} from "#/const/image-const";
 
 export function createThumbnail(
-  input: ReadableStream<Uint8Array>,
+  input: Readable,
   width = THUMBNAIL_WIDTH,
-): { stream: ReadableStream<Uint8Array>; ext: string; contentType: string } {
+): { stream: Readable; ext: string; contentType: string } {
   const transformer = sharp({
     limitInputPixels: MAX_IMAGE_MEGAPIXELS * 1_000_000,
     sequentialRead: true,
@@ -29,12 +29,10 @@ export function createThumbnail(
       quality: OPTIMIZED_QUALITY,
     });
 
-  const output = Readable.fromWeb(
-    input as unknown as import("node:stream/web").ReadableStream<Uint8Array>,
-  ).pipe(transformer);
+  const output = input.pipe(transformer);
 
   return {
-    stream: Readable.toWeb(output) as ReadableStream<Uint8Array>,
+    stream: output,
     ext: OPTIMIZED_FORMAT,
     contentType: `image/${OPTIMIZED_FORMAT}`,
   };

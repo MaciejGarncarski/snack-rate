@@ -1,9 +1,6 @@
 import { useEffect } from "react";
 
-import {
-  ALLOWED_MIME_TYPES,
-  MAXIMUM_IMAGES,
-} from "#/features/catalogue/create-snack/consts/image-const";
+import { ALLOWED_MIME_TYPES, MAXIMUM_IMAGES } from "#/const/image-const";
 import {
   showToastForValidationError,
   validateImage,

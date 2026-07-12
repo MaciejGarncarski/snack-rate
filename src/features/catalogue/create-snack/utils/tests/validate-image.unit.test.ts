@@ -1,4 +1,4 @@
-import { MAX_FILE_SIZE } from "#/features/catalogue/create-snack/consts/image-const";
+import { MAX_FILE_SIZE } from "#/const/image-const";
 import { validateImage } from "#/features/catalogue/create-snack/utils/validate-image";
 
 describe("validateImage", () => {

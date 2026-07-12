@@ -5,7 +5,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { Readable } from "node:stream";
+import { type Readable } from "node:stream";
 
 import { serverEnv } from "#/lib/server.env";
 
@@ -34,16 +34,14 @@ export async function uploadPublicFile(key: string, body: Buffer) {
 
 export async function uploadPublicFileStream(
   key: string,
-  stream: ReadableStream<Uint8Array<ArrayBuffer>>,
+  stream: Readable,
   options?: { contentType?: string },
 ) {
-  const body = Readable.fromWeb(stream as unknown as import("node:stream/web").ReadableStream);
-
   await s3UploadClient.send(
     new PutObjectCommand({
       Bucket: PUBLIC_BUCKET,
       Key: key,
-      Body: body,
+      Body: stream,
       ContentType: options?.contentType,
     }),
   );
@@ -71,7 +69,7 @@ export async function getPublicFileStream(key: string) {
   }
 
   return {
-    stream: Readable.toWeb(Body as Readable) as ReadableStream,
+    stream: Body as Readable,
     contentType: ContentType,
     contentLength: ContentLength,
   };

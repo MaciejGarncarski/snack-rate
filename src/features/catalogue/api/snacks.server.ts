@@ -1,7 +1,7 @@
 import { os } from "@orpc/server";
 import * as z from "zod";
 
-import { MAXIMUM_IMAGES } from "#/features/catalogue/create-snack/consts/image-const";
+import { MAXIMUM_IMAGES } from "#/const/image-const";
 import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
 import { createSnack } from "#/features/catalogue/server/use-cases/create-snack.use-case";
 import { listSnacksFeed } from "#/features/catalogue/server/use-cases/list-snacks.use-case";

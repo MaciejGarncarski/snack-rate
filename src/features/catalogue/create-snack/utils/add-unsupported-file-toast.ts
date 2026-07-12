@@ -1,8 +1,5 @@
 import { anchoredToastManager, toastManager } from "#/components/ui/toast";
-import {
-  IMAGE_TOAST_TIMEOUT,
-  supportedFormatsList,
-} from "#/features/catalogue/create-snack/consts/image-const";
+import { IMAGE_TOAST_TIMEOUT, supportedFormatsList } from "#/const/image-const";
 
 export function addUnsupportedFileToast(ref?: React.RefObject<HTMLInputElement>) {
   if (ref?.current) {

@@ -15,3 +15,7 @@ export const readinessFailureCounter = meter.createCounter("readiness_failures_t
 export const dbFailuresCounter = meter.createCounter("db_failures_total", {
   description: "Total database failures",
 });
+
+export const s3FailuresCounter = meter.createCounter("s3_failures_total", {
+  description: "Total S3 failures",
+});

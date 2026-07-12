@@ -1,5 +1,5 @@
 import { toastManager } from "#/components/ui/toast";
-import { IMAGE_TOAST_TIMEOUT } from "#/features/catalogue/create-snack/consts/image-const";
+import { IMAGE_TOAST_TIMEOUT } from "#/const/image-const";
 
 const toastId = "already-added-toast";
 

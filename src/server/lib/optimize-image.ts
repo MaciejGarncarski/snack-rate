@@ -1,4 +1,4 @@
-import { Readable } from "node:stream";
+import { type Readable } from "node:stream";
 import sharp from "sharp";
 
 import {
@@ -6,10 +6,10 @@ import {
   MAX_IMAGE_MEGAPIXELS,
   OPTIMIZED_FORMAT,
   OPTIMIZED_QUALITY,
-} from "#/features/catalogue/create-snack/consts/image-const.ts";
+} from "#/const/image-const";
 
-export function optimizeImage(input: ReadableStream<Uint8Array>): {
-  stream: ReadableStream<Uint8Array>;
+export function optimizeImage(input: Readable): {
+  stream: Readable;
   ext: string;
   contentType: string;
 } {
@@ -28,14 +28,10 @@ export function optimizeImage(input: ReadableStream<Uint8Array>): {
       quality: OPTIMIZED_QUALITY,
     });
 
-  const nodeInput = Readable.fromWeb(
-    input as unknown as import("node:stream/web").ReadableStream<Uint8Array>,
-  );
-
-  const nodeOutput = nodeInput.pipe(transformer);
+  const output = input.pipe(transformer);
 
   return {
-    stream: Readable.toWeb(nodeOutput) as ReadableStream<Uint8Array>,
+    stream: output,
     ext: OPTIMIZED_FORMAT,
     contentType: `image/${OPTIMIZED_FORMAT}`,
   };

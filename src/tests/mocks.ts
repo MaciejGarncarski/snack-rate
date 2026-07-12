@@ -10,8 +10,7 @@ const MINIMAL_PNG = new Uint8Array([
 ]);
 
 function createMockStream(buffer: Uint8Array) {
-  const readable = Readable.from(Buffer.from(buffer));
-  return Readable.toWeb(readable) as ReadableStream<Uint8Array>;
+  return Readable.from(Buffer.from(buffer));
 }
 
 vi.mock("#/infrastructure/s3-client", () => ({
@@ -21,10 +20,8 @@ vi.mock("#/infrastructure/s3-client", () => ({
   getPublicFileUrl: vi.fn<(key: string) => string>().mockReturnValue("https://test.com/file"),
   getPublicFileStream: vi
     .fn<
-      (
-        key: string,
-      ) => Promise<{
-        stream: ReadableStream;
+      (key: string) => Promise<{
+        stream: Readable;
         contentType: string | undefined;
         contentLength: number | undefined;
       }>

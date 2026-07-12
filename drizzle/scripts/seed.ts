@@ -2,9 +2,9 @@
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
 
-import { createThumbnailFromBuffer } from "#/features/catalogue/server/utils/create-thumbnail.ts";
 import * as schema from "#/infrastructure/db/schema.ts";
 import { hashPassword } from "#/lib/crypto.ts";
+import { createThumbnailFromBuffer } from "#/server/lib/create-thumbnail.ts";
 
 import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
 
