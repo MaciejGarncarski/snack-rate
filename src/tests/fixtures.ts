@@ -1,7 +1,7 @@
+import { snackItemImages, snackItems, snackTypes } from "@snack-rate/db-schema/schema";
 import type { InferInsertModel } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
-import { snackItemImages, snackItems, snackTypes } from "#/infrastructure/db/schema";
 import { getDb } from "#/tests/setup.int";
 
 type SnackInsert = InferInsertModel<typeof snackItems>;

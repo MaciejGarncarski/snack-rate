@@ -1,11 +1,10 @@
+import { hashPassword } from "@snack-rate/db-schema/crypto";
+import * as schema from "@snack-rate/db-schema/schema";
 // oxlint-disable no-console
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
 
-import * as schema from "#/infrastructure/db/schema.ts";
-import { hashPassword } from "#/lib/crypto.ts";
-import { createThumbnailFromBuffer } from "#/server/lib/create-thumbnail.ts";
-
+import { createThumbnailFromBuffer } from "../../../../src/server/lib/create-thumbnail.ts";
 import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
 
 const db = drizzle(process.env.DATABASE_URL!);

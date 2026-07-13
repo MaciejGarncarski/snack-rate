@@ -20,7 +20,7 @@ caddy-root.crt
 
 # Docker files themselves
 .dockerignore
-Dockerfile*
+/Dockerfile*
 compose*
 
 # Misc

@@ -18,6 +18,8 @@ RUN pnpm run build
 FROM base
 COPY --from=build /app/.output ./.output
 COPY --from=build /app/package.json ./
+COPY --from=build /app/pnpm-workspace.yaml ./
+COPY --from=build /app/packages ./packages
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 EXPOSE ${APP_PORT}
 CMD ["pnpm", "run", "start"]

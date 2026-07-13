@@ -7,27 +7,20 @@ services:
     env_file:
       - .env.staging
 
-  db-tool:
-    volumes:
-      - pnpm_store:/pnpm/store
+  queue-worker:
+    env_file:
+      - .env.staging
 
+  db-tool:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: deps
+      dockerfile: tools/db-tool/Dockerfile
     env_file:
       - .env.staging
     depends_on:
       postgres:
         condition: service_healthy
-    entrypoint:
-      - sh
-      - -c
-    command:
-      - pnpm run db:migrate && pnpm run db:seed-prod
     restart: "no"
-    stdin_open: true
-    tty: true
 
   app:
     image: ghcr.io/maciejgarncarski/snack-rate:staging
@@ -42,6 +35,8 @@ services:
     depends_on:
       db-tool:
         condition: service_completed_successfully
+      queue-worker:
+        condition: service_started
       postgres:
         condition: service_healthy
       prometheus:

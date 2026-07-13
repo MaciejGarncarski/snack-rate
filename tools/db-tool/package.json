@@ -1,0 +1,13 @@
+{
+  "name": "@snack-rate/db-tool",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@snack-rate/db-schema": "workspace:*",
+    "dotenv": "catalog:",
+    "drizzle-kit": "catalog:",
+    "drizzle-orm": "catalog:",
+    "pg": "catalog:",
+    "tsx": "catalog:"
+  }
+}

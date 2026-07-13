@@ -1,8 +1,7 @@
+import * as schema from "@snack-rate/db-schema/schema";
 // oxlint-disable no-console
 import { drizzle } from "drizzle-orm/node-postgres";
 import { reset } from "drizzle-seed";
-
-import * as schema from "../../src/infrastructure/db/schema.ts";
 
 const db = drizzle(process.env.DATABASE_URL!);
 

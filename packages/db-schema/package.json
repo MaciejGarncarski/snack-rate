@@ -1,0 +1,21 @@
+{
+  "name": "@snack-rate/db-schema",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./schema": "./src/schema.ts",
+    "./relations": "./src/relations.ts",
+    "./crypto": "./src/crypto.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "catalog:"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "catalog:",
+    "dotenv": "catalog:",
+    "drizzle-kit": "catalog:",
+    "drizzle-seed": "catalog:",
+    "nanoid": "catalog:",
+    "pg": "catalog:"
+  }
+}

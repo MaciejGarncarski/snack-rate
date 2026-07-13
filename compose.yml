@@ -1,4 +1,13 @@
 services:
+  queue-worker:
+    build:
+      context: .
+      dockerfile: tools/queue-worker/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   garage:
     image: dxflrs/garage:v2.3.0
     restart: unless-stopped
@@ -146,7 +155,7 @@ services:
   backup:
     build:
       context: .
-      dockerfile: Dockerfile.backup
+      dockerfile: tools/backup-tool/Dockerfile
     depends_on:
       postgres:
         condition: service_healthy

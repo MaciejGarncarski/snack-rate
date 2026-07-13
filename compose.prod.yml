@@ -7,27 +7,20 @@ services:
     env_file:
       - .env.production
 
-  db-tool:
-    volumes:
-      - pnpm_store:/pnpm/store
+  queue-worker:
+    env_file:
+      - .env.production
 
+  db-tool:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: deps
+      dockerfile: tools/db-tool/Dockerfile
     env_file:
       - .env.production
     depends_on:
       postgres:
         condition: service_healthy
-    entrypoint:
-      - sh
-      - -c
-    command:
-      - pnpm run db:migrate && pnpm run db:seed-prod
     restart: "no"
-    stdin_open: true
-    tty: true
 
   app:
     # Use staging image for early iteration and testing, replace with production image when ready
@@ -43,6 +36,8 @@ services:
     depends_on:
       db-tool:
         condition: service_completed_successfully
+      queue-worker:
+        condition: service_started
       postgres:
         condition: service_healthy
       prometheus:

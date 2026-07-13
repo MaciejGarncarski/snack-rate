@@ -10,6 +10,8 @@ const schema = z.object({
   POSTGRES_PASSWORD: z.string().min(1),
   POSTGRES_DB: z.string().min(1),
   DATABASE_URL: z.url(),
+  PG_BOSS_DB_URL: z.url(),
+  PG_BOSS_DB_URL_INTERNAL: z.url(),
   OTEL_EXPORTER_OTLP_ENDPOINT: z.url(),
 
   OBSERVABILITY_LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),

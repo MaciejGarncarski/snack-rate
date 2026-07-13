@@ -1,3 +1,4 @@
+import * as schema from "@snack-rate/db-schema/schema";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { reset } from "drizzle-seed";
 import { nanoid } from "nanoid";
@@ -5,7 +6,6 @@ import { Pool } from "pg";
 import { inject } from "vitest";
 
 import { createDb, type Db } from "#/infrastructure/db/db";
-import * as schema from "#/infrastructure/db/schema.ts";
 
 let db: Db;
 let dbPool: Pool;
@@ -38,7 +38,7 @@ beforeAll(async () => {
   });
 
   db = createDb(dbPool);
-  await migrate(db, { migrationsFolder: "./drizzle" });
+  await migrate(db, { migrationsFolder: "./packages/db-schema/drizzle" });
 });
 
 beforeEach(async () => {

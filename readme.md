@@ -73,12 +73,15 @@ Copy `.env.example` to the appropriate file and fill in values before running an
 
 ### Database
 
-| Variable            | Used in    | Description                  |
-| ------------------- | ---------- | ---------------------------- |
-| `POSTGRES_USER`     | dev + prod | Database user                |
-| `POSTGRES_PASSWORD` | dev + prod | Database password            |
-| `POSTGRES_DB`       | dev + prod | Database name                |
-| `DATABASE_URL`      | dev + prod | PostgreSQL connection string |
+| Variable                  | Used in    | Description                                          |
+| ------------------------- | ---------- | ---------------------------------------------------- |
+| `POSTGRES_USER`           | dev + prod | Database user                                        |
+| `POSTGRES_PASSWORD`       | dev + prod | Database password                                    |
+| `POSTGRES_DB`             | dev + prod | Database name                                        |
+| `DATABASE_URL`            | dev + prod | PostgreSQL connection string                         |
+| `PG_BOSS_DB_URL`          | dev + prod | Queue worker database connection string              |
+| `PG_BOSS_DB_URL_INTERNAL` | dev + prod | Queue worker db connection string (docker container) |
+| `PG_BOSS_MAINTENANCE_DB`  | dev + prod | Queue worker maintenance DB (default: postgres)      |
 
 ### S3 / Storage
 

@@ -1,9 +1,8 @@
+import { hashPassword } from "@snack-rate/db-schema/crypto";
+import * as schema from "@snack-rate/db-schema/schema";
 // oxlint-disable no-console
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
-
-import * as schema from "../../src/infrastructure/db/schema.ts";
-import { hashPassword } from "../../src/lib/crypto.ts";
 
 const db = drizzle(process.env.DATABASE_URL!);
 

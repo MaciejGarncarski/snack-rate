@@ -1,4 +1,8 @@
 services:
+  queue-worker:
+    env_file:
+      - .env.development
+
   garage:
     env_file:
       - .env.development

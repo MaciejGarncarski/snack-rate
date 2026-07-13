@@ -18,12 +18,15 @@ echo "    Saved: ${DB_BACKUP_DIR}/${TIMESTAMP}.sql.gz"
 
 echo "==> [2/3] Syncing Garage bucket..."
 mkdir -p "${GARAGE_BACKUP_DIR}"
-export AWS_ACCESS_KEY_ID="$S3_ACCESS_KEY"
-export AWS_SECRET_ACCESS_KEY="$S3_SECRET_KEY"
-export AWS_DEFAULT_REGION="$S3_REGION"
-aws s3 sync "s3://${S3_BUCKET_PUBLIC}" "${GARAGE_BACKUP_DIR}" \
-  --endpoint-url "$S3_ENDPOINT_INTERNAL" \
-  --no-progress
+rclone sync \
+  --s3-provider Other \
+  --s3-access-key-id "$S3_ACCESS_KEY" \
+  --s3-secret-access-key "$S3_SECRET_KEY" \
+  --s3-region "$S3_REGION" \
+  --s3-endpoint "$S3_ENDPOINT_INTERNAL" \
+  --s3-force-path-style true \
+  :s3:"${S3_BUCKET_PUBLIC}" \
+  "${GARAGE_BACKUP_DIR}"
 echo "    Synced to: ${GARAGE_BACKUP_DIR}/"
 
 echo "==> [3/3] Cleaning up DB dumps older than 7 days..."

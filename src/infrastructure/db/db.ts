@@ -1,8 +1,7 @@
+import { relations } from "@snack-rate/db-schema/relations";
+import * as schema from "@snack-rate/db-schema/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import type { Pool } from "pg";
-
-import { relations } from "./relations.ts";
-import * as schema from "./schema.ts";
 
 export function createDb(client: Pool) {
   return drizzle({
