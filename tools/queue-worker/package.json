@@ -3,9 +3,11 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@aws-sdk/client-s3": "catalog:",
     "p-retry": "^8.0.0",
     "pg": "^8.22.0",
     "pg-boss": "^12.26.0",
-    "pino": "^10.3.1"
+    "pino": "^10.3.1",
+    "sharp": "^0.35.2"
   }
 }

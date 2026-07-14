@@ -159,6 +159,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    restart: "no"
 
   node-exporter:
     image: prom/node-exporter:v1

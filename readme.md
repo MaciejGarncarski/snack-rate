@@ -23,6 +23,9 @@ pnpm db:migrate && pnpm db:seed
 pnpm dev # → http://localhost:3000/  (or whatever APP_PORT is set to)
 ```
 
+> [!NOTE]
+> See `package.json` for all available scripts.
+
 ## Tech stack
 
 UI:
@@ -256,43 +259,6 @@ pnpm backup:cron-staging   # install cron job for staging
 ```
 
 This installs a system cron job that runs the backup daily. Backups are stored at `/var/backups/snack-rate/` on the host.
-
-### Infrastructure diagram - production
-
-```mermaid
-%%{init: {'flowchart': {'nodeSpacing':50, 'rankSpacing': 100}}}%%
-graph LR
-  Internet["Internet :80/:443"]
-
-  subgraph docker["Docker network"]
-    Caddy["Caddy\nreverse proxy"]
-    App["App\nTanStack Start"]
-    Postgres["PostgreSQL\npg18 + Drizzle"]
-    Grafana["Grafana\ndashboards"]
-    Prometheus["Prometheus\nmetrics"]
-    Alloy["Alloy\ncollector"]
-    Tempo["Tempo\ntraces"]
-    Loki["Loki\nlogs"]
-    NodeExp["Node exporter\nhost metrics"]
-  end
-
-  Internet -->|":80/:443"| Caddy
-  Caddy -->|"/*"| App
-  Caddy -->|"/grafana*"| Grafana
-
-  App --> Postgres
-  App -->|"traces"| Alloy
-  App -->|"metrics export"| Alloy
-  Alloy -->|"remote write"| Prometheus
-  Alloy -->|"logs"| Loki
-  Alloy -->|"traces"| Tempo
-  Alloy -->|"scrapes"| NodeExp
-
-  Grafana -->|"queries"| Prometheus
-  Grafana -->|"queries"| Loki
-  Grafana -->|"queries"| Tempo
-
-```
 
 ## Formatting & linting
 

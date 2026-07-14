@@ -364,6 +364,9 @@ importers:
 
   tools/queue-worker:
     dependencies:
+      '@aws-sdk/client-s3':
+        specifier: 'catalog:'
+        version: 3.1066.0
       p-retry:
         specifier: ^8.0.0
         version: 8.0.0
@@ -376,6 +379,9 @@ importers:
       pino:
         specifier: ^10.3.1
         version: 10.3.1
+      sharp:
+        specifier: ^0.35.2
+        version: 0.35.2
 
 packages:
 

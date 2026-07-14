@@ -1,10 +1,19 @@
-FROM node:26-alpine
+FROM node:26-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g pnpm@11
+RUN pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
-COPY tools/queue-worker/package.json ./
-COPY tools/queue-worker/src ./src
+FROM base AS deps
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY tools/queue-worker ./tools/queue-worker
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --filter @snack-rate/queue-worker install --frozen-lockfile
 
-RUN pnpm install --prod --no-frozen-lockfile
+FROM base
+COPY --from=deps /app /app
+WORKDIR /app/tools/queue-worker
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+  CMD pgrep -f "node.*src/index\\.ts" || exit 1
 
 CMD ["node", "--strip-types", "src/index.ts"]
