@@ -3,7 +3,7 @@ import { Pool } from "pg";
 import { PgBoss } from "pg-boss";
 import pino from "pino";
 
-import { handleImageProcessing } from "./image-processor.js";
+import { handleImageProcessing } from "./image-processor.ts";
 
 const logger = pino({ name: "pg-boss" });
 const queueDbUrl = process.env.PG_BOSS_DB_URL_INTERNAL ?? "";
@@ -73,7 +73,7 @@ async function startQueue(): Promise<void> {
     return { received: job.data };
   });
 
-  await boss.work<{ key: string }>("image:resize", { batchSize: 1 }, async ([job]) => {
+  await boss.work<{ key: string }>("imageResize", { batchSize: 1 }, async ([job]) => {
     logger.info({ jobId: job.id, key: job.data.key }, "processing image");
     return handleImageProcessing(job.data);
   });

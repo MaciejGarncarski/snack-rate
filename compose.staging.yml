@@ -8,6 +8,8 @@ services:
       - .env.staging
 
   queue-worker:
+    image: ghcr.io/maciejgarncarski/snack-rate/queue-worker:staging
+    pull_policy: always
     env_file:
       - .env.staging
 

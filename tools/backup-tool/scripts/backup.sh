@@ -24,7 +24,7 @@ rclone sync \
   --s3-secret-access-key "$S3_SECRET_KEY" \
   --s3-region "$S3_REGION" \
   --s3-endpoint "$S3_ENDPOINT_INTERNAL" \
-  --s3-force-path-style true \
+  --s3-force-path-style \
   :s3:"${S3_BUCKET_PUBLIC}" \
   "${GARAGE_BACKUP_DIR}"
 echo "    Synced to: ${GARAGE_BACKUP_DIR}/"

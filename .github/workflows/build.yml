@@ -19,6 +19,15 @@ jobs:
       contents: read
       packages: write
 
+    strategy:
+      matrix:
+        include:
+          - dockerfile: Dockerfile
+            image_suffix: ""
+
+          - dockerfile: tools/queue-worker/Dockerfile
+            image_suffix: /queue-worker
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -34,7 +43,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}${{ matrix.image_suffix }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -48,6 +57,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
+          dockerfile: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
