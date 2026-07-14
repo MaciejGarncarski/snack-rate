@@ -8,7 +8,7 @@ services:
       - .env.production
 
   queue-worker:
-    image: ghcr.io/maciejgarncarski/snack-rate/queue-worker:staging
+    image: ghcr.io/maciejgarncarski/snack-rate/queue-worker:${IMAGE_TAG:-staging}
     # build:
     #   context: .
     #   dockerfile: tools/queue-worker/Dockerfile
@@ -29,7 +29,7 @@ services:
 
   app:
     # Use staging image for early iteration and testing, replace with production image when ready
-    image: ghcr.io/maciejgarncarski/snack-rate:staging
+    image: ghcr.io/maciejgarncarski/snack-rate:${IMAGE_TAG:-staging}
     # build:
     #   context: .
     #   dockerfile: Dockerfile

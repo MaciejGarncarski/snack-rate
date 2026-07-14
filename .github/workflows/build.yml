@@ -49,6 +49,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=staging,enable=${{ github.ref_name == 'development' }}
+            type=sha,format=short,enable=${{ github.ref_name == 'development' }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -63,3 +64,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Image size
+        run: docker image ls --filter "reference=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}${{ matrix.image_suffix }}*" --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"

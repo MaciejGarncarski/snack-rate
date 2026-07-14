@@ -5,10 +5,15 @@ PROJECT="snack-rate-prod"
 COMPOSE_FILES=(-f compose.yml -f compose.prod.yml)
 ENV_FILE=".env.production"
 PULLABLE_SERVICES=(app queue-worker)
+
+IMAGE_TAG="${IMAGE_TAG:-${1:-staging}}"
+: "${IMAGE_TAG:?IMAGE_TAG must not be empty}"
+export IMAGE_TAG
+echo "==> Deploying with image tag: $IMAGE_TAG"
 BUILD_LOCAL_SERVICES=(db-tool backup)
 ONESHOT_SERVICES=(db-tool backup)
 LONG_RUNNING_SERVICES=(app queue-worker tempo postgres garage alloy caddy loki node-exporter prometheus grafana)
-FORCE_BUILD="${FORCE_BUILD:-0}"   # FORCE_BUILD=1 ./deploy.sh to rebuild db-tool/backup
+FORCE_BUILD="${FORCE_BUILD:-0}"
 
 compose() {
     docker compose -p "$PROJECT" "${COMPOSE_FILES[@]}" --env-file "$ENV_FILE" "$@"
@@ -21,46 +26,38 @@ if [ ! -f "$ENV_FILE" ]; then
     exit 1
 fi
 
-# Returns "tag|digest" for a service's current image, or empty if none exists.
-get_image_info() {
-    local svc=$1
-    local image_id
-    image_id=$(compose images -q "$svc" 2>/dev/null | head -n1 || true)
-    if [ -n "$image_id" ]; then
-        docker inspect --format='{{index .RepoTags 0}}|{{index .RepoDigests 0}}' "$image_id" 2>/dev/null || true
-    fi
+get_current_image() {
+    local svc=$1 container image
+    container=$(compose ps -q "$svc") || return 1
+    [ -n "$container" ] || return 1
+    image=$(docker inspect --format='{{.Config.Image}}' "$container") || return 1
+    case "$image" in
+        *@*)
+            echo "Error: $svc is running a digest image, cannot roll back by tag" >&2
+            return 1
+            ;;
+    esac
+    echo "$image"
 }
 
-rollback() {
-    local svc=$1 info=$2
-    local tag="${info%%|*}"
-    local digest="${info##*|}"
-    if [ -n "$digest" ] && [ -n "$tag" ]; then
-        echo "→ Restoring $svc to $tag ..."
-        if ! docker tag "$digest" "$tag"; then
-            echo "!! Failed to restore $svc — digest $digest not found locally." >&2
-        fi
-    else
-        echo "!! No prior image info for $svc — nothing to roll back to (likely first deploy)." >&2
-    fi
-}
-
-# ----- Step 1: Save current image state for rollback -----
+# ----- Step 1: Save current image for rollback -----
 CURRENT_STEP="save-state"
-echo "==> [1/5] Saving current image state for rollback..."
-OLD_APP_INFO=$(get_image_info app)
-OLD_QUEUE_WORKER_INFO=$(get_image_info queue-worker)
+echo "==> [1/5] Saving current image for rollback..."
+OLD_IMAGE=$(get_current_image app || true)
 
 FIRST_DEPLOY=0
-if [ -z "$OLD_APP_INFO" ] && [ -z "$OLD_QUEUE_WORKER_INFO" ]; then
-    echo "→ No previous images found — this looks like the first deploy. Rollback will be unavailable if this run fails."
+if [ -z "$OLD_IMAGE" ]; then
+    echo "→ No previous image found — this looks like the first deploy. Rollback will be unavailable if this run fails."
     FIRST_DEPLOY=1
 fi
 
 # ----- Step 2: Pull -----
 CURRENT_STEP="pull"
 echo "==> [2/5] Pulling latest images..."
-compose pull "${PULLABLE_SERVICES[@]}"
+if ! compose pull "${PULLABLE_SERVICES[@]}"; then
+    echo "==> Failed to pull image tag: $IMAGE_TAG" >&2
+    exit 1
+fi
 
 # ----- Step 3: Build locally-built images (only if missing, or forced) -----
 CURRENT_STEP="build"
@@ -102,24 +99,21 @@ else
         exit 1
     fi
 
-    echo "==> Rolling back..."
-    rollback app "$OLD_APP_INFO"
-    rollback queue-worker "$OLD_QUEUE_WORKER_INFO"
-
-    echo "→ Restarting with previous images..."
-    compose up -d --remove-orphans --wait --wait-timeout 360 "${LONG_RUNNING_SERVICES[@]}" || true
-
-    echo "==> Rollback complete. Deploy aborted."
+    OLD_TAG="${OLD_IMAGE##*:}"
+    echo "==> Previous version: $OLD_TAG"
+    echo "==> Requested version: $IMAGE_TAG"
+    echo "==> Rolling back to $OLD_TAG ..."
+    IMAGE_TAG="$OLD_TAG"
+    export IMAGE_TAG
+    if compose up -d --remove-orphans --wait --wait-timeout 360 "${LONG_RUNNING_SERVICES[@]}"; then
+        echo "==> Rollback successful."
+    else
+        echo "==> Rollback FAILED. Manual intervention required." >&2
+    fi
     exit 1
 fi
 
-# ----- Step 5: Cleanup -----
-CURRENT_STEP="cleanup"
-echo "==> [5/5] Cleaning up dangling images..."
-docker image prune -f --filter "label=com.docker.compose.project=$PROJECT"
-
-CURRENT_STEP="status"
-echo "==> Current status:"
-compose ps
-
-echo "==> Done. Tail logs with: pnpm run prod:logs"
+# ----- Step 5: Verify -----
+CURRENT_STEP="verify"
+echo "==> [5/5] Successfully deployed $IMAGE_TAG"
+compose images app queue-worker
