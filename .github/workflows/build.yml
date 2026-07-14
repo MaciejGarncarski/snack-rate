@@ -66,4 +66,4 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Image size
-        run: docker image ls --filter "reference=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}${{ matrix.image_suffix }}*" --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
+        run: docker image ls "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}${{ matrix.image_suffix }}" --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}"
