@@ -23,9 +23,9 @@
 	route {
 		handle /robots.txt {
 			respond <<ROBOTS
-			User-agent: *
-			Disallow: /
-			ROBOTS 200
+User-agent: *
+Disallow: /
+ROBOTS 200
 		}
 
 		basic_auth {

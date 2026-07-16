@@ -69,6 +69,7 @@ describe("list snacks feed", () => {
       repository,
     );
 
+    // TODO: This test is flaky. Sometimes there are 6 items instead of 5. Investigate why.
     const collected = [...page1.items, ...page2.items, ...page3.items].map((s) => s.id);
 
     expect(collected).toHaveLength(5);
