@@ -9,12 +9,13 @@ type Props = {
   description: string | null;
   slug: string;
   rating: number;
+  lazy?: boolean;
   images: {
     url: string;
   }[];
 };
 
-export function SnacksListItem({ name, description, slug, rating, images }: Props) {
+export function SnacksListItem({ name, description, slug, rating, lazy, images }: Props) {
   return (
     <li className="mx-auto w-full max-w-sm">
       <Link to="/produkt/$slug" params={{ slug: slug }}>
@@ -22,6 +23,7 @@ export function SnacksListItem({ name, description, slug, rating, images }: Prop
           <CardContent>
             <div className="flex flex-col items-center justify-center gap-10">
               <ImageWithPlaceholder
+                lazy={lazy}
                 src={images[0]?.url}
                 containerClassName="w-full aspect-4/5 flex justify-center items-center rounded-md bg-muted shrink-0"
                 className="h-full w-full rounded-md object-cover"

@@ -30,7 +30,7 @@ export function SearchBoxInput({
   isSearchBoxOpen = false,
 }: Props) {
   return (
-    <InputGroup className="max-w-24 border border-input md:max-w-sm">
+    <InputGroup className="border border-input">
       <InputGroupInput
         type="text"
         autoComplete="off"

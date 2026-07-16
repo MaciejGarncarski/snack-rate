@@ -31,7 +31,7 @@ export default function SnackImageSlider({ images }: Props) {
 
   return (
     <div className="mx-auto w-full">
-      <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl border bg-neutral-900">
+      <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl border bg-muted border-border">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.img
             key={index}

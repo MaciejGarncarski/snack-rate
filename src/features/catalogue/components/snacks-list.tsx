@@ -21,8 +21,9 @@ export function SnacksList() {
       <ul className="mx-auto flex flex-col gap-4 lg:gap-14">
         {data.pages
           .flatMap((page) => page.items)
-          .map((snack) => (
+          .map((snack, idx) => (
             <SnacksListItem
+              lazy={idx > 1}
               key={snack.slug}
               name={snack.name}
               description={snack.description}

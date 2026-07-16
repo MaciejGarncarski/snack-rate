@@ -38,18 +38,20 @@ export function NavbarSearchBox() {
   };
 
   return (
-    <div className="relative">
-      <SearchBoxInput
-        inputValue={inputValue}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        onFocus={() => setSuggestionsOpen(true)}
-        onClick={() => setSuggestionsOpen(true)}
-        onResetClick={handleClose}
-        inputRef={inputRef}
-        isSearchBoxOpen={suggestionsOpen}
-        isLoading={isLoading || isDebouncing}
-      />
+    <div className="relative w-full">
+      <div className="max-w-50 md:max-w-72">
+        <SearchBoxInput
+          inputValue={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          onFocus={() => setSuggestionsOpen(true)}
+          onClick={() => setSuggestionsOpen(true)}
+          onResetClick={handleClose}
+          inputRef={inputRef}
+          isSearchBoxOpen={suggestionsOpen}
+          isLoading={isLoading || isDebouncing}
+        />
+      </div>
 
       <AnimatePresence mode="wait">
         {suggestionsOpen && (
@@ -57,7 +59,7 @@ export function NavbarSearchBox() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute -left-8 mt-1 w-58 rounded-lg border border-accent bg-popover text-sm shadow-lg md:top-11 md:-left-9 md:w-84"
+            className="absolute left-1/2 -translate-x-1/2 mt-1 w-58 rounded-lg border border-accent bg-popover text-sm shadow-lg md:top-11 md:w-84"
           >
             {data?.length === 0 ? (
               <SearchBoxMessage message="Brak wyników" />

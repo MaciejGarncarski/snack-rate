@@ -1,14 +1,9 @@
 import { ImageIcon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useRef, useState, type ComponentProps } from "react";
+import { useInView } from "react-intersection-observer";
 
 import { cn } from "#/lib/utils";
-
-interface ImageWithPlaceholderProps extends ComponentProps<"img"> {
-  placeholder?: React.ReactNode;
-  fallback?: React.ReactNode;
-  containerClassName?: string;
-}
 
 function DefaultFallback() {
   return (
@@ -22,6 +17,13 @@ type Status = "loading" | "loaded" | "error";
 
 const IMAGE_LOAD_SKELETON_DELAY = 50;
 
+interface ImageWithPlaceholderProps extends ComponentProps<"img"> {
+  placeholder?: React.ReactNode;
+  fallback?: React.ReactNode;
+  containerClassName?: string;
+  lazy?: boolean;
+}
+
 export function ImageWithPlaceholder({
   src,
   alt,
@@ -29,11 +31,16 @@ export function ImageWithPlaceholder({
   fallback = <DefaultFallback />,
   className,
   containerClassName,
+  lazy,
   ...imgProps
 }: ImageWithPlaceholderProps) {
   const [status, setStatus] = useState<Status>("loading");
   const [showSkeleton, setShowSkeleton] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
 
   useEffect(() => {
     setShowSkeleton(false);
@@ -57,8 +64,10 @@ export function ImageWithPlaceholder({
     }
   }, [src]);
 
+  const shouldLazyLoad = lazy ?? true;
+
   return (
-    <div key={src} className={cn("relative overflow-hidden", containerClassName)}>
+    <div key={src} className={cn("relative overflow-hidden", containerClassName)} ref={ref}>
       <AnimatePresence>
         {status === "loading" && showSkeleton && (
           <motion.div
@@ -74,15 +83,17 @@ export function ImageWithPlaceholder({
         )}
       </AnimatePresence>
       {status === "error" && fallback}
-      <img
-        ref={imgRef}
-        src={src}
-        alt={alt}
-        className={cn(status === "loaded" ? "block" : "absolute opacity-0", className)}
-        onLoad={() => setStatus("loaded")}
-        onError={() => setStatus("error")}
-        {...imgProps}
-      />
+      {!lazy || inView ? (
+        <img
+          ref={imgRef}
+          src={src}
+          alt={alt}
+          className={cn(status === "loaded" ? "block" : "absolute opacity-0", className)}
+          onLoad={() => setStatus("loaded")}
+          onError={() => setStatus("error")}
+          {...imgProps}
+        />
+      ) : null}
     </div>
   );
 }
