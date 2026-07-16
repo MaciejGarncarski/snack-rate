@@ -4,6 +4,8 @@ set -euo pipefail
 PROJECT="snack-rate-prod"
 COMPOSE_FILES=(-f compose.yml -f compose.prod.yml)
 ENV_FILE=".env.production"
+# Only app + queue-worker are pulled per-deploy via IMAGE_TAG.
+# Infra services (postgres, prometheus, etc.) are pinned to fixed images.
 PULLABLE_SERVICES=(app queue-worker)
 
 IMAGE_TAG="${IMAGE_TAG:-${1:-}}"
@@ -27,11 +29,15 @@ esac
 export IMAGE_TAG
 echo "==> Deploying with image tag: $IMAGE_TAG"
 
-BUILD_LOCAL_SERVICES=(db-tool backup)
-MIGRATION_SERVICES=(db-tool)          # blocking: non-zero exit aborts deploy
-ONESHOT_NONBLOCKING_SERVICES=(backup) # non-blocking
+LOCKFILE="/tmp/snack-rate-deploy-${PROJECT}.lock"
+exec 9>"$LOCKFILE"
+if ! flock -n 9; then
+    echo "Error: another deploy for ${PROJECT} is already running (lock: $LOCKFILE)" >&2
+    exit 1
+fi
+
 LONG_RUNNING_SERVICES=(app queue-worker tempo postgres garage alloy caddy loki node-exporter prometheus grafana)
-FORCE_BUILD="${FORCE_BUILD:-0}"
+# All long-running services share the same IMAGE_TAG — rollback sets one tag for all.
 
 compose() {
     docker compose -p "$PROJECT" "${COMPOSE_FILES[@]}" --env-file "$ENV_FILE" "$@"
@@ -48,10 +54,12 @@ fi
 # Returns non-zero only on a genuine query/inspect failure (not "no container").
 get_current_image() {
     local svc=$1 container image
-    container=$(compose ps -q "$svc") || {
+    local raw
+    raw=$(compose ps -q "$svc") || {
         echo "Error: failed to query container for $svc" >&2
         return 1
     }
+    container=$(echo "$raw" | head -1)
     if [ -z "$container" ]; then
         return 0
     fi
@@ -68,14 +76,18 @@ get_current_image() {
     echo "$image"
 }
 
-# ----- Step 1: Save current image for rollback -----
+# ----- Step 1: Save current app image for rollback -----
 CURRENT_STEP="save-state"
-echo "==> [1/6] Saving current image for rollback..."
-OLD_IMAGE=$(get_current_image app)
+echo "==> [1/6] Saving current app image for rollback..."
+
+if ! OLD_APP_IMAGE=$(get_current_image app); then
+    echo "Error: could not determine current app image state" >&2
+    exit 1
+fi
 
 FIRST_DEPLOY=0
-if [ -z "$OLD_IMAGE" ]; then
-    echo "→ No previous image found — this looks like the first deploy. Rollback will be unavailable if this run fails."
+if [ -z "$OLD_APP_IMAGE" ]; then
+    echo "→ No previous app image found — first deploy (rollback unavailable)."
     FIRST_DEPLOY=1
 fi
 
@@ -87,65 +99,24 @@ if ! compose pull "${PULLABLE_SERVICES[@]}"; then
     exit 1
 fi
 
-# ----- Step 3: Build locally-built images (only if missing, or forced) -----
+# ----- Step 3: Build db-tool image -----
 CURRENT_STEP="build"
-echo "==> [3/6] Checking locally-built images..."
-
-to_build=()
-for svc in "${BUILD_LOCAL_SERVICES[@]}"; do
-    if [ "$FORCE_BUILD" = "1" ] || [ -z "$(compose images -q "$svc" 2>/dev/null)" ]; then
-        to_build+=("$svc")
-    fi
-done
-
-if [ "${#to_build[@]}" -gt 0 ]; then
-    echo "→ Building: ${to_build[*]}"
-    compose build "${to_build[@]}"
-else
-    echo "→ Skipping build, images already present (use FORCE_BUILD=1 to override)"
-fi
+echo "==> [3/6] Building db-tool image..."
+compose build db-tool
 
 # ----- Step 4: Run migrations (blocking) -----
 CURRENT_STEP="migrate"
-echo "==> [4/6] Running migrations: ${MIGRATION_SERVICES[*]}"
+echo "==> [4/6] Running migrations..."
 
-# compose up returns as soon as containers start, not when they exit,
-# so we check migration exit codes explicitly via docker wait below.
-migration_failed=0
-for svc in "${MIGRATION_SERVICES[@]}"; do
+for svc in db-tool; do
     echo "→ Running $svc..."
-    if compose up -d --remove-orphans --force-recreate "$svc"; then
-        cid=$(compose ps -aq "$svc")
-        if [ -z "$cid" ]; then
-            echo "==> Could not locate container for migration '$svc' after start" >&2
-            migration_failed=1
-            continue
-        fi
-        exit_code=$(docker wait "$cid")
-        if [ "$exit_code" != "0" ]; then
-            echo "==> Migration '$svc' failed with exit code $exit_code" >&2
-            migration_failed=1
-        else
-            echo "→ $svc completed successfully (exit 0)"
-        fi
-    else
-        echo "==> Migration '$svc' failed to start" >&2
-        migration_failed=1
-    fi
+    compose run --rm "$svc"
+    echo "→ $svc completed successfully (exit 0)"
 done
-
-if [ "$migration_failed" = "1" ]; then
-    echo "==> Aborting deploy: migration(s) failed. No services were updated." >&2
-    exit 1
-fi
 
 # ----- Step 5: Deploy -----
 CURRENT_STEP="deploy"
 echo "==> [5/6] Deploying stack..."
-
-echo "→ Starting non-blocking one-shot services: ${ONESHOT_NONBLOCKING_SERVICES[*]}"
-compose up -d --remove-orphans --force-recreate "${ONESHOT_NONBLOCKING_SERVICES[@]}"
-
 echo "→ Deploying long-running services: ${LONG_RUNNING_SERVICES[*]}"
 if compose up -d --remove-orphans --wait --wait-timeout 360 "${LONG_RUNNING_SERVICES[@]}"; then
     echo "==> App is healthy."
@@ -157,9 +128,9 @@ else
         exit 1
     fi
 
-    OLD_TAG="${OLD_IMAGE##*:}"
-    if [ -z "$OLD_TAG" ] || [ "$OLD_TAG" = "$OLD_IMAGE" ]; then
-        echo "==> Could not determine a valid previous tag from '$OLD_IMAGE'. Aborting without rollback." >&2
+    OLD_TAG="${OLD_APP_IMAGE##*:}"
+    if [ -z "$OLD_TAG" ] || [ "$OLD_TAG" = "$OLD_APP_IMAGE" ]; then
+        echo "==> Could not determine a valid previous tag from '$OLD_APP_IMAGE'. Aborting without rollback." >&2
         exit 1
     fi
 

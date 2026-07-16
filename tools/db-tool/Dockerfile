@@ -14,4 +14,4 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --filter @snack-rate/db-t
 FROM base
 COPY --from=deps /app /app
 WORKDIR /app/packages/db-schema
-ENTRYPOINT ["sh", "-c", "pnpm exec drizzle-kit migrate && node drizzle/scripts/seed-prod.ts"]
+ENTRYPOINT ["sh", "-e", "-c", "pnpm exec drizzle-kit migrate && node drizzle/scripts/seed-prod.ts"]

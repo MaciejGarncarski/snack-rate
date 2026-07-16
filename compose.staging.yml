@@ -35,8 +35,6 @@ services:
       - .env.staging
 
     depends_on:
-      db-tool:
-        condition: service_completed_successfully
       queue-worker:
         condition: service_started
       postgres:
