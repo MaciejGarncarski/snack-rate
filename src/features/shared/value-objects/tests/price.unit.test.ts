@@ -7,7 +7,7 @@ describe("Price value object", () => {
   });
 
   it("should throw an error for a non-numeric value", () => {
-    expect(() => Price.create("abc" as any)).toThrow("Invalid price");
+    expect(() => Price.create("abc" as unknown as number)).toThrow("Invalid price");
   });
 
   it("should throw an error for a negative price", () => {

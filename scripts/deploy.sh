@@ -78,7 +78,7 @@ get_current_image() {
 
 # ----- Step 1: Save current app image for rollback -----
 CURRENT_STEP="save-state"
-echo "==> [1/6] Saving current app image for rollback..."
+echo "==> [1/7] Saving current app image for rollback..."
 
 if ! OLD_APP_IMAGE=$(get_current_image app); then
     echo "Error: could not determine current app image state" >&2
@@ -93,20 +93,35 @@ fi
 
 # ----- Step 2: Pull -----
 CURRENT_STEP="pull"
-echo "==> [2/6] Pulling latest images..."
+echo "==> [2/7] Pulling latest images..."
 if ! compose pull "${PULLABLE_SERVICES[@]}"; then
     echo "==> Failed to pull image tag: $IMAGE_TAG" >&2
     exit 1
 fi
 
-# ----- Step 3: Build db-tool image -----
+# ----- Step 3: Backup database -----
+CURRENT_STEP="backup"
+echo "==> [3/7] Backing up database before migration..."
+BACKUP_DIR="/tmp/snack-rate-backup-${PROJECT}"
+mkdir -p "$BACKUP_DIR"
+BACKUP_FILE="${BACKUP_DIR}/pre-deploy-$(date +%Y%m%d_%H%M%S).sql.gz"
+compose exec -T postgres pg_dump --no-owner --no-acl -U "${POSTGRES_USER:-snackrate}" "${POSTGRES_DB:-app_db}" | gzip -9 > "$BACKUP_FILE" || {
+    echo "Warning: pre-deploy backup failed (non-fatal)" >&2
+}
+if [ -f "$BACKUP_FILE" ]; then
+    echo "→ Database backed up to: $BACKUP_FILE"
+    # Keep only last 5 backups
+    ls -t "$BACKUP_DIR"/*.sql.gz 2>/dev/null | tail -n +6 | xargs -r rm --
+fi
+
+# ----- Step 4: Build db-tool image -----
 CURRENT_STEP="build"
-echo "==> [3/6] Building db-tool image..."
+echo "==> [4/7] Building db-tool image..."
 compose build db-tool
 
-# ----- Step 4: Run migrations (blocking) -----
+# ----- Step 5: Run migrations (blocking) -----
 CURRENT_STEP="migrate"
-echo "==> [4/6] Running migrations..."
+echo "==> [5/7] Running migrations..."
 
 for svc in db-tool; do
     echo "→ Running $svc..."
@@ -114,9 +129,9 @@ for svc in db-tool; do
     echo "→ $svc completed successfully (exit 0)"
 done
 
-# ----- Step 5: Deploy -----
+# ----- Step 6: Deploy -----
 CURRENT_STEP="deploy"
-echo "==> [5/6] Deploying stack..."
+echo "==> [6/7] Deploying stack..."
 echo "→ Deploying long-running services: ${LONG_RUNNING_SERVICES[*]}"
 if compose up -d --remove-orphans --wait --wait-timeout 360 "${LONG_RUNNING_SERVICES[@]}"; then
     echo "==> App is healthy."
@@ -148,7 +163,7 @@ else
     fi
 fi
 
-# ----- Step 6: Verify -----
+# ----- Step 7: Verify -----
 CURRENT_STEP="verify"
-echo "==> [6/6] Successfully deployed $IMAGE_TAG"
+echo "==> [7/7] Successfully deployed $IMAGE_TAG"
 compose images app queue-worker

@@ -83,7 +83,7 @@ services:
       - .env.production
 
   caddy:
-    image: caddy:2-alpine
+    image: caddy:2.11.4-alpine
     env_file:
       - .env.production
     restart: unless-stopped

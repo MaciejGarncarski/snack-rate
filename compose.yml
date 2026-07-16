@@ -31,7 +31,7 @@ services:
         max-file: "3"
 
   postgres:
-    image: postgres:18-alpine
+    image: postgres:18.4-alpine
     restart: unless-stopped
 
     environment:
@@ -56,7 +56,7 @@ services:
         max-file: "3"
 
   prometheus:
-    image: prom/prometheus:v3
+    image: prom/prometheus:v3.13.1
     restart: unless-stopped
 
     extra_hosts:
@@ -131,7 +131,7 @@ services:
         max-file: "3"
 
   alloy:
-    image: grafana/alloy:v1.16.1
+    image: grafana/alloy:v1.17.0
     restart: unless-stopped
 
     command:
@@ -162,7 +162,7 @@ services:
     restart: "no"
 
   node-exporter:
-    image: prom/node-exporter:v1
+    image: prom/node-exporter:v1.11.1
     restart: unless-stopped
 
     command:
@@ -199,7 +199,7 @@ services:
         max-file: "3"
 
   grafana:
-    image: grafana/grafana:13.0.1
+    image: grafana/grafana:13.0.3
     restart: unless-stopped
 
     environment:
