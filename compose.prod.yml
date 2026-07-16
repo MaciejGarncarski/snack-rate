@@ -29,10 +29,10 @@ services:
 
   app:
     # Use staging image for early iteration and testing, replace with production image when ready
-    # image: ghcr.io/maciejgarncarski/snack-rate:${IMAGE_TAG:-staging}
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/maciejgarncarski/snack-rate:${IMAGE_TAG:-staging}
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     restart: unless-stopped
 
     volumes:
