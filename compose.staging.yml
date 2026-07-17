@@ -36,6 +36,8 @@ services:
         condition: service_started
       postgres:
         condition: service_healthy
+      garage:
+        condition: service_started
       prometheus:
         condition: service_started
       tempo:
@@ -54,7 +56,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 3
-      start_period: 10s
+      start_period: 30s
 
     logging:
       driver: json-file
