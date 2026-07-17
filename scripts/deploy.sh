@@ -13,10 +13,10 @@ IMAGE_TAG="${IMAGE_TAG:-${1:-}}"
 
 # Only immutable sha-based tags are deployable; moving tags (staging/latest) are rejected.
 case "$IMAGE_TAG" in
-    sha-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*)
+    sha-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*)
         IMAGE_TAG="sha-$(echo "$IMAGE_TAG" | sed 's/^sha-//' | cut -c1-7)"
         ;;
-    [0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*)
+    [0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]*)
         IMAGE_TAG="sha-$(echo "$IMAGE_TAG" | cut -c1-7)"
         ;;
     *)
