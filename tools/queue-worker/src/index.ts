@@ -68,6 +68,9 @@ async function startQueue(): Promise<void> {
   await boss.start();
   logger.info("pg-boss worker started");
 
+  await boss.createQueue("echo");
+  await boss.createQueue("imageResize");
+
   await boss.work<{ message?: string }>("echo", { batchSize: 1 }, async ([job]) => {
     logger.info({ jobId: job.id, data: job.data }, "echo job");
     return { received: job.data };
