@@ -23,6 +23,6 @@ FROM node:26.5.0-slim
 WORKDIR /app
 COPY --from=install /app/deploy .
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-  CMD pgrep -f "node.*src/index\\.ts" || exit 1
+  CMD kill -0 1 2>/dev/null || exit 1
 
 CMD ["node", "--strip-types", "src/index.ts"]
