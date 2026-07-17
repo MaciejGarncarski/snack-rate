@@ -13,7 +13,7 @@ FROM base AS install
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY packages/db-schema ./packages/db-schema
 COPY tools/db-tool ./tools/db-tool
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --offline --frozen-lockfile --filter @snack-rate/db-schema...
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter @snack-rate/db-schema...
 RUN pnpm deploy --filter @snack-rate/db-schema /app/deploy
 
 FROM base
