@@ -24,4 +24,4 @@ ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=install /app/deploy .
 USER node
-ENTRYPOINT ["sh", "-e", "-c", "node node_modules/.bin/drizzle-kit migrate && node drizzle/scripts/seed-prod.ts"]
+ENTRYPOINT ["sh", "-e", "-c", "./node_modules/.bin/drizzle-kit migrate && node drizzle/scripts/seed-prod.ts"]
