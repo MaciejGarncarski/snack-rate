@@ -21,7 +21,10 @@ RUN pnpm deploy --filter @snack-rate/db-schema /app/deploy
 
 FROM node:26.5.0-slim
 ENV NODE_ENV=production
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN npm install -g pnpm@11.13.0
 WORKDIR /app
 COPY --from=install /app/deploy .
 USER node
-ENTRYPOINT ["sh", "-e", "-c", "./node_modules/.bin/drizzle-kit migrate && node drizzle/scripts/seed-prod.ts"]
+ENTRYPOINT ["sh", "-e", "-c", "pnpm exec drizzle-kit migrate && node drizzle/scripts/seed-prod.ts"]
