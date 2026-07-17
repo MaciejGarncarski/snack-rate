@@ -251,4 +251,3 @@ volumes:
   loki_data:
   caddy_data:
   caddy_config:
-  pnpm_store:

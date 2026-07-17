@@ -28,9 +28,6 @@ services:
     image: ghcr.io/maciejgarncarski/snack-rate:${IMAGE_TAG:-staging}
     restart: unless-stopped
 
-    volumes:
-      - pnpm_store:/pnpm/store
-
     env_file:
       - .env.staging
 

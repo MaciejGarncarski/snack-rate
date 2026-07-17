@@ -3,6 +3,10 @@ packages:
   - "packages/*"
   - "tools/*"
 
+syncInjectedDepsAfterScripts:
+  - build
+injectWorkspacePackages: true
+
 catalog:
   "@aws-sdk/client-s3": "^3.1066.0"
   dotenv: "^17.3.1"

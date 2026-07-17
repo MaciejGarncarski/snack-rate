@@ -1,10 +1,10 @@
 ARG APP_PORT=3000
 
-FROM node:26.5.0-alpine AS base
+FROM node:26.5.0-slim AS base
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g pnpm@11
+RUN npm install -g pnpm@11.13.0
 RUN pnpm config set store-dir /pnpm/store
 
 FROM base AS fetch
@@ -15,18 +15,13 @@ RUN pnpm fetch --frozen-lockfile
 FROM base AS build
 WORKDIR /app
 COPY --from=fetch /pnpm/store /pnpm/store
-COPY --from=fetch /app/node_modules ./node_modules
 COPY . .
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --offline --frozen-lockfile
 RUN pnpm run build
 
-FROM base
+FROM node:26.5.0-slim
+ARG APP_PORT=3000
 WORKDIR /app
-COPY --from=build /app/.output ./.output
-COPY --from=build /app/package.json ./
-COPY --from=build /app/pnpm-workspace.yaml ./
-COPY --from=build /app/packages ./packages
-COPY --from=build /app/pnpm-lock.yaml ./
-RUN pnpm install --prod --frozen-lockfile
+COPY --from=build /app/.output ./
 EXPOSE ${APP_PORT}
-CMD ["pnpm", "run", "start"]
+CMD ["node", "server/index.mjs"]

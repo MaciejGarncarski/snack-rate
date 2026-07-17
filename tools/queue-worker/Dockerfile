@@ -1,18 +1,27 @@
-FROM node:26.5.0-alpine AS base
+FROM node:26.5.0-slim AS base
+ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g pnpm@11
+RUN npm install -g pnpm@11.13.0
 RUN pnpm config set store-dir /pnpm/store
+
+FROM base AS fetch
 WORKDIR /app
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm fetch --frozen-lockfile
 
-FROM base AS deps
+FROM base AS install
+WORKDIR /app
+COPY --from=fetch /pnpm/store /pnpm/store
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY packages/db-schema ./packages/db-schema
 COPY tools/queue-worker ./tools/queue-worker
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --filter @snack-rate/queue-worker install --frozen-lockfile
+RUN pnpm install --offline --frozen-lockfile --filter @snack-rate/queue-worker...
+RUN pnpm deploy --filter @snack-rate/queue-worker /app/deploy
 
-FROM base
-COPY --from=deps /app /app
-WORKDIR /app/tools/queue-worker
+FROM node:26.5.0-slim
+WORKDIR /app
+COPY --from=install /app/deploy .
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
   CMD pgrep -f "node.*src/index\\.ts" || exit 1
 
