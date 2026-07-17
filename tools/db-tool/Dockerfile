@@ -10,7 +10,6 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm fetch --frozen-lockfile
 
 FROM base AS install
-COPY --from=fetch /pnpm/store /pnpm/store
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY packages/db-schema ./packages/db-schema
 COPY tools/db-tool ./tools/db-tool
