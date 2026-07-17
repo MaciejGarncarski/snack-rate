@@ -23,16 +23,16 @@ catalog:
 minimumReleaseAge: 1440
 blockExoticSubdeps: true
 allowBuilds:
-  argon2: true
-  cpu-features: true
-  electron: true
-  esbuild: true
+  argon2: false
+  cpu-features: false
+  electron: false
+  esbuild: false
   lefthook: false
-  lightningcss: true
+  lightningcss: false
   msw: false
   protobufjs: false
-  sharp: true
-  ssh2: true
+  sharp: false
+  ssh2: false
 minimumReleaseAgeExclude:
   - "@oxfmt/binding-android-arm-eabi@0.56.0"
   - "@oxfmt/binding-android-arm64@0.56.0"
