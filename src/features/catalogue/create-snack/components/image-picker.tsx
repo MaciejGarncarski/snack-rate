@@ -92,7 +92,7 @@ export function ImagePicker({ onChange }: Props) {
   const emptySpaces = MAXIMUM_IMAGES - images.length;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <div className="relative">
         <ImageDropzone
           handleAddToQueue={handleAddToQueue}
