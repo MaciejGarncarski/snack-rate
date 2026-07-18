@@ -99,9 +99,10 @@ export function ImagePicker({ onChange }: Props) {
           images={images}
           onValidationError={handleValidationError}
         >
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {foundSelectedImage ? (
               <motion.img
+                key={foundSelectedImage.id}
                 src={foundSelectedImage.croppedFileUrl}
                 alt="Wybrany obraz"
                 className="size-full object-cover"
@@ -111,6 +112,7 @@ export function ImagePicker({ onChange }: Props) {
               />
             ) : (
               <motion.button
+                key="no-image"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -126,15 +128,29 @@ export function ImagePicker({ onChange }: Props) {
 
         <AnimatePresence>
           {foundSelectedImage && (
-            <>
-              <div className="absolute bottom-2 left-2 flex items-center justify-center gap-2">
-                <MainImageBadges isPrimaryImage={selectedIndex === 0} />
-              </div>
+            <motion.div
+              key="badges"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute bottom-2 left-2 flex items-center justify-center gap-2"
+            >
+              <MainImageBadges isPrimaryImage={selectedIndex === 0} />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-              <div className="absolute top-2 right-2 flex items-center justify-center gap-4">
-                <MainImageToolbar handleRecrop={handleRecrop} handleDelete={handleDelete} />
-              </div>
-            </>
+        <AnimatePresence>
+          {foundSelectedImage && (
+            <motion.div
+              key="toolbar"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute top-2 right-2 flex items-center justify-center gap-4"
+            >
+              <MainImageToolbar handleRecrop={handleRecrop} handleDelete={handleDelete} />
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
@@ -154,7 +170,7 @@ export function ImagePicker({ onChange }: Props) {
       <div className="flex flex-col gap-2">
         <LayoutGroup>
           <div className="grid grid-cols-3 gap-2 overflow-hidden py-0.5 ">
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               {images.map((image, index) => {
                 return (
                   <ImageSlot
@@ -169,10 +185,10 @@ export function ImagePicker({ onChange }: Props) {
                   />
                 );
               })}
-              {Array.from({ length: emptySpaces }).map((_, index) => {
-                return <ImageSlot key={`empty-${index}`} onClick={uploadOnClick} />;
-              })}
             </AnimatePresence>
+            {Array.from({ length: emptySpaces }).map((_, index) => {
+              return <ImageSlot key={`empty-${index}`} onClick={uploadOnClick} />;
+            })}
           </div>
         </LayoutGroup>
       </div>

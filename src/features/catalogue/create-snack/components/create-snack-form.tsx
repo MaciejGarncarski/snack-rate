@@ -50,7 +50,7 @@ export function CreateSnackForm({ types }: Props) {
           {(field) => {
             const hasError = field.state.meta.errors.length > 0;
             return (
-              <Field invalid={hasError} className="w-76">
+              <Field invalid={hasError} className="w-76 md:w-90">
                 <ImagePicker
                   value={field.state.value}
                   onChange={(files) => field.handleChange(files)}

@@ -74,7 +74,7 @@ export const ImageDropzone = ({ images, handleAddToQueue, onValidationError, chi
 
   return (
     <motion.div
-      className="relative flex aspect-4/5 h-auto w-full items-center justify-center overflow-hidden rounded-lg border border-accent bg-secondary focus-within:ring-accent md:w-88"
+      className="relative flex aspect-4/5 h-auto w-full items-center justify-center overflow-hidden rounded-lg border border-accent bg-secondary focus-within:ring-accent"
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
