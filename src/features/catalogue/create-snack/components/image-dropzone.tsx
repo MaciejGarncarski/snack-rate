@@ -3,26 +3,25 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 
 import type { ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
-import {
-  showToastForValidationError,
-  validateImage,
-} from "#/features/catalogue/create-snack/utils/validate-image";
+import { validateImage } from "#/features/catalogue/create-snack/utils/validate-image";
+import type { ImageValidationError } from "#/features/catalogue/create-snack/utils/validate-image";
 
 type Props = {
   images: ImagePair[];
   handleAddToQueue: (file: File) => void;
+  onValidationError: (error: ImageValidationError) => void;
 
   children: React.ReactNode;
 };
 
-export const ImageDropzone = ({ images, handleAddToQueue, children }: Props) => {
+export const ImageDropzone = ({ images, handleAddToQueue, onValidationError, children }: Props) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const dragCounter = useRef(0);
 
   const processDroppedFiles = useCallback(
-    (files: File[]) => {
+    async (files: File[]) => {
       for (const file of files) {
-        const validationResult = validateImage(
+        const validationResult = await validateImage(
           file,
           images.map((img) => img.file),
         );
@@ -31,10 +30,10 @@ export const ImageDropzone = ({ images, handleAddToQueue, children }: Props) => 
           handleAddToQueue(validationResult);
           return;
         }
-        showToastForValidationError(validationResult, file.name);
+        onValidationError(validationResult);
       }
     },
-    [handleAddToQueue, images],
+    [handleAddToQueue, images, onValidationError],
   );
 
   const handleDragEnter = useCallback((e: React.DragEvent) => {
@@ -75,7 +74,7 @@ export const ImageDropzone = ({ images, handleAddToQueue, children }: Props) => 
 
   return (
     <motion.div
-      className="relative flex aspect-4/5 h-auto w-76 items-center justify-center overflow-hidden rounded-lg border border-accent bg-secondary focus-within:ring-accent md:w-88"
+      className="relative flex aspect-4/5 h-auto w-full items-center justify-center overflow-hidden rounded-lg border border-accent bg-secondary focus-within:ring-accent md:w-88"
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}

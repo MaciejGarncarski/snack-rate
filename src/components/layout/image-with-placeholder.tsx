@@ -34,12 +34,18 @@ export function ImageWithPlaceholder({
   lazy,
   ...imgProps
 }: ImageWithPlaceholderProps) {
+  const [isVisible, setIsVisible] = useState(!lazy);
   const [status, setStatus] = useState<Status>("loading");
   const [showSkeleton, setShowSkeleton] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  const { ref, inView } = useInView({
+  const { ref } = useInView({
     threshold: 0,
+    onChange: (inView) => {
+      if (inView) {
+        setIsVisible(true);
+      }
+    },
   });
 
   useEffect(() => {
@@ -64,8 +70,6 @@ export function ImageWithPlaceholder({
     }
   }, [src]);
 
-  const shouldLazyLoad = lazy ?? true;
-
   return (
     <div key={src} className={cn("relative overflow-hidden", containerClassName)} ref={ref}>
       <AnimatePresence>
@@ -83,7 +87,7 @@ export function ImageWithPlaceholder({
         )}
       </AnimatePresence>
       {status === "error" && fallback}
-      {!lazy || inView ? (
+      {isVisible ? (
         <img
           ref={imgRef}
           src={src}

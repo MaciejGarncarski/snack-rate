@@ -1,16 +1,17 @@
 import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "#/const/image-const";
-import { addFilesizeToast } from "#/features/catalogue/create-snack/utils/add-filesize-toast";
-import { addUnsupportedFileToast } from "#/features/catalogue/create-snack/utils/add-unsupported-file-toast";
-import { addAlreadyAddedToast } from "#/features/catalogue/create-snack/utils/already-added-toast";
 
-type ImageValidationError = "file-too-large" | "unsupported-file-type" | "already-added";
+export type ImageValidationError =
+  | "file-too-large"
+  | "unsupported-file-type"
+  | "already-added"
+  | "resolution-too-low";
 type ImageValidationResult = File | ImageValidationError;
 
 const isDuplicate = (newFile: File, existing: File[]) => {
   return existing.some((f) => f.name === newFile.name && f.size === newFile.size);
 };
 
-export function validateImage(file: File, allFiles: File[]): ImageValidationResult {
+export async function validateImage(file: File, allFiles: File[]): Promise<ImageValidationResult> {
   if (isDuplicate(file, allFiles)) {
     return "already-added";
   }
@@ -27,19 +28,48 @@ export function validateImage(file: File, allFiles: File[]): ImageValidationResu
     return "unsupported-file-type";
   }
 
+  try {
+    const isResolutionValid = await checkImageResolution(file);
+
+    if (!isResolutionValid) {
+      return "resolution-too-low";
+    }
+  } catch {
+    return "resolution-too-low";
+  }
+
   return file;
 }
 
-export function showToastForValidationError(error: ImageValidationError, fileName: string) {
-  switch (error) {
-    case "file-too-large":
-      addFilesizeToast();
-      break;
-    case "unsupported-file-type":
-      addUnsupportedFileToast();
-      break;
-    case "already-added":
-      addAlreadyAddedToast({ fileName });
-      break;
-  }
+const MIN_WIDTH = 200;
+const MIN_HEIGHT = 200;
+
+function checkImageResolution(file: File): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    const handleLoad = () => {
+      const isValid = img.naturalWidth >= MIN_WIDTH && img.naturalHeight >= MIN_HEIGHT;
+
+      URL.revokeObjectURL(url);
+      img.removeEventListener("load", handleLoad);
+      img.removeEventListener("error", handleError);
+
+      resolve(isValid);
+    };
+
+    const handleError = () => {
+      URL.revokeObjectURL(url);
+      img.removeEventListener("load", handleLoad);
+      img.removeEventListener("error", handleError);
+
+      reject(new Error("Failed to load image"));
+    };
+
+    img.addEventListener("load", handleLoad);
+    img.addEventListener("error", handleError);
+
+    img.src = url;
+  });
 }

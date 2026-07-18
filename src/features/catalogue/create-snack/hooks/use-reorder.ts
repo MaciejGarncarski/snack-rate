@@ -5,11 +5,10 @@ import type { ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-
 type Props = {
   images: ImagePair[];
   onChange: (files: File[]) => void;
-  setSelectedIndex: Dispatch<React.SetStateAction<number>>;
   setImages: Dispatch<React.SetStateAction<ImagePair[]>>;
 };
 
-export function useReorder({ images, onChange, setSelectedIndex, setImages }: Props) {
+export function useReorder({ images, onChange, setImages }: Props) {
   const handleMove = useCallback(
     (fromIndex: number, direction: "left" | "right") => {
       const toIndex = direction === "left" ? fromIndex - 1 : fromIndex + 1;
@@ -22,9 +21,8 @@ export function useReorder({ images, onChange, setSelectedIndex, setImages }: Pr
         onChange(newImages.map((img) => img.croppedFile || img.file));
         return newImages;
       });
-      setSelectedIndex(toIndex);
     },
-    [images.length, onChange, setImages, setSelectedIndex],
+    [images.length, onChange, setImages],
   );
 
   return { handleMove };

@@ -1,4 +1,4 @@
-import { CropIcon, TrashIcon } from "lucide-react";
+import { EditIcon, TrashIcon } from "lucide-react";
 
 import {
   AlertDialog,
@@ -29,7 +29,7 @@ export function MainImageToolbar({ handleRecrop, handleDelete }: Props) {
             <TooltipTrigger
               render={<Button size="icon-sm" variant="default" onClick={handleRecrop} />}
             >
-              <CropIcon />
+              <EditIcon />
             </TooltipTrigger>
             <TooltipPopup>Przytnij zdjęcie</TooltipPopup>
           </Tooltip>

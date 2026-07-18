@@ -50,7 +50,7 @@ export function CreateSnackForm({ types }: Props) {
           {(field) => {
             const hasError = field.state.meta.errors.length > 0;
             return (
-              <Field invalid={hasError}>
+              <Field invalid={hasError} className="w-76">
                 <ImagePicker
                   value={field.state.value}
                   onChange={(files) => field.handleChange(files)}
@@ -204,7 +204,7 @@ export function CreateSnackForm({ types }: Props) {
                     Podgląd produktu (wkrótce)
                   </Button>
                   <Button type="submit" disabled={!canSubmit}>
-                    {isSubmitting ? "Dodawanie..." : "Dodaj"}
+                    {isSubmitting ? "Wysyłanie..." : "Wyślij"}
                   </Button>
                 </div>
               </>

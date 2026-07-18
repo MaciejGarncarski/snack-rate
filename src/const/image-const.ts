@@ -1,4 +1,3 @@
-export const IMAGE_TOAST_TIMEOUT = 5000;
 export const MAXIMUM_IMAGES = 3;
 
 export const ALLOWED_MIME_TYPES = new Set([

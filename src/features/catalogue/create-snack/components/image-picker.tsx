@@ -1,18 +1,34 @@
-import { ImageOffIcon } from "lucide-react";
+import { CircleAlertIcon, ImageOffIcon, X } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
+import { Alert, AlertAction, AlertDescription } from "#/components/ui/alert";
+import { Button } from "#/components/ui/button";
 import { MAXIMUM_IMAGES } from "#/const/image-const";
 import { ImageCropDialog } from "#/features/catalogue/create-snack/components/image-crop-dialog";
 import { ImageDropzone } from "#/features/catalogue/create-snack/components/image-dropzone";
 import { ImageSlot } from "#/features/catalogue/create-snack/components/image-slot";
-import { ImageSlotEmpty } from "#/features/catalogue/create-snack/components/image-slot-empty";
 import { MainImageBadges } from "#/features/catalogue/create-snack/components/main-image-badges";
 import { MainImageToolbar } from "#/features/catalogue/create-snack/components/main-image-toolbar";
 import { useAddImage, type ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
 import { useCropQueue } from "#/features/catalogue/create-snack/hooks/use-crop-queue";
 import { useObjectUrl } from "#/features/catalogue/create-snack/hooks/use-object-url";
 import { useReorder } from "#/features/catalogue/create-snack/hooks/use-reorder";
+
+const VALIDATION_ALERT_DURATION = 4000;
+
+type ValidationAlert = {
+  id: number;
+  message: string;
+  error: "file-too-large" | "unsupported-file-type" | "already-added" | "resolution-too-low";
+};
+
+const errorMessageMap: Record<ValidationAlert["error"], string> = {
+  "file-too-large": "Plik jest zbyt duży (maks. 10 MB).",
+  "unsupported-file-type": "Nieobsługiwany typ pliku.",
+  "already-added": "Ten plik został już dodany.",
+  "resolution-too-low": "Zbyt niska rozdzielczość (min. 200×200 px).",
+};
 
 type Props = {
   value: File[];
@@ -22,6 +38,8 @@ type Props = {
 export function ImagePicker({ onChange }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [images, setImages] = useState<ImagePair[]>([]);
+  const [alerts, setAlerts] = useState<ValidationAlert[]>([]);
+  const alertIdRef = useRef(0);
   const foundSelectedImage = images[selectedIndex] || null;
 
   const {
@@ -36,12 +54,25 @@ export function ImagePicker({ onChange }: Props) {
   const { handleMove } = useReorder({
     images,
     setImages,
-    setSelectedIndex,
     onChange,
   });
 
+  const handleValidationError = useCallback((error: ValidationAlert["error"]) => {
+    const id = ++alertIdRef.current;
+    setAlerts((prev) => [...prev, { id, message: errorMessageMap[error], error }]);
+
+    setTimeout(() => {
+      setAlerts((prev) => prev.filter((a) => a.id !== id));
+    }, VALIDATION_ALERT_DURATION);
+  }, []);
+
+  const dismissAlert = useCallback((id: number) => {
+    setAlerts((prev) => prev.filter((a) => a.id !== id));
+  }, []);
+
   const { uploadOnClick } = useAddImage({
     onAddToQueue: handleAddToQueue,
+    onValidationError: handleValidationError,
     allFiles: images.map((img) => img.file),
   });
 
@@ -63,7 +94,11 @@ export function ImagePicker({ onChange }: Props) {
   return (
     <div className="flex flex-col gap-4">
       <div className="relative">
-        <ImageDropzone handleAddToQueue={handleAddToQueue} images={images}>
+        <ImageDropzone
+          handleAddToQueue={handleAddToQueue}
+          images={images}
+          onValidationError={handleValidationError}
+        >
           <AnimatePresence>
             {foundSelectedImage ? (
               <motion.img
@@ -103,29 +138,44 @@ export function ImagePicker({ onChange }: Props) {
           )}
         </AnimatePresence>
       </div>
-      <LayoutGroup>
-        <div className="flex max-w-76 gap-2 overflow-hidden py-0.5 md:max-w-88">
-          <AnimatePresence mode="sync">
-            {images.map((image, index) => {
-              return (
-                <ImageSlot
-                  key={image.id}
-                  isSelected={index === selectedIndex}
-                  onClick={() => setSelectedIndex(index)}
-                  onMoveLeft={index > 0 ? () => handleMove(index, "left") : undefined}
-                  onMoveRight={
-                    index < images.length - 1 ? () => handleMove(index, "right") : undefined
-                  }
-                  imageSrc={image.croppedFileUrl}
-                />
-              );
-            })}
-            {Array.from({ length: emptySpaces }).map((_, index) => {
-              return <ImageSlotEmpty key={`empty-${index}`} onClick={uploadOnClick} />;
-            })}
-          </AnimatePresence>
-        </div>
-      </LayoutGroup>
+
+      {alerts.map((alert) => (
+        <Alert variant="error" key={alert.id}>
+          <CircleAlertIcon />
+          <AlertDescription>{alert.message}</AlertDescription>
+          <AlertAction>
+            <Button size="xs" variant="ghost" onClick={() => dismissAlert(alert.id)}>
+              <X className="size-4" />
+            </Button>
+          </AlertAction>
+        </Alert>
+      ))}
+
+      <div className="flex flex-col gap-2">
+        <LayoutGroup>
+          <div className="grid grid-cols-3 gap-2 overflow-hidden py-0.5 ">
+            <AnimatePresence mode="wait">
+              {images.map((image, index) => {
+                return (
+                  <ImageSlot
+                    key={image.id}
+                    isSelected={index === selectedIndex}
+                    onClick={() => setSelectedIndex(index)}
+                    onMoveLeft={index > 0 ? () => handleMove(index, "left") : undefined}
+                    onMoveRight={
+                      index < images.length - 1 ? () => handleMove(index, "right") : undefined
+                    }
+                    imageSrc={image.croppedFileUrl}
+                  />
+                );
+              })}
+              {Array.from({ length: emptySpaces }).map((_, index) => {
+                return <ImageSlot key={`empty-${index}`} onClick={uploadOnClick} />;
+              })}
+            </AnimatePresence>
+          </div>
+        </LayoutGroup>
+      </div>
 
       <ImageCropDialog
         open={isCropDialogOpen}

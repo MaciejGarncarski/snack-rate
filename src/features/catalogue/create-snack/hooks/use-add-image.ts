@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 
 import { ALLOWED_MIME_TYPES, MAXIMUM_IMAGES } from "#/const/image-const";
-import {
-  showToastForValidationError,
-  validateImage,
-} from "#/features/catalogue/create-snack/utils/validate-image";
+import { validateImage } from "#/features/catalogue/create-snack/utils/validate-image";
+import type { ImageValidationError } from "#/features/catalogue/create-snack/utils/validate-image";
 
 export type ImagePair = {
   id: string;
@@ -15,12 +13,13 @@ export type ImagePair = {
 
 type UseAddImageProps = {
   onAddToQueue: (file: File) => void;
+  onValidationError: (error: ImageValidationError) => void;
   allFiles: File[];
 };
 
-export function useAddImage({ onAddToQueue, allFiles }: UseAddImageProps) {
+export function useAddImage({ onAddToQueue, onValidationError, allFiles }: UseAddImageProps) {
   useEffect(() => {
-    const handlePaste = (event: ClipboardEvent) => {
+    const handlePaste = async (event: ClipboardEvent) => {
       const items = event.clipboardData?.items;
       if (!items) return;
 
@@ -30,20 +29,20 @@ export function useAddImage({ onAddToQueue, allFiles }: UseAddImageProps) {
       const file = imageItem.getAsFile();
       if (!file) return;
 
-      const validationResult = validateImage(file, allFiles);
+      const validationResult = await validateImage(file, allFiles);
 
       if (validationResult instanceof File) {
         onAddToQueue(validationResult);
         return;
       }
-      showToastForValidationError(validationResult, file.name);
+      onValidationError(validationResult);
     };
 
     window.addEventListener("paste", handlePaste);
     return () => {
       window.removeEventListener("paste", handlePaste);
     };
-  }, [onAddToQueue, allFiles]);
+  }, [onAddToQueue, allFiles, onValidationError]);
 
   const uploadOnClick = () => {
     const input = document.createElement("input");
@@ -52,15 +51,15 @@ export function useAddImage({ onAddToQueue, allFiles }: UseAddImageProps) {
     input.multiple = allFiles.length < MAXIMUM_IMAGES;
     input.click();
 
-    input.addEventListener("change", (event) => {
+    input.addEventListener("change", async (event) => {
       const target = event.target as HTMLInputElement;
 
       if (!target.files) return;
 
       const newFiles = Array.from(target.files);
 
-      newFiles.forEach((newFile, index) => {
-        const validationResult = validateImage(newFile, allFiles);
+      for (const [index, newFile] of newFiles.entries()) {
+        const validationResult = await validateImage(newFile, allFiles);
 
         if (validationResult instanceof File) {
           if (allFiles.length + index >= MAXIMUM_IMAGES) {
@@ -71,8 +70,8 @@ export function useAddImage({ onAddToQueue, allFiles }: UseAddImageProps) {
           return;
         }
 
-        showToastForValidationError(validationResult, newFile.name);
-      });
+        onValidationError(validationResult);
+      }
     });
   };
 
