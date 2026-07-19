@@ -45,11 +45,11 @@ export function CreateSnackForm({ types }: Props) {
       }}
       className="flex w-full flex-col gap-12 "
     >
-      <div className="flex flex-col justify-between md:flex-row">
+      <div className="flex flex-col gap-4 justify-between md:flex-row">
         <form.Field name="images">
           {(field) => {
             return (
-              <Field className="w-76 md:w-90">
+              <Field className="w-76 mx-auto md:mx-0 md:w-82 xl:w-90">
                 <ImagePicker
                   value={field.state.value}
                   onChange={(files) => field.handleChange(files)}

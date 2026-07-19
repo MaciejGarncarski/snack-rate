@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from "#/components/ui/alert-dialog";
 import { Button } from "#/components/ui/button";
-import { ButtonGroup, ButtonGroupSeparator } from "#/components/ui/button-group";
+import { ButtonGroup } from "#/components/ui/button-group";
 import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
 
 type Props = {
@@ -28,7 +28,6 @@ export function MainImageToolbar({ handleRecrop, handleDelete }: Props) {
         </Button>
         <Tooltip>Przytnij zdjęcie</Tooltip>
       </TooltipTrigger>
-      <ButtonGroupSeparator />
       <AlertDialogTrigger>
         <TooltipTrigger>
           <Button size="icon-lg" variant="secondary">

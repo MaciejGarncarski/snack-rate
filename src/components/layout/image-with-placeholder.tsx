@@ -82,7 +82,7 @@ export function ImageWithPlaceholder({
             exit={{ opacity: 0 }}
             transition={{ delay: IMAGE_LOAD_SKELETON_DELAY / 1000 }}
           >
-            {placeholder ?? <div className="h-full w-full animate-pulse bg-neutral-600" />}
+            {placeholder ?? <div className="h-full w-full animate-pulse bg-muted" />}
           </motion.div>
         )}
       </AnimatePresence>
