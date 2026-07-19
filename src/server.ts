@@ -11,6 +11,6 @@ await startQueue();
 
 export default {
   fetch(request: Request) {
-    return handler.fetch(request);
+    return handler.fetch(request, {});
   },
 };

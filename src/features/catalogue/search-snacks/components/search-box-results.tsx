@@ -16,7 +16,7 @@ type Props = {
 
 export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }: Props) {
   return (
-    <ScrollArea className="h-72" scrollFade>
+    <ScrollArea className="h-72">
       <motion.ul
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -29,8 +29,8 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }:
               to="/produkt/$slug"
               params={{ slug: item.slug }}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 transition-colors outline-none hover:bg-accent/50",
-                index === selectedIndex && "bg-accent/50",
+                "flex items-center gap-3 rounded-md px-3 py-2 transition-colors outline-none hover:bg-primary/25",
+                index === selectedIndex && "bg-primary/20",
               )}
               {...(index === 0 && { "data-first": "" })}
               onClick={onLinkClick}

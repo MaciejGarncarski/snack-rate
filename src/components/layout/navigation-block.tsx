@@ -2,14 +2,13 @@ import { useBlocker } from "@tanstack/react-router";
 
 import {
   AlertDialog,
-  AlertDialogClose,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogPopup,
   AlertDialogTitle,
 } from "#/components/ui/alert-dialog";
-import { Button } from "#/components/ui/button";
 
 type Props = {
   shouldBlock: boolean;
@@ -27,21 +26,19 @@ export function NavigationBlock({ shouldBlock, title, description }: Props) {
   });
 
   return (
-    <AlertDialog open={status === "blocked"}>
-      <AlertDialogPopup>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title || defaultTitle}</AlertDialogTitle>
-          <AlertDialogDescription>{description || defaultDescription}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogClose render={<Button variant="ghost" onClick={reset} />}>
-            Pozostań na stronie
-          </AlertDialogClose>
-          <AlertDialogClose render={<Button variant="destructive" onClick={proceed} />}>
-            Opuść stronę
-          </AlertDialogClose>
-        </AlertDialogFooter>
-      </AlertDialogPopup>
+    <AlertDialog isOpen={status === "blocked"}>
+      <AlertDialogHeader>
+        <AlertDialogTitle>{title || defaultTitle}</AlertDialogTitle>
+        <AlertDialogDescription>{description || defaultDescription}</AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel variant="ghost" onClick={reset}>
+          Pozostań na stronie
+        </AlertDialogCancel>
+        <AlertDialogAction variant="destructive" onClick={proceed}>
+          Opuść stronę
+        </AlertDialogAction>
+      </AlertDialogFooter>
     </AlertDialog>
   );
 }

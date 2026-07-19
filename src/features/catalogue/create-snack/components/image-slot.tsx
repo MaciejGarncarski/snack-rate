@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowRight, ImagePlusIcon } from "lucide-react";
 import { motion } from "motion/react";
 
 import { Button } from "#/components/ui/button";
-import { Tooltip, TooltipPopup, TooltipTrigger } from "#/components/ui/tooltip";
+import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
 import { cn } from "#/lib/utils";
 
 type SlotWithImage = {
@@ -65,39 +65,31 @@ export function ImageSlot({ isSelected, onClick, onMoveLeft, onMoveRight, imageS
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
           >
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    size="icon-xs"
-                    className="disabled:opacity-50"
-                    variant="outline"
-                    onClick={onMoveLeft}
-                    disabled={!onMoveLeft}
-                  />
-                }
+            <TooltipTrigger>
+              <Button
+                size="icon-xs"
+                className="disabled:opacity-50"
+                variant="outline"
+                onClick={onMoveLeft}
+                isDisabled={!onMoveLeft}
               >
                 <ArrowLeft />
-              </TooltipTrigger>
-              <TooltipPopup side="bottom">Pzesuń w lewo</TooltipPopup>
-            </Tooltip>
+              </Button>
+              <Tooltip placement="bottom">Pzesuń w lewo</Tooltip>
+            </TooltipTrigger>
 
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    size="icon-xs"
-                    className="disabled:opacity-50"
-                    variant="outline"
-                    onClick={onMoveRight}
-                    disabled={!onMoveRight}
-                  />
-                }
+            <TooltipTrigger>
+              <Button
+                size="icon-xs"
+                className="disabled:opacity-50"
+                variant="outline"
+                onClick={onMoveRight}
+                isDisabled={!onMoveRight}
               >
                 <ArrowRight />
-              </TooltipTrigger>
-              <TooltipPopup side="bottom">Pzesuń w prawo</TooltipPopup>
-            </Tooltip>
+              </Button>
+              <Tooltip placement="bottom">Pzesuń w prawo</Tooltip>
+            </TooltipTrigger>
           </motion.div>
         </>
       )}

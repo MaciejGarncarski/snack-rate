@@ -1,41 +1,24 @@
 "use client";
 
-import { Collapsible as CollapsiblePrimitive } from "@base-ui/react/collapsible";
-import type React from "react";
+import {
+  DisclosurePanel as CollapsibleContentPrimitive,
+  Disclosure as CollapsiblePrimitive,
+  Button as CollapsibleTriggerPrimitive,
+  type ButtonProps,
+  type DisclosurePanelProps,
+  type DisclosureProps,
+} from "react-aria-components";
 
-import { cn } from "#/lib/utils.ts";
-
-export function Collapsible({ ...props }: CollapsiblePrimitive.Root.Props): React.ReactElement {
-  return <CollapsiblePrimitive.Root data-slot="collapsible" {...props} />;
+function Collapsible({ ...props }: DisclosureProps) {
+  return <CollapsiblePrimitive data-slot="collapsible" {...props} />;
 }
 
-export function CollapsibleTrigger({
-  className,
-  ...props
-}: CollapsiblePrimitive.Trigger.Props): React.ReactElement {
-  return (
-    <CollapsiblePrimitive.Trigger
-      className={className}
-      data-slot="collapsible-trigger"
-      {...props}
-    />
-  );
+function CollapsibleTrigger({ ...props }: ButtonProps) {
+  return <CollapsibleTriggerPrimitive slot="trigger" data-slot="collapsible-trigger" {...props} />;
 }
 
-export function CollapsiblePanel({
-  className,
-  ...props
-}: CollapsiblePrimitive.Panel.Props): React.ReactElement {
-  return (
-    <CollapsiblePrimitive.Panel
-      className={cn(
-        "h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 data-ending-style:h-0 data-starting-style:h-0",
-        className,
-      )}
-      data-slot="collapsible-panel"
-      {...props}
-    />
-  );
+function CollapsibleContent({ ...props }: DisclosurePanelProps) {
+  return <CollapsibleContentPrimitive data-slot="collapsible-content" {...props} />;
 }
 
-export { CollapsiblePrimitive, CollapsiblePanel as CollapsibleContent };
+export { Collapsible, CollapsibleTrigger, CollapsibleContent };

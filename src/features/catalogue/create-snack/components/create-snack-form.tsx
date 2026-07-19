@@ -2,11 +2,11 @@ import { NavigationBlock } from "#/components/layout/navigation-block";
 import { Button } from "#/components/ui/button";
 import {
   Combobox,
+  ComboboxContent,
   ComboboxEmpty,
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-  ComboboxPopup,
 } from "#/components/ui/combobox";
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
@@ -48,14 +48,13 @@ export function CreateSnackForm({ types }: Props) {
       <div className="flex flex-col justify-between md:flex-row">
         <form.Field name="images">
           {(field) => {
-            const hasError = field.state.meta.errors.length > 0;
             return (
-              <Field invalid={hasError} className="w-76 md:w-90">
+              <Field className="w-76 md:w-90">
                 <ImagePicker
                   value={field.state.value}
                   onChange={(files) => field.handleChange(files)}
                 />
-                <FieldError match={hasError}>{getErrorMessage(field.state.meta.errors)}</FieldError>
+                <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
               </Field>
             );
           }}
@@ -63,39 +62,23 @@ export function CreateSnackForm({ types }: Props) {
         <div className="flex flex-col gap-10 md:w-[20rem]">
           <form.Field name="typeSlug">
             {(field) => {
-              const hasError = field.state.meta.errors.length > 0;
               return (
-                <Field invalid={hasError}>
+                <Field>
                   <FieldLabel>Rodzaj</FieldLabel>
-                  <Combobox
-                    items={typesFormMapped}
-                    value={
-                      typesFormMapped.find((t) => t.value === field.state.value) || {
-                        label: "",
-                        value: "",
-                      }
-                    }
-                    onValueChange={(value) => {
-                      if (value?.value) {
-                        field.handleChange(value?.value);
-                      }
-                    }}
-                  >
-                    <ComboboxInput size="lg" placeholder="Rodzaj" onBlur={field.handleBlur} />
-                    <ComboboxPopup>
+                  <Combobox<SnackTypeFormatted> menuTrigger="focus" items={typesFormMapped}>
+                    <ComboboxInput placeholder="Rodzaj" onBlur={field.handleBlur} />
+                    <ComboboxContent>
                       <ComboboxEmpty>Brak typów.</ComboboxEmpty>
-                      <ComboboxList>
+                      <ComboboxList<SnackTypeFormatted>>
                         {(item) => (
-                          <ComboboxItem key={item.value} value={item}>
+                          <ComboboxItem id={item.value} textValue={item.label}>
                             {item.label}
                           </ComboboxItem>
                         )}
                       </ComboboxList>
-                    </ComboboxPopup>
+                    </ComboboxContent>
                   </Combobox>
-                  <FieldError match={hasError}>
-                    {getErrorMessage(field.state.meta.errors)}
-                  </FieldError>
+                  <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
                 </Field>
               );
             }}
@@ -103,20 +86,16 @@ export function CreateSnackForm({ types }: Props) {
 
           <form.Field name="name">
             {(field) => {
-              const hasError = field.state.meta.errors.length > 0;
               return (
-                <Field invalid={hasError}>
+                <Field>
                   <FieldLabel>Nazwa</FieldLabel>
                   <Input
-                    size="lg"
                     placeholder="Nazwa"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                   />
-                  <FieldError match={hasError}>
-                    {getErrorMessage(field.state.meta.errors)}
-                  </FieldError>
+                  <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
                 </Field>
               );
             }}
@@ -124,20 +103,16 @@ export function CreateSnackForm({ types }: Props) {
 
           <form.Field name="description">
             {(field) => {
-              const hasError = field.state.meta.errors.length > 0;
               return (
-                <Field invalid={hasError}>
+                <Field>
                   <FieldLabel>Opis (opcjonalnie)</FieldLabel>
                   <Textarea
-                    size="lg"
                     placeholder="Opis (opcjonalnie)"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                   />
-                  <FieldError match={hasError}>
-                    {getErrorMessage(field.state.meta.errors)}
-                  </FieldError>
+                  <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
                 </Field>
               );
             }}
@@ -145,12 +120,10 @@ export function CreateSnackForm({ types }: Props) {
 
           <form.Field name="price">
             {(field) => {
-              const hasError = field.state.meta.errors.length > 0;
               return (
-                <Field invalid={hasError}>
+                <Field>
                   <FieldLabel>Cena (opcjonalnie)</FieldLabel>
                   <Input
-                    size="lg"
                     type="number"
                     placeholder="Cena (opcjonalnie)"
                     value={field.state.value}
@@ -159,9 +132,7 @@ export function CreateSnackForm({ types }: Props) {
                     step="0.01"
                     min="0"
                   />
-                  <FieldError match={hasError}>
-                    {getErrorMessage(field.state.meta.errors)}
-                  </FieldError>
+                  <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
                 </Field>
               );
             }}
@@ -169,21 +140,17 @@ export function CreateSnackForm({ types }: Props) {
 
           <form.Field name="barcode">
             {(field) => {
-              const hasError = field.state.meta.errors.length > 0;
               return (
-                <Field invalid={hasError}>
+                <Field>
                   <FieldLabel>Kod kreskowy (opcjonalnie)</FieldLabel>
                   <Input
                     type="text"
-                    size="lg"
                     placeholder="Kod kreskowy - numer"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                   />
-                  <FieldError match={hasError}>
-                    {getErrorMessage(field.state.meta.errors)}
-                  </FieldError>
+                  <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
                 </Field>
               );
             }}
@@ -200,10 +167,10 @@ export function CreateSnackForm({ types }: Props) {
               <>
                 <NavigationBlock shouldBlock={shouldBlockNavigation} />
                 <div className="flex flex-col justify-between gap-4 md:flex-row">
-                  <Button type="button" disabled={true} variant={"outline"}>
+                  <Button isDisabled variant="outline">
                     Podgląd produktu (wkrótce)
                   </Button>
-                  <Button type="submit" disabled={!canSubmit}>
+                  <Button type="submit" isDisabled={!canSubmit}>
                     {isSubmitting ? "Wysyłanie..." : "Wyślij"}
                   </Button>
                 </div>

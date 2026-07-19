@@ -8,12 +8,10 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogPanel,
-  DialogPopup,
   DialogTitle,
 } from "#/components/ui/dialog";
-import { Field, FieldLabel } from "#/components/ui/field";
-import { Slider, SliderValue } from "#/components/ui/slider";
+import { Field } from "#/components/ui/field";
+import { Slider } from "#/components/ui/slider";
 
 const MAX_OUTPUT_DIMENSION = 1024;
 
@@ -117,59 +115,56 @@ export function ImageCropDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogPopup className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Przycinanie obrazu</DialogTitle>
-          <DialogDescription>Przycinaj obraz do wybranego obszaru.</DialogDescription>
-        </DialogHeader>
-        <DialogPanel className="flex flex-col items-center gap-4">
-          <div className="relative aspect-4/5 w-full overflow-hidden rounded-xl bg-muted">
-            <Cropper
-              key={imageSrc}
-              image={imageSrc}
-              crop={crop}
-              zoom={zoom}
-              aspect={4 / 5}
-              cropShape="rect"
-              showGrid
-              onCropChange={setCrop}
-              onZoomChange={setZoom}
-              onCropComplete={handleCropComplete}
-            />
-          </div>
+    <Dialog isOpen={open} onOpenChange={onOpenChange} className="max-w-md">
+      <DialogHeader>
+        <DialogTitle>Przycinanie obrazu</DialogTitle>
+        <DialogDescription>Przycinaj obraz do wybranego obszaru.</DialogDescription>
+      </DialogHeader>
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative aspect-4/5 w-full overflow-hidden rounded-xl bg-muted">
+          <Cropper
+            key={imageSrc}
+            image={imageSrc}
+            crop={crop}
+            zoom={zoom}
+            aspect={4 / 5}
+            cropShape="rect"
+            showGrid
+            onCropChange={setCrop}
+            onZoomChange={setZoom}
+            onCropComplete={handleCropComplete}
+          />
+        </div>
 
-          <Field>
+        <Field>
+          <div className="flex items-center gap-6">
+            <p>Przybliżenie</p>
             <Slider
               value={zoom}
-              onValueChange={(value) => {
+              onChange={(value) => {
                 if (typeof value === "number") {
                   setZoom(value);
                 }
               }}
-              min={1}
-              max={3}
+              minValue={1}
+              maxValue={3}
               step={0.1}
-            >
-              <div className="mb-2 flex items-center justify-between gap-1">
-                <FieldLabel className="text-sm font-medium">Przybliżenie</FieldLabel>
-                <SliderValue />
-              </div>
-            </Slider>
-          </Field>
+              className="flex flex-col grow-0"
+            />
+          </div>
+        </Field>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
-        </DialogPanel>
+        {error && <p className="text-sm text-destructive">{error}</p>}
+      </div>
 
-        <DialogFooter>
-          <DialogClose render={<Button variant="ghost" disabled={isCropping} />}>
-            Anuluj
-          </DialogClose>
-          <Button type="button" onClick={handleCrop} disabled={!croppedAreaPixels || isCropping}>
-            {isCropping ? "Przycinanie..." : "Przytnij"}
-          </Button>
-        </DialogFooter>
-      </DialogPopup>
+      <DialogFooter>
+        <DialogClose variant="ghost" isDisabled={isCropping}>
+          Anuluj
+        </DialogClose>
+        <Button type="button" onPress={handleCrop} isDisabled={!croppedAreaPixels || isCropping}>
+          {isCropping ? "Przycinanie..." : "Przytnij"}
+        </Button>
+      </DialogFooter>
     </Dialog>
   );
 }

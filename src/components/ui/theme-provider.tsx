@@ -18,7 +18,7 @@ function getThemeScript(storageKey: string, defaultTheme: Theme) {
   const key = JSON.stringify(storageKey);
   const fallback = JSON.stringify(defaultTheme);
 
-  return `(function(){try{var t=localStorage.getItem(${key});if(t!=='light'&&t!=='dark'&&t!=='system'){t=${fallback}}var d=matchMedia('(prefers-color-scheme: dark)').matches;var r=t==='system'?(d?'dark':'light'):t;var e=document.documentElement;e.classList.add(r);e.style.colorScheme=r}catch(e){}})();`;
+  return `(function(){try{var t=localStorage.getItem(${key});if(t!=='light'&&t!=='dark'&&t!=='system'){t=${fallback}}var d=matchMedia('(prefers-color-scheme: dark)').matches;var r=t==='system'?(d?'dark':'light'):t;var e=document.documentElement;e.classList.add('disable-transition');e.classList.add(r);e.style.colorScheme=r;requestAnimationFrame(function(){requestAnimationFrame(function(){e.classList.remove('disable-transition')})})}catch(e){}})();`;
 }
 
 const ThemeProviderContext = createContext<ThemeProviderState>({
@@ -28,6 +28,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>({
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
+  root.classList.add("disable-transition");
   root.classList.remove("light", "dark");
 
   const resolved =
@@ -39,6 +40,11 @@ function applyTheme(theme: Theme) {
 
   root.classList.add(resolved);
   root.style.colorScheme = resolved;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      root.classList.remove("disable-transition");
+    });
+  });
 }
 
 export function ThemeProvider({

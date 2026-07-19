@@ -1,77 +1,73 @@
-"use client";
-
-import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import * as React from "react";
+import {
+  SliderFill,
+  Slider as SliderPrimitive,
+  SliderThumb,
+  SliderTrack,
+  SliderStateContext,
+  type SliderProps as SliderPrimitiveProps,
+} from "react-aria-components";
 
 import { cn } from "#/lib/utils.ts";
 
-export function Slider({
+type SliderValue = number | number[];
+type SliderProps<T extends SliderValue = SliderValue> = Omit<
+  SliderPrimitiveProps<T>,
+  "className"
+> & {
+  className?: string;
+};
+
+function Slider<T extends SliderValue = SliderValue>({
   className,
   children,
-  defaultValue,
-  value,
-  min = 0,
-  max = 100,
   ...props
-}: SliderPrimitive.Root.Props): React.ReactElement {
-  const _values = React.useMemo(() => {
-    if (value !== undefined) {
-      return Array.isArray(value) ? value : [value];
-    }
-    if (defaultValue !== undefined) {
-      return Array.isArray(defaultValue) ? defaultValue : [defaultValue];
-    }
-    return [min];
-  }, [value, defaultValue, min]);
-
+}: SliderProps<T>) {
   return (
-    <SliderPrimitive.Root
-      className={cn("data-[orientation=horizontal]:w-full", className)}
-      defaultValue={defaultValue}
-      max={max}
-      min={min}
-      thumbAlignment="edge"
-      value={value}
+    <SliderPrimitive
+      className={cn(
+        "group relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col",
+        className,
+      )}
+      data-slot="slider"
       {...props}
     >
-      {children}
-      <SliderPrimitive.Control
-        className="flex touch-none select-none data-[orientation=horizontal]:w-full data-[orientation=horizontal]:min-w-44 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:flex-col data-disabled:pointer-events-none data-disabled:opacity-64"
-        data-slot="slider-control"
-      >
-        <SliderPrimitive.Track
-          className="relative grow select-none before:absolute before:rounded-full before:bg-input data-[orientation=horizontal]:h-1 data-[orientation=horizontal]:w-full data-[orientation=horizontal]:before:inset-x-0.5 data-[orientation=horizontal]:before:inset-y-0 data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1 data-[orientation=vertical]:before:inset-x-0 data-[orientation=vertical]:before:inset-y-0.5"
-          data-slot="slider-track"
-        >
-          <SliderPrimitive.Indicator
-            className="rounded-full bg-primary select-none data-[orientation=horizontal]:ms-0.5 data-[orientation=vertical]:mb-0.5"
-            data-slot="slider-indicator"
-          />
-          {Array.from({ length: _values.length }, (_, index) => (
-            <SliderPrimitive.Thumb
-              className="block size-5 shrink-0 rounded-full border border-input bg-white shadow-xs/5 transition-[box-shadow,scale] outline-none select-none not-dark:bg-clip-padding before:absolute before:inset-0 before:rounded-full before:shadow-[0_1px_--theme(--color-black/4%)] has-focus-visible:ring-[3px] has-focus-visible:ring-ring/24 data-dragging:scale-120 sm:size-4 dark:border-background dark:has-focus-visible:ring-ring/48 [:has(*:focus-visible),[data-dragging]]:shadow-none"
-              data-slot="slider-thumb"
-              index={index}
-              key={String(index)}
-            />
-          ))}
-        </SliderPrimitive.Track>
-      </SliderPrimitive.Control>
-    </SliderPrimitive.Root>
+      {({ state }) => {
+        return (
+          <>
+            <SliderTrack
+              data-slot="slider-track"
+              className="relative grow overflow-hidden rounded-full bg-input/90 select-none data-horizontal:h-2 data-horizontal:w-full data-vertical:h-full data-vertical:w-2"
+            >
+              <SliderFill
+                data-slot="slider-range"
+                className="absolute bg-primary select-none data-horizontal:h-full data-vertical:w-full"
+              />
+            </SliderTrack>
+            {state.values.map((_, index) => (
+              <SliderThumb
+                data-slot="slider-thumb"
+                key={index}
+                index={index}
+                className="block h-4 w-6 shrink-0 rounded-full bg-white shadow-md ring-1 ring-black/10 transition-[color,box-shadow,background-color] select-none not-dark:bg-clip-padding group-data-horizontal:top-[50%] group-data-vertical:left-[50%] hover:ring-4 hover:ring-ring/30 focus-visible:ring-4 focus-visible:ring-ring/30 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 data-vertical:h-6 data-vertical:w-4"
+              />
+            ))}
+            {children}
+          </>
+        );
+      }}
+    </SliderPrimitive>
   );
 }
 
-export function SliderValue({
-  className,
-  ...props
-}: SliderPrimitive.Value.Props): React.ReactElement {
+function SliderValue({ className, ...props }: React.ComponentProps<"span">) {
+  const state = React.useContext(SliderStateContext);
+  if (!state) return null;
   return (
-    <SliderPrimitive.Value
-      className={cn("flex justify-end text-sm", className)}
-      data-slot="slider-value"
-      {...props}
-    />
+    <span className={cn("text-sm tabular-nums", className)} {...props}>
+      {state.values[0]}
+    </span>
   );
 }
 
-export { SliderPrimitive };
+export { Slider, SliderValue };

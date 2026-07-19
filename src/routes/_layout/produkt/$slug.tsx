@@ -1,4 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { XCircleIcon } from "lucide-react";
 
@@ -29,7 +30,13 @@ export const Route = createFileRoute("/_layout/produkt/$slug")({
       </Empty>
     );
   },
-  loader: async ({ params, context }) => {
+  loader: async ({
+    params,
+    context,
+  }: {
+    params: { slug: string };
+    context: { queryClient: QueryClient };
+  }) => {
     const snack = await context.queryClient.ensureQueryData(
       getSnackBySlugQueryOptions(params.slug),
     );

@@ -1,7 +1,5 @@
 import { Badge } from "#/components/ui/badge";
-import { ToggleGroup } from "#/components/ui/toggle-group";
-import { Toolbar, ToolbarSeparator } from "#/components/ui/toolbar";
-import { TooltipProvider } from "#/components/ui/tooltip";
+import { ButtonGroup, ButtonGroupSeparator } from "#/components/ui/button-group";
 
 type Props = {
   isPrimaryImage: boolean;
@@ -9,22 +7,14 @@ type Props = {
 
 export function MainImageBadges({ isPrimaryImage }: Props) {
   return (
-    <TooltipProvider>
-      <Toolbar>
-        <ToggleGroup className="border-none p-0">
-          <Badge size="default">Podgląd</Badge>
-        </ToggleGroup>
-        {isPrimaryImage && (
-          <>
-            <ToolbarSeparator />
-            <ToggleGroup className="border-none p-0">
-              <Badge size="default" variant="info">
-                Główne zdjęcie
-              </Badge>
-            </ToggleGroup>
-          </>
-        )}
-      </Toolbar>
-    </TooltipProvider>
+    <ButtonGroup>
+      <Badge>Podgląd</Badge>
+      {isPrimaryImage && (
+        <>
+          <ButtonGroupSeparator />
+          <Badge variant="secondary">Główne zdjęcie</Badge>
+        </>
+      )}
+    </ButtonGroup>
   );
 }

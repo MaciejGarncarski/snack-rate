@@ -2,18 +2,17 @@ import { EditIcon, TrashIcon } from "lucide-react";
 
 import {
   AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogDescription,
-  AlertDialogPopup,
-  AlertDialogTrigger,
-  AlertDialogTitle,
-  AlertDialogHeader,
   AlertDialogFooter,
-  AlertDialogClose,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from "#/components/ui/alert-dialog";
 import { Button } from "#/components/ui/button";
-import { ToggleGroup } from "#/components/ui/toggle-group";
-import { Toolbar, ToolbarSeparator } from "#/components/ui/toolbar";
-import { Tooltip, TooltipPopup, TooltipProvider, TooltipTrigger } from "#/components/ui/tooltip";
+import { ButtonGroup, ButtonGroupSeparator } from "#/components/ui/button-group";
+import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
 
 type Props = {
   handleRecrop: () => void;
@@ -22,53 +21,34 @@ type Props = {
 
 export function MainImageToolbar({ handleRecrop, handleDelete }: Props) {
   return (
-    <TooltipProvider>
-      <Toolbar>
-        <ToggleGroup className="border-none p-0">
-          <Tooltip>
-            <TooltipTrigger
-              render={<Button size="icon-sm" variant="default" onClick={handleRecrop} />}
-            >
-              <EditIcon />
-            </TooltipTrigger>
-            <TooltipPopup>Przytnij zdjęcie</TooltipPopup>
-          </Tooltip>
-        </ToggleGroup>
-        <ToolbarSeparator />
-        <ToggleGroup className="border-none p-0">
-          <Tooltip>
-            <AlertDialog>
-              <AlertDialogTrigger
-                render={
-                  <TooltipTrigger render={<Button size="icon-sm" variant="destructive" />}>
-                    <TrashIcon />
-                  </TooltipTrigger>
-                }
-              />
-              <AlertDialogPopup>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Usunięcie zdjęcia</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Czy na pewno chcesz usunąć to zdjęcie?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogClose render={<Button variant="ghost" />}>
-                    Nie usuwaj
-                  </AlertDialogClose>
-                  <AlertDialogClose
-                    render={<Button variant="destructive" onClick={handleDelete} />}
-                  >
-                    Usuń zdjęcie
-                  </AlertDialogClose>
-                </AlertDialogFooter>
-              </AlertDialogPopup>
-            </AlertDialog>
-
-            <TooltipPopup>Usuń zdjęcie</TooltipPopup>
-          </Tooltip>
-        </ToggleGroup>
-      </Toolbar>
-    </TooltipProvider>
+    <ButtonGroup>
+      <TooltipTrigger>
+        <Button size="icon-lg" variant="default" onClick={handleRecrop}>
+          <EditIcon />
+        </Button>
+        <Tooltip>Przytnij zdjęcie</Tooltip>
+      </TooltipTrigger>
+      <ButtonGroupSeparator />
+      <AlertDialogTrigger>
+        <TooltipTrigger>
+          <Button size="icon-lg" variant="secondary">
+            <TrashIcon />
+          </Button>
+          <Tooltip>Usuń zdjęcie</Tooltip>
+        </TooltipTrigger>
+        <AlertDialog>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Usunięcie zdjęcia</AlertDialogTitle>
+            <AlertDialogDescription>Czy na pewno chcesz usunąć to zdjęcie?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel variant="ghost">Nie usuwaj</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={handleDelete}>
+              Usuń zdjęcie
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialog>
+      </AlertDialogTrigger>
+    </ButtonGroup>
   );
 }

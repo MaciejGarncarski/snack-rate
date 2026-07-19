@@ -47,13 +47,7 @@ export function SearchBoxInput({
         <AnimatePresence>{isLoading && isSearchBoxOpen ? <Spinner /> : <Search />}</AnimatePresence>
       </InputGroupAddon>
       <InputGroupAddon align="inline-end">
-        <Button
-          aria-label="Reset"
-          variant={"ghost"}
-          title="Reset"
-          size="icon-xs"
-          onClick={onResetClick}
-        >
+        <Button aria-label="Reset" variant="ghost" size="icon-xs" onClick={onResetClick}>
           <XIcon />
         </Button>
       </InputGroupAddon>

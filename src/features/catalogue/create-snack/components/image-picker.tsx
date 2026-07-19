@@ -156,7 +156,7 @@ export function ImagePicker({ onChange }: Props) {
       </div>
 
       {alerts.map((alert) => (
-        <Alert variant="error" key={alert.id}>
+        <Alert variant="destructive" key={alert.id}>
           <CircleAlertIcon />
           <AlertDescription>{alert.message}</AlertDescription>
           <AlertAction>
@@ -170,7 +170,7 @@ export function ImagePicker({ onChange }: Props) {
       <div className="flex flex-col gap-2">
         <LayoutGroup>
           <div className="grid grid-cols-3 gap-2 overflow-hidden py-0.5 ">
-            <AnimatePresence>
+            <AnimatePresence mode="popLayout">
               {images.map((image, index) => {
                 return (
                   <ImageSlot

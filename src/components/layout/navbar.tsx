@@ -5,9 +5,9 @@ import { Button, buttonVariants } from "#/components/ui/button";
 import { ModeToggle } from "#/components/ui/mode-toggle";
 import {
   Sheet,
+  SheetClose,
+  SheetFooter,
   SheetHeader,
-  SheetPanel,
-  SheetPopup,
   SheetTitle,
   SheetTrigger,
 } from "#/components/ui/sheet";
@@ -30,30 +30,27 @@ export function Navbar() {
           <ModeToggle />
           <Link
             to="/dodaj-produkt"
-            className={buttonVariants({ variant: "outline", size: "default" })}
+            className={buttonVariants({ variant: "default", size: "default" })}
           >
             <PlusIcon className="mr-2 h-4 w-4" />
             Dodaj produkt
           </Link>
         </div>
 
-        <Sheet>
-          <SheetTrigger
-            className="flex md:hidden"
-            render={<Button variant="outline" size="icon" aria-label="Menu" />}
-          >
+        <SheetTrigger>
+          <Button className="md:hidden" variant="outline" size="icon" aria-label="Menu">
             <MenuIcon className="h-5 w-5" />
-          </SheetTrigger>
-          <SheetPopup side="right">
+          </Button>
+          <Sheet side="right" className="flex md:hidden">
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
-            <SheetPanel className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 p-6">
               <ModeToggle />
               <Link
                 to="/dodaj-produkt"
                 className={buttonVariants({
-                  variant: "outline",
+                  variant: "default",
                   size: "default",
                   className: "w-full",
                 })}
@@ -61,9 +58,12 @@ export function Navbar() {
                 <PlusIcon className="mr-2 h-4 w-4" />
                 Dodaj produkt
               </Link>
-            </SheetPanel>
-          </SheetPopup>
-        </Sheet>
+            </div>
+            <SheetFooter>
+              <SheetClose variant="outline">Close</SheetClose>
+            </SheetFooter>
+          </Sheet>
+        </SheetTrigger>
       </div>
     </nav>
   );

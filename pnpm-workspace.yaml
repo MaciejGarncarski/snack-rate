@@ -3,6 +3,8 @@ packages:
   - "packages/*"
   - "tools/*"
 
+ignoreWorkspaceRootCheck: true
+
 syncInjectedDepsAfterScripts:
   - build
 injectWorkspacePackages: true

@@ -1,73 +1,22 @@
 "use client";
 
-import { Toolbar as ToolbarPrimitive } from "@base-ui/react/toolbar";
-import type React from "react";
+import { Toolbar as ToolbarPrimitive } from "react-aria-components";
 
+import { Separator } from "#/components/ui/separator.tsx";
 import { cn } from "#/lib/utils.ts";
 
-export function Toolbar({ className, ...props }: ToolbarPrimitive.Root.Props): React.ReactElement {
+function Toolbar({ className, ...props }: React.ComponentProps<typeof ToolbarPrimitive>) {
   return (
-    <ToolbarPrimitive.Root
-      className={cn(
-        "relative flex gap-2 rounded-xl border bg-card p-1 text-card-foreground not-dark:bg-clip-padding",
-        className,
-      )}
+    <ToolbarPrimitive
       data-slot="toolbar"
+      className={cn("flex flex-row flex-wrap items-center gap-2", className)}
       {...props}
     />
   );
 }
 
-export function ToolbarButton({
-  className,
-  ...props
-}: ToolbarPrimitive.Button.Props): React.ReactElement {
-  return (
-    <ToolbarPrimitive.Button className={cn(className)} data-slot="toolbar-button" {...props} />
-  );
+function ToolbarSeparator({ className, ...props }: React.ComponentProps<typeof Separator>) {
+  return <Separator orientation="vertical" className={cn("h-6", className)} {...props} />;
 }
 
-export function ToolbarLink({
-  className,
-  ...props
-}: ToolbarPrimitive.Link.Props): React.ReactElement {
-  return <ToolbarPrimitive.Link className={cn(className)} data-slot="toolbar-link" {...props} />;
-}
-
-export function ToolbarInput({
-  className,
-  ...props
-}: ToolbarPrimitive.Input.Props): React.ReactElement {
-  return <ToolbarPrimitive.Input className={cn(className)} data-slot="toolbar-input" {...props} />;
-}
-
-export function ToolbarGroup({
-  className,
-  ...props
-}: ToolbarPrimitive.Group.Props): React.ReactElement {
-  return (
-    <ToolbarPrimitive.Group
-      className={cn("flex items-center gap-1", className)}
-      data-slot="toolbar-group"
-      {...props}
-    />
-  );
-}
-
-export function ToolbarSeparator({
-  className,
-  ...props
-}: ToolbarPrimitive.Separator.Props): React.ReactElement {
-  return (
-    <ToolbarPrimitive.Separator
-      className={cn(
-        "shrink-0 bg-border data-[orientation=horizontal]:my-0.5 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:my-1.5 data-[orientation=vertical]:w-px data-[orientation=vertical]:not-[[class^='h-']]:not-[[class*='_h-']]:self-stretch",
-        className,
-      )}
-      data-slot="toolbar-separator"
-      {...props}
-    />
-  );
-}
-
-export { ToolbarPrimitive };
+export { Toolbar, ToolbarSeparator };

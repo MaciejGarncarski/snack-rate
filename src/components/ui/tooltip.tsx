@@ -1,65 +1,70 @@
-"use client";
-
-import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
-import type React from "react";
+import * as React from "react";
+import {
+  Focusable,
+  OverlayArrow,
+  Tooltip as TooltipPrimitive,
+  TooltipTrigger as TooltipTriggerPrimitive,
+} from "react-aria-components";
 
 import { cn } from "#/lib/utils.ts";
 
-export const TooltipCreateHandle: typeof TooltipPrimitive.createHandle =
-  TooltipPrimitive.createHandle;
-
-export const TooltipProvider: typeof TooltipPrimitive.Provider = TooltipPrimitive.Provider;
-
-export const Tooltip: typeof TooltipPrimitive.Root = TooltipPrimitive.Root;
-
-export function TooltipTrigger(props: TooltipPrimitive.Trigger.Props): React.ReactElement {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
-}
-
-export function TooltipPopup({
-  className,
-  align = "center",
-  sideOffset = 4,
-  side = "top",
-  anchor,
+function TooltipTrigger({
+  delay = 0,
   children,
-  portalProps,
   ...props
-}: TooltipPrimitive.Popup.Props & {
-  align?: TooltipPrimitive.Positioner.Props["align"];
-  side?: TooltipPrimitive.Positioner.Props["side"];
-  sideOffset?: TooltipPrimitive.Positioner.Props["sideOffset"];
-  anchor?: TooltipPrimitive.Positioner.Props["anchor"];
-  portalProps?: TooltipPrimitive.Portal.Props;
-}): React.ReactElement {
+}: React.ComponentProps<typeof TooltipTriggerPrimitive>) {
+  const [trigger, tooltip] = React.Children.toArray(children);
+
   return (
-    <TooltipPrimitive.Portal {...portalProps}>
-      <TooltipPrimitive.Positioner
-        align={align}
-        anchor={anchor}
-        className="z-50 h-(--positioner-height) w-(--positioner-width) max-w-(--available-width) transition-[top,left,right,bottom,transform] data-instant:transition-none"
-        data-slot="tooltip-positioner"
-        side={side}
-        sideOffset={sideOffset}
-      >
-        <TooltipPrimitive.Popup
-          className={cn(
-            "relative flex h-(--popup-height,auto) w-(--popup-width,auto) origin-(--transform-origin) rounded-md border bg-popover text-xs text-balance text-popover-foreground shadow-md/5 transition-[width,height,scale,opacity] not-dark:bg-clip-padding before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-md)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] data-ending-style:scale-98 data-ending-style:opacity-0 data-instant:duration-0 data-starting-style:scale-98 data-starting-style:opacity-0 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
-            className,
-          )}
-          data-slot="tooltip-popup"
-          {...props}
-        >
-          <TooltipPrimitive.Viewport
-            className="relative size-full overflow-clip px-(--viewport-inline-padding) py-1 [--viewport-inline-padding:--spacing(2)] **:data-current:w-[calc(var(--popup-width)-2*var(--viewport-inline-padding)-2px)] **:data-current:opacity-100 **:data-current:transition-opacity **:data-current:data-ending-style:opacity-0 data-instant:transition-none **:data-previous:w-[calc(var(--popup-width)-2*var(--viewport-inline-padding)-2px)] **:data-previous:truncate **:data-previous:opacity-100 **:data-previous:transition-opacity **:data-previous:data-ending-style:opacity-0 **:data-current:data-starting-style:opacity-0 **:data-previous:data-starting-style:opacity-0"
-            data-slot="tooltip-viewport"
-          >
-            {children}
-          </TooltipPrimitive.Viewport>
-        </TooltipPrimitive.Popup>
-      </TooltipPrimitive.Positioner>
-    </TooltipPrimitive.Portal>
+    <TooltipTriggerPrimitive data-slot="tooltip-trigger" delay={delay} {...props}>
+      <Focusable>{trigger as React.ComponentProps<typeof Focusable>["children"]}</Focusable>
+      {tooltip}
+    </TooltipTriggerPrimitive>
   );
 }
 
-export { TooltipPrimitive, TooltipPopup as TooltipContent };
+function Tooltip({
+  className,
+  placement = "top",
+  offset = 4,
+  crossOffset = 0,
+  children,
+  ...props
+}: Omit<React.ComponentProps<typeof TooltipPrimitive>, "children" | "className"> & {
+  className?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <TooltipPrimitive
+      data-slot="tooltip-content"
+      placement={placement}
+      offset={offset}
+      crossOffset={crossOffset}
+      className={cn(
+        "z-50 inline-flex w-fit max-w-xs origin-(--trigger-anchor-point) items-center gap-1.5 rounded-xl bg-foreground px-3 py-1.5 text-xs text-background has-data-[slot=kbd]:pr-1.5 data-entering:animate-in data-entering:fade-in-0 data-entering:zoom-in-95 data-exiting:animate-out data-exiting:fade-out-0 data-exiting:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-lg",
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      <OverlayArrow
+        className="z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] bg-foreground fill-foreground data-[side=left]:translate-x-[-1.5px] data-[side=right]:translate-x-[1.5px]"
+        style={({ placement, defaultStyle }) => ({
+          ...defaultStyle,
+          rotate: "0deg",
+          translate: "0 0",
+          transform:
+            placement === "bottom"
+              ? "translate(-50%, calc(50% + 2px)) rotate(45deg)"
+              : placement === "top"
+                ? "translate(-50%, calc(-50% - 2px)) rotate(45deg)"
+                : placement === "left"
+                  ? "translate(calc(-50% - 2px), -50%) rotate(45deg)"
+                  : "translate(calc(50% + 2px), -50%) rotate(45deg)",
+        })}
+      />
+    </TooltipPrimitive>
+  );
+}
+
+export { Tooltip, TooltipTrigger };
