@@ -36,7 +36,7 @@ export const useCreateSnackForm = () => {
       images: [] as File[],
     } satisfies FormValues,
     validators: {
-      onChange: createSnackSchema,
+      onBlur: createSnackSchema,
     },
     onSubmit: async ({ value, formApi }) => {
       const formData = new FormData();

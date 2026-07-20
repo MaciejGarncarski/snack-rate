@@ -2,10 +2,15 @@ import { Moon, Sun } from "lucide-react";
 
 import { Button } from "#/components/ui/button";
 import { useTheme } from "#/components/ui/theme-provider";
-import { cn } from "#/lib/utils";
 
 export function ModeToggle({ withText = false }: { withText?: boolean }) {
   const { theme, setTheme } = useTheme();
+  const resolvedTheme =
+    theme === "system"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+      : theme;
 
   function toggle() {
     if (theme === "system") {
@@ -17,11 +22,30 @@ export function ModeToggle({ withText = false }: { withText?: boolean }) {
     setTheme(theme === "light" ? "dark" : "light");
   }
 
+  if (withText) {
+    return (
+      <Button variant="outline" size="default" onClick={toggle}>
+        {resolvedTheme === "light" ? (
+          <Sun
+            data-icon="inline-start"
+            className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"
+          />
+        ) : (
+          <Moon
+            data-icon="inline-start"
+            className="h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
+          />
+        )}
+        <span className={"ml-2"}>Przełącz motyw</span>
+      </Button>
+    );
+  }
+
   return (
-    <Button variant="outline" size={withText ? "default" : "icon"} onClick={toggle}>
+    <Button variant="outline" size={"icon"} onClick={toggle}>
       <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
       <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-      <span className={cn(withText ? "ml-2" : "sr-only")}>Przełącz motyw</span>
+      <span className={"sr-only"}>Przełącz motyw</span>
     </Button>
   );
 }

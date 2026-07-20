@@ -112,7 +112,7 @@ describe("validateImage", () => {
   });
 
   describe("duplicate files", () => {
-    it("should return 'already-added' if the file is a duplicate", async () => {
+    it("should return 'already-added' if the file has the same content", async () => {
       const file = new File(["content"], "image.png", {
         type: "image/png",
       });
@@ -122,7 +122,7 @@ describe("validateImage", () => {
       expect(result).toBe("already-added");
     });
 
-    it("should return the file if it has the same name but different size", async () => {
+    it("should return the file if it has the same name but different content", async () => {
       const existing = new File(["short"], "image.png", {
         type: "image/png",
       });
@@ -134,16 +134,28 @@ describe("validateImage", () => {
       expect(result).toBe(newFile);
     });
 
-    it("should return the file if it has the same size but different name", async () => {
+    it("should return the file if it has the same size but different content", async () => {
       const existing = new File(["content"], "first.png", {
         type: "image/png",
       });
-      const newFile = new File(["content"], "second.png", {
+      const newFile = new File(["different"], "second.png", {
         type: "image/png",
       });
 
       const result = await validateImage(newFile, [existing]);
       expect(result).toBe(newFile);
+    });
+
+    it("should return 'already-added' if files have different names but same content", async () => {
+      const existing = new File(["same content"], "first.png", {
+        type: "image/png",
+      });
+      const newFile = new File(["same content"], "second.png", {
+        type: "image/png",
+      });
+
+      const result = await validateImage(newFile, [existing]);
+      expect(result).toBe("already-added");
     });
 
     it("should return the file if it is not a duplicate", async () => {

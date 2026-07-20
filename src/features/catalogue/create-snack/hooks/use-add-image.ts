@@ -58,14 +58,10 @@ export function useAddImage({ onAddToQueue, onValidationError, allFiles }: UseAd
 
       const newFiles = Array.from(target.files);
 
-      for (const [index, newFile] of newFiles.entries()) {
+      for (const [, newFile] of newFiles.entries()) {
         const validationResult = await validateImage(newFile, allFiles);
 
         if (validationResult instanceof File) {
-          if (allFiles.length + index >= MAXIMUM_IMAGES) {
-            return;
-          }
-
           onAddToQueue(validationResult);
           return;
         }

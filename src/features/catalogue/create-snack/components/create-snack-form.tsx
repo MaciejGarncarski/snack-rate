@@ -48,8 +48,10 @@ export function CreateSnackForm({ types }: Props) {
       <div className="flex flex-col gap-4 justify-between md:flex-row">
         <form.Field name="images">
           {(field) => {
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
             return (
-              <Field className="w-76 mx-auto md:mx-0 md:w-82 xl:w-90">
+              <Field className="w-76 mx-auto md:mx-0 md:w-82 xl:w-90" data-invalid={isInvalid}>
                 <ImagePicker
                   value={field.state.value}
                   onChange={(files) => field.handleChange(files)}
@@ -59,17 +61,41 @@ export function CreateSnackForm({ types }: Props) {
             );
           }}
         </form.Field>
-        <div className="flex flex-col gap-10 md:w-[20rem]">
+        <div className="flex flex-col gap-6 md:w-[20rem]">
           <form.Field name="typeSlug">
             {(field) => {
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
               return (
-                <Field>
+                <Field data-invalid={isInvalid}>
                   <FieldLabel>Rodzaj</FieldLabel>
-                  <Combobox<SnackTypeFormatted> menuTrigger="focus" items={typesFormMapped}>
-                    <ComboboxInput placeholder="Rodzaj" onBlur={field.handleBlur} />
+                  <Combobox
+                    selectionMode="single"
+                    isRequired
+                    value={field.state.value}
+                    onChange={(key) => {
+                      const value = key?.toString();
+
+                      if (value) {
+                        field.handleChange(value);
+                      }
+                    }}
+                    allowsEmptyCollection
+                    menuTrigger="focus"
+                    aria-invalid={isInvalid}
+                    name={field.name}
+                  >
+                    <ComboboxInput
+                      aria-invalid={isInvalid}
+                      placeholder="Rodzaj"
+                      onBlur={field.handleBlur}
+                      autoComplete="off"
+                    />
                     <ComboboxContent>
-                      <ComboboxEmpty>Brak typów.</ComboboxEmpty>
-                      <ComboboxList<SnackTypeFormatted>>
+                      <ComboboxList
+                        renderEmptyState={() => <ComboboxEmpty>Brak typów.</ComboboxEmpty>}
+                        items={typesFormMapped}
+                      >
                         {(item) => (
                           <ComboboxItem id={item.value} textValue={item.label}>
                             {item.label}
@@ -86,12 +112,18 @@ export function CreateSnackForm({ types }: Props) {
 
           <form.Field name="name">
             {(field) => {
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
               return (
-                <Field>
+                <Field data-invalid={isInvalid}>
                   <FieldLabel>Nazwa</FieldLabel>
                   <Input
                     placeholder="Nazwa"
                     value={field.state.value}
+                    name={field.name}
+                    id={field.name}
+                    aria-invalid={isInvalid}
+                    autoComplete="off"
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                   />
@@ -103,12 +135,18 @@ export function CreateSnackForm({ types }: Props) {
 
           <form.Field name="description">
             {(field) => {
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
               return (
-                <Field>
+                <Field data-invalid={isInvalid}>
                   <FieldLabel>Opis (opcjonalnie)</FieldLabel>
                   <Textarea
                     placeholder="Opis (opcjonalnie)"
                     value={field.state.value}
+                    name={field.name}
+                    id={field.name}
+                    aria-invalid={isInvalid}
+                    autoComplete="off"
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                   />
@@ -120,13 +158,19 @@ export function CreateSnackForm({ types }: Props) {
 
           <form.Field name="price">
             {(field) => {
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
               return (
-                <Field>
+                <Field data-invalid={isInvalid}>
                   <FieldLabel>Cena (opcjonalnie)</FieldLabel>
                   <Input
                     type="number"
                     placeholder="Cena (opcjonalnie)"
                     value={field.state.value}
+                    name={field.name}
+                    id={field.name}
+                    aria-invalid={isInvalid}
+                    autoComplete="off"
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                     step="0.01"
@@ -140,13 +184,19 @@ export function CreateSnackForm({ types }: Props) {
 
           <form.Field name="barcode">
             {(field) => {
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
               return (
-                <Field>
+                <Field data-invalid={isInvalid}>
                   <FieldLabel>Kod kreskowy (opcjonalnie)</FieldLabel>
                   <Input
                     type="text"
                     placeholder="Kod kreskowy - numer"
                     value={field.state.value}
+                    name={field.name}
+                    id={field.name}
+                    aria-invalid={isInvalid}
+                    autoComplete="off"
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                   />

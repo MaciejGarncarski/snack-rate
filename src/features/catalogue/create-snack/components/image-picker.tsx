@@ -1,8 +1,8 @@
-import { CircleAlertIcon, ImageOffIcon, X } from "lucide-react";
+import { AlertCircleIcon, X } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 
-import { Alert, AlertAction, AlertDescription } from "#/components/ui/alert";
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "#/components/ui/alert";
 import { Button } from "#/components/ui/button";
 import { MAXIMUM_IMAGES } from "#/const/image-const";
 import { ImageCropDialog } from "#/features/catalogue/create-snack/components/image-crop-dialog";
@@ -14,20 +14,22 @@ import { useAddImage, type ImagePair } from "#/features/catalogue/create-snack/h
 import { useCropQueue } from "#/features/catalogue/create-snack/hooks/use-crop-queue";
 import { useObjectUrl } from "#/features/catalogue/create-snack/hooks/use-object-url";
 import { useReorder } from "#/features/catalogue/create-snack/hooks/use-reorder";
+import type { ImageValidationError } from "#/features/catalogue/create-snack/utils/validate-image";
 
-const VALIDATION_ALERT_DURATION = 4000;
+const VALIDATION_ALERT_DURATION = 6000;
 
 type ValidationAlert = {
   id: number;
   message: string;
-  error: "file-too-large" | "unsupported-file-type" | "already-added" | "resolution-too-low";
+  error: ImageValidationError;
 };
 
 const errorMessageMap: Record<ValidationAlert["error"], string> = {
   "file-too-large": "Plik jest zbyt duży (maks. 10 MB).",
   "unsupported-file-type": "Nieobsługiwany typ pliku.",
   "already-added": "Ten plik został już dodany.",
-  "resolution-too-low": "Zbyt niska rozdzielczość (min. 200×200 px).",
+  "resolution-too-low": "Zbyt niska rozdzielczość (min. 200x200 px).",
+  "maximum-images-reached": "Osiągnięto maksimum obrazów.",
 };
 
 type Props = {
@@ -98,33 +100,9 @@ export function ImagePicker({ onChange }: Props) {
           handleAddToQueue={handleAddToQueue}
           images={images}
           onValidationError={handleValidationError}
-        >
-          <AnimatePresence mode="popLayout">
-            {foundSelectedImage ? (
-              <motion.img
-                key={foundSelectedImage.id}
-                src={foundSelectedImage.croppedFileUrl}
-                alt="Wybrany obraz"
-                className="size-full object-cover"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              />
-            ) : (
-              <motion.button
-                key="no-image"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={uploadOnClick}
-                className="absolute left-0 flex h-full w-full flex-col items-center justify-center gap-4 rounded-lg text-muted-foreground"
-              >
-                <ImageOffIcon />
-                <p>Brak obrazu</p>
-              </motion.button>
-            )}
-          </AnimatePresence>
-        </ImageDropzone>
+          selectedImage={foundSelectedImage}
+          onUploadClick={uploadOnClick}
+        />
 
         <AnimatePresence>
           {foundSelectedImage && (
@@ -157,10 +135,11 @@ export function ImagePicker({ onChange }: Props) {
 
       {alerts.map((alert) => (
         <Alert variant="destructive" key={alert.id}>
-          <CircleAlertIcon />
+          <AlertCircleIcon />
+          <AlertTitle>Nie dodano obrazu</AlertTitle>
           <AlertDescription>{alert.message}</AlertDescription>
           <AlertAction>
-            <Button size="xs" variant="ghost" onClick={() => dismissAlert(alert.id)}>
+            <Button size="icon-xs" variant="ghost" onClick={() => dismissAlert(alert.id)}>
               <X className="size-4" />
             </Button>
           </AlertAction>
@@ -169,7 +148,7 @@ export function ImagePicker({ onChange }: Props) {
 
       <div className="flex flex-col gap-2">
         <LayoutGroup>
-          <div className="grid grid-cols-3 gap-2 overflow-hidden py-0.5 ">
+          <div className="grid grid-cols-3 gap-2 overflow-hidden py-0.5 px-0.5">
             <AnimatePresence mode="popLayout">
               {images.map((image, index) => {
                 return (

@@ -1,19 +1,38 @@
-import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "#/const/image-const";
+import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE, MAXIMUM_IMAGES } from "#/const/image-const";
 
 export type ImageValidationError =
   | "file-too-large"
   | "unsupported-file-type"
   | "already-added"
-  | "resolution-too-low";
+  | "resolution-too-low"
+  | "maximum-images-reached";
 type ImageValidationResult = File | ImageValidationError;
 
-const isDuplicate = (newFile: File, existing: File[]) => {
-  return existing.some((f) => f.name === newFile.name && f.size === newFile.size);
-};
+async function hashFile(file: File): Promise<string> {
+  const buffer = await file.arrayBuffer();
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function isDuplicate(newFile: File, existing: File[]): Promise<boolean> {
+  const newHash = await hashFile(newFile);
+  for (const f of existing) {
+    const existingHash = await hashFile(f);
+    if (newHash === existingHash) {
+      return true;
+    }
+  }
+  return false;
+}
 
 export async function validateImage(file: File, allFiles: File[]): Promise<ImageValidationResult> {
-  if (isDuplicate(file, allFiles)) {
+  if (await isDuplicate(file, allFiles)) {
     return "already-added";
+  }
+
+  if (allFiles.length >= MAXIMUM_IMAGES) {
+    return "maximum-images-reached";
   }
 
   if (file.size > MAX_FILE_SIZE) {
