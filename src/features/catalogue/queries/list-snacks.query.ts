@@ -1,4 +1,4 @@
-import { orpc } from "#/orpc/client";
+import { orpc } from "@/orpc/client";
 
 const SNACKS_PER_PAGE = 12;
 

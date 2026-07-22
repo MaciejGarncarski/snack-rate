@@ -1,5 +1,6 @@
-import { cn } from "#/lib/utils.ts";
 import { Keyboard as KbdPrimitive } from "react-aria-components";
+
+import { cn } from "@/lib/utils.ts";
 
 function Kbd({ className, ...props }: React.ComponentProps<"kbd">) {
   return (

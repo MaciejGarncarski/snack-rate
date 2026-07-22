@@ -1,12 +1,13 @@
+import { type Readable } from "node:stream";
+import sharp from "sharp";
+
 import {
   MAX_IMAGE_MEGAPIXELS,
   OPTIMIZED_FORMAT,
   OPTIMIZED_QUALITY,
   THUMBNAIL_ASPECT_RATIO,
   THUMBNAIL_WIDTH,
-} from "#/const/image-const";
-import { type Readable } from "node:stream";
-import sharp from "sharp";
+} from "@/const/image-const";
 
 export function createThumbnail(
   input: Readable,

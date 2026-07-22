@@ -1,4 +1,4 @@
-import { Status } from "#/features/shared/value-objects/status.vo";
+import { Status } from "@/features/shared/value-objects/status.vo";
 
 describe("Status value object", () => {
   describe("create", () => {

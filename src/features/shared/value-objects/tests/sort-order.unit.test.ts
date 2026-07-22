@@ -1,4 +1,4 @@
-import { SortOrder } from "#/features/shared/value-objects/sort-order.vo";
+import { SortOrder } from "@/features/shared/value-objects/sort-order.vo";
 
 describe("SortOrder value object", () => {
   describe("create", () => {

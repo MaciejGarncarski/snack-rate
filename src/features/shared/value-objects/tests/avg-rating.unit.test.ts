@@ -1,4 +1,4 @@
-import { AvgRating } from "#/features/shared/value-objects/avg-rating.vo";
+import { AvgRating } from "@/features/shared/value-objects/avg-rating.vo";
 
 describe("avg rating value object", () => {
   it("should create an avg rating value object with a valid avg rating", () => {

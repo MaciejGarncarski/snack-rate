@@ -1,4 +1,3 @@
-import { cn } from "#/lib/utils.ts";
 import * as React from "react";
 import {
   Focusable,
@@ -6,6 +5,8 @@ import {
   Tooltip as TooltipPrimitive,
   TooltipTrigger as TooltipTriggerPrimitive,
 } from "react-aria-components";
+
+import { cn } from "@/lib/utils.ts";
 
 function TooltipTrigger({
   delay = 0,

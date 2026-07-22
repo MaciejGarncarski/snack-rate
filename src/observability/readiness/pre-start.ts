@@ -1,11 +1,12 @@
-import { exponentialBackoff } from "#/lib/exponential-backoff";
-import { serverEnv } from "#/lib/server.env";
-import { readinessFailureCounter } from "#/observability/counters";
-import { logger } from "#/observability/logger/logger";
-import { checkDatabaseOnce } from "#/observability/readiness/check-db";
-import { checkS3Once } from "#/observability/readiness/check-s3";
 import { S3Client } from "@aws-sdk/client-s3";
 import { Pool } from "pg";
+
+import { exponentialBackoff } from "@/lib/exponential-backoff";
+import { serverEnv } from "@/lib/server.env";
+import { readinessFailureCounter } from "@/observability/counters";
+import { logger } from "@/observability/logger/logger";
+import { checkDatabaseOnce } from "@/observability/readiness/check-db";
+import { checkS3Once } from "@/observability/readiness/check-s3";
 
 export async function runPreStartChecks() {
   if (serverEnv.isTest) return;

@@ -1,4 +1,3 @@
-import { cn } from "#/lib/utils.ts";
 import { cva } from "class-variance-authority";
 import { CheckIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";
@@ -15,6 +14,8 @@ import {
   type MenuItemProps as MenuItemPrimitiveProps,
   type MenuSectionProps as MenuSectionPrimitiveProps,
 } from "react-aria-components";
+
+import { cn } from "@/lib/utils.ts";
 
 function DropdownMenuTrigger({ ...props }: React.ComponentProps<typeof MenuTriggerPrimitive>) {
   return <MenuTriggerPrimitive data-slot="dropdown-menu-trigger" {...props} />;

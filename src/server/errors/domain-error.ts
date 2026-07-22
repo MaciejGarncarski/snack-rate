@@ -1,4 +1,4 @@
-import type { CatalogueErrorCode } from "#/features/catalogue/server/errors/catalogue-errors";
+import type { CatalogueErrorCode } from "@/features/catalogue/server/errors/catalogue-errors";
 
 export type DomainErrorCode = CatalogueErrorCode;
 

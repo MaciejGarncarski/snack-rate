@@ -1,11 +1,12 @@
+import { type Readable } from "node:stream";
+import sharp from "sharp";
+
 import {
   MAX_IMAGE_DIMENSION_OUTPUT,
   MAX_IMAGE_MEGAPIXELS,
   OPTIMIZED_FORMAT,
   OPTIMIZED_QUALITY,
-} from "#/const/image-const";
-import { type Readable } from "node:stream";
-import sharp from "sharp";
+} from "@/const/image-const";
 
 export function optimizeImage(input: Readable): {
   stream: Readable;

@@ -1,5 +1,5 @@
-import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
-import { cn } from "#/lib/utils";
+import { ImageWithPlaceholder } from "@/components/layout/image-with-placeholder";
+import { cn } from "@/lib/utils";
 
 type Size = "sm" | "md" | "lg" | "xl";
 

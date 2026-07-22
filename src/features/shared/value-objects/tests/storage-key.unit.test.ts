@@ -1,5 +1,5 @@
-import { Slug } from "#/features/shared/value-objects/slug.vo";
-import { StorageKey } from "#/features/shared/value-objects/storage-key.vo";
+import { Slug } from "@/features/shared/value-objects/slug.vo";
+import { StorageKey } from "@/features/shared/value-objects/storage-key.vo";
 
 describe("StorageKey value object", () => {
   describe("create", () => {

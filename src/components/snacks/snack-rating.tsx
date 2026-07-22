@@ -1,4 +1,4 @@
-import { cn } from "#/lib/utils";
+import { cn } from "@/lib/utils";
 
 const Star = ({ fill = 0, size = "md" }: { fill?: number; size?: "xs" | "sm" | "md" | "lg" }) => {
   const sizeClass =
