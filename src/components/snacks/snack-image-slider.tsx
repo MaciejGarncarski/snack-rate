@@ -1,7 +1,8 @@
-import { cn } from "@/lib/utils";
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+
+import { cn } from "#/lib/utils";
 
 type Direction = 1 | -1;
 
