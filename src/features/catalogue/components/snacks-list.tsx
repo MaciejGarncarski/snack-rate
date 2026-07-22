@@ -18,7 +18,7 @@ export function SnacksList() {
 
   return (
     <div>
-      <ul className="mx-auto flex flex-col gap-4 lg:gap-14">
+      <ul className="mx-auto flex flex-col gap-14">
         {data.pages
           .flatMap((page) => page.items)
           .map((snack, idx) => (

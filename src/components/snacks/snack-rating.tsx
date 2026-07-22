@@ -9,7 +9,10 @@ const Star = ({ fill = 0, size = "md" }: { fill?: number; size?: "xs" | "sm" | "
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        className={cn("absolute top-0 left-0 text-primary/70 fill-primary/30", sizeClass)}
+        className={cn(
+          "absolute top-0 left-0 dark:text-primary/60 dark:fill-primary/30 text-primary/40 fill-primary/20",
+          sizeClass,
+        )}
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
@@ -49,7 +52,9 @@ export function SnackRating({ rating, withText, size = "md" }: SnackRatingProps)
 
   return (
     <div className="flex items-center gap-3">
-      {withText && <span className="text-lg font-bold">{value.toFixed(1)}</span>}
+      {withText && (
+        <span className="text-lg mt-0.5 tabular-nums font-bold">{value.toFixed(1)}</span>
+      )}
 
       <div className={cn(`flex`, gapClass)}>
         {Array.from({ length: 5 }, (_, i) => {

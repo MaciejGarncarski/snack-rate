@@ -45,6 +45,11 @@ export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScan
           },
           () => {},
         );
+
+        const video = document.querySelector(`#${SCANNER_ID} video`);
+        if (video && !video.hasAttribute("aria-label")) {
+          video.setAttribute("aria-label", "Kamera skanera kodów kreskowych");
+        }
       } catch (err) {
         if (cancelled) return;
         setError(err instanceof Error ? err.message : "Nie udało się uruchomić kamery.");

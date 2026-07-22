@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MenuIcon, PlusIcon } from "lucide-react";
+import { useState } from "react";
 
 import { Button, buttonVariants } from "#/components/ui/button";
 import { ModeToggle } from "#/components/ui/mode-toggle";
@@ -16,6 +17,11 @@ import { useIsMobile } from "#/hooks/use-mobile";
 
 export function Navbar() {
   const isMobile = useIsMobile();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const closeSheet = () => {
+    setIsSheetOpen(false);
+  };
 
   return (
     <nav className="sticky top-0 z-10 grid md:grid-cols-3 grid-cols-[auto_1fr_auto] w-full items-center border-b bg-sidebar/90 px-4 py-3 backdrop-blur-md md:px-12">
@@ -42,10 +48,15 @@ export function Navbar() {
 
         {isMobile && (
           <SheetTrigger>
-            <Button variant="outline" size="icon" aria-label="Menu">
+            <Button
+              variant="outline"
+              size="icon"
+              aria-label="Menu"
+              onClick={() => setIsSheetOpen(true)}
+            >
               <MenuIcon className="h-5 w-5" />
             </Button>
-            <Sheet side="right" className="flex">
+            <Sheet side="right" className="flex" isOpen={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
@@ -53,6 +64,7 @@ export function Navbar() {
                 <ModeToggle withText />
                 <Link
                   to="/dodaj-produkt"
+                  onClick={closeSheet}
                   className={buttonVariants({
                     variant: "default",
                     size: "default",
@@ -64,7 +76,7 @@ export function Navbar() {
                 </Link>
               </div>
               <SheetFooter>
-                <SheetClose variant="outline">Close</SheetClose>
+                <SheetClose variant="outline">Zamknij</SheetClose>
               </SheetFooter>
             </Sheet>
           </SheetTrigger>
