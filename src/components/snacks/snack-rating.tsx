@@ -9,8 +9,7 @@ const Star = ({ fill = 0, size = "md" }: { fill?: number; size?: "xs" | "sm" | "
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        fill="none"
-        className={cn("absolute top-0 left-0 text-slate-500", sizeClass)}
+        className={cn("absolute top-0 left-0 text-primary/70 fill-primary/30", sizeClass)}
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"

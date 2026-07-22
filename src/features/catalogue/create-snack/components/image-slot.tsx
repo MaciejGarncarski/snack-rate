@@ -54,7 +54,12 @@ export function ImageSlot({ isSelected, onClick, onMoveLeft, onMoveRight, imageS
             onClick={onClick}
           >
             {imageSrc ? (
-              <img src={imageSrc} alt="Miniatura" className="size-full object-cover" />
+              <img
+                src={imageSrc}
+                alt="Miniatura"
+                className="size-full object-cover select-none"
+                draggable={false}
+              />
             ) : (
               <ImagePlusIcon className="text-muted-foreground" />
             )}

@@ -156,32 +156,6 @@ export function CreateSnackForm({ types }: Props) {
             }}
           </form.Field>
 
-          <form.Field name="price">
-            {(field) => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel>Cena (opcjonalnie)</FieldLabel>
-                  <Input
-                    type="number"
-                    placeholder="Cena (opcjonalnie)"
-                    value={field.state.value}
-                    name={field.name}
-                    id={field.name}
-                    aria-invalid={isInvalid}
-                    autoComplete="off"
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                    step="0.01"
-                    min="0"
-                  />
-                  <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
-                </Field>
-              );
-            }}
-          </form.Field>
-
           <form.Field name="barcode">
             {(field) => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;

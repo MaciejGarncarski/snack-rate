@@ -66,9 +66,8 @@ function RouteComponent() {
         <div>
           <h1 className="mb-4 text-3xl font-bold">{data.name}</h1>
           <p className="mb-2 text-lg text-muted-foreground">{data.description || "Brak opisu"}</p>
-          <p className="mb-2 text-xl font-semibold">{data.price} zł</p>
           <SnackRating rating={data.avgRating} />
-          <div>{data.type && <Badge>{data.type.name}</Badge>}</div>
+          <div>{<Badge>{data.type.name}</Badge>}</div>
         </div>
       </div>
       <div>

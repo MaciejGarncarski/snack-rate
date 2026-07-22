@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import {
   Dialog as AlertDialogPrimitive,
@@ -5,6 +7,7 @@ import {
   Heading,
   ModalOverlay as ModalOverlayPrimitive,
   Modal as ModalPrimitive,
+  type DialogProps as AlertDialogPrimitiveProps,
   type DialogTriggerProps as AlertDialogTriggerPrimitiveProps,
   type ModalOverlayProps as ModalOverlayPrimitiveProps,
 } from "react-aria-components";
@@ -62,7 +65,7 @@ function AlertDialog({
         <AlertDialogPrimitive
           data-slot="alert-dialog"
           role="alertdialog"
-          className="[display:inherit] gap-[inherit] outline-none"
+          className="[display:inherit] [gap:inherit] outline-none"
         >
           {children}
         </AlertDialogPrimitive>

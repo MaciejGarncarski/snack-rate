@@ -1,0 +1,1 @@
+ALTER TABLE "snack_items" DROP COLUMN "price";

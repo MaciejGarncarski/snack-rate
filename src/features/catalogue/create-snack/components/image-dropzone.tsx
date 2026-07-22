@@ -94,7 +94,8 @@ export const ImageDropzone = ({
               key={selectedImage.id}
               src={selectedImage.croppedFileUrl}
               alt="Wybrany obraz"
-              className="size-full object-cover"
+              draggable={false}
+              className="size-full object-cover select-none"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -106,7 +107,7 @@ export const ImageDropzone = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onUploadClick}
-              className="absolute left-0 flex h-full w-full flex-col items-center justify-center gap-4 rounded-lg bg-secondary text-muted-foreground outline-none"
+              className="absolute left-0 flex select-none h-full w-full flex-col items-center justify-center gap-4 rounded-lg bg-secondary text-muted-foreground outline-none"
             >
               <ImageOffIcon />
               <p>Brak obrazu</p>

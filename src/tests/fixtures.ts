@@ -34,7 +34,6 @@ export async function createSnack(overrides?: Partial<SnackInsert>) {
       name: "Test Snack",
       slug: `test-snack-${nanoid(8)}`,
       status: "published",
-      price: "2.99",
       typeId,
       ...overrides,
     })

@@ -6,13 +6,6 @@ import { useCreateSnack } from "#/features/catalogue/create-snack/hooks/use-crea
 export const createSnackSchema = z.object({
   name: z.string().min(1, "Nazwa jest wymagana").max(200),
   description: z.string().max(2000),
-  price: z
-    .string()
-    .refine(
-      (v) => v === "" || (!Number.isNaN(Number(v)) && Number(v) > 0),
-      "Cena musi być liczbą większą od 0",
-    )
-    .refine((v) => Number(v) <= 100, "Cena nie może być większa niż 100"),
   barcode: z.string(),
   typeSlug: z.string().min(1, "Rodzaj jest wymagany"),
   images: z
@@ -30,22 +23,18 @@ export const useCreateSnackForm = () => {
     defaultValues: {
       name: "",
       description: "",
-      price: "",
       barcode: "",
       typeSlug: "",
       images: [] as File[],
     } satisfies FormValues,
     validators: {
       onBlur: createSnackSchema,
+      onSubmit: createSnackSchema,
     },
     onSubmit: async ({ value, formApi }) => {
       const formData = new FormData();
       formData.append("name", value.name);
       formData.append("description", value.description);
-
-      if (value.price) {
-        formData.append("price", value.price);
-      }
 
       if (value.barcode) {
         formData.append("barcode", value.barcode);

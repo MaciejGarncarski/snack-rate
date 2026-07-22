@@ -11,6 +11,7 @@ type ThemeProviderProps = {
 
 type ThemeProviderState = {
   theme: Theme;
+  resolvedTheme: "light" | "dark";
   setTheme: (theme: Theme) => void;
 };
 
@@ -21,8 +22,16 @@ function getThemeScript(storageKey: string, defaultTheme: Theme) {
   return `(function(){try{var t=localStorage.getItem(${key});if(t!=='light'&&t!=='dark'&&t!=='system'){t=${fallback}}var d=matchMedia('(prefers-color-scheme: dark)').matches;var r=t==='system'?(d?'dark':'light'):t;var e=document.documentElement;e.classList.add('disable-transition');e.classList.add(r);e.style.colorScheme=r;requestAnimationFrame(function(){requestAnimationFrame(function(){e.classList.remove('disable-transition')})})}catch(e){}})();`;
 }
 
+function resolveTheme(theme: Theme): "light" | "dark" {
+  if (theme === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  return theme;
+}
+
 const ThemeProviderContext = createContext<ThemeProviderState>({
   theme: "system",
+  resolvedTheme: "light",
   setTheme: () => {},
 });
 
@@ -31,13 +40,7 @@ function applyTheme(theme: Theme) {
   root.classList.add("disable-transition");
   root.classList.remove("light", "dark");
 
-  const resolved =
-    theme === "system"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      : theme;
-
+  const resolved = resolveTheme(theme);
   root.classList.add(resolved);
   root.style.colorScheme = resolved;
   requestAnimationFrame(() => {
@@ -54,12 +57,14 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [mounted, setMounted] = useState(false);
+  const [osPrefersDark, setOsPrefersDark] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(storageKey);
     setThemeState(
       stored === "light" || stored === "dark" || stored === "system" ? stored : defaultTheme,
     );
+    setOsPrefersDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
     setMounted(true);
   }, [defaultTheme, storageKey]);
 
@@ -69,10 +74,13 @@ export function ThemeProvider({
   }, [theme, mounted]);
 
   useEffect(() => {
-    if (!mounted || theme !== "system") return;
+    if (!mounted) return;
 
     const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = () => applyTheme("system");
+    const onChange = () => {
+      setOsPrefersDark(media.matches);
+      if (theme === "system") applyTheme("system");
+    };
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
   }, [theme, mounted]);
@@ -82,8 +90,11 @@ export function ThemeProvider({
     setThemeState(next);
   };
 
+  const resolvedTheme: "light" | "dark" =
+    theme === "system" ? (osPrefersDark ? "dark" : "light") : theme;
+
   return (
-    <ThemeProviderContext value={{ theme, setTheme }}>
+    <ThemeProviderContext value={{ theme, resolvedTheme, setTheme }}>
       <ScriptOnce>{getThemeScript(storageKey, defaultTheme)}</ScriptOnce>
       {children}
     </ThemeProviderContext>

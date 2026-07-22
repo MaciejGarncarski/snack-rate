@@ -21,7 +21,6 @@ const createSnackInput = z
   .object({
     name: z.string().min(1).max(200),
     description: z.string().max(2000).optional(),
-    price: z.number().positive().optional(),
     barcode: z.string().optional(),
     typeSlug: z.string(),
     images: z.array(z.string()).min(1).max(MAXIMUM_IMAGES),

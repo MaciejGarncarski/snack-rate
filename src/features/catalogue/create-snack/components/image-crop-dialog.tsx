@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "#/components/ui/dialog";
 import { Field } from "#/components/ui/field";
+import { Label } from "#/components/ui/label";
 import { Slider } from "#/components/ui/slider";
 
 const MAX_OUTPUT_DIMENSION = 1024;
@@ -72,6 +73,9 @@ type ImageCropDialogProps = {
   onCropComplete: (croppedFile: File) => void;
 };
 
+const MAX_ZOOM = 3;
+const MIN_ZOOM = 1;
+
 export function ImageCropDialog({
   open,
   onOpenChange,
@@ -130,6 +134,10 @@ export function ImageCropDialog({
             aspect={4 / 5}
             cropShape="rect"
             showGrid
+            objectFit="vertical-cover"
+            minZoom={MIN_ZOOM}
+            maxZoom={MAX_ZOOM}
+            restrictPosition={true}
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onCropComplete={handleCropComplete}
@@ -138,16 +146,20 @@ export function ImageCropDialog({
 
         <Field>
           <div className="flex items-center gap-6">
-            <p>Przybliżenie</p>
+            <Label id="zoom-label" htmlFor="zoom" className="shrink-0">
+              Przybliżenie
+            </Label>
             <Slider
+              id="zoom"
+              aria-labelledby="zoom-label"
               value={zoom}
               onChange={(value) => {
                 if (typeof value === "number") {
                   setZoom(value);
                 }
               }}
-              minValue={1}
-              maxValue={3}
+              minValue={MIN_ZOOM}
+              maxValue={MAX_ZOOM}
               step={0.1}
               className="flex flex-col grow-0"
             />

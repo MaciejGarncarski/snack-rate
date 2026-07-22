@@ -5,7 +5,6 @@ export type CreateSnackInput = {
 export const buildCreateSnackPayload = (formData: FormData) => {
   const name = formData.get("name");
   const description = formData.get("description");
-  const price = formData.get("price");
   const barcode = formData.get("barcode");
   const typeSlug = formData.get("typeSlug");
 
@@ -20,7 +19,6 @@ export const buildCreateSnackPayload = (formData: FormData) => {
   return {
     name: String(name),
     description: description ? String(description) : undefined,
-    price: price ? Number(price) : undefined,
     barcode: barcode ? String(barcode) : undefined,
     typeSlug: typeSlug?.toString() || "",
     images,

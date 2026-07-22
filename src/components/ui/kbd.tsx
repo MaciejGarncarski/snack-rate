@@ -1,5 +1,3 @@
-"use client";
-
 import { Keyboard as KbdPrimitive } from "react-aria-components";
 
 import { cn } from "#/lib/utils.ts";

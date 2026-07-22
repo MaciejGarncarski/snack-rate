@@ -7,7 +7,6 @@ export type SnackItem = {
   id: string;
   name: string;
   description: string | null;
-  price: number | null;
   slug: string;
   status: SnackStatus;
   barcode: string | null;
@@ -28,7 +27,7 @@ export type SnackItem = {
     id: string;
     name: string;
     slug: string;
-  } | null;
+  };
 };
 
 const MAX_SEARCH_RESULTS = 8;
@@ -42,7 +41,6 @@ type DbSnackItem = {
   id: string;
   name: string;
   description: string | null;
-  price: string | null;
   slug: string;
   status: string;
   barcode: string | null;
@@ -64,7 +62,7 @@ type DbSnackItem = {
     id: string;
     name: string;
     slug: string;
-  } | null;
+  };
 };
 
 async function toSnackItem(
@@ -95,7 +93,6 @@ async function toSnackItem(
     id: row.id,
     name: row.name,
     description: row.description,
-    price: row.price ? Number(row.price) : null,
     slug: row.slug,
     barcode: row.barcode,
     avgRating: Number(row.avgRating),
@@ -114,7 +111,6 @@ type CreateSnackData = {
   name: string;
   slug: string;
   description?: string;
-  price?: number;
   barcode?: string;
   typeSlug: string;
   status: SnackStatus;
@@ -150,7 +146,6 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
           name: data.name,
           slug: data.slug,
           description: data.description || null,
-          price: data.price ? data.price.toString() : null,
           barcode: data.barcode || null,
           typeId: snackType.id,
           status: data.status,
@@ -186,7 +181,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
 
       if (!foundSnack) return null;
 
-      return toSnackItem(foundSnack, getFileUrl);
+      return toSnackItem(foundSnack as DbSnackItem, getFileUrl);
     },
 
     list: async (limit: number, cursor?: string): Promise<SnackItem[]> => {
@@ -202,7 +197,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
         },
       });
 
-      return Promise.all(rows.map((row) => toSnackItem(row, getFileUrl)));
+      return Promise.all(rows.map((row) => toSnackItem(row as DbSnackItem, getFileUrl)));
     },
 
     search: async (query: string): Promise<SnackItem[]> => {
@@ -222,7 +217,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
         },
       });
 
-      return Promise.all(rows.map((row) => toSnackItem(row, getFileUrl)));
+      return Promise.all(rows.map((row) => toSnackItem(row as DbSnackItem, getFileUrl)));
     },
 
     listTypes: () => {

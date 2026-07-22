@@ -6,7 +6,6 @@ import type { SnackStatus } from "#/features/shared/value-objects/status.vo";
 export type CreateSnackInput = {
   name: string;
   description?: string;
-  price?: number;
   barcode?: string;
   typeSlug: string;
   images: { key: string; thumbKey: string; filename: string; fileExt: string }[];
@@ -25,7 +24,6 @@ export function createSnackRecord(
         name: input.name,
         slug: slug.getValue(),
         description: input.description,
-        price: input.price,
         barcode: input.barcode,
         typeSlug: input.typeSlug,
         status,

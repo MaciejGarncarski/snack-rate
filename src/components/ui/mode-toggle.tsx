@@ -4,13 +4,7 @@ import { Button } from "#/components/ui/button";
 import { useTheme } from "#/components/ui/theme-provider";
 
 export function ModeToggle({ withText = false }: { withText?: boolean }) {
-  const { theme, setTheme } = useTheme();
-  const resolvedTheme =
-    theme === "system"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      : theme;
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   function toggle() {
     if (theme === "system") {

@@ -26,7 +26,6 @@ describe("create snack", () => {
     const input = {
       name: "Test Snack",
       description: "A delicious test snack",
-      price: 2.99,
       typeSlug: type.slug,
       images: [],
     };
@@ -36,7 +35,6 @@ describe("create snack", () => {
         images: input.images,
         name: input.name,
         description: input.description,
-        price: input.price,
         typeSlug: input.typeSlug,
       },
       repository,
@@ -53,7 +51,6 @@ describe("create snack", () => {
     expect(dbSnack).not.toBeNull();
     expect(dbSnack?.name).toBe(input.name);
     expect(dbSnack?.description).toBe(input.description);
-    expect(dbSnack?.price).toBe(String(input.price));
     expect(dbSnack?.images).toEqual([]);
     expect(dbSnack?.typeId).toBe(type.id);
   });
@@ -73,7 +70,6 @@ describe("create snack", () => {
         ],
         name: "Snack With Image",
         description: "Test",
-        price: 1.99,
         typeSlug: type.slug,
       },
       repository,
