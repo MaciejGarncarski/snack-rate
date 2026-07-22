@@ -1,15 +1,14 @@
 // oxlint-disable-next-line import/no-unassigned-import
-import "#/polyfill";
-import { SmartCoercionPlugin } from "@orpc/json-schema";
+import "@/polyfill";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { logger } from "#/observability/logger/logger";
-import { getActiveTraceId } from "#/observability/tracing";
-import router from "#/orpc/router";
+import { logger } from "@/observability/logger/logger";
+import { getActiveTraceId } from "@/observability/tracing";
+import router from "@/orpc/router";
 
 const handler = new OpenAPIHandler(router, {
   interceptors: [
@@ -18,9 +17,6 @@ const handler = new OpenAPIHandler(router, {
     }),
   ],
   plugins: [
-    new SmartCoercionPlugin({
-      schemaConverters: [new ZodToJsonSchemaConverter()],
-    }),
     new OpenAPIReferencePlugin({
       schemaConverters: [new ZodToJsonSchemaConverter()],
       specGenerateOptions: {

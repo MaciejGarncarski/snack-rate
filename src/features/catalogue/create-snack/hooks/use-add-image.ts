@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
-import { ALLOWED_MIME_TYPES, MAXIMUM_IMAGES } from "#/const/image-const";
-import { validateImage } from "#/features/catalogue/create-snack/utils/validate-image";
-import type { ImageValidationError } from "#/features/catalogue/create-snack/utils/validate-image";
+import { ALLOWED_MIME_TYPES, MAXIMUM_IMAGES } from "@/const/image-const";
+import { validateImage } from "@/features/catalogue/create-snack/utils/validate-image";
+import type { ImageValidationError } from "@/features/catalogue/create-snack/utils/validate-image";
 
 export type ImagePair = {
   id: string;
@@ -58,12 +58,14 @@ export function useAddImage({ onAddToQueue, onValidationError, allFiles }: UseAd
 
       const newFiles = Array.from(target.files);
 
-      for (const [, newFile] of newFiles.entries()) {
-        const validationResult = await validateImage(newFile, allFiles);
+      for (const file of newFiles) {
+        const validationResult = await validateImage(file, allFiles);
+
+        console.log("isValidated", validationResult instanceof File);
 
         if (validationResult instanceof File) {
           onAddToQueue(validationResult);
-          return;
+          continue;
         }
 
         onValidationError(validationResult);

@@ -1,4 +1,4 @@
-import { hash, verify } from "argon2";
+import { hash, verify, type HashOptions } from "argon2";
 import { argon2id } from "argon2";
 
 const MEMORY_COST = 131072;
@@ -6,7 +6,7 @@ const TIME_COST = 3;
 const PARALLELISM = 2;
 const HASH_LENGTH = 32;
 
-export const argon2Options = {
+export const argon2Options: HashOptions = {
   type: argon2id,
   memoryCost: MEMORY_COST,
   timeCost: TIME_COST,

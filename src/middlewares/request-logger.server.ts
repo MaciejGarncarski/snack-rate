@@ -1,9 +1,9 @@
 import { SpanStatusCode, trace } from "@opentelemetry/api";
 import { createMiddleware } from "@tanstack/react-start";
 
-import { httpRequestsCounter, httpStatusCodesCounter } from "#/observability/counters";
-import { httpDurationHistogram } from "#/observability/http-duration";
-import { logger } from "#/observability/logger/logger";
+import { httpRequestsCounter, httpStatusCodesCounter } from "@/observability/counters";
+import { httpDurationHistogram } from "@/observability/http-duration";
+import { logger } from "@/observability/logger/logger";
 
 const tracer = trace.getTracer("app");
 

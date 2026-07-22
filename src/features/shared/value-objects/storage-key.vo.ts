@@ -1,6 +1,5 @@
-import { nanoid } from "nanoid";
-
 import { Slug } from "#/features/shared/value-objects/slug.vo";
+import { nanoid } from "nanoid";
 
 export class StorageKey {
   private constructor(private readonly value: string) {}

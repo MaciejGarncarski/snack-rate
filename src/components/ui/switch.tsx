@@ -1,12 +1,11 @@
 "use client";
 
+import { cn } from "#/lib/utils.ts";
 import {
   composeRenderProps,
   Switch as SwitchPrimitive,
   type SwitchProps as SwitchPrimitiveProps,
 } from "react-aria-components";
-
-import { cn } from "#/lib/utils.ts";
 
 function Switch({
   className,

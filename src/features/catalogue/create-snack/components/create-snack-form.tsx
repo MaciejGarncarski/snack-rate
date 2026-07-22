@@ -1,8 +1,8 @@
 import { ScanBarcodeIcon } from "lucide-react";
 import { useState } from "react";
 
-import { NavigationBlock } from "#/components/layout/navigation-block";
-import { Button } from "#/components/ui/button";
+import { NavigationBlock } from "@/components/layout/navigation-block";
+import { Button } from "@/components/ui/button";
 import {
   Combobox,
   ComboboxContent,
@@ -10,13 +10,13 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from "#/components/ui/combobox";
-import { Field, FieldError, FieldLabel } from "#/components/ui/field";
-import { Input } from "#/components/ui/input";
-import { Textarea } from "#/components/ui/textarea";
-import { BarcodeScannerDialog } from "#/features/catalogue/create-snack/components/barcode-scanner-dialog";
-import { ImagePicker } from "#/features/catalogue/create-snack/components/image-picker";
-import { useCreateSnackForm } from "#/features/catalogue/create-snack/hooks/use-create-snack-form";
+} from "@/components/ui/combobox";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { BarcodeScannerDialog } from "@/features/catalogue/create-snack/components/barcode-scanner-dialog";
+import { ImagePicker } from "@/features/catalogue/create-snack/components/image-picker";
+import { useCreateSnackForm } from "@/features/catalogue/create-snack/hooks/use-create-snack-form";
 
 type SnackType = {
   name: string;

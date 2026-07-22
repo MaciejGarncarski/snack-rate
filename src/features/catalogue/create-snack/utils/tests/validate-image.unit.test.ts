@@ -1,5 +1,5 @@
-import { MAX_FILE_SIZE } from "#/const/image-const";
-import { validateImage } from "#/features/catalogue/create-snack/utils/validate-image";
+import { MAX_FILE_SIZE } from "@/const/image-const";
+import { validateImage } from "@/features/catalogue/create-snack/utils/validate-image";
 
 const mockImageDimensions = { width: 200, height: 200 };
 

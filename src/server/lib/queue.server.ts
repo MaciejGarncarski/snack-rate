@@ -1,7 +1,6 @@
-import { PgBoss, type SendOptions } from "pg-boss";
-
 import { serverEnv } from "#/lib/server.env";
 import { logger } from "#/observability/logger/logger";
+import { PgBoss, type SendOptions } from "pg-boss";
 
 let boss: PgBoss | null = null;
 

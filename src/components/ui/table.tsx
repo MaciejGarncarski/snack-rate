@@ -1,3 +1,4 @@
+import { cn } from "#/lib/utils.ts";
 import * as React from "react";
 import {
   Cell as CellPrimitive,
@@ -15,8 +16,6 @@ import {
   type TableHeaderProps,
   type TableProps,
 } from "react-aria-components";
-
-import { cn } from "#/lib/utils.ts";
 
 function Table({ className, ...props }: TableProps) {
   return (

@@ -1,6 +1,5 @@
-import { queryOptions } from "@tanstack/react-query";
-
 import { getSnackBySlugFn } from "#/features/catalogue/api/snacks.api";
+import { queryOptions } from "@tanstack/react-query";
 
 export const getSnackBySlugQueryOptions = (slug: string) =>
   queryOptions({

@@ -1,6 +1,5 @@
-import { Separator as SeparatorPrimitive } from "react-aria-components";
-
 import { cn } from "#/lib/utils.ts";
+import { Separator as SeparatorPrimitive } from "react-aria-components";
 
 function Separator({
   className,

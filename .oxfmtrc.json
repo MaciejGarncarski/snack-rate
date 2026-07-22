@@ -16,7 +16,7 @@
   "bracketSpacing": true,
   "singleAttributePerLine": false,
   "sortImports": {
-    "internalPattern": ["#/", "@/"],
+    "internalPattern": ["@/", "@/"],
     "newlinesBetween": true,
     "groups": [
       ["value-builtin", "value-external", "type-builtin", "type-external"],

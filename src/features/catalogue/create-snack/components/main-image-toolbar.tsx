@@ -9,10 +9,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "#/components/ui/alert-dialog";
-import { Button } from "#/components/ui/button";
-import { ButtonGroup } from "#/components/ui/button-group";
-import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { Tooltip, TooltipTrigger } from "@/components/ui/tooltip";
 
 type Props = {
   handleRecrop: () => void;

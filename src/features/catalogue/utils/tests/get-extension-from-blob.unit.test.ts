@@ -1,4 +1,4 @@
-import { getExtensionFromBlob } from "#/features/catalogue/utils/get-extension-from-blob.ts";
+import { getExtensionFromBlob } from "@/features/catalogue/utils/get-extension-from-blob.ts";
 
 describe("getExtensionFromBlob", () => {
   it("should return the correct file ending for a given Blob", () => {

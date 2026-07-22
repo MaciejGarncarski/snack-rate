@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
 
-import { Button } from "#/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -9,10 +9,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "#/components/ui/dialog";
-import { Field } from "#/components/ui/field";
-import { Label } from "#/components/ui/label";
-import { Slider } from "#/components/ui/slider";
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
 const MAX_OUTPUT_DIMENSION = 1024;
 
@@ -145,7 +145,7 @@ export function ImageCropDialog({
         </div>
 
         <Field>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 py-4 h-auto">
             <Label id="zoom-label" htmlFor="zoom" className="shrink-0">
               Przybliżenie
             </Label>
@@ -161,7 +161,7 @@ export function ImageCropDialog({
               minValue={MIN_ZOOM}
               maxValue={MAX_ZOOM}
               step={0.1}
-              className="flex flex-col grow-0"
+              className="flex flex-col h-2 grow-0"
             />
           </div>
         </Field>

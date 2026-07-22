@@ -4,7 +4,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
-import { ThemeProvider } from "#/components/ui/theme-provider";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles/app.css?url";
@@ -14,7 +14,6 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  notFoundComponent: () => <div>Not found</div>,
   head: () => ({
     meta: [
       {
@@ -46,7 +45,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ThemeProvider>{children}</ThemeProvider>
-
         <TanStackDevtools
           config={{
             position: "bottom-right",

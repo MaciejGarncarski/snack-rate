@@ -1,3 +1,4 @@
+import { cn } from "#/lib/utils.ts";
 import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 import * as React from "react";
 import {
@@ -9,8 +10,6 @@ import {
   type BreadcrumbsProps,
   type LinkProps,
 } from "react-aria-components";
-
-import { cn } from "#/lib/utils.ts";
 
 function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
   return (

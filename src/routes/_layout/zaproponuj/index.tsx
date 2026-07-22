@@ -1,9 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-
 import { CreateSnackForm } from "#/features/catalogue/create-snack/components/create-snack-form";
 import { client } from "#/orpc/client";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_layout/dodaj-produkt/")({
+export const Route = createFileRoute("/_layout/zaproponuj/")({
   component: RouteComponent,
   loader: async () => {
     const types = await client.snacks.listTypes();

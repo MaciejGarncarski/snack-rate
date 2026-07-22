@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "#/lib/utils.ts";
 import {
   SliderFill,
   Slider as SliderPrimitive,
@@ -7,8 +8,6 @@ import {
   SliderTrack,
   type SliderProps as SliderPrimitiveProps,
 } from "react-aria-components";
-
-import { cn } from "#/lib/utils.ts";
 
 type SliderValue = number | number[];
 type SliderProps<T extends SliderValue = SliderValue> = Omit<

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "#/lib/utils.ts";
 import * as React from "react";
 import {
   Label as LabelPrimitive,
@@ -7,8 +8,6 @@ import {
   type LabelProps,
   type ProgressBarProps as ProgressPrimitiveProps,
 } from "react-aria-components";
-
-import { cn } from "#/lib/utils.ts";
 
 type ProgressContextValue = {
   percentage?: number;

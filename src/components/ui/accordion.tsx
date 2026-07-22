@@ -1,3 +1,4 @@
+import { cn } from "#/lib/utils.ts";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import * as React from "react";
 import {
@@ -11,8 +12,6 @@ import {
   type DisclosurePanelProps,
   type DisclosureProps,
 } from "react-aria-components";
-
-import { cn } from "#/lib/utils.ts";
 
 function Accordion({ className, ...props }: DisclosureGroupProps) {
   return (

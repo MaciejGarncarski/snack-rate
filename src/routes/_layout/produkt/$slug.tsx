@@ -1,8 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import type { QueryClient } from "@tanstack/react-query";
-import { createFileRoute, notFound } from "@tanstack/react-router";
-import { XCircleIcon } from "lucide-react";
-
 import SnackImageSlider from "#/components/snacks/snack-image-slider";
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { Badge } from "#/components/ui/badge";
@@ -14,6 +9,10 @@ import {
   EmptyTitle,
 } from "#/components/ui/empty";
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
+import { createFileRoute, notFound } from "@tanstack/react-router";
+import { XCircleIcon } from "lucide-react";
 
 export const Route = createFileRoute("/_layout/produkt/$slug")({
   component: RouteComponent,

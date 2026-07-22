@@ -1,3 +1,5 @@
+import { Button } from "#/components/ui/button.tsx";
+import { cn } from "#/lib/utils.ts";
 import { XIcon } from "lucide-react";
 import * as React from "react";
 import {
@@ -10,9 +12,6 @@ import {
   type DialogTriggerProps as DialogTriggerPrimitiveProps,
   type ModalOverlayProps as ModalOverlayPrimitiveProps,
 } from "react-aria-components";
-
-import { Button } from "#/components/ui/button.tsx";
-import { cn } from "#/lib/utils.ts";
 
 function DialogTrigger({ ...props }: DialogTriggerPrimitiveProps) {
   return <DialogTriggerPrimitive data-slot="dialog-trigger" {...props} />;

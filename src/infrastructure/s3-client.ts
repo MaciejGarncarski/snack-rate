@@ -7,7 +7,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { type Readable } from "node:stream";
 
-import { serverEnv } from "#/lib/server.env";
+import { serverEnv } from "@/lib/server.env";
 
 const s3UploadClient = new S3Client({
   region: serverEnv.S3_REGION,

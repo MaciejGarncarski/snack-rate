@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "#/lib/utils.ts";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 import {
@@ -8,8 +9,6 @@ import {
   Tab as TabPrimitive,
   Tabs as TabsPrimitive,
 } from "react-aria-components";
-
-import { cn } from "#/lib/utils.ts";
 
 function Tabs({ className, ...props }: React.ComponentProps<typeof TabsPrimitive>) {
   return (

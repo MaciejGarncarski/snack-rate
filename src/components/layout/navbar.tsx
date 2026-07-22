@@ -1,7 +1,3 @@
-import { Link } from "@tanstack/react-router";
-import { MenuIcon, PlusIcon } from "lucide-react";
-import { useState } from "react";
-
 import { Button, buttonVariants } from "#/components/ui/button";
 import { ModeToggle } from "#/components/ui/mode-toggle";
 import {
@@ -14,6 +10,9 @@ import {
 } from "#/components/ui/sheet";
 import { NavbarSearchBox } from "#/features/catalogue/search-snacks/components/search-box";
 import { useIsMobile } from "#/hooks/use-mobile";
+import { Link } from "@tanstack/react-router";
+import { MenuIcon, PlusIcon } from "lucide-react";
+import { useState } from "react";
 
 export function Navbar() {
   const isMobile = useIsMobile();
@@ -38,7 +37,7 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           <ModeToggle />
           <Link
-            to="/dodaj-produkt"
+            to="/zaproponuj"
             className={buttonVariants({ variant: "default", size: "default" })}
           >
             <PlusIcon className="mr-2 h-4 w-4" />
@@ -63,7 +62,7 @@ export function Navbar() {
               <div className="flex flex-col gap-4 p-6">
                 <ModeToggle withText />
                 <Link
-                  to="/dodaj-produkt"
+                  to="/zaproponuj"
                   onClick={closeSheet}
                   className={buttonVariants({
                     variant: "default",

@@ -7,6 +7,8 @@
 
 @import "@fontsource-variable/nunito-sans";
 
+@import "@fontsource-variable/geist";
+
 @custom-variant dark (&:is(.dark *));
 
 :root.disable-transition,
@@ -20,7 +22,7 @@
   --font-heading: "Geist Variable", sans-serif;
   --font-mono: "Geist Variable", monospace;
 
-  --radius: 0.625rem;
+  --radius: 0.45rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.148 0.004 228.8);
   --card: oklch(1 0 0);

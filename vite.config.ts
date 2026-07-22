@@ -13,9 +13,7 @@ const config = defineConfig({
   },
   plugins: [
     devtools(),
-    nitro({
-      serverDir: true,
-    }),
+    nitro(),
     tailwindcss(),
     tanstackStart({
       importProtection: {

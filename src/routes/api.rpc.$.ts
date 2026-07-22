@@ -1,16 +1,16 @@
 import { trace } from "@opentelemetry/api";
 
 // oxlint-disable-next-line import/no-unassigned-import
-import "#/polyfill";
+import "@/polyfill";
 import { RPCHandler } from "@orpc/server/fetch";
 import { parseFormData, type ParseFormDataOptions } from "@remix-run/form-data-parser";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { MAX_FILE_SIZE, MAXIMUM_IMAGES } from "#/const/image-const";
-import { logger } from "#/observability/logger/logger";
-import { mapError } from "#/orpc/map-error";
-import router from "#/orpc/router";
-import { createFileUploadHandler } from "#/server/lib/automatic-file-upload-handler";
+import { MAX_FILE_SIZE, MAXIMUM_IMAGES } from "@/const/image-const";
+import { logger } from "@/observability/logger/logger";
+import { mapError } from "@/orpc/map-error";
+import router from "@/orpc/router";
+import { createFileUploadHandler } from "@/server/lib/automatic-file-upload-handler";
 
 const OVERRIDE_BODY_CONTEXT = Symbol("OVERRIDE_BODY_CONTEXT");
 

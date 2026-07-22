@@ -9,7 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "#/components/ui/dialog";
+} from "@/components/ui/dialog";
 
 const SCANNER_ID = "barcode-scanner";
 const SCAN_FPS = 10;

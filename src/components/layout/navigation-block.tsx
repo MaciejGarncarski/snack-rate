@@ -1,5 +1,3 @@
-import { useBlocker } from "@tanstack/react-router";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,6 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "#/components/ui/alert-dialog";
+import { useBlocker } from "@tanstack/react-router";
 
 type Props = {
   shouldBlock: boolean;

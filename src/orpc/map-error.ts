@@ -1,6 +1,6 @@
 import { ORPCError } from "@orpc/client";
 
-import { DomainError } from "#/server/errors/domain-error";
+import { DomainError } from "@/server/errors/domain-error";
 
 type PgError = {
   code?: string;

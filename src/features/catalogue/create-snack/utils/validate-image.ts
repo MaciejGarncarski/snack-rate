@@ -1,4 +1,4 @@
-import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE, MAXIMUM_IMAGES } from "#/const/image-const";
+import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE, MAXIMUM_IMAGES } from "@/const/image-const";
 
 export type ImageValidationError =
   | "file-too-large"

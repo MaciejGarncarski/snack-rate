@@ -1,8 +1,7 @@
 "use client";
 
-import * as React from "react";
-
 import { cn } from "#/lib/utils.ts";
+import * as React from "react";
 
 function ScrollArea({ className, children, ...props }: React.ComponentProps<"div">) {
   // Use native scrollbar-width and scrollbar-color to customize the scrollbar.

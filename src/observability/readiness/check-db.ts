@@ -1,8 +1,8 @@
 import type { Pool } from "pg";
 
-import { exponentialBackoff } from "#/lib/exponential-backoff";
-import { dbFailuresCounter } from "#/observability/counters";
-import { logger } from "#/observability/logger/logger";
+import { exponentialBackoff } from "@/lib/exponential-backoff";
+import { dbFailuresCounter } from "@/observability/counters";
+import { logger } from "@/observability/logger/logger";
 
 type DbCheckResult = { ok: true } | { ok: false; error: string };
 

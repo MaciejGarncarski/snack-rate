@@ -1,6 +1,6 @@
-import { serverEnv } from "#/lib/server.env";
-import { logger } from "#/observability/logger/logger";
-import { initOpenTelemetry } from "#/observability/otel-sdk";
+import { serverEnv } from "@/lib/server.env";
+import { logger } from "@/observability/logger/logger";
+import { initOpenTelemetry } from "@/observability/otel-sdk";
 
 initOpenTelemetry({
   otelExporterOtlpEndpoint: serverEnv.OTEL_EXPORTER_OTLP_ENDPOINT,

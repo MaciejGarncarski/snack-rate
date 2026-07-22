@@ -1,9 +1,8 @@
 "use client";
 
-import { Toolbar as ToolbarPrimitive } from "react-aria-components";
-
 import { Separator } from "#/components/ui/separator.tsx";
 import { cn } from "#/lib/utils.ts";
+import { Toolbar as ToolbarPrimitive } from "react-aria-components";
 
 function Toolbar({ className, ...props }: React.ComponentProps<typeof ToolbarPrimitive>) {
   return (

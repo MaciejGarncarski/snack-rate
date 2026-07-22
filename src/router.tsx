@@ -1,28 +1,24 @@
-// oxlint-disable no-unused-vars
-import { createRouter as createTanStackRouter } from "@tanstack/react-router";
+import { QueryClient } from "@tanstack/react-query";
+import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
-import { getContext } from "./integrations/tanstack-query/root-provider";
+import { DefaultNotFound } from "@/components/layout/default-not-found";
+
 import { routeTree } from "./routeTree.gen";
 
 export function getRouter() {
-  const context = getContext();
+  const queryClient = new QueryClient();
 
-  const router = createTanStackRouter({
+  const router = createRouter({
     routeTree,
-    context,
+    context: { queryClient },
     scrollRestoration: true,
     defaultPreload: "intent",
     defaultPreloadStaleTime: 0,
+    defaultNotFoundComponent: () => <DefaultNotFound />,
   });
 
-  setupRouterSsrQueryIntegration({ router, queryClient: context.queryClient });
+  setupRouterSsrQueryIntegration({ router, queryClient: queryClient });
 
   return router;
-}
-
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: ReturnType<typeof getRouter>;
-  }
 }

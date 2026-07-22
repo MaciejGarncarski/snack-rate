@@ -1,11 +1,10 @@
+import { cn } from "#/lib/utils.ts";
 import { CheckIcon } from "lucide-react";
 import {
   Checkbox as CheckboxPrimitive,
   composeRenderProps,
   type CheckboxProps,
 } from "react-aria-components";
-
-import { cn } from "#/lib/utils.ts";
 
 function Checkbox({ className, children, ...props }: CheckboxProps) {
   return (

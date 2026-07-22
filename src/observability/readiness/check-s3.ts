@@ -1,8 +1,8 @@
 import { HeadBucketCommand, S3Client } from "@aws-sdk/client-s3";
 
-import { exponentialBackoff } from "#/lib/exponential-backoff";
-import { s3FailuresCounter } from "#/observability/counters";
-import { logger } from "#/observability/logger/logger";
+import { exponentialBackoff } from "@/lib/exponential-backoff";
+import { s3FailuresCounter } from "@/observability/counters";
+import { logger } from "@/observability/logger/logger";
 
 type S3CheckResult = { ok: true } | { ok: false; error: string };
 
