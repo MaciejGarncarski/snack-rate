@@ -1,3 +1,6 @@
+import { ScanBarcodeIcon } from "lucide-react";
+import { useState } from "react";
+
 import { NavigationBlock } from "#/components/layout/navigation-block";
 import { Button } from "#/components/ui/button";
 import {
@@ -11,6 +14,7 @@ import {
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
+import { BarcodeScannerDialog } from "#/features/catalogue/create-snack/components/barcode-scanner-dialog";
 import { ImagePicker } from "#/features/catalogue/create-snack/components/image-picker";
 import { useCreateSnackForm } from "#/features/catalogue/create-snack/hooks/use-create-snack-form";
 
@@ -35,6 +39,7 @@ function getErrorMessage(errors: unknown[]): string {
 export function CreateSnackForm({ types }: Props) {
   const form = useCreateSnackForm();
   const typesFormMapped = types.map((t): SnackTypeFormatted => ({ value: t.slug, label: t.name }));
+  const [isBarcodeScannerOpen, setIsBarcodeScannerOpen] = useState(false);
 
   return (
     <form
@@ -163,22 +168,42 @@ export function CreateSnackForm({ types }: Props) {
               return (
                 <Field data-invalid={isInvalid}>
                   <FieldLabel>Kod kreskowy (opcjonalnie)</FieldLabel>
-                  <Input
-                    type="text"
-                    placeholder="Kod kreskowy - numer"
-                    value={field.state.value}
-                    name={field.name}
-                    id={field.name}
-                    aria-invalid={isInvalid}
-                    autoComplete="off"
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      type="text"
+                      placeholder="Kod kreskowy - numer"
+                      value={field.state.value}
+                      name={field.name}
+                      id={field.name}
+                      aria-invalid={isInvalid}
+                      autoComplete="off"
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onPress={() => setIsBarcodeScannerOpen(true)}
+                      aria-label="Skanuj kod kreskowy"
+                    >
+                      <ScanBarcodeIcon />
+                    </Button>
+                  </div>
                   <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
                 </Field>
               );
             }}
           </form.Field>
+
+          <BarcodeScannerDialog
+            open={isBarcodeScannerOpen}
+            onOpenChange={setIsBarcodeScannerOpen}
+            onScan={(barcode) => {
+              form.setFieldValue("barcode", barcode);
+            }}
+          />
 
           <form.Subscribe
             selector={(state) => ({

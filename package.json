@@ -89,6 +89,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "file-type": "^22.0.1",
+    "html5-qrcode": "^2.3.8",
     "lucide-react": "^1.21.0",
     "motion": "^12.40.0",
     "nanoid": "catalog:",
