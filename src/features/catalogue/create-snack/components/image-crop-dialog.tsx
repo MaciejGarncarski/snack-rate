@@ -151,7 +151,7 @@ export function ImageCropDialog({
             </Label>
             <Slider
               id="zoom"
-              aria-labelledby="zoom-label"
+              aria-label="Przybliżenie"
               value={zoom}
               onChange={(value) => {
                 if (typeof value === "number") {
