@@ -1,4 +1,4 @@
-import { ImageIcon } from "lucide-react";
+import { ImageOffIcon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { useInView } from "react-intersection-observer";
@@ -8,7 +8,7 @@ import { cn } from "#/lib/utils";
 function DefaultFallback() {
   return (
     <div className="flex h-full w-full items-center justify-center rounded bg-muted text-muted-foreground">
-      <ImageIcon />
+      <ImageOffIcon />
     </div>
   );
 }
