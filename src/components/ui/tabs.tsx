@@ -9,7 +9,7 @@ import {
   Tabs as TabsPrimitive,
 } from "react-aria-components";
 
-import { cn } from "@/lib/utils.ts";
+import { cn } from "#/lib/utils.ts";
 
 function Tabs({ className, ...props }: React.ComponentProps<typeof TabsPrimitive>) {
   return (

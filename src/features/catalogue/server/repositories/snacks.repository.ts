@@ -1,7 +1,7 @@
 import { snackItemImages, snackItems } from "@snack-rate/db-schema/schema";
 
-import type { SnackStatus } from "@/features/shared/value-objects/status.vo";
-import type { Db } from "@/infrastructure/db/db";
+import type { SnackStatus } from "#/features/shared/value-objects/status.vo";
+import type { Db } from "#/infrastructure/db/db";
 
 export type SnackItem = {
   id: string;

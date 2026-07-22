@@ -1,7 +1,7 @@
-import type { SnacksRepository } from "@/features/catalogue/server/repositories/snacks.repository";
-import type { UploadedImage } from "@/features/catalogue/server/services/snack-image.service";
-import { Slug } from "@/features/shared/value-objects/slug.vo";
-import type { SnackStatus } from "@/features/shared/value-objects/status.vo";
+import type { SnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
+import type { UploadedImage } from "#/features/catalogue/server/services/snack-image.service";
+import { Slug } from "#/features/shared/value-objects/slug.vo";
+import type { SnackStatus } from "#/features/shared/value-objects/status.vo";
 
 export type CreateSnackInput = {
   name: string;

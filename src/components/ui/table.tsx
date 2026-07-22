@@ -16,7 +16,7 @@ import {
   type TableProps,
 } from "react-aria-components";
 
-import { cn } from "@/lib/utils.ts";
+import { cn } from "#/lib/utils.ts";
 
 function Table({ className, ...props }: TableProps) {
   return (

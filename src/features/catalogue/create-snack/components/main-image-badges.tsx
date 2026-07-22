@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge";
-import { ButtonGroup, ButtonGroupSeparator } from "@/components/ui/button-group";
+import { Badge } from "#/components/ui/badge";
+import { ButtonGroup, ButtonGroupSeparator } from "#/components/ui/button-group";
 
 type Props = {
   isPrimaryImage: boolean;

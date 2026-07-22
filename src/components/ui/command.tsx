@@ -22,9 +22,9 @@ import {
   type SeparatorProps,
 } from "react-aria-components";
 
-import { Dialog, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog.tsx";
-import { InputGroup, InputGroupAddon } from "@/components/ui/input-group.tsx";
-import { cn } from "@/lib/utils.ts";
+import { Dialog, DialogDescription, DialogHeader, DialogTitle } from "#/components/ui/dialog.tsx";
+import { InputGroup, InputGroupAddon } from "#/components/ui/input-group.tsx";
+import { cn } from "#/lib/utils.ts";
 
 function Command({
   className,

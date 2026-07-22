@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 
-import { ImageWithPlaceholder } from "@/components/layout/image-with-placeholder";
-import { SnackRating } from "@/components/snacks/snack-rating";
-import { Badge } from "@/components/ui/badge";
+import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
+import { SnackRating } from "#/components/snacks/snack-rating";
+import { Badge } from "#/components/ui/badge";
 import {
   Card,
   CardAction,
@@ -10,7 +10,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "#/components/ui/card";
 
 type Props = {
   name: string;

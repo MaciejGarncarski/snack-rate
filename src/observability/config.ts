@@ -1,4 +1,4 @@
-import { serverEnv } from "@/lib/server.env";
+import { serverEnv } from "#/lib/server.env";
 
 const observabilityConfigData = {
   development: {

@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
 
-import type { ImagePair } from "@/features/catalogue/create-snack/hooks/use-add-image";
+import type { ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
 
 type QueueItem = {
   id: string;

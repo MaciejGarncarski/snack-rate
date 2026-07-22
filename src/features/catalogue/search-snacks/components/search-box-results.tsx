@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
-import { ImageWithPlaceholder } from "@/components/layout/image-with-placeholder";
-import { SnackRating } from "@/components/snacks/snack-rating";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import type { SnackItem } from "@/features/catalogue/server/repositories/snacks.repository";
-import { cn } from "@/lib/utils";
+import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
+import { SnackRating } from "#/components/snacks/snack-rating";
+import { ScrollArea } from "#/components/ui/scroll-area";
+import type { SnackItem } from "#/features/catalogue/server/repositories/snacks.repository";
+import { cn } from "#/lib/utils";
 
 type Props = {
   onLinkClick: () => void;

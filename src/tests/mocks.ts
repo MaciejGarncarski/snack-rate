@@ -13,7 +13,7 @@ function createMockStream(buffer: Uint8Array) {
   return Readable.from(Buffer.from(buffer));
 }
 
-vi.mock("@/infrastructure/s3-client", () => ({
+vi.mock("#/infrastructure/s3-client", () => ({
   uploadPublicFile: vi.fn<(key: string, body: Buffer) => Promise<void>>().mockResolvedValue(),
   uploadPublicFileStream: vi.fn<() => Promise<void>>().mockResolvedValue(),
   deletePublicFile: vi.fn<(key: string) => Promise<void>>().mockResolvedValue(),

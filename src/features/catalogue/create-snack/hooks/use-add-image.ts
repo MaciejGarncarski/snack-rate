@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
-import { ALLOWED_MIME_TYPES, MAXIMUM_IMAGES } from "@/const/image-const";
-import { validateImage } from "@/features/catalogue/create-snack/utils/validate-image";
-import type { ImageValidationError } from "@/features/catalogue/create-snack/utils/validate-image";
+import { ALLOWED_MIME_TYPES, MAXIMUM_IMAGES } from "#/const/image-const";
+import { validateImage } from "#/features/catalogue/create-snack/utils/validate-image";
+import type { ImageValidationError } from "#/features/catalogue/create-snack/utils/validate-image";
 
 export type ImagePair = {
   id: string;

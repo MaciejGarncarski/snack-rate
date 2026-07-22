@@ -1,7 +1,7 @@
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { useCallback, useEffect, useState, type KeyboardEvent, type RefObject } from "react";
 
-import { useClickOutside } from "@/hooks/use-click-outside";
+import { useClickOutside } from "#/hooks/use-click-outside";
 
 type UseSearchBoxNavigationProps = {
   setSuggestionsOpen: (open: boolean) => void;

@@ -2,9 +2,9 @@ import { Search, XIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import type { RefObject } from "react";
 
-import { Button } from "@/components/ui/button";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { Spinner } from "@/components/ui/spinner";
+import { Button } from "#/components/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "#/components/ui/input-group";
+import { Spinner } from "#/components/ui/spinner";
 
 type Props = {
   onChange: (value: string) => void;

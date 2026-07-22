@@ -9,17 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LayoutRouteRouteImport } from './routes/_layout/route'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as HealthRouteImport } from './routes/health'
-import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as HealthReadyRouteImport } from './routes/health.ready'
-import { Route as LayoutProduktSlugRouteImport } from './routes/_layout/produkt/$slug'
-import { Route as LayoutZaproponujIndexRouteImport } from './routes/_layout/zaproponuj/index'
+import { Route as AppProduktSlugRouteImport } from './routes/_app/produkt/$slug'
+import { Route as AppZaproponujIndexRouteImport } from './routes/_app/zaproponuj/index'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 
-const LayoutRouteRoute = LayoutRouteRouteImport.update({
-  id: '/_layout',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HealthRoute = HealthRouteImport.update({
@@ -27,10 +27,10 @@ const HealthRoute = HealthRouteImport.update({
   path: '/health',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutIndexRoute = LayoutIndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => LayoutRouteRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
@@ -42,15 +42,15 @@ const HealthReadyRoute = HealthReadyRouteImport.update({
   path: '/ready',
   getParentRoute: () => HealthRoute,
 } as any)
-const LayoutProduktSlugRoute = LayoutProduktSlugRouteImport.update({
+const AppProduktSlugRoute = AppProduktSlugRouteImport.update({
   id: '/produkt/$slug',
   path: '/produkt/$slug',
-  getParentRoute: () => LayoutRouteRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
-const LayoutZaproponujIndexRoute = LayoutZaproponujIndexRouteImport.update({
+const AppZaproponujIndexRoute = AppZaproponujIndexRouteImport.update({
   id: '/zaproponuj/',
   path: '/zaproponuj/',
-  getParentRoute: () => LayoutRouteRoute,
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
@@ -59,33 +59,33 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof LayoutIndexRoute
+  '/': typeof AppIndexRoute
   '/health': typeof HealthRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
-  '/produkt/$slug': typeof LayoutProduktSlugRoute
+  '/produkt/$slug': typeof AppProduktSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
-  '/zaproponuj/': typeof LayoutZaproponujIndexRoute
+  '/zaproponuj/': typeof AppZaproponujIndexRoute
 }
 export interface FileRoutesByTo {
   '/health': typeof HealthRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
-  '/': typeof LayoutIndexRoute
-  '/produkt/$slug': typeof LayoutProduktSlugRoute
+  '/': typeof AppIndexRoute
+  '/produkt/$slug': typeof AppProduktSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
-  '/zaproponuj': typeof LayoutZaproponujIndexRoute
+  '/zaproponuj': typeof AppZaproponujIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_layout': typeof LayoutRouteRouteWithChildren
+  '/_app': typeof AppRouteRouteWithChildren
   '/health': typeof HealthRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
-  '/_layout/': typeof LayoutIndexRoute
-  '/_layout/produkt/$slug': typeof LayoutProduktSlugRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/produkt/$slug': typeof AppProduktSlugRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
-  '/_layout/zaproponuj/': typeof LayoutZaproponujIndexRoute
+  '/_app/zaproponuj/': typeof AppZaproponujIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -108,18 +108,18 @@ export interface FileRouteTypes {
     | '/zaproponuj'
   id:
     | '__root__'
-    | '/_layout'
+    | '/_app'
     | '/health'
     | '/api/$'
     | '/health/ready'
-    | '/_layout/'
-    | '/_layout/produkt/$slug'
+    | '/_app/'
+    | '/_app/produkt/$slug'
     | '/api/rpc/$'
-    | '/_layout/zaproponuj/'
+    | '/_app/zaproponuj/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  LayoutRouteRoute: typeof LayoutRouteRouteWithChildren
+  AppRouteRoute: typeof AppRouteRouteWithChildren
   HealthRoute: typeof HealthRouteWithChildren
   ApiSplatRoute: typeof ApiSplatRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
@@ -127,11 +127,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_layout': {
-      id: '/_layout'
+    '/_app': {
+      id: '/_app'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof LayoutRouteRouteImport
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/health': {
@@ -141,12 +141,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HealthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_layout/': {
-      id: '/_layout/'
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LayoutIndexRouteImport
-      parentRoute: typeof LayoutRouteRoute
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/api/$': {
       id: '/api/$'
@@ -162,19 +162,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HealthReadyRouteImport
       parentRoute: typeof HealthRoute
     }
-    '/_layout/produkt/$slug': {
-      id: '/_layout/produkt/$slug'
+    '/_app/produkt/$slug': {
+      id: '/_app/produkt/$slug'
       path: '/produkt/$slug'
       fullPath: '/produkt/$slug'
-      preLoaderRoute: typeof LayoutProduktSlugRouteImport
-      parentRoute: typeof LayoutRouteRoute
+      preLoaderRoute: typeof AppProduktSlugRouteImport
+      parentRoute: typeof AppRouteRoute
     }
-    '/_layout/zaproponuj/': {
-      id: '/_layout/zaproponuj/'
+    '/_app/zaproponuj/': {
+      id: '/_app/zaproponuj/'
       path: '/zaproponuj'
       fullPath: '/zaproponuj/'
-      preLoaderRoute: typeof LayoutZaproponujIndexRouteImport
-      parentRoute: typeof LayoutRouteRoute
+      preLoaderRoute: typeof AppZaproponujIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/api/rpc/$': {
       id: '/api/rpc/$'
@@ -186,20 +186,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface LayoutRouteRouteChildren {
-  LayoutIndexRoute: typeof LayoutIndexRoute
-  LayoutProduktSlugRoute: typeof LayoutProduktSlugRoute
-  LayoutZaproponujIndexRoute: typeof LayoutZaproponujIndexRoute
+interface AppRouteRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppProduktSlugRoute: typeof AppProduktSlugRoute
+  AppZaproponujIndexRoute: typeof AppZaproponujIndexRoute
 }
 
-const LayoutRouteRouteChildren: LayoutRouteRouteChildren = {
-  LayoutIndexRoute: LayoutIndexRoute,
-  LayoutProduktSlugRoute: LayoutProduktSlugRoute,
-  LayoutZaproponujIndexRoute: LayoutZaproponujIndexRoute,
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppProduktSlugRoute: AppProduktSlugRoute,
+  AppZaproponujIndexRoute: AppZaproponujIndexRoute,
 }
 
-const LayoutRouteRouteWithChildren = LayoutRouteRoute._addFileChildren(
-  LayoutRouteRouteChildren,
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
 )
 
 interface HealthRouteChildren {
@@ -214,7 +214,7 @@ const HealthRouteWithChildren =
   HealthRoute._addFileChildren(HealthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  LayoutRouteRoute: LayoutRouteRouteWithChildren,
+  AppRouteRoute: AppRouteRouteWithChildren,
   HealthRoute: HealthRouteWithChildren,
   ApiSplatRoute: ApiSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,

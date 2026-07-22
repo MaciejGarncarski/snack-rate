@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { getPool } from "@/infrastructure/db/pool";
-import { readinessFailureCounter } from "@/observability/counters";
-import { checkDb } from "@/observability/readiness/check-db";
+import { getPool } from "#/infrastructure/db/pool";
+import { readinessFailureCounter } from "#/observability/counters";
+import { checkDb } from "#/observability/readiness/check-db";
 
 export const Route = createFileRoute("/health/ready")({
   server: {

@@ -1,4 +1,4 @@
-import { ImgUrl } from "@/features/shared/value-objects/img-url.vo";
+import { ImgUrl } from "#/features/shared/value-objects/img-url.vo";
 
 describe("ImgUrl value object", () => {
   describe("create", () => {

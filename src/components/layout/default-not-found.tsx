@@ -1,14 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { HomeIcon } from "lucide-react";
 
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "#/components/ui/button";
 import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
-} from "@/components/ui/empty";
+} from "#/components/ui/empty";
 
 export function DefaultNotFound() {
   return (

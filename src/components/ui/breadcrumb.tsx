@@ -10,7 +10,7 @@ import {
   type LinkProps,
 } from "react-aria-components";
 
-import { cn } from "@/lib/utils.ts";
+import { cn } from "#/lib/utils.ts";
 
 function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
   return (

@@ -1,4 +1,4 @@
-import { Slug } from "@/features/shared/value-objects/slug.vo";
+import { Slug } from "#/features/shared/value-objects/slug.vo";
 
 describe("slug value object", () => {
   it("should create a slug value object with a valid slug", () => {

@@ -2,8 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { MenuIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { Button, buttonVariants } from "#/components/ui/button";
+import { ModeToggle } from "#/components/ui/mode-toggle";
 import {
   Sheet,
   SheetClose,
@@ -11,9 +11,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { NavbarSearchBox } from "@/features/catalogue/search-snacks/components/search-box";
-import { useIsMobile } from "@/hooks/use-mobile";
+} from "#/components/ui/sheet";
+import { NavbarSearchBox } from "#/features/catalogue/search-snacks/components/search-box";
+import { useIsMobile } from "#/hooks/use-mobile";
 
 export function Navbar() {
   const isMobile = useIsMobile();

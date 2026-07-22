@@ -2,7 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
-import { DefaultNotFound } from "@/components/layout/default-not-found";
+import { DefaultNotFound } from "#/components/layout/default-not-found";
 
 import { routeTree } from "./routeTree.gen";
 

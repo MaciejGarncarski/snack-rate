@@ -19,8 +19,8 @@ import {
   type SelectValueProps,
 } from "react-aria-components";
 
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group.tsx";
-import { cn } from "@/lib/utils.ts";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "#/components/ui/input-group.tsx";
+import { cn } from "#/lib/utils.ts";
 
 function Select<T extends object, M extends "single" | "multiple" = "single">({
   className,

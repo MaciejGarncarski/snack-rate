@@ -13,8 +13,8 @@ import {
   type DialogTriggerProps as SheetTriggerPrimitiveProps,
 } from "react-aria-components";
 
-import { Button } from "@/components/ui/button.tsx";
-import { cn } from "@/lib/utils.ts";
+import { Button } from "#/components/ui/button.tsx";
+import { cn } from "#/lib/utils.ts";
 
 function SheetTrigger({ ...props }: SheetTriggerPrimitiveProps) {
   return <SheetTriggerPrimitive data-slot="sheet-trigger" {...props} />;

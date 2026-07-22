@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounce } from "#/hooks/use-debounce";
 
 export function useSearchBoxInput() {
   const [inputValue, setInputValue] = useState("");

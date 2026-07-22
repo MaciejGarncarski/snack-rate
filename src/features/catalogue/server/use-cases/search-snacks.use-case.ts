@@ -1,4 +1,4 @@
-import type { SnacksRepository } from "@/features/catalogue/server/repositories/snacks.repository";
+import type { SnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
 
 export function searchSnacks(query: string, repository: SnacksRepository) {
   const queryLowerCase = query.toLowerCase();

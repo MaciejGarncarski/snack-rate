@@ -1,6 +1,6 @@
 import pRetry, { type RetryContext } from "p-retry";
 
-import type { LoggerAdapter } from "@/observability/logger/logger";
+import type { LoggerAdapter } from "#/observability/logger/logger";
 
 type Options = {
   retries: number;

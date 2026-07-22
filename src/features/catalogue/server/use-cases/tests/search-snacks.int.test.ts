@@ -1,9 +1,9 @@
-import { createSnacksRepository } from "@/features/catalogue/server/repositories/snacks.repository";
-import { searchSnacks } from "@/features/catalogue/server/use-cases/search-snacks.use-case";
-import type { Db } from "@/infrastructure/db/db";
-import { createSnack } from "@/tests/fixtures";
-import { getDb } from "@/tests/setup.int";
-import { noopGetFileUrl } from "@/tests/utils";
+import { createSnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
+import { searchSnacks } from "#/features/catalogue/server/use-cases/search-snacks.use-case";
+import type { Db } from "#/infrastructure/db/db";
+import { createSnack } from "#/tests/fixtures";
+import { getDb } from "#/tests/setup.int";
+import { noopGetFileUrl } from "#/tests/utils";
 
 let db: Db;
 let repository: ReturnType<typeof createSnacksRepository>;

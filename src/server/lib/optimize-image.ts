@@ -6,7 +6,7 @@ import {
   MAX_IMAGE_MEGAPIXELS,
   OPTIMIZED_FORMAT,
   OPTIMIZED_QUALITY,
-} from "@/const/image-const";
+} from "#/const/image-const";
 
 export function optimizeImage(input: Readable): {
   stream: Readable;

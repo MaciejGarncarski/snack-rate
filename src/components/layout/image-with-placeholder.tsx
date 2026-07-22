@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { useInView } from "react-intersection-observer";
 
-import { cn } from "@/lib/utils";
+import { cn } from "#/lib/utils";
 
 function DefaultFallback() {
   return (

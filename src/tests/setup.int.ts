@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { Pool } from "pg";
 import { inject } from "vitest";
 
-import { createDb, type Db } from "@/infrastructure/db/db";
+import { createDb, type Db } from "#/infrastructure/db/db";
 
 let db: Db;
 let dbPool: Pool;

@@ -1,9 +1,9 @@
 import { ArrowLeft, ArrowRight, ImagePlusIcon } from "lucide-react";
 import { motion } from "motion/react";
 
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { Button } from "#/components/ui/button";
+import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
+import { cn } from "#/lib/utils";
 
 type SlotWithImage = {
   isSelected: boolean;

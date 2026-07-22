@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import * as z from "zod";
 
-import { useCreateSnack } from "@/features/catalogue/create-snack/hooks/use-create-snack";
+import { useCreateSnack } from "#/features/catalogue/create-snack/hooks/use-create-snack";
 
 export const createSnackSchema = z.object({
   name: z.string().min(1, "Nazwa jest wymagana").max(200),

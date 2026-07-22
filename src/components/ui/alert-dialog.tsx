@@ -12,8 +12,8 @@ import {
   type ModalOverlayProps as ModalOverlayPrimitiveProps,
 } from "react-aria-components";
 
-import { Button } from "@/components/ui/button.tsx";
-import { cn } from "@/lib/utils.ts";
+import { Button } from "#/components/ui/button.tsx";
+import { cn } from "#/lib/utils.ts";
 
 function AlertDialogTrigger({ ...props }: AlertDialogTriggerPrimitiveProps) {
   return <AlertDialogTriggerPrimitive data-slot="alert-dialog-trigger" {...props} />;

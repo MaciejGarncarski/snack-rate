@@ -1,6 +1,6 @@
 import { fileTypeStream } from "file-type";
 
-import { ALLOWED_MIME_TYPES } from "@/const/image-const";
+import { ALLOWED_MIME_TYPES } from "#/const/image-const";
 
 export async function validateImageType(fileStream: ReadableStream<Uint8Array<ArrayBuffer>>) {
   const stream = await fileTypeStream(fileStream);

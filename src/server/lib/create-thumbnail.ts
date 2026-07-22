@@ -7,7 +7,7 @@ import {
   OPTIMIZED_QUALITY,
   THUMBNAIL_ASPECT_RATIO,
   THUMBNAIL_WIDTH,
-} from "@/const/image-const";
+} from "#/const/image-const";
 
 export function createThumbnail(
   input: Readable,

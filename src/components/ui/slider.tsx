@@ -8,7 +8,7 @@ import {
   type SliderProps as SliderPrimitiveProps,
 } from "react-aria-components";
 
-import { cn } from "@/lib/utils.ts";
+import { cn } from "#/lib/utils.ts";
 
 type SliderValue = number | number[];
 type SliderProps<T extends SliderValue = SliderValue> = Omit<

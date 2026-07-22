@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 
-import { serverEnv } from "@/lib/server.env";
+import { serverEnv } from "#/lib/server.env";
 
 let _pool: Pool | undefined;
 

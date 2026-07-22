@@ -5,7 +5,7 @@ import {
   type CheckboxProps,
 } from "react-aria-components";
 
-import { cn } from "@/lib/utils.ts";
+import { cn } from "#/lib/utils.ts";
 
 function Checkbox({ className, children, ...props }: CheckboxProps) {
   return (

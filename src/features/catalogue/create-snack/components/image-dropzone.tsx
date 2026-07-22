@@ -2,9 +2,9 @@ import { ImageOffIcon, ImageUpIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 
-import type { ImagePair } from "@/features/catalogue/create-snack/hooks/use-add-image";
-import { validateImage } from "@/features/catalogue/create-snack/utils/validate-image";
-import type { ImageValidationError } from "@/features/catalogue/create-snack/utils/validate-image";
+import type { ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
+import { validateImage } from "#/features/catalogue/create-snack/utils/validate-image";
+import type { ImageValidationError } from "#/features/catalogue/create-snack/utils/validate-image";
 
 type Props = {
   images: ImagePair[];

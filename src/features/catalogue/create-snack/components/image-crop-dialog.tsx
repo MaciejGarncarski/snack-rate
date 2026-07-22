@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "#/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -9,10 +9,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Field } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+} from "#/components/ui/dialog";
+import { Field } from "#/components/ui/field";
+import { Label } from "#/components/ui/label";
+import { Slider } from "#/components/ui/slider";
 
 const MAX_OUTPUT_DIMENSION = 1024;
 

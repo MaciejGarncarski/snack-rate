@@ -11,8 +11,8 @@ import {
   type ModalOverlayProps as ModalOverlayPrimitiveProps,
 } from "react-aria-components";
 
-import { Button } from "@/components/ui/button.tsx";
-import { cn } from "@/lib/utils.ts";
+import { Button } from "#/components/ui/button.tsx";
+import { cn } from "#/lib/utils.ts";
 
 function DialogTrigger({ ...props }: DialogTriggerPrimitiveProps) {
   return <DialogTriggerPrimitive data-slot="dialog-trigger" {...props} />;

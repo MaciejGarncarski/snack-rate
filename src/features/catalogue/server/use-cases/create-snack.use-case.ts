@@ -1,17 +1,17 @@
 import { trace } from "@opentelemetry/api";
 import pLimit from "p-limit";
 
-import type { SnacksRepository } from "@/features/catalogue/server/repositories/snacks.repository";
-import type { UploadedImage } from "@/features/catalogue/server/services/snack-image.service";
+import type { SnacksRepository } from "#/features/catalogue/server/repositories/snacks.repository";
+import type { UploadedImage } from "#/features/catalogue/server/services/snack-image.service";
 import {
   type CreateSnackInput,
   createSnackRecord,
-} from "@/features/catalogue/server/services/snack-record.service";
-import { Slug } from "@/features/shared/value-objects/slug.vo";
-import type { SnackStatus } from "@/features/shared/value-objects/status.vo.ts";
-import { StorageKey } from "@/features/shared/value-objects/storage-key.vo";
-import { copyPublicFile, deletePublicFile } from "@/infrastructure/s3-client";
-import { logger } from "@/observability/logger/logger";
+} from "#/features/catalogue/server/services/snack-record.service";
+import { Slug } from "#/features/shared/value-objects/slug.vo";
+import type { SnackStatus } from "#/features/shared/value-objects/status.vo.ts";
+import { StorageKey } from "#/features/shared/value-objects/storage-key.vo";
+import { copyPublicFile, deletePublicFile } from "#/infrastructure/s3-client";
+import { logger } from "#/observability/logger/logger";
 
 const UPLOAD_CONCURRENCY = 3;
 

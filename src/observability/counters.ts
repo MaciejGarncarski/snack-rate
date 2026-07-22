@@ -1,4 +1,4 @@
-import { meter } from "@/observability/metrics";
+import { meter } from "#/observability/metrics";
 
 export const httpRequestsCounter = meter.createCounter("http_requests_total", {
   description: "Total HTTP requests",

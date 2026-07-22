@@ -6,7 +6,7 @@ import {
   type SwitchProps as SwitchPrimitiveProps,
 } from "react-aria-components";
 
-import { cn } from "@/lib/utils.ts";
+import { cn } from "#/lib/utils.ts";
 
 function Switch({
   className,

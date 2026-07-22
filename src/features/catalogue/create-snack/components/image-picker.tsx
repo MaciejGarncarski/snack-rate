@@ -2,19 +2,19 @@ import { AlertCircleIcon, X } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 
-import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { MAXIMUM_IMAGES } from "@/const/image-const";
-import { ImageCropDialog } from "@/features/catalogue/create-snack/components/image-crop-dialog";
-import { ImageDropzone } from "@/features/catalogue/create-snack/components/image-dropzone";
-import { ImageSlot } from "@/features/catalogue/create-snack/components/image-slot";
-import { MainImageBadges } from "@/features/catalogue/create-snack/components/main-image-badges";
-import { MainImageToolbar } from "@/features/catalogue/create-snack/components/main-image-toolbar";
-import { useAddImage, type ImagePair } from "@/features/catalogue/create-snack/hooks/use-add-image";
-import { useCropQueue } from "@/features/catalogue/create-snack/hooks/use-crop-queue";
-import { useObjectUrl } from "@/features/catalogue/create-snack/hooks/use-object-url";
-import { useReorder } from "@/features/catalogue/create-snack/hooks/use-reorder";
-import type { ImageValidationError } from "@/features/catalogue/create-snack/utils/validate-image";
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "#/components/ui/alert";
+import { Button } from "#/components/ui/button";
+import { MAXIMUM_IMAGES } from "#/const/image-const";
+import { ImageCropDialog } from "#/features/catalogue/create-snack/components/image-crop-dialog";
+import { ImageDropzone } from "#/features/catalogue/create-snack/components/image-dropzone";
+import { ImageSlot } from "#/features/catalogue/create-snack/components/image-slot";
+import { MainImageBadges } from "#/features/catalogue/create-snack/components/main-image-badges";
+import { MainImageToolbar } from "#/features/catalogue/create-snack/components/main-image-toolbar";
+import { useAddImage, type ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
+import { useCropQueue } from "#/features/catalogue/create-snack/hooks/use-crop-queue";
+import { useObjectUrl } from "#/features/catalogue/create-snack/hooks/use-object-url";
+import { useReorder } from "#/features/catalogue/create-snack/hooks/use-reorder";
+import type { ImageValidationError } from "#/features/catalogue/create-snack/utils/validate-image";
 
 const VALIDATION_ALERT_DURATION = 6000;
 

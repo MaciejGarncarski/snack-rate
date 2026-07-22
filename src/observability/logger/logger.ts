@@ -1,5 +1,5 @@
-import { pinoLogger } from "@/observability/logger/pino";
-import { getTraceContext } from "@/observability/tracing";
+import { pinoLogger } from "#/observability/logger/pino";
+import { getTraceContext } from "#/observability/tracing";
 
 const enableTracing = process.env.OBSERVABILITY_TRACING_ENABLED !== "false";
 

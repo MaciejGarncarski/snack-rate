@@ -2,12 +2,12 @@ import type { FileUpload } from "@remix-run/form-data-parser";
 import { nanoid } from "nanoid";
 import pLimit from "p-limit";
 
-import { OPTIMIZED_FORMAT } from "@/const/image-const";
-import { deletePublicFile, uploadPublicFileStream } from "@/infrastructure/s3-client";
-import { createThumbnail } from "@/server/lib/create-thumbnail";
-import { optimizeImage } from "@/server/lib/optimize-image";
-import { nodeStreamFromWeb } from "@/server/lib/utils";
-import { validateImageType } from "@/server/lib/validate-image-type";
+import { OPTIMIZED_FORMAT } from "#/const/image-const";
+import { deletePublicFile, uploadPublicFileStream } from "#/infrastructure/s3-client";
+import { createThumbnail } from "#/server/lib/create-thumbnail";
+import { optimizeImage } from "#/server/lib/optimize-image";
+import { nodeStreamFromWeb } from "#/server/lib/utils";
+import { validateImageType } from "#/server/lib/validate-image-type";
 
 const uploadQueue = pLimit(2);
 
