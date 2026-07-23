@@ -7,7 +7,6 @@ export function createDb(client: Pool) {
     client,
     relations,
     jit: true,
-    logger: true,
   });
 }
 
