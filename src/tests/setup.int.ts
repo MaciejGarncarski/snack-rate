@@ -42,6 +42,5 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  console.log("DEBUGDEBUGDEBUGDEBUG: Resetting database before test");
   await reset(db, schema);
 });

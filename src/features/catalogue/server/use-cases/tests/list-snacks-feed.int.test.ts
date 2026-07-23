@@ -72,6 +72,13 @@ describe("list snacks feed", () => {
     // TODO: This test is flaky. Sometimes there are 6 items instead of 5. Investigate why.
     const collected = [...page1.items, ...page2.items, ...page3.items].map((s) => s.id);
 
+    console.log("DEBUG", {
+      page1: page1.items.map((x) => x.id),
+      page2: page2.items.map((x) => x.id),
+      page3: page3.items.map((x) => x.id),
+      collected,
+    });
+
     expect(collected).toHaveLength(5);
     expect(new Set(collected).size).toBe(5);
     expect(collected.toSorted()).toEqual(allIds.toSorted());
