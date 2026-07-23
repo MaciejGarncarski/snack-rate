@@ -9,11 +9,7 @@ import { ThemeProvider } from "#/components/ui/theme-provider";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles/app.css?url";
 
-interface MyRouterContext {
-  queryClient: QueryClient;
-}
-
-export const Route = createRootRouteWithContext<MyRouterContext>()({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       {
@@ -24,7 +20,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: "Snack Rate",
+      },
+      {
+        name: "description",
+        content:
+          "Snack Rate to aplikacja do oceniania przekąsek, która pozwala użytkownikom oceniać różne przekąski i dzielić się swoimi opiniami z innymi. Aplikacja oferuje prosty interfejs użytkownika, który umożliwia łatwe przeglądanie i ocenianie przekąsek, a także dodawanie własnych opinii i komentarzy.",
       },
     ],
     links: [
@@ -39,7 +40,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pl" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
