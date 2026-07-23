@@ -3,6 +3,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { XCircleIcon } from "lucide-react";
 
+import { SnackBarcode } from "#/components/snacks/snack-barcode";
 import SnackImageSlider from "#/components/snacks/snack-image-slider";
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { Badge } from "#/components/ui/badge";
@@ -67,6 +68,11 @@ function RouteComponent() {
           <h1 className="mb-4 text-3xl font-bold">{data.name}</h1>
           <p className="mb-2 text-lg text-muted-foreground">{data.description || "Brak opisu"}</p>
           <SnackRating rating={data.avgRating} />
+          {data.barcode && (
+            <div className="mt-4 border-border border w-fit rounded-2xl p-2 bg-secondary">
+              <SnackBarcode barcode={data.barcode} />
+            </div>
+          )}
           <div>{<Badge>{data.type.name}</Badge>}</div>
         </div>
       </div>
