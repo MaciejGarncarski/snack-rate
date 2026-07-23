@@ -61,8 +61,6 @@ export function useAddImage({ onAddToQueue, onValidationError, allFiles }: UseAd
       for (const file of newFiles) {
         const validationResult = await validateImage(file, allFiles);
 
-        console.log("isValidated", validationResult instanceof File);
-
         if (validationResult instanceof File) {
           onAddToQueue(validationResult);
           continue;

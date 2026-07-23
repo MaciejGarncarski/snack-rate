@@ -21,7 +21,9 @@ import {
 export const users = pgTable(
   "users",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     email: text("email").notNull(),
     passwordHash: text("password_hash").notNull(),
     firstName: text("first_name"),
@@ -47,7 +49,9 @@ export const users = pgTable(
 // ---------------------------------------------------------------------------
 
 export const snackTypes = pgTable("snack_types", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`uuidv7()`),
   name: text("name").notNull().unique(),
   slug: text("slug").notNull().unique(),
 });
@@ -59,7 +63,9 @@ export const snackTypes = pgTable("snack_types", {
 export const snackItems = pgTable(
   "snack_items",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     typeId: uuid("type_id")
       .notNull()
       .references(() => snackTypes.id),
@@ -69,7 +75,7 @@ export const snackItems = pgTable(
     barcode: text("barcode"),
     avgRating: decimal("avg_rating", { precision: 3, scale: 2 }).notNull().default("0"),
     status: text("status").notNull().default("pending"), // 'pending' | 'published' | 'rejected'
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    createdAt: timestamp("created_at", { precision: 3 }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
   },
@@ -80,6 +86,9 @@ export const snackItems = pgTable(
     uniqueIndex("snack_items_slug_unique_idx")
       .on(t.slug)
       .where(sql`slug IS NOT NULL AND deleted_at IS NULL`),
+    index("snack_items_published_feed_idx")
+      .on(t.status, t.createdAt.desc(), t.id.desc())
+      .where(sql`deleted_at IS NULL`),
   ],
 );
 
@@ -90,7 +99,9 @@ export const snackItems = pgTable(
 export const snackReviews = pgTable(
   "snack_reviews",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     snackItemId: uuid("snack_item_id")
       .notNull()
       .references(() => snackItems.id),
@@ -119,7 +130,9 @@ export const snackReviews = pgTable(
 export const comments = pgTable(
   "comments",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     reviewId: uuid("review_id")
       .notNull()
       .references(() => snackReviews.id),
@@ -147,7 +160,9 @@ export const comments = pgTable(
 export const snackItemImages = pgTable(
   "snack_item_images",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     snackItemId: uuid("snack_item_id")
       .notNull()
       .references(() => snackItems.id),
@@ -172,7 +187,9 @@ export const snackItemImages = pgTable(
 export const snackReviewImages = pgTable(
   "snack_review_images",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     reviewId: uuid("review_id")
       .notNull()
       .references(() => snackReviews.id),
@@ -196,7 +213,9 @@ export const snackReviewImages = pgTable(
 export const reviewReactions = pgTable(
   "review_reactions",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id),
@@ -219,7 +238,9 @@ export const reviewReactions = pgTable(
 export const commentReactions = pgTable(
   "comment_reactions",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id),
@@ -242,7 +263,9 @@ export const commentReactions = pgTable(
 export const reviewReports = pgTable(
   "review_reports",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     reporterId: uuid("reporter_id")
       .notNull()
       .references(() => users.id),
@@ -262,7 +285,9 @@ export const reviewReports = pgTable(
 export const commentReports = pgTable(
   "comment_reports",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     reporterId: uuid("reporter_id")
       .notNull()
       .references(() => users.id),
@@ -300,7 +325,9 @@ export const bookmarks = pgTable(
 export const sessions = pgTable(
   "sessions",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id),
@@ -315,7 +342,9 @@ export const sessions = pgTable(
 export const passwordResets = pgTable(
   "password_resets",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id),
@@ -330,7 +359,9 @@ export const passwordResets = pgTable(
 export const emailVerifications = pgTable(
   "email_verifications",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuidv7()`),
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id),

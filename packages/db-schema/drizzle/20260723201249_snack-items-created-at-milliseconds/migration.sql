@@ -1,0 +1,1 @@
+ALTER TABLE "snack_items" ALTER COLUMN "created_at" SET DATA TYPE timestamp(3) USING "created_at"::timestamp(3);

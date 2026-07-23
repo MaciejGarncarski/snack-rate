@@ -3,6 +3,7 @@ import * as schema from "@snack-rate/db-schema/schema";
 // oxlint-disable no-console
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
+import { randomUUID } from "node:crypto";
 
 import { createThumbnailFromBuffer } from "../../../../src/server/lib/create-thumbnail.ts";
 import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
@@ -120,6 +121,7 @@ async function seedDatabase() {
         status: "published",
       },
       {
+        id: randomUUID(),
         typeId: energyDrink.id,
         name: "Monster Energy Ultra White",
         description: "Lekka wersja Monstera bez cukru, o subtelnym smaku cytrusowym.",
@@ -138,6 +140,7 @@ async function seedDatabase() {
         status: "published",
       },
       {
+        id: randomUUID(),
         typeId: chips.id,
         name: "Lay's Klasyczne",
         description: "Oryginalne chrupki ziemniaczane lekko solone – klasyka wśród chipsów.",
@@ -165,6 +168,7 @@ async function seedDatabase() {
         status: "published",
       },
       {
+        id: randomUUID(),
         typeId: chips.id,
         name: "Pringles Ser & Kebab",
         description: "Chrupki Pringles o intensywnym smaku sera i kebaba – ulubieniec imprezowy.",
@@ -183,6 +187,7 @@ async function seedDatabase() {
         status: "published",
       },
       {
+        id: randomUUID(),
         typeId: chips.id,
         name: "Tyrrell's Słodka Papryka",
         description: "Chipsy z angielskich ziemniaków o smaku słodkiej papryki i przypraw.",
@@ -201,6 +206,7 @@ async function seedDatabase() {
         status: "published",
       },
       {
+        id: randomUUID(),
         typeId: chocolate.id,
         name: "Wedel Gorzka Czekolada 70%",
         description: "Intensywna, polska czekolada gorzka z 70% kakao dla prawdziwych smakoszy.",

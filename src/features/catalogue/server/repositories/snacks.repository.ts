@@ -1,7 +1,13 @@
 import { snackItemImages, snackItems } from "@snack-rate/db-schema/schema";
+import type { TableFilter } from "drizzle-orm";
 
 import type { SnackStatus } from "#/features/shared/value-objects/status.vo";
 import type { Db } from "#/infrastructure/db/db";
+
+export type DecodedCursor = {
+  createdAt: Date;
+  id: string;
+};
 
 export type SnackItem = {
   id: string;
@@ -184,17 +190,30 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
       return toSnackItem(foundSnack as DbSnackItem, getFileUrl);
     },
 
-    list: async (limit: number, cursor?: string): Promise<SnackItem[]> => {
+    list: async (limit: number, cursor?: DecodedCursor | null): Promise<SnackItem[]> => {
+      const whereConditions: TableFilter<typeof snackItems> = {
+        status: "published",
+        deletedAt: { isNull: true },
+      };
+
+      if (cursor) {
+        whereConditions.OR = [
+          {
+            createdAt: { eq: cursor.createdAt },
+            id: { lt: cursor.id },
+          },
+          { createdAt: { lt: cursor.createdAt } },
+        ];
+      }
+
       const rows = await db.query.snackItems.findMany({
-        orderBy: (table, { desc }) => [desc(table.createdAt)],
-        limit,
-        where: cursor
-          ? { createdAt: { lt: new Date(cursor) }, status: "published" }
-          : { status: "published" },
+        orderBy: (table, { desc }) => [desc(table.createdAt), desc(table.id)],
+        where: whereConditions,
         with: {
           type: true,
           images: true,
         },
+        limit,
       });
 
       return Promise.all(rows.map((row) => toSnackItem(row as DbSnackItem, getFileUrl)));
