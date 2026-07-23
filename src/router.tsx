@@ -3,8 +3,7 @@ import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
 import { DefaultNotFound } from "#/components/layout/default-not-found";
-
-import { routeTree } from "./routeTree.gen";
+import { routeTree } from "#/routeTree.gen";
 
 export function getRouter() {
   const queryClient = new QueryClient();

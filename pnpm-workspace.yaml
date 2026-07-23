@@ -12,9 +12,9 @@ injectWorkspacePackages: true
 catalog:
   "@aws-sdk/client-s3": "^3.1066.0"
   dotenv: "^17.3.1"
-  drizzle-kit: "1.0.0-beta.22"
-  drizzle-orm: "1.0.0-beta.22"
-  drizzle-seed: "1.0.0-beta.22"
+  drizzle-kit: "1.0.0-rc.4"
+  drizzle-orm: "1.0.0-rc.4"
+  drizzle-seed: "1.0.0-rc.4"
   nanoid: "5.1.15"
   p-retry: "^8.0.0"
   pg: "^8.22.0"
