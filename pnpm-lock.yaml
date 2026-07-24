@@ -383,6 +383,9 @@ importers:
       '@snack-rate/db-schema':
         specifier: workspace:*
         version: link:../../packages/db-schema
+      argon2:
+        specifier: ^0.45.1
+        version: 0.45.1
       dotenv:
         specifier: 'catalog:'
         version: 17.4.2

@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "@snack-rate/db-schema": "workspace:*",
+    "argon2": "^0.45.1",
     "dotenv": "catalog:",
     "drizzle-kit": "catalog:",
     "drizzle-orm": "catalog:",
