@@ -355,6 +355,9 @@ importers:
 
   packages/db-schema:
     dependencies:
+      argon2:
+        specifier: ^0.45.1
+        version: 0.45.1
       drizzle-orm:
         specifier: 'catalog:'
         version: 1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(pg@8.22.0)(zod@4.4.3)
@@ -383,9 +386,6 @@ importers:
       '@snack-rate/db-schema':
         specifier: workspace:*
         version: link:../../packages/db-schema
-      argon2:
-        specifier: ^0.45.1
-        version: 0.45.1
       dotenv:
         specifier: 'catalog:'
         version: 17.4.2

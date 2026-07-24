@@ -8,6 +8,7 @@
     "./crypto": "./src/crypto.ts"
   },
   "dependencies": {
+    "argon2": "^0.45.1",
     "drizzle-orm": "catalog:"
   },
   "devDependencies": {
