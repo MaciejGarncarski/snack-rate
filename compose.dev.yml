@@ -13,12 +13,22 @@ services:
       - "127.0.0.1:3903:3903"
 
   prometheus:
+    healthcheck:
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 3s
     ports:
       - "127.0.0.1:9090:9090"
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./config/alerts:/etc/prometheus/alerts:ro
   grafana:
+    healthcheck:
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
     env_file:
       - .env.development
     environment:
@@ -34,6 +44,11 @@ services:
       - "127.0.0.1:4317:4317"
       - "127.0.0.1:4318:4318"
   loki:
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     ports:
       - "127.0.0.1:3100:3100"
   postgres:
@@ -41,3 +56,15 @@ services:
       - .env.development
     ports:
       - "5432:5432"
+    healthcheck:
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 3s
+
+  node-exporter:
+    healthcheck:
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s

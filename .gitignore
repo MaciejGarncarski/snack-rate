@@ -18,6 +18,7 @@ coverage
 .env.caddy
 caddy-root.crt
 .pnpm-store
+storybook-static
 
 # Playwright
 /test-results/

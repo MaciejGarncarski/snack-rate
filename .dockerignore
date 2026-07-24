@@ -23,6 +23,9 @@ caddy-root.crt
 /Dockerfile*
 compose*
 
+# Storybook
+storybook-static
+
 # Misc
 *.log
 .DS_Store

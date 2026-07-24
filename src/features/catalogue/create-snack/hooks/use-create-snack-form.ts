@@ -2,11 +2,12 @@ import { useForm } from "@tanstack/react-form";
 import * as z from "zod";
 
 import { useCreateSnack } from "#/features/catalogue/create-snack/hooks/use-create-snack";
+import { optionalEanSchema } from "#/schemas/ean";
 
 export const createSnackSchema = z.object({
   name: z.string().min(1, "Nazwa jest wymagana").max(200),
   description: z.string().max(2000),
-  barcode: z.string(),
+  barcode: optionalEanSchema,
   typeSlug: z.string().min(1, "Rodzaj jest wymagany"),
   images: z
     .array(z.instanceof(File))
@@ -16,19 +17,21 @@ export const createSnackSchema = z.object({
 
 export type FormValues = z.infer<typeof createSnackSchema>;
 
+const defaultValues: FormValues = {
+  name: "",
+  description: "",
+  barcode: "",
+  typeSlug: "",
+  images: [],
+};
+
 export const useCreateSnackForm = () => {
   const { createSnack } = useCreateSnack();
 
   const form = useForm({
-    defaultValues: {
-      name: "",
-      description: "",
-      barcode: "",
-      typeSlug: "",
-      images: [] as File[],
-    } satisfies FormValues,
+    defaultValues,
     validators: {
-      onBlur: createSnackSchema,
+      onChange: createSnackSchema,
       onSubmit: createSnackSchema,
     },
     onSubmit: async ({ value, formApi }) => {

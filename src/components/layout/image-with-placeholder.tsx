@@ -1,6 +1,6 @@
 import { ImageOffIcon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useRef, useState, type ComponentProps } from "react";
+import { useEffect, useRef, useState, type ImgHTMLAttributes } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { cn } from "#/lib/utils";
@@ -17,7 +17,12 @@ type Status = "loading" | "loaded" | "error";
 
 const IMAGE_LOAD_SKELETON_DELAY = 50;
 
-interface ImageWithPlaceholderProps extends ComponentProps<"img"> {
+type ImgProps = Omit<
+  ImgHTMLAttributes<HTMLImageElement>,
+  "onAnimationStart" | "onAnimationEnd" | "onDrag" | "onDragStart" | "onDragEnd" | "onTransitionEnd"
+>;
+
+interface ImageWithPlaceholderProps extends ImgProps {
   placeholder?: React.ReactNode;
   fallback?: React.ReactNode;
   containerClassName?: string;
@@ -88,11 +93,14 @@ export function ImageWithPlaceholder({
       </AnimatePresence>
       {status === "error" && fallback}
       {isVisible ? (
-        <img
+        <motion.img
           ref={imgRef}
           src={src}
           alt={alt}
-          className={cn(status === "loaded" ? "block" : "absolute opacity-0", className)}
+          className={cn("block", className)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: status === "loaded" ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
           onLoad={() => setStatus("loaded")}
           onError={() => setStatus("error")}
           {...imgProps}

@@ -2,6 +2,7 @@ import { ScanBarcodeIcon } from "lucide-react";
 import { useState } from "react";
 
 import { NavigationBlock } from "#/components/layout/navigation-block";
+import { SnackBarcode } from "#/components/snacks/snack-barcode";
 import { Button } from "#/components/ui/button";
 import {
   Combobox,
@@ -33,7 +34,24 @@ type Props = {
 };
 
 function getErrorMessage(errors: unknown[]): string {
-  return errors.map((e: any) => e?.message ?? String(e)).join(", ");
+  return errors
+    .map((error) => {
+      if (typeof error === "string") {
+        return error;
+      }
+
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error &&
+        typeof error.message === "string"
+      ) {
+        return error.message;
+      }
+
+      return String(error);
+    })
+    .join(", ");
 }
 
 export function CreateSnackForm({ types }: Props) {
@@ -196,6 +214,18 @@ export function CreateSnackForm({ types }: Props) {
               );
             }}
           </form.Field>
+          <form.Subscribe
+            selector={(state) => ({
+              barcode: state.values.barcode,
+              hasBarcodeError: (state.fieldMeta.barcode?.errors?.length ?? 0) > 0,
+            })}
+          >
+            {(field) => {
+              return field.barcode && !field.hasBarcodeError ? (
+                <SnackBarcode barcode={field.barcode} size="md" />
+              ) : null;
+            }}
+          </form.Subscribe>
 
           <BarcodeScannerDialog
             open={isBarcodeScannerOpen}

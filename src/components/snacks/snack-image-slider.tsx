@@ -2,6 +2,7 @@ import { useHotkey } from "@tanstack/react-hotkeys";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
+import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
 import { cn } from "#/lib/utils";
 
 type Direction = 1 | -1;
@@ -33,18 +34,22 @@ export default function SnackImageSlider({ images }: Props) {
     <div className="mx-auto w-full">
       <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl border bg-muted border-border">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
-          <motion.img
+          <motion.div
             key={index}
-            src={images[index]}
-            alt={`Slajd ${index + 1}`}
             custom={direction}
             variants={variants}
             initial="enter"
             animate="center"
             exit="exit"
             transition={{ duration: 0.15, ease: "easeInOut" }}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+            className="absolute inset-0"
+          >
+            <ImageWithPlaceholder
+              src={images[index]}
+              alt={`Slajd ${index + 1}`}
+              className="h-full w-full object-cover"
+            />
+          </motion.div>
         </AnimatePresence>
       </div>
 
@@ -59,7 +64,11 @@ export default function SnackImageSlider({ images }: Props) {
               i === index ? "border-accent" : "border-transparent opacity-60 hover:opacity-100",
             )}
           >
-            <img src={src} alt={`Miniatura ${i + 1}`} className="h-full w-full object-cover" />
+            <ImageWithPlaceholder
+              src={src}
+              alt={`Miniatura ${i + 1}`}
+              className="h-full w-full object-cover"
+            />
           </button>
         ))}
       </div>

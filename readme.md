@@ -26,6 +26,13 @@ pnpm dev # → http://localhost:3000/  (or whatever APP_PORT is set to)
 > [!NOTE]
 > See `package.json` for all available scripts.
 
+### Storybook
+
+```bash
+pnpm storybook          # start Storybook dev server on port 6006
+pnpm build-storybook    # build static Storybook
+```
+
 ## Tech stack
 
 UI:
@@ -34,6 +41,7 @@ UI:
 - TanStack Start
 - Tailwind CSS
 - shadcn
+- Storybook
 
 API:
 

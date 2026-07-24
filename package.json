@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "imports": {
-    "#/*": "./src/*"
+    "#/*": "./src/*",
+    "$/*": "./.storybook/*"
   },
   "scripts": {
     "dev": "vite dev",
@@ -47,7 +48,9 @@
     "prod:up": "docker compose -p snack-rate-prod -f compose.yml -f compose.prod.yml --env-file .env.production up -d",
     "prod:down": "docker compose -p snack-rate-prod -f compose.yml -f compose.prod.yml --env-file .env.production down",
     "prod:logs": "docker compose -p snack-rate-prod -f compose.yml -f compose.prod.yml --env-file .env.production logs -f",
-    "prod:restart": "pnpm run prod:down && pnpm run prod:up"
+    "prod:restart": "pnpm run prod:down && pnpm run prod:up",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "catalog:",
@@ -115,7 +118,13 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^5.2.1",
     "@playwright/test": "^1.61.1",
+    "@storybook/addon-a11y": "^10.5.4",
+    "@storybook/addon-docs": "^10.5.4",
+    "@storybook/addon-themes": "^10.5.4",
+    "@storybook/addon-vitest": "^10.5.4",
+    "@storybook/tanstack-react": "^10.5.4",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/devtools-vite": "0.8.3",
     "@tanstack/eslint-plugin-query": "^5.100.10",
@@ -130,6 +139,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitejs/plugin-rsc": "^0.5.29",
+    "@vitest/browser-playwright": "4.1.10",
     "@vitest/coverage-v8": "^4.1.9",
     "dotenv": "catalog:",
     "drizzle-kit": "catalog:",
@@ -140,11 +150,13 @@
     "oxfmt": "^0.60.0",
     "oxlint": "^1.75.0",
     "pino-pretty": "^13.1.3",
+    "playwright": "^1.61.1",
+    "storybook": "^10.5.4",
     "tsx": "catalog:",
     "tw-animate-css": "^1.4.0",
     "typescript": "~6.0.3",
     "vite": "^8.1.5",
     "vitest": "^4.1.10"
   },
-  "packageManager": "pnpm@11.15.1"
+  "packageManager": "pnpm@11.17.0"
 }

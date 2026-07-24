@@ -1,7 +1,7 @@
 FROM node:26.5.0-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g pnpm@11.15.1
+RUN npm install -g pnpm@11.17.0
 RUN pnpm config set store-dir /pnpm/store
 WORKDIR /app
 
