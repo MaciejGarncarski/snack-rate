@@ -1,17 +1,20 @@
-FROM node:26.5.0-slim AS base
+FROM node:26.5.0-alpine AS base
+ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g pnpm@11.17.0
 RUN pnpm config set store-dir /pnpm/store
-WORKDIR /app
 
-FROM base AS deps
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+FROM base AS builder
+WORKDIR /app
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY packages/db-schema ./packages/db-schema
 COPY tools/db-tool ./tools/db-tool
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --filter @snack-rate/db-tool install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --filter @snack-rate/db-tool
+RUN pnpm deploy --filter @snack-rate/db-tool --prod /app/deploy
 
-FROM base
-COPY --from=deps /app /app
-WORKDIR /app/packages/db-schema
-ENTRYPOINT ["sh", "-e", "-c", "pnpm exec drizzle-kit migrate && node drizzle/scripts/seed-prod.ts"]
+FROM node:26.5.0-alpine
+COPY --from=builder /app/deploy /app
+ENV PATH="/app/node_modules/.bin:$PATH"
+WORKDIR /app/node_modules/@snack-rate/db-schema
+ENTRYPOINT ["sh", "-e", "-c", "drizzle-kit migrate && tsx drizzle/scripts/seed-prod.ts"]

@@ -28,6 +28,9 @@ jobs:
           - dockerfile: tools/queue-worker/Dockerfile
             image_suffix: /queue-worker
 
+          - dockerfile: tools/db-tool/Dockerfile
+            image_suffix: /db-tool
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6

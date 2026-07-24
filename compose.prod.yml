@@ -17,9 +17,8 @@ services:
       - .env.production
 
   db-tool:
-    build:
-      context: .
-      dockerfile: tools/db-tool/Dockerfile
+    image: ghcr.io/maciejgarncarski/snack-rate/db-tool:${IMAGE_TAG:-staging}
+    pull_policy: always
     env_file:
       - .env.production
     depends_on:

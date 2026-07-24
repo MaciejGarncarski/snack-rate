@@ -4,9 +4,9 @@ set -euo pipefail
 PROJECT="snack-rate-prod"
 COMPOSE_FILES=(-f compose.yml -f compose.prod.yml)
 ENV_FILE=".env.production"
-# Only app + queue-worker are pulled per-deploy via IMAGE_TAG.
+# Only app + queue-worker + db-tool are pulled per-deploy via IMAGE_TAG.
 # Infra services (postgres, prometheus, etc.) are pinned to fixed images.
-PULLABLE_SERVICES=(app queue-worker)
+PULLABLE_SERVICES=(app queue-worker db-tool)
 
 IMAGE_TAG="${IMAGE_TAG:-${1:-}}"
 : "${IMAGE_TAG:?IMAGE_TAG must not be empty}"
@@ -79,7 +79,7 @@ get_current_image() {
 
 # ----- Step 1: Save current app image for rollback -----
 CURRENT_STEP="save-state"
-echo "==> [1/7] Saving current app image for rollback..."
+echo "==> [1/6] Saving current app image for rollback..."
 
 if ! OLD_APP_IMAGE=$(get_current_image app); then
     echo "Error: could not determine current app image state" >&2
@@ -94,7 +94,7 @@ fi
 
 # ----- Step 2: Pull -----
 CURRENT_STEP="pull"
-echo "==> [2/7] Pulling latest images..."
+echo "==> [2/6] Pulling latest images..."
 if ! compose pull "${PULLABLE_SERVICES[@]}"; then
     echo "==> Failed to pull image tag: $IMAGE_TAG" >&2
     exit 1
@@ -102,7 +102,7 @@ fi
 
 # ----- Step 3: Backup database -----
 CURRENT_STEP="backup"
-echo "==> [3/7] Backing up database before migration..."
+echo "==> [3/6] Backing up database before migration..."
 BACKUP_DIR="/tmp/snack-rate-backup-${PROJECT}"
 mkdir -p "$BACKUP_DIR"
 BACKUP_FILE="${BACKUP_DIR}/pre-deploy-$(date +%Y%m%d_%H%M%S).sql.gz"
@@ -115,14 +115,9 @@ if [ -f "$BACKUP_FILE" ]; then
     ls -t "$BACKUP_DIR"/*.sql.gz 2>/dev/null | tail -n +6 | xargs -r rm --
 fi
 
-# ----- Step 4: Build db-tool image -----
-CURRENT_STEP="build"
-echo "==> [4/7] Building db-tool image..."
-compose build db-tool
-
-# ----- Step 5: Run migrations (blocking) -----
+# ----- Step 4: Run migrations (blocking) -----
 CURRENT_STEP="migrate"
-echo "==> [5/7] Running migrations..."
+echo "==> [4/6] Running migrations..."
 
 for svc in db-tool; do
     echo "→ Running $svc..."
@@ -130,9 +125,9 @@ for svc in db-tool; do
     echo "→ $svc completed successfully (exit 0)"
 done
 
-# ----- Step 6: Deploy -----
+# ----- Step 5: Deploy -----
 CURRENT_STEP="deploy"
-echo "==> [6/7] Deploying stack..."
+echo "==> [5/6] Deploying stack..."
 echo "→ Deploying long-running services: ${LONG_RUNNING_SERVICES[*]}"
 if compose up -d --remove-orphans --wait --wait-timeout 360 "${LONG_RUNNING_SERVICES[@]}"; then
     echo "==> App is healthy."
@@ -164,7 +159,7 @@ else
     fi
 fi
 
-# ----- Step 7: Verify -----
+# ----- Step 6: Verify -----
 CURRENT_STEP="verify"
-echo "==> [7/7] Successfully deployed $IMAGE_TAG"
+echo "==> [6/6] Successfully deployed $IMAGE_TAG"
 compose images app queue-worker
