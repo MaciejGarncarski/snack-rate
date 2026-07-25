@@ -1,6 +1,7 @@
 import { CheckIcon, ScanBarcodeIcon } from "lucide-react";
 import { useState } from "react";
 
+import { BarcodeScannerDialog } from "#/components/barcode-scanner-dialog";
 import { NavigationBlock } from "#/components/layout/navigation-block";
 import { SnackBarcode } from "#/components/snacks/snack-barcode";
 import { Button } from "#/components/ui/button";
@@ -16,7 +17,6 @@ import { Field, FieldDescription, FieldError, FieldLabel } from "#/components/ui
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
 import { CaptchaField } from "#/features/captcha/components/captcha-field";
-import { BarcodeScannerDialog } from "#/features/catalogue/create-snack/components/barcode-scanner-dialog";
 import { ImagePicker } from "#/features/catalogue/create-snack/components/image-picker";
 import { SnackFormCard } from "#/features/catalogue/create-snack/components/snack-form-card";
 import { useCreateSnackForm } from "#/features/catalogue/create-snack/hooks/use-create-snack-form";
@@ -207,7 +207,9 @@ export function CreateSnackForm({ types }: Props) {
 
             return (
               <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor={field.name}>Kod kreskowy (opcjonalnie)</FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  Kod kreskowy (opcjonalnie, ale pomocne)
+                </FieldLabel>
                 <div className="flex gap-3">
                   <Input
                     type="text"

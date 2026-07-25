@@ -1,6 +1,23 @@
 import { cn } from "#/lib/utils";
 
-const Star = ({ fill = 0, size = "md" }: { fill?: number; size?: "xs" | "sm" | "md" | "lg" }) => {
+function getColorClass(rating: number): string {
+  if (rating <= 1) return "text-red-500";
+  if (rating <= 2) return "text-orange-500";
+  if (rating <= 3) return "text-yellow-500";
+  if (rating <= 3.5) return "text-lime-500";
+  if (rating <= 4.5) return "text-green-600";
+  return "text-cyan-500";
+}
+
+const Star = ({
+  fill = 0,
+  size = "md",
+  color = "text-yellow-500",
+}: {
+  fill?: number;
+  size?: "xs" | "sm" | "md" | "lg";
+  color?: string;
+}) => {
   const sizeClass =
     size === "xs" ? "w-3 h-3" : size === "sm" ? "w-4 h-4" : size === "lg" ? "w-8 h-8" : "w-6 h-6";
 
@@ -29,7 +46,7 @@ const Star = ({ fill = 0, size = "md" }: { fill?: number; size?: "xs" | "sm" | "
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
-          className={cn("text-yellow-500", sizeClass)}
+          className={cn(color, sizeClass)}
         >
           <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
         </svg>
@@ -46,6 +63,7 @@ type SnackRatingProps = {
 
 export function SnackRating({ rating, withText, size = "md" }: SnackRatingProps) {
   const value = Math.max(0, Math.min(5, rating));
+  const color = getColorClass(value);
 
   const gapClass =
     size === "xs" ? "gap-0.5" : size === "sm" ? "gap-1" : size === "lg" ? "gap-2" : "gap-1.5";
@@ -56,10 +74,11 @@ export function SnackRating({ rating, withText, size = "md" }: SnackRatingProps)
         <span className="text-lg mt-0.5 tabular-nums font-bold">{value.toFixed(1)}</span>
       )}
 
-      <div className={cn(`flex`, gapClass)}>
+      <div className={cn("flex", gapClass)}>
         {Array.from({ length: 5 }, (_, i) => {
           const fill = Math.max(0, Math.min(1, value - i));
-          return <Star key={i} fill={fill} size={size} />;
+
+          return <Star key={i} fill={fill} size={size} color={color} />;
         })}
       </div>
     </div>

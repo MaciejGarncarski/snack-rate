@@ -59,7 +59,7 @@ export function NavbarSearchBox() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute left-1/2 -translate-x-1/2 mt-1 w-58 rounded-lg border border-accent bg-popover/97 text-sm shadow-lg md:top-11 md:w-84"
+            className="absolute left-1/2 -translate-x-1/2 mt-2 w-58 rounded-lg border border-accent bg-popover/98 text-sm shadow-xl md:top-11 md:w-84"
           >
             {data?.length === 0 ? (
               <SearchBoxMessage message="Brak wyników" />

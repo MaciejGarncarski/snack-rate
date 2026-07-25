@@ -230,7 +230,11 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
           AND: [
             { status: "published" },
             {
-              OR: [{ name: { ilike: `%${query}%` } }, { description: { ilike: `%${query}%` } }],
+              OR: [
+                { name: { ilike: `%${query}%` } },
+                { barcode: { eq: query } },
+                { description: { ilike: `%${query}%` } },
+              ],
             },
           ],
         },
