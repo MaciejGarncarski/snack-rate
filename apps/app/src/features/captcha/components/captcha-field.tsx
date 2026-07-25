@@ -1,5 +1,7 @@
+import { useMutation } from "@tanstack/react-query";
 import { RefreshCw } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useMemo } from "react";
 
 import { Button } from "#/components/ui/button";
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
@@ -23,72 +25,168 @@ export function CaptchaField({
   isInvalid,
   errors,
 }: CaptchaFieldProps) {
-  const [svg, setSvg] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchCaptcha = useCallback(() => {
-    setIsLoading(true);
-    getCaptcha()
-      .then((svgString) => {
-        setSvg(svgString);
-        onChange("");
-      })
-      .catch(() => {
-        setSvg(null);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [onChange]);
+  const {
+    mutate,
+    data: svg,
+    isPending,
+    isError,
+  } = useMutation({
+    mutationFn: () => getCaptcha(),
+    onSuccess: () => {
+      onChange("");
+    },
+  });
 
   useEffect(() => {
-    fetchCaptcha();
-  }, [fetchCaptcha]);
+    mutate();
+  }, [mutate]);
+
+  const handleRefresh = () => {
+    mutate();
+  };
+
+  const view = useMemo(() => {
+    if (isPending) return "loading";
+    if (isError) return "error";
+    if (svg) return "svg";
+    return "loading";
+  }, [isPending, isError, svg]);
 
   return (
     <Field data-invalid={isInvalid}>
-      <FieldLabel>Kod z obrazka</FieldLabel>
+      <FieldLabel htmlFor={name}>Kod z obrazka</FieldLabel>
+
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-2 w-full">
-          {isLoading ? (
-            <div className="animate-pulse rounded bg-muted flex-1 aspect-[200/64]" />
-          ) : svg ? (
-            <div
-              className="select-none overflow-hidden rounded border leading-none [&_svg]:block [&_svg]:w-full [&_svg]:h-full flex-1 aspect-[200/64]"
-              dangerouslySetInnerHTML={{ __html: svg }}
-            />
-          ) : (
-            <div className="flex items-center justify-center rounded border text-sm text-muted-foreground flex-1 aspect-[200/64]">
-              Błąd ładowania
-            </div>
-          )}
+        <div className="flex items-stretch gap-2">
+          <div
+            className="relative aspect-[200/64] flex-1 overflow-hidden rounded-md border bg-muted/40"
+            aria-live="polite"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {view === "loading" && (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute inset-0 overflow-hidden bg-muted"
+                >
+                  <motion.div
+                    className="h-full w-full bg-muted-foreground/10"
+                    animate={{
+                      opacity: [0.4, 1, 0.4],
+                    }}
+                    transition={{
+                      duration: 0.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                </motion.div>
+              )}
+
+              {view === "error" && (
+                <motion.div
+                  key="error"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-2 text-center text-sm text-muted-foreground"
+                >
+                  <span>Nie udało się załadować kodu</span>
+
+                  <button
+                    type="button"
+                    onClick={handleRefresh}
+                    className="text-xs font-medium text-primary underline-offset-2 hover:underline"
+                  >
+                    Spróbuj ponownie
+                  </button>
+                </motion.div>
+              )}
+
+              {view === "svg" && svg && (
+                <motion.div
+                  key={svg}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.98,
+                    filter: "blur(6px)",
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    filter: "blur(0px)",
+                  }}
+                  exit={{
+                    opacity: 0,
+                    scale: 1.02,
+                    filter: "blur(6px)",
+                  }}
+                  transition={{
+                    duration: 0.3,
+                    ease: "easeOut",
+                  }}
+                  className="absolute inset-0 select-none leading-none [&_svg]:block [&_svg]:h-full [&_svg]:w-full"
+                  dangerouslySetInnerHTML={{ __html: svg }}
+                />
+              )}
+            </AnimatePresence>
+          </div>
+
           <Button
             type="button"
             variant="outline"
             size="icon"
-            isDisabled={isLoading}
-            onPress={fetchCaptcha}
+            isDisabled={isPending}
+            onPress={handleRefresh}
             aria-label="Odśwież kod"
+            className="shrink-0"
           >
-            <RefreshCw className={isLoading ? "animate-spin" : ""} />
+            <motion.div
+              animate={{
+                rotate: isPending ? 360 : 0,
+              }}
+              transition={{
+                rotate: isPending
+                  ? {
+                      duration: 0.5,
+                      ease: "linear",
+                      repeat: Infinity,
+                    }
+                  : {
+                      duration: 0.2,
+                      ease: "easeOut",
+                    },
+              }}
+            >
+              <RefreshCw className="size-4" />
+            </motion.div>
           </Button>
         </div>
+
         <Input
-          placeholder="Wpisz kod z obrazka"
-          value={value}
-          name={name}
           id={name}
+          name={name}
+          value={value}
+          placeholder="Wpisz kod z obrazka"
           aria-invalid={isInvalid}
           autoComplete="off"
+          autoCapitalize="off"
+          spellCheck={false}
           onChange={(e) => onChange(e.target.value)}
           onBlur={onBlur}
         />
       </div>
+
       {errors && errors.length > 0 && (
         <FieldError>
           {errors
             .map((error) => {
               if (typeof error === "string") return error;
+
               if (
                 typeof error === "object" &&
                 error !== null &&
@@ -97,6 +195,7 @@ export function CaptchaField({
               ) {
                 return error.message;
               }
+
               return String(error);
             })
             .join(", ")}

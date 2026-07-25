@@ -14,10 +14,13 @@ export function verifyCaptcha(userCode: string): boolean {
   if (!cookie) return false;
 
   const parts = cookie.split(":");
-  if (parts.length !== 3) return false;
 
-  const storedCode = parts[0];
-  const signature = parts[1];
+  const [storedCode, signature] = parts;
+
+  if (!storedCode || !signature) {
+    deleteCookie(COOKIE_NAME, { path: "/" });
+    return false;
+  }
 
   if (!verifySignature(storedCode + ":", signature, getSecret())) {
     deleteCookie(COOKIE_NAME, { path: "/" });

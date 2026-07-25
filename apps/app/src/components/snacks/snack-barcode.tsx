@@ -4,7 +4,7 @@ import Barcode from "react-barcode";
 import { cn } from "#/lib/utils";
 
 type Props = {
-  barcode: string;
+  barcode: string | null;
 } & VariantProps<typeof barcodeContainerVariants>;
 
 const sizeMap: Record<"sm" | "md" | "lg", { width: number; height: number }> = {
@@ -53,14 +53,30 @@ export function SnackBarcode({ barcode, size = "md", variant = "default" }: Prop
 
   return (
     <div className={cn(barcodeContainerVariants({ variant, size }))}>
-      <Barcode
-        value={barcode}
-        format="EAN13"
-        displayValue={true}
-        width={width}
-        height={height}
-        className="rounded-lg shadow w-fit"
-      />
+      {barcode ? (
+        <Barcode
+          value={barcode}
+          format="EAN13"
+          displayValue={true}
+          width={width}
+          height={height}
+          className="rounded-lg shadow w-fit"
+        />
+      ) : (
+        <div
+          className={cn(
+            "flex h-full w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
+            {
+              "h-18 w-31.5 text-sm": size === "sm",
+              "h-30 w-51": size === "md",
+              "h-40.5 w-72": size === "lg",
+              "bg-muted": variant === "default",
+            },
+          )}
+        >
+          Brak kodu kreskowego
+        </div>
+      )}
     </div>
   );
 }

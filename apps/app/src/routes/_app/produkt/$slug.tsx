@@ -60,7 +60,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="mb-4 flex gap-30">
+      <div className="mb-4 flex flex-col md:flex-row gap-10 md:gap-30">
         <div className="w-[20rem]">
           <SnackImageSlider images={imageUrls} />
         </div>
@@ -68,7 +68,7 @@ function RouteComponent() {
           <h1 className="mb-4 text-3xl font-bold">{data.name}</h1>
           <p className="mb-2 text-lg text-muted-foreground">{data.description || "Brak opisu"}</p>
           <SnackRating rating={data.avgRating} />
-          {data.barcode && <SnackBarcode barcode={data.barcode} size="md" />}
+          <SnackBarcode barcode={data.barcode} size="md" />
           <div>{<Badge>{data.type.name}</Badge>}</div>
         </div>
       </div>

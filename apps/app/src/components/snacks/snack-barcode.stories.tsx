@@ -68,3 +68,61 @@ export const LargeWithPadding = meta.story({
     variant: "padding",
   },
 });
+
+export const NoBarcode = meta.story({
+  args: {
+    barcode: null,
+  },
+});
+
+export const NoBarcodeSmall = meta.story({
+  args: {
+    barcode: null,
+    size: "sm",
+  },
+});
+
+export const NoBarcodeMedium = meta.story({
+  args: {
+    barcode: null,
+    size: "md",
+  },
+});
+
+export const NoBarcodeLarge = meta.story({
+  args: {
+    barcode: null,
+    size: "lg",
+  },
+});
+
+export const NoBarcodeWithPadding = meta.story({
+  args: {
+    barcode: null,
+    variant: "padding",
+  },
+});
+
+export const NoBarcodeSmallWithPadding = meta.story({
+  args: {
+    barcode: null,
+    size: "sm",
+    variant: "padding",
+  },
+});
+
+export const NoBarcodeMediumWithPadding = meta.story({
+  args: {
+    barcode: null,
+    size: "md",
+    variant: "padding",
+  },
+});
+
+export const NoBarcodeLargeWithPadding = meta.story({
+  args: {
+    barcode: null,
+    size: "lg",
+    variant: "padding",
+  },
+});

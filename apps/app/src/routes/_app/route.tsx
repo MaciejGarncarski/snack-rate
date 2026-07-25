@@ -2,8 +2,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import * as z from "zod";
 
-import { Navbar } from "#/components/layout/navbar";
-import { Toaster } from "#/components/ui/sonner";
+import { AppLayout } from "#/components/layout/app-layout";
 import { getSearchedItemsQueryOptions } from "#/features/catalogue/search-snacks/api/get-searched-items";
 
 const sharedParamsSchema = z.object({
@@ -23,13 +22,8 @@ export const Route = createFileRoute("/_app")({
 
 function RouteComponent() {
   return (
-    <div className="">
-      <Navbar />
-      <Toaster />
-
-      <div className="relative isolate mx-auto flex min-h-svh max-w-5xl flex-col p-8">
-        <Outlet />
-      </div>
-    </div>
+    <AppLayout>
+      <Outlet />
+    </AppLayout>
   );
 }

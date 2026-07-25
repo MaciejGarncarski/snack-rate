@@ -29,8 +29,13 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }:
               to="/produkt/$slug"
               params={{ slug: item.slug }}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 transition-colors outline-none hover:bg-secondary",
-                index === selectedIndex && "bg-primary/15",
+                "relative flex w-full items-center gap-2.5 rounded-2xl",
+                "py-2 pr-3 pl-3",
+                "text-sm font-medium",
+                "outline-none transition-colors",
+                "hover:bg-foreground/10 hover:text-accent-foreground",
+                "focus:bg-foreground/10 focus:text-accent-foreground",
+                index === selectedIndex && "bg-foreground/10 text-accent-foreground",
               )}
               {...(index === 0 && { "data-first": "" })}
               onClick={onLinkClick}

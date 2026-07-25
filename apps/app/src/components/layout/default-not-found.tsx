@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { HomeIcon } from "lucide-react";
 
+import { AppLayout } from "#/components/layout/app-layout";
 import { buttonVariants } from "#/components/ui/button";
 import {
   Empty,
@@ -12,28 +13,30 @@ import {
 
 export function DefaultNotFound() {
   return (
-    <div className="h-screen">
-      <Empty className="h-full bg-secondary">
-        <EmptyHeader>
-          <EmptyTitle>Błąd 404 - Nie znaleziono strony</EmptyTitle>
-          <EmptyDescription>Ups, wygląda na to, że ta strona nie istnieje.</EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <div className="flex gap-2">
-            <Link
-              to="/"
-              className={buttonVariants({
-                variant: "outline",
-                size: "sm",
-                className: "border-border",
-              })}
-            >
-              <HomeIcon />
-              Strona główna
-            </Link>
-          </div>
-        </EmptyContent>
-      </Empty>
-    </div>
+    <AppLayout>
+      <div className="">
+        <Empty className="h-full">
+          <EmptyHeader>
+            <EmptyTitle>Błąd 404 - Nie znaleziono strony</EmptyTitle>
+            <EmptyDescription>Ups, wygląda na to, że ta strona nie istnieje.</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <div className="flex gap-2">
+              <Link
+                to="/"
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "sm",
+                  className: "border-border",
+                })}
+              >
+                <HomeIcon />
+                Strona główna
+              </Link>
+            </div>
+          </EmptyContent>
+        </Empty>
+      </div>
+    </AppLayout>
   );
 }

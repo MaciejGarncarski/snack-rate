@@ -13,7 +13,7 @@ export function useCreateSnack() {
     orpc.snacks.create.mutationOptions({
       onError: (mutationError) => {
         const errorMessage = extractORPCError(mutationError)?.message;
-        toast.error(errorMessage ? `Błąd: ${errorMessage}` : "Wystąpił nieoczekiwany błąd");
+        toast.error(errorMessage ? errorMessage : "Wystąpił nieoczekiwany błąd");
       },
 
       onSuccess: ({ slug }, _vars, _result, context) => {
