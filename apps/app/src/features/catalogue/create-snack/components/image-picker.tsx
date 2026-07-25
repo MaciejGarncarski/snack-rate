@@ -132,7 +132,7 @@ export function ImagePicker({ onChange }: Props) {
       </div>
 
       {alerts.map((alert) => (
-        <Alert variant="destructive" key={alert.id}>
+        <Alert variant="destructive" key={alert.id} className="bg-input/50">
           <AlertCircleIcon />
           <AlertTitle>Nie dodano obrazu</AlertTitle>
           <AlertDescription>{alert.message}</AlertDescription>

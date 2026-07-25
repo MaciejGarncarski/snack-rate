@@ -56,10 +56,10 @@ export function CaptchaField({
     <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={name}>Kod z obrazka</FieldLabel>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-stretch gap-2">
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between md:gap-10 gap-3">
           <div
-            className="relative aspect-[200/64] flex-1 overflow-hidden rounded-md border bg-muted/40"
+            className="relative aspect-200/64 md:max-w-[20rem] flex-1 overflow-hidden rounded-md border bg-muted/40"
             aria-live="polite"
           >
             <AnimatePresence mode="wait" initial={false}>

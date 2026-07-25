@@ -38,7 +38,7 @@ export function ImageSlot({ isSelected, onClick, onMoveLeft, onMoveRight, imageS
       {isEmpty ? (
         <motion.button
           type="button"
-          className="flex outline-none aspect-4/5 h-auto w-full items-center justify-center rounded-lg border border-dashed border-accent bg-secondary outline-0 focus:border-solid focus:ring focus:ring-ring"
+          className="flex outline-none aspect-4/5 h-auto w-full items-center justify-center rounded-lg border border-dashed border-accent bg-input/50 outline-0 focus:border-solid focus:ring focus:ring-ring"
           onClick={onClick}
         >
           <ImagePlusIcon className="text-muted-foreground" />
@@ -48,7 +48,7 @@ export function ImageSlot({ isSelected, onClick, onMoveLeft, onMoveRight, imageS
           <motion.button
             type="button"
             className={cn(
-              "outline-none flex aspect-4/5 h-auto w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-accent bg-secondary outline-0 focus:border-solid focus:ring focus:ring-ring",
+              "outline-none flex aspect-4/5 h-auto w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-accent bg-input/50 outline-0 focus:border-solid focus:ring focus:ring-ring",
               isSelected && "border-solid ring-2 ring-primary",
             )}
             onClick={onClick}
