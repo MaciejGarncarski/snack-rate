@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { MenuIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 
+import { Logo } from "#/components/layout/logo";
 import { Button, buttonVariants } from "#/components/ui/button";
 import { ModeToggle } from "#/components/ui/mode-toggle";
 import {
@@ -31,9 +32,18 @@ export function NavbarMobileMenu() {
       <Button variant="outline" size="icon" aria-label="Menu" onClick={() => setIsSheetOpen(true)}>
         <MenuIcon className="h-5 w-5" />
       </Button>
-      <Sheet side="right" className="flex" isOpen={isSheetOpen} onOpenChange={setIsSheetOpen}>
+      <Sheet
+        side="right"
+        showCloseButton={true}
+        className="flex"
+        isOpen={isSheetOpen}
+        onOpenChange={setIsSheetOpen}
+      >
         <SheetHeader>
-          <SheetTitle>Menu</SheetTitle>
+          <SheetTitle className="flex items-center gap-2">
+            <Logo />
+            Menu
+          </SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-4 p-6">
           <ModeToggle withText />
