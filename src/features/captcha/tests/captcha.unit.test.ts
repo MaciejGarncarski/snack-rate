@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { generateCode, signCode, verifySignature } from "#/lib/captcha";
+import { generateCode, signCode, verifySignature } from "#/features/captcha/captcha";
 
 const SECRET = "test-secret-that-is-at-least-32-chars-long!!";
 

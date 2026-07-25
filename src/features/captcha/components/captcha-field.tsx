@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "#/components/ui/button";
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
-import { getCaptcha } from "#/lib/captcha";
+import { getCaptcha } from "#/features/captcha/api/get-captcha.server";
 
 type CaptchaFieldProps = {
   value: string;

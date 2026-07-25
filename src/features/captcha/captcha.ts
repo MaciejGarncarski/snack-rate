@@ -1,17 +1,12 @@
-import { createServerFn } from "@tanstack/react-start";
-import { getCookie, setCookie, deleteCookie } from "@tanstack/react-start/server";
 import crypto from "node:crypto";
 
-import { serverEnv } from "#/lib/server.env";
-
-// Alphabet without confusing characters (0/O, 1/I/l)
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
 const CODE_LENGTH = 5;
 const COOKIE_NAME = "captcha_token";
 const COOKIE_MAX_AGE = 600;
 
-function getSecret(): string {
-  return serverEnv.CAPTCHA_SECRET;
+function randomInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export function generateCode(): string {
@@ -31,10 +26,6 @@ export function verifySignature(code: string, signature: string, secret: string)
   const expected = signCode(code, secret);
   if (expected.length !== signature.length) return false;
   return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
-}
-
-function randomInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export function renderSVG(code: string): string {
@@ -71,41 +62,4 @@ export function renderSVG(code: string): string {
   return svg;
 }
 
-export const getCaptcha = createServerFn({ method: "GET" }).handler(() => {
-  const code = generateCode();
-  const svg = renderSVG(code);
-  const signature = signCode(code, getSecret());
-
-  setCookie(COOKIE_NAME, `${code}:${signature}`, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-    maxAge: COOKIE_MAX_AGE,
-    path: "/",
-  });
-
-  return svg;
-});
-
-export function verifyCaptcha(userCode: string): boolean {
-  const cookie = getCookie(COOKIE_NAME);
-  if (!cookie) return false;
-
-  const colonIndex = cookie.indexOf(":");
-  if (colonIndex === -1) return false;
-
-  const storedCode = cookie.slice(0, colonIndex);
-  const signature = cookie.slice(colonIndex + 1);
-
-  if (!verifySignature(storedCode, signature, getSecret())) {
-    return false;
-  }
-
-  if (userCode.trim().toLowerCase() !== storedCode.toLowerCase()) {
-    return false;
-  }
-
-  deleteCookie(COOKIE_NAME, { path: "/" });
-
-  return true;
-}
+export { ALPHABET, CODE_LENGTH, COOKIE_NAME, COOKIE_MAX_AGE };

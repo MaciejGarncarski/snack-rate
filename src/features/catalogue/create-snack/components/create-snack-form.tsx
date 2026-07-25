@@ -1,7 +1,6 @@
 import { ScanBarcodeIcon } from "lucide-react";
 import { useState } from "react";
 
-import { CaptchaField } from "#/components/captcha-field";
 import { NavigationBlock } from "#/components/layout/navigation-block";
 import { SnackBarcode } from "#/components/snacks/snack-barcode";
 import { Button } from "#/components/ui/button";
@@ -16,6 +15,7 @@ import {
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
+import { CaptchaField } from "#/features/captcha/components/captcha-field";
 import { BarcodeScannerDialog } from "#/features/catalogue/create-snack/components/barcode-scanner-dialog";
 import { ImagePicker } from "#/features/catalogue/create-snack/components/image-picker";
 import { useCreateSnackForm } from "#/features/catalogue/create-snack/hooks/use-create-snack-form";
