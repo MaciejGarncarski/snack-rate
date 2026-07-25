@@ -6,10 +6,16 @@ const COOKIE_NAME = "captcha_token";
 const COOKIE_MAX_AGE = 600;
 
 export function generateCode(): string {
-  const bytes = crypto.randomBytes(CODE_LENGTH);
+  const maxValid = Math.floor(256 / ALPHABET.length) * ALPHABET.length;
   let code = "";
-  for (let i = 0; i < CODE_LENGTH; i++) {
-    code += ALPHABET[bytes[i] % ALPHABET.length];
+  while (code.length < CODE_LENGTH) {
+    const bytes = crypto.randomBytes(CODE_LENGTH - code.length);
+    for (const byte of bytes) {
+      if (byte < maxValid) {
+        code += ALPHABET[byte % ALPHABET.length];
+        if (code.length === CODE_LENGTH) break;
+      }
+    }
   }
   return code;
 }

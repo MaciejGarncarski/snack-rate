@@ -14,7 +14,7 @@ function randomInt(min: number, max: number): number {
 
 export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => {
   const code = generateCode();
-  const signature = signCode(code, serverEnv.CAPTCHA_SECRET);
+  const signature = signCode(code + ":", serverEnv.CAPTCHA_SECRET);
 
   setCookie(COOKIE_NAME, `${code}:${signature}`, {
     httpOnly: true,
@@ -126,8 +126,8 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
   );
 
   const displaySvg = svg
-    .replace(/ width="[^"]*"/, ' width="100%"')
-    .replace(/ height="[^"]*"/, ' height="100%"');
+    .replace(/ width="[^"]*"/u, ' width="100%"')
+    .replace(/ height="[^"]*"/u, ' height="100%"');
 
   return displaySvg;
 });

@@ -13,17 +13,19 @@ export function verifyCaptcha(userCode: string): boolean {
   const cookie = getCookie(COOKIE_NAME);
   if (!cookie) return false;
 
-  const colonIndex = cookie.indexOf(":");
-  if (colonIndex === -1) return false;
+  const parts = cookie.split(":");
+  if (parts.length !== 3) return false;
 
-  const storedCode = cookie.slice(0, colonIndex);
-  const signature = cookie.slice(colonIndex + 1);
+  const storedCode = parts[0];
+  const signature = parts[1];
 
-  if (!verifySignature(storedCode, signature, getSecret())) {
+  if (!verifySignature(storedCode + ":", signature, getSecret())) {
+    deleteCookie(COOKIE_NAME, { path: "/" });
     return false;
   }
 
   if (userCode.trim().toLowerCase() !== storedCode.toLowerCase()) {
+    deleteCookie(COOKIE_NAME, { path: "/" });
     return false;
   }
 
