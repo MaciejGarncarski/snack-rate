@@ -10,7 +10,7 @@ const Star = ({ fill = 0, size = "md" }: { fill?: number; size?: "xs" | "sm" | "
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         className={cn(
-          "absolute top-0 left-0 dark:text-primary/60 dark:fill-primary/30 text-primary/40 fill-primary/20",
+          "absolute top-0 left-0 dark:text-input dark:fill-input text-input/40 fill-primary/20",
           sizeClass,
         )}
         stroke="currentColor"

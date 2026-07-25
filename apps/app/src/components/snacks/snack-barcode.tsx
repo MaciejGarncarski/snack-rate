@@ -8,12 +8,12 @@ type Props = {
 } & VariantProps<typeof barcodeContainerVariants>;
 
 const sizeMap: Record<"sm" | "md" | "lg", { width: number; height: number }> = {
-  sm: { width: 1, height: 40 },
+  sm: { width: 1.2, height: 40 },
   md: { width: 1.7, height: 80 },
   lg: { width: 2.5, height: 120 },
 };
 
-const barcodeContainerVariants = cva("w-fit overflow-hidden", {
+const barcodeContainerVariants = cva("w-fit ", {
   variants: {
     variant: {
       default: "shadow-lg border border-border rounded-xl",
@@ -67,7 +67,7 @@ export function SnackBarcode({ barcode, size = "md", variant = "default" }: Prop
           className={cn(
             "flex h-full w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
             {
-              "h-18 w-31.5 text-sm": size === "sm",
+              "h-19 w-37.5 text-sm": size === "sm",
               "h-30 w-51": size === "md",
               "h-40.5 w-72": size === "lg",
               "bg-muted": variant === "default",
