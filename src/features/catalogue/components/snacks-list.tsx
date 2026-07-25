@@ -8,6 +8,7 @@ export function SnacksList() {
   const { data, hasNextPage, fetchNextPage } = useSuspenseInfiniteQuery(listSnacksQueryOptions());
 
   const { ref } = useInView({
+    rootMargin: "400px",
     threshold: 0,
     onChange: (inView) => {
       if (inView && hasNextPage) {

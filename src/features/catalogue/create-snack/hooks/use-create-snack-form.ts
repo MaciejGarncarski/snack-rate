@@ -13,6 +13,7 @@ export const createSnackSchema = z.object({
     .array(z.instanceof(File))
     .min(1, "Wymagana jest przynajmniej jedna grafika")
     .max(3, "Maksymalnie 3 grafiki"),
+  captchaCode: z.string().length(5, "Wpisz 5-znakowy kod z obrazka"),
 });
 
 export type FormValues = z.infer<typeof createSnackSchema>;
@@ -23,6 +24,7 @@ const defaultValues: FormValues = {
   barcode: "",
   typeSlug: "",
   images: [],
+  captchaCode: "",
 };
 
 export const useCreateSnackForm = () => {
@@ -50,6 +52,8 @@ export const useCreateSnackForm = () => {
       for (const image of value.images) {
         formData.append("images", image);
       }
+
+      formData.append("captchaCode", value.captchaCode);
 
       await createSnack(formData);
       formApi.reset();

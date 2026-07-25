@@ -77,10 +77,11 @@ Copy `.env.example` to the appropriate file and fill in values before running an
 
 ### Application
 
-| Variable   | Used in    | Description                                       |
-| ---------- | ---------- | ------------------------------------------------- |
-| `APP_PORT` | dev + prod | Application port (default 3000)                   |
-| `NODE_ENV` | dev + prod | Runtime environment (`development`, `production`) |
+| Variable         | Used in    | Description                                             |
+| ---------------- | ---------- | ------------------------------------------------------- |
+| `APP_PORT`       | dev + prod | Application port (default 3000)                         |
+| `NODE_ENV`       | dev + prod | Runtime environment (`development`, `production`)       |
+| `CAPTCHA_SECRET` | dev + prod | Secret key for captcha HMAC signing (min 32 characters) |
 
 ### Database
 

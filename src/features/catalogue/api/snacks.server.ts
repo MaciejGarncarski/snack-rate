@@ -1,3 +1,4 @@
+import { ORPCError } from "@orpc/client";
 import { os } from "@orpc/server";
 import * as z from "zod";
 
@@ -5,6 +6,7 @@ import { MAXIMUM_IMAGES } from "#/const/image-const";
 import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
 import { createSnack } from "#/features/catalogue/server/use-cases/create-snack.use-case";
 import { listSnacksFeed } from "#/features/catalogue/server/use-cases/list-snacks.use-case";
+import { verifyCaptcha } from "#/lib/captcha";
 
 const listSnacksInputSchema = z.object({
   limit: z.number().min(1).max(100).default(20),
@@ -24,6 +26,7 @@ const createSnackInput = z
     barcode: z.string().optional(),
     typeSlug: z.string(),
     images: z.array(z.string()).min(1).max(MAXIMUM_IMAGES),
+    captchaCode: z.string().length(5),
   })
   .transform((data) => {
     return {
@@ -40,6 +43,12 @@ const createSnackInput = z
   });
 
 export const createSnackProcedure = os.input(createSnackInput).handler(({ input }) => {
+  if (!verifyCaptcha(input.captchaCode)) {
+    throw new ORPCError("BAD_REQUEST", {
+      message: "Nieprawidłowy kod captcha. Spróbuj odświeżyć obrazek.",
+    });
+  }
+
   return createSnack(
     {
       ...input,

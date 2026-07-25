@@ -1,24 +1,13 @@
 import { ORPCError } from "@orpc/client";
 
-import { DomainError } from "#/server/errors/domain-error";
-
 type PgError = {
   code?: string;
   constraint?: string;
 };
 
 export function mapError(err: unknown): never {
-  if (err instanceof DomainError) {
-    switch (err.type) {
-      case "SNACK_NOT_FOUND":
-        throw new ORPCError("NOT_FOUND", err.toJSON());
-
-      case "SNACK_ALREADY_EXISTS":
-        throw new ORPCError("CONFLICT", err.toJSON());
-
-      case "INVALID_SNACK_DATA":
-        throw new ORPCError("BAD_REQUEST", err.toJSON());
-    }
+  if (err instanceof ORPCError) {
+    throw err;
   }
 
   const pgErr = extractPgError(err);

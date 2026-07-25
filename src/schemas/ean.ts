@@ -24,4 +24,11 @@ const eanBaseSchema = z.string().trim().refine(isValidEAN, {
 
 export const eanSchema = eanBaseSchema;
 
-export const optionalEanSchema = eanBaseSchema.optional();
+const optionalEanBase = z
+  .string()
+  .trim()
+  .refine((val) => !val || isValidEAN(val), {
+    message: "Nieprawidłowy kod EAN.",
+  });
+
+export const optionalEanSchema = optionalEanBase.optional();

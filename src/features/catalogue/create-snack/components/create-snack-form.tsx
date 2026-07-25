@@ -1,6 +1,7 @@
 import { ScanBarcodeIcon } from "lucide-react";
 import { useState } from "react";
 
+import { CaptchaField } from "#/components/captcha-field";
 import { NavigationBlock } from "#/components/layout/navigation-block";
 import { SnackBarcode } from "#/components/snacks/snack-barcode";
 import { Button } from "#/components/ui/button";
@@ -234,6 +235,23 @@ export function CreateSnackForm({ types }: Props) {
               form.setFieldValue("barcode", barcode);
             }}
           />
+
+          <form.Field name="captchaCode">
+            {(field) => {
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+              return (
+                <CaptchaField
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                  name={field.name}
+                  onBlur={field.handleBlur}
+                  isInvalid={isInvalid}
+                  errors={field.state.meta.errors}
+                />
+              );
+            }}
+          </form.Field>
 
           <form.Subscribe
             selector={(state) => ({
