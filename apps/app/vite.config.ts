@@ -2,10 +2,15 @@ import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import { config } from "dotenv";
 import { nitro } from "nitro/vite";
+import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
-const config = defineConfig({
+config({ path: resolve(import.meta.dirname, "../../.env.development") });
+
+const viteConfig = defineConfig({
+  envDir: "../..",
   resolve: { tsconfigPaths: true },
   server: {
     host: true,
@@ -38,4 +43,4 @@ const config = defineConfig({
   ],
 });
 
-export default config;
+export default viteConfig;

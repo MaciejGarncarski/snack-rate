@@ -49,16 +49,16 @@ export function CaptchaField({
     <Field data-invalid={isInvalid}>
       <FieldLabel>Kod z obrazka</FieldLabel>
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-2 h-20 w-full">
+        <div className="flex items-center justify-between gap-2 w-full">
           {isLoading ? (
-            <div className=" animate-pulse rounded bg-muted h-full w-full" />
+            <div className="animate-pulse rounded bg-muted flex-1 aspect-[200/64]" />
           ) : svg ? (
             <div
-              className="select-none overflow-hidden rounded border leading-none [&_svg]:block h-full w-full"
+              className="select-none overflow-hidden rounded border leading-none [&_svg]:block [&_svg]:w-full [&_svg]:h-full flex-1 aspect-[200/64]"
               dangerouslySetInnerHTML={{ __html: svg }}
             />
           ) : (
-            <div className="flex items-center justify-center rounded border text-sm text-muted-foreground h-full w-full">
+            <div className="flex items-center justify-center rounded border text-sm text-muted-foreground flex-1 aspect-[200/64]">
               Błąd ładowania
             </div>
           )}

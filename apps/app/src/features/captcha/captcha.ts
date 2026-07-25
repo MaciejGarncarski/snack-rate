@@ -5,10 +5,6 @@ const CODE_LENGTH = 5;
 const COOKIE_NAME = "captcha_token";
 const COOKIE_MAX_AGE = 600;
 
-function randomInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 export function generateCode(): string {
   const bytes = crypto.randomBytes(CODE_LENGTH);
   let code = "";
@@ -26,40 +22,6 @@ export function verifySignature(code: string, signature: string, secret: string)
   const expected = signCode(code, secret);
   if (expected.length !== signature.length) return false;
   return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
-}
-
-export function renderSVG(code: string): string {
-  const w = 200;
-  const h = 64;
-  const spacing = 32;
-  const startX = 20;
-  const fontSize = 30;
-
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges">
-  <rect width="${w}" height="${h}" fill="#f4f4f4" rx="4"/>`;
-
-  const lineCount = randomInt(3, 6);
-  for (let i = 0; i < lineCount; i++) {
-    svg += `
-  <line x1="${randomInt(0, w)}" y1="${randomInt(0, h)}" x2="${randomInt(0, w)}" y2="${randomInt(0, h)}" stroke="hsl(${randomInt(0, 360)}, 50%, 60%)" stroke-width="1.5" stroke-opacity="0.6"/>`;
-  }
-
-  for (let i = 0; i < code.length; i++) {
-    const x = startX + i * spacing;
-    const y = randomInt(38, 48);
-    const angle = randomInt(-20, 20);
-    svg += `
-  <text x="${x}" y="${y}" transform="rotate(${angle}, ${x}, ${y})" font-family="Nunito Sans Variable, monospace, sans-serif" font-size="${fontSize}" font-weight="bold" fill="hsl(${randomInt(200, 260)}, 60%, 30%)">${code[i]}</text>`;
-  }
-
-  const dotCount = randomInt(20, 50);
-  for (let i = 0; i < dotCount; i++) {
-    svg += `
-  <circle cx="${randomInt(0, w)}" cy="${randomInt(0, h)}" r="${randomInt(1, 2)}" fill="#999" fill-opacity="0.4"/>`;
-  }
-
-  svg += "\n</svg>";
-  return svg;
 }
 
 export { ALPHABET, CODE_LENGTH, COOKIE_NAME, COOKIE_MAX_AGE };
