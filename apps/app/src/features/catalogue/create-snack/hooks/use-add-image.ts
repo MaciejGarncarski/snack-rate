@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { ALLOWED_MIME_TYPES, MAXIMUM_IMAGES } from "#/const/image-const";
 import { validateImage } from "#/features/catalogue/create-snack/utils/validate-image";
 import type { ImageValidationError } from "#/features/catalogue/create-snack/utils/validate-image";
+import { useIsMobile } from "#/hooks/use-mobile";
 
 export type ImagePair = {
   id: string;
@@ -18,6 +19,8 @@ type UseAddImageProps = {
 };
 
 export function useAddImage({ onAddToQueue, onValidationError, allFiles }: UseAddImageProps) {
+  const isMobile = useIsMobile();
+
   useEffect(() => {
     const handlePaste = async (event: ClipboardEvent) => {
       const items = event.clipboardData?.items;
@@ -47,7 +50,11 @@ export function useAddImage({ onAddToQueue, onValidationError, allFiles }: UseAd
   const uploadOnClick = () => {
     const input = document.createElement("input");
     input.type = "file";
-    input.accept = Array.from(ALLOWED_MIME_TYPES).join(",");
+
+    if (!isMobile) {
+      input.accept = Array.from(ALLOWED_MIME_TYPES).join(",");
+    }
+
     input.multiple = allFiles.length < MAXIMUM_IMAGES;
     input.click();
 
