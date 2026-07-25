@@ -2,7 +2,7 @@ pre-commit:
   parallel: true
   commands:
     format:
-      run: pnpm fmt
+      run: pnpm --filter @snack-rate/app fmt
       stage_fixed: true
     lint:
-      run: pnpm lint
+      run: pnpm --filter @snack-rate/app lint

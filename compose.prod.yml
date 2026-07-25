@@ -10,14 +10,19 @@ services:
   queue-worker:
     image: ghcr.io/maciejgarncarski/snack-rate/queue-worker:${IMAGE_TAG:-staging}
     # build:
-    # context: .
-    # dockerfile: tools/queue-worker/Dockerfile
+    #   context: .
+    #   dockerfile: tools/queue-worker/Dockerfile
+
     pull_policy: always
     env_file:
       - .env.production
 
   db-tool:
     image: ghcr.io/maciejgarncarski/snack-rate/db-tool:${IMAGE_TAG:-staging}
+    # build:
+    #   context: .
+    #   dockerfile: tools/db-tool/Dockerfile
+
     pull_policy: always
     env_file:
       - .env.production
@@ -29,10 +34,10 @@ services:
   app:
     image: ghcr.io/maciejgarncarski/snack-rate:${IMAGE_TAG:-staging}
     # build:
-    # context: .
-    # dockerfile: Dockerfile
-    restart: unless-stopped
+    #   context: .
+    #   dockerfile: apps/app/Dockerfile
 
+    restart: unless-stopped
     env_file:
       - .env.production
 

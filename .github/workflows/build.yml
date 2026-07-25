@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - dockerfile: Dockerfile
+          - dockerfile: apps/app/Dockerfile
             image_suffix: ""
 
           - dockerfile: tools/queue-worker/Dockerfile

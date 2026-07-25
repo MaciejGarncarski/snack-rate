@@ -38,7 +38,7 @@ beforeAll(async () => {
   });
 
   db = createDb(dbPool);
-  await migrate(db, { migrationsFolder: "./packages/db-schema/drizzle" });
+  await migrate(db, { migrationsFolder: "../../packages/db-schema/drizzle" });
 });
 
 beforeEach(async () => {

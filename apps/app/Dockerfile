@@ -15,13 +15,15 @@ RUN pnpm fetch --frozen-lockfile
 FROM base AS build
 WORKDIR /app
 COPY --from=fetch /pnpm/store /pnpm/store
-COPY . .
-RUN pnpm install --offline --frozen-lockfile
-RUN pnpm run build
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/app ./apps/app
+COPY packages/db-schema ./packages/db-schema
+RUN pnpm install --offline --frozen-lockfile --filter @snack-rate/app...
+RUN pnpm --filter @snack-rate/app build
 
 FROM node:26.5.0-slim
 ARG APP_PORT=3000
 WORKDIR /app
-COPY --from=build /app/.output ./
+COPY --from=build /app/apps/app/.output ./
 EXPOSE ${APP_PORT}
 CMD ["node", "server/index.mjs"]

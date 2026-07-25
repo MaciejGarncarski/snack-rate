@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
 
-  "ignorePatterns": ["src/components/ui/**"],
+  "ignorePatterns": ["apps/app/src/components/ui/**"],
 
   "plugins": [
     "typescript",
