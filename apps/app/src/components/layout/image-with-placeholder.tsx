@@ -103,7 +103,7 @@ export function ImageWithPlaceholder({
               src={src}
               alt=""
               aria-hidden="true"
-              className="absolute inset-0 h-full w-full scale-150 object-cover blur-2xl opacity-80 brightness-130 "
+              className="  absolute inset-0 h-full w-full scale-125 object-cover blur-3xl opacity-60 saturate-140 brightness-150"
             />
           )}
 

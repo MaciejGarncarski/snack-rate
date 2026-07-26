@@ -28,15 +28,16 @@ type BarcodeScannerDialogProps = {
 
 const cameraConfig: Html5QrcodeScannerConfig = {
   fps: SCAN_FPS,
-  qrbox: (viewfinderWidth) => {
-    const width = Math.floor(viewfinderWidth * 0.85);
-    const height = Math.floor(width * 0.4);
+  qrbox: (viewfinderWidth, viewfinderHeight) => {
+    const width = Math.min(Math.floor(viewfinderWidth * 0.9), 320);
+    const height = Math.min(Math.floor(viewfinderHeight * 0.35), 160);
 
     return {
-      width: Math.min(width, 250),
-      height: Math.min(height, 90),
+      width,
+      height,
     };
   },
+  aspectRatio: 1.777778,
   disableFlip: false,
 };
 
@@ -122,7 +123,10 @@ export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScan
       </DialogHeader>
       <div className="flex flex-col items-center gap-4">
         <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl bg-muted">
-          <div id={SCANNER_ID} className="size-full [&_video]:rounded-xl" />
+          <div
+            id={SCANNER_ID}
+            className="size-full [&_video]:!h-full [&_video]:!w-full [&_video]:object-cover [&_video]:rounded-xl"
+          />
           {!cameraReady && (
             <CameraOffIcon className="absolute left-1/2 top-1/2 z-10 h-12 w-12 -translate-x-1/2 -translate-y-1/2 text-muted-foreground" />
           )}
