@@ -10,6 +10,8 @@ import { ThemeProvider } from "#/components/ui/theme-provider";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles/app.css?url";
 
+const isDev = import.meta.env.DEV;
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -21,7 +23,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "Snack Rate",
+        title: isDev ? "(DEV) Snack Rate" : "Snack Rate",
       },
       {
         name: "description",

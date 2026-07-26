@@ -33,8 +33,8 @@ const cameraConfig: Html5QrcodeScannerConfig = {
     const height = Math.floor(width * 0.4);
 
     return {
-      width,
-      height: Math.max(height, 80),
+      width: Math.min(width, 250),
+      height: Math.min(height, 90),
     };
   },
   disableFlip: false,
