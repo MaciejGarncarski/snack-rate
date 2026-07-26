@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useRef, useState, type ImgHTMLAttributes } from "react";
 import { useInView } from "react-intersection-observer";
 
+import { ImageBlur } from "#/components/image/image-blur";
 import { cn } from "#/lib/utils";
 
 function DefaultFallback() {
@@ -98,14 +99,7 @@ export function ImageWithPlaceholder({
 
       {isVisible && src ? (
         <>
-          {blurBackground && status === "loaded" && (
-            <motion.img
-              src={src}
-              alt=""
-              aria-hidden="true"
-              className="  absolute inset-0 h-full w-full scale-125 object-cover blur-3xl opacity-60 saturate-140 brightness-150"
-            />
-          )}
+          {blurBackground && status === "loaded" && <ImageBlur src={src} />}
 
           <motion.img
             ref={imgRef}

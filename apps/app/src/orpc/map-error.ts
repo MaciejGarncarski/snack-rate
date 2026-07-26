@@ -70,23 +70,12 @@ const UNIQUE_CONSTRAINT_MAP: Record<string, { message: string; field?: string }>
     field: "barcode",
   },
 
-  // snack_reviews (composite — one user, one review per snack)
-  snack_reviews_snack_user_unique_idx: {
-    message: "Już dodałeś recenzję tego produktu.",
-  },
-
   // reactions
-  review_reactions_user_review_unique_idx: {
-    message: "Już zareagowałeś na tę recenzję.",
-  },
   comment_reactions_user_comment_unique_idx: {
     message: "Już zareagowałeś na ten komentarz.",
   },
 
   // reports
-  review_reports_reporter_review_unique_idx: {
-    message: "Już zgłosiłeś tę recenzję.",
-  },
   comment_reports_reporter_comment_unique_idx: {
     message: "Już zgłosiłeś ten komentarz.",
   },

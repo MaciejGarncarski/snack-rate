@@ -66,18 +66,20 @@ function RouteComponent() {
           <SnackImageSlider images={imageUrls} />
         </div>
 
-        <div className="pt-1">
+        <div className="pt-1 flex flex-col gap-6 lg:pt-2">
           <Badge variant="default" className="mb-4 rounded-full px-3 py-1 font-semibold">
             {data.type.name}
           </Badge>
-          <h1 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
-            {data.name}
-          </h1>
-          <p className="mt-4 max-w-xl text-pretty leading-relaxed text-muted-foreground sm:text-lg">
-            {data.description || "Ten produkt nie ma jeszcze opisu."}
-          </p>
+          <div>
+            <h1 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
+              {data.name}
+            </h1>
+            <p className="max-w-xl text-pretty leading-relaxed text-muted-foreground sm:text-lg">
+              {data.description || "Ten produkt nie ma jeszcze opisu."}
+            </p>
+          </div>
 
-          <div className="mt-7 flex items-center gap-3 border-y border-border/70 py-5">
+          <div className=" flex items-center gap-3 border-y border-border/70 py-5">
             <div className="flex size-10 items-center justify-center rounded-full bg-amber-400/15 text-amber-600 dark:text-amber-400">
               <StarIcon className="size-5 fill-current" />
             </div>

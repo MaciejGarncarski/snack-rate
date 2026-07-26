@@ -2,7 +2,8 @@ import { useHotkey } from "@tanstack/react-hotkeys";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
-import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
+import { ImageWithPlaceholder } from "#/components/image/image-with-placeholder";
+import { MAXIMUM_IMAGES } from "#/const/image-const";
 import { cn } from "#/lib/utils";
 
 type Direction = 1 | -1;
@@ -30,6 +31,8 @@ export default function SnackImageSlider({ images }: Props) {
   useHotkey("ArrowLeft", () => goTo((index - 1 + images.length) % images.length));
   useHotkey("ArrowRight", () => goTo((index + 1) % images.length));
 
+  const emptySpaces = Math.max(MAXIMUM_IMAGES - images.length, 0);
+
   return (
     <div className="mx-auto w-full">
       <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl border bg-muted border-border">
@@ -54,14 +57,14 @@ export default function SnackImageSlider({ images }: Props) {
         </AnimatePresence>
       </div>
 
-      <div className="mt-4 flex justify-center gap-3">
+      <div className="mt-4 grid grid-cols-3 gap-4">
         {images.map((src, i) => (
           <button
             key={i}
             type="button"
             onClick={() => goTo(i)}
             className={cn(
-              "min-h-none relative aspect-4/5 w-20 overflow-hidden rounded-lg border-2 p-0 transition-colors",
+              "min-h-none relative aspect-4/5 w-full overflow-hidden rounded-lg border-2 p-0 transition-colors",
               i === index ? "border-accent" : "border-transparent opacity-60 hover:opacity-100",
             )}
           >
@@ -73,6 +76,13 @@ export default function SnackImageSlider({ images }: Props) {
             />
           </button>
         ))}
+        {emptySpaces > 0 &&
+          Array.from({ length: emptySpaces }).map((_, i) => (
+            <div
+              key={i}
+              className="aspect-4/5 w-full rounded-lg border-2 border-dashed border-border bg-muted"
+            />
+          ))}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import * as schema from "@snack-rate/db-schema/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { randomUUID } from "node:crypto";
 
-import { createThumbnailFromBuffer } from "../../../../src/server/lib/create-thumbnail.ts";
+import { createThumbnailFromBuffer } from "../../../../apps/app/src/server/lib/create-thumbnail.ts";
 import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
 
 const db = drizzle(process.env.DATABASE_URL!);

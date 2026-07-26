@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
 
 import type { ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
+import { normalizeImageAspectRatio } from "#/features/catalogue/create-snack/utils/normalize-image-aspect-ratio";
 
 type QueueItem = {
   id: string;
@@ -67,24 +68,28 @@ export function useCropQueue({ setImages, onChange, foundSelectedImage }: Props)
     setCropQueue((prev) => prev.slice(1));
   }, []);
 
-  const handleAddToQueue = useCallback((file: File) => {
+  const handleAddToQueue = useCallback(async (file: File) => {
+    const normalizedFile = await normalizeImageAspectRatio(file);
+
     setCropQueue((prev) => [
       ...prev,
       {
         id: nanoid(),
-        file,
+        file: normalizedFile,
       },
     ]);
   }, []);
 
-  const handleRecrop = useCallback(() => {
+  const handleRecrop = useCallback(async () => {
     if (!foundSelectedImage) return;
+
+    const normalizedFile = await normalizeImageAspectRatio(foundSelectedImage.file);
 
     setCropQueue((prev) => [
       ...prev,
       {
         id: nanoid(),
-        file: foundSelectedImage.file,
+        file: normalizedFile,
         originalImageId: foundSelectedImage.id,
       },
     ]);

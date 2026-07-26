@@ -76,6 +76,7 @@ export function SearchBoxInput({
           aria-label="Scan Barcode"
           variant="secondary"
           size="icon"
+          className="border border-input"
           onClick={() => setDialogOpen(true)}
         >
           <ScanBarcodeIcon />

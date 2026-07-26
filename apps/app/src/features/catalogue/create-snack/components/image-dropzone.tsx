@@ -90,15 +90,19 @@ export const ImageDropzone = ({
       <div className="relative size-full overflow-hidden rounded-lg border border-accent">
         <AnimatePresence mode="popLayout">
           {selectedImage ? (
-            <motion.img
+            <motion.div
+              className="size-full relative select-none bg-secondary"
               key={selectedImage.id}
-              src={selectedImage.croppedFileUrl}
-              alt="Wybrany obraz"
-              draggable={false}
-              className="size-full object-cover select-none"
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
+            >
+              <motion.img
+                src={selectedImage.croppedFileUrl}
+                alt="Wybrany obraz"
+                draggable={false}
+                className="size-full object-cover select-none"
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+            </motion.div>
           ) : (
             <motion.button
               key="no-image"

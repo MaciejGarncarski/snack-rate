@@ -1,4 +1,4 @@
-import { ImageWithPlaceholder } from "#/components/layout/image-with-placeholder";
+import { ImageWithPlaceholder } from "#/components/image/image-with-placeholder";
 
 export function Logo() {
   return (
