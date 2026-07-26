@@ -27,6 +27,7 @@ interface ImageWithPlaceholderProps extends ImgProps {
   fallback?: React.ReactNode;
   containerClassName?: string;
   lazy?: boolean;
+  blurBackground?: boolean;
 }
 
 export function ImageWithPlaceholder({
@@ -37,6 +38,7 @@ export function ImageWithPlaceholder({
   className,
   containerClassName,
   lazy,
+  blurBackground = false,
   ...imgProps
 }: ImageWithPlaceholderProps) {
   const [isVisible, setIsVisible] = useState(!lazy);
@@ -91,20 +93,33 @@ export function ImageWithPlaceholder({
           </motion.div>
         )}
       </AnimatePresence>
+
       {status === "error" && fallback}
-      {isVisible ? (
-        <motion.img
-          ref={imgRef}
-          src={src}
-          alt={alt}
-          className={cn("block", className)}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: status === "loaded" ? 1 : 0 }}
-          transition={{ duration: 0.2 }}
-          onLoad={() => setStatus("loaded")}
-          onError={() => setStatus("error")}
-          {...imgProps}
-        />
+
+      {isVisible && src ? (
+        <>
+          {blurBackground && status === "loaded" && (
+            <motion.img
+              src={src}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full scale-150 object-cover blur-2xl opacity-80 brightness-130 "
+            />
+          )}
+
+          <motion.img
+            ref={imgRef}
+            src={src}
+            alt={alt}
+            className={cn("relative z-10 block", className)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: status === "loaded" ? 1 : 0 }}
+            transition={{ duration: 0.2 }}
+            onLoad={() => setStatus("loaded")}
+            onError={() => setStatus("error")}
+            {...imgProps}
+          />
+        </>
       ) : null}
     </div>
   );

@@ -13,58 +13,7 @@ import {
 import { Field } from "#/components/ui/field";
 import { Label } from "#/components/ui/label";
 import { Slider } from "#/components/ui/slider";
-
-const MAX_OUTPUT_DIMENSION = 1024;
-
-function createImage(url: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.addEventListener("load", () => resolve(image));
-    image.addEventListener("error", (error) => reject(error));
-    image.setAttribute("crossOrigin", "anonymous");
-    image.src = url;
-  });
-}
-
-async function getCroppedImg(imageSrc: string, pixelCrop: Area, fileName: string): Promise<File> {
-  const image = await createImage(imageSrc);
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-
-  if (!ctx) {
-    throw new Error("Could not get canvas context");
-  }
-
-  const scale = Math.min(1, MAX_OUTPUT_DIMENSION / Math.max(pixelCrop.width, pixelCrop.height));
-  canvas.width = pixelCrop.width * scale;
-  canvas.height = pixelCrop.height * scale;
-
-  ctx.drawImage(
-    image,
-    pixelCrop.x,
-    pixelCrop.y,
-    pixelCrop.width,
-    pixelCrop.height,
-    0,
-    0,
-    canvas.width,
-    canvas.height,
-  );
-
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) {
-          reject(new Error("Canvas to blob failed"));
-          return;
-        }
-        resolve(new File([blob], fileName, { type: "image/png", lastModified: Date.now() }));
-      },
-      "image/png",
-      0.95,
-    );
-  });
-}
+import { useImageCrop } from "#/features/catalogue/create-snack/hooks/use-image-crop";
 
 type ImageCropDialogProps = {
   open: boolean;
@@ -74,7 +23,7 @@ type ImageCropDialogProps = {
 };
 
 const MAX_ZOOM = 3;
-const MIN_ZOOM = 1;
+const MIN_ZOOM = 0.8;
 
 export function ImageCropDialog({
   open,
@@ -87,6 +36,7 @@ export function ImageCropDialog({
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [isCropping, setIsCropping] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { processImage } = useImageCrop();
 
   useEffect(() => {
     if (open) {
@@ -106,7 +56,7 @@ export function ImageCropDialog({
     setIsCropping(true);
     setError(null);
     try {
-      const croppedFile = await getCroppedImg(imageSrc, croppedAreaPixels, "cropped.png");
+      const croppedFile = await processImage(imageSrc, croppedAreaPixels, "cropped.png");
       onCropComplete(croppedFile);
       onOpenChange(false);
     } catch (err) {
@@ -134,7 +84,6 @@ export function ImageCropDialog({
             aspect={4 / 5}
             cropShape="rect"
             showGrid
-            objectFit="vertical-cover"
             minZoom={MIN_ZOOM}
             maxZoom={MAX_ZOOM}
             restrictPosition={true}

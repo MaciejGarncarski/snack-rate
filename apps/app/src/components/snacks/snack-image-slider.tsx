@@ -48,6 +48,7 @@ export default function SnackImageSlider({ images }: Props) {
               src={images[index]}
               alt={`Slajd ${index + 1}`}
               className="h-full w-full object-cover"
+              blurBackground
             />
           </motion.div>
         </AnimatePresence>
@@ -66,6 +67,7 @@ export default function SnackImageSlider({ images }: Props) {
           >
             <ImageWithPlaceholder
               src={src}
+              blurBackground
               alt={`Miniatura ${i + 1}`}
               className="h-full w-full object-cover"
             />

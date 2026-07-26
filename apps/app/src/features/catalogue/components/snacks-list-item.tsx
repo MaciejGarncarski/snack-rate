@@ -33,6 +33,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
             lazy={lazy}
             src={images[0]?.url}
             alt={name}
+            blurBackground
             containerClassName="w-full aspect-4/5 bg-muted"
             className="h-full w-full object-cover"
           />
