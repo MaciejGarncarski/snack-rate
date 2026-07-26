@@ -8,198 +8,200 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as AppIndexRouteImport } from "./routes/_app/index";
-import { Route as AppProduktSlugRouteImport } from "./routes/_app/produkt/$slug";
-import { Route as AppRouteRouteImport } from "./routes/_app/route";
-import { Route as AppZaproponujIndexRouteImport } from "./routes/_app/zaproponuj/index";
-import { Route as ApiSplatRouteImport } from "./routes/api/$";
-import { Route as ApiRpcSplatRouteImport } from "./routes/api/rpc/$";
-import { Route as HealthIndexRouteImport } from "./routes/health/index";
-import { Route as HealthReadyRouteImport } from "./routes/health/ready";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as HealthIndexRouteImport } from './routes/health/index'
+import { Route as HealthReadyRouteImport } from './routes/health/ready'
+import { Route as AppProduktSlugRouteImport } from './routes/_app/produkt/$slug'
+import { Route as AppZaproponujIndexRouteImport } from './routes/_app/zaproponuj/index'
+import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 
 const AppRouteRoute = AppRouteRouteImport.update({
-  id: "/_app",
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AppIndexRoute = AppIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => AppRouteRoute,
-} as any);
+} as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
-  id: "/api/$",
-  path: "/api/$",
+  id: '/api/$',
+  path: '/api/$',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const HealthIndexRoute = HealthIndexRouteImport.update({
-  id: "/health/",
-  path: "/health/",
+  id: '/health/',
+  path: '/health/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const HealthReadyRoute = HealthReadyRouteImport.update({
-  id: "/health/ready",
-  path: "/health/ready",
+  id: '/health/ready',
+  path: '/health/ready',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AppProduktSlugRoute = AppProduktSlugRouteImport.update({
-  id: "/produkt/$slug",
-  path: "/produkt/$slug",
+  id: '/produkt/$slug',
+  path: '/produkt/$slug',
   getParentRoute: () => AppRouteRoute,
-} as any);
+} as any)
 const AppZaproponujIndexRoute = AppZaproponujIndexRouteImport.update({
-  id: "/zaproponuj/",
-  path: "/zaproponuj/",
+  id: '/zaproponuj/',
+  path: '/zaproponuj/',
   getParentRoute: () => AppRouteRoute,
-} as any);
+} as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
-  id: "/api/rpc/$",
-  path: "/api/rpc/$",
+  id: '/api/rpc/$',
+  path: '/api/rpc/$',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof AppIndexRoute;
-  "/api/$": typeof ApiSplatRoute;
-  "/health/ready": typeof HealthReadyRoute;
-  "/health/": typeof HealthIndexRoute;
-  "/produkt/$slug": typeof AppProduktSlugRoute;
-  "/api/rpc/$": typeof ApiRpcSplatRoute;
-  "/zaproponuj/": typeof AppZaproponujIndexRoute;
+  '/': typeof AppIndexRoute
+  '/api/$': typeof ApiSplatRoute
+  '/health/ready': typeof HealthReadyRoute
+  '/health/': typeof HealthIndexRoute
+  '/produkt/$slug': typeof AppProduktSlugRoute
+  '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/zaproponuj/': typeof AppZaproponujIndexRoute
 }
 export interface FileRoutesByTo {
-  "/api/$": typeof ApiSplatRoute;
-  "/health/ready": typeof HealthReadyRoute;
-  "/": typeof AppIndexRoute;
-  "/health": typeof HealthIndexRoute;
-  "/produkt/$slug": typeof AppProduktSlugRoute;
-  "/api/rpc/$": typeof ApiRpcSplatRoute;
-  "/zaproponuj": typeof AppZaproponujIndexRoute;
+  '/api/$': typeof ApiSplatRoute
+  '/health/ready': typeof HealthReadyRoute
+  '/': typeof AppIndexRoute
+  '/health': typeof HealthIndexRoute
+  '/produkt/$slug': typeof AppProduktSlugRoute
+  '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/zaproponuj': typeof AppZaproponujIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/_app": typeof AppRouteRouteWithChildren;
-  "/api/$": typeof ApiSplatRoute;
-  "/health/ready": typeof HealthReadyRoute;
-  "/_app/": typeof AppIndexRoute;
-  "/health/": typeof HealthIndexRoute;
-  "/_app/produkt/$slug": typeof AppProduktSlugRoute;
-  "/api/rpc/$": typeof ApiRpcSplatRoute;
-  "/_app/zaproponuj/": typeof AppZaproponujIndexRoute;
+  __root__: typeof rootRouteImport
+  '/_app': typeof AppRouteRouteWithChildren
+  '/api/$': typeof ApiSplatRoute
+  '/health/ready': typeof HealthReadyRoute
+  '/_app/': typeof AppIndexRoute
+  '/health/': typeof HealthIndexRoute
+  '/_app/produkt/$slug': typeof AppProduktSlugRoute
+  '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/_app/zaproponuj/': typeof AppZaproponujIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/api/$"
-    | "/health/ready"
-    | "/health/"
-    | "/produkt/$slug"
-    | "/api/rpc/$"
-    | "/zaproponuj/";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/api/$'
+    | '/health/ready'
+    | '/health/'
+    | '/produkt/$slug'
+    | '/api/rpc/$'
+    | '/zaproponuj/'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/api/$"
-    | "/health/ready"
-    | "/"
-    | "/health"
-    | "/produkt/$slug"
-    | "/api/rpc/$"
-    | "/zaproponuj";
+    | '/api/$'
+    | '/health/ready'
+    | '/'
+    | '/health'
+    | '/produkt/$slug'
+    | '/api/rpc/$'
+    | '/zaproponuj'
   id:
-    | "__root__"
-    | "/_app"
-    | "/api/$"
-    | "/health/ready"
-    | "/_app/"
-    | "/health/"
-    | "/_app/produkt/$slug"
-    | "/api/rpc/$"
-    | "/_app/zaproponuj/";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/_app'
+    | '/api/$'
+    | '/health/ready'
+    | '/_app/'
+    | '/health/'
+    | '/_app/produkt/$slug'
+    | '/api/rpc/$'
+    | '/_app/zaproponuj/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AppRouteRoute: typeof AppRouteRouteWithChildren;
-  ApiSplatRoute: typeof ApiSplatRoute;
-  HealthReadyRoute: typeof HealthReadyRoute;
-  HealthIndexRoute: typeof HealthIndexRoute;
-  ApiRpcSplatRoute: typeof ApiRpcSplatRoute;
+  AppRouteRoute: typeof AppRouteRouteWithChildren
+  ApiSplatRoute: typeof ApiSplatRoute
+  HealthReadyRoute: typeof HealthReadyRoute
+  HealthIndexRoute: typeof HealthIndexRoute
+  ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/_app": {
-      id: "/_app";
-      path: "";
-      fullPath: "/";
-      preLoaderRoute: typeof AppRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_app/": {
-      id: "/_app/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof AppIndexRouteImport;
-      parentRoute: typeof AppRouteRoute;
-    };
-    "/api/$": {
-      id: "/api/$";
-      path: "/api/$";
-      fullPath: "/api/$";
-      preLoaderRoute: typeof ApiSplatRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/health/": {
-      id: "/health/";
-      path: "/health";
-      fullPath: "/health/";
-      preLoaderRoute: typeof HealthIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/health/ready": {
-      id: "/health/ready";
-      path: "/health/ready";
-      fullPath: "/health/ready";
-      preLoaderRoute: typeof HealthReadyRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_app/produkt/$slug": {
-      id: "/_app/produkt/$slug";
-      path: "/produkt/$slug";
-      fullPath: "/produkt/$slug";
-      preLoaderRoute: typeof AppProduktSlugRouteImport;
-      parentRoute: typeof AppRouteRoute;
-    };
-    "/_app/zaproponuj/": {
-      id: "/_app/zaproponuj/";
-      path: "/zaproponuj";
-      fullPath: "/zaproponuj/";
-      preLoaderRoute: typeof AppZaproponujIndexRouteImport;
-      parentRoute: typeof AppRouteRoute;
-    };
-    "/api/rpc/$": {
-      id: "/api/rpc/$";
-      path: "/api/rpc/$";
-      fullPath: "/api/rpc/$";
-      preLoaderRoute: typeof ApiRpcSplatRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/api/$': {
+      id: '/api/$'
+      path: '/api/$'
+      fullPath: '/api/$'
+      preLoaderRoute: typeof ApiSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/health/': {
+      id: '/health/'
+      path: '/health'
+      fullPath: '/health/'
+      preLoaderRoute: typeof HealthIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/health/ready': {
+      id: '/health/ready'
+      path: '/health/ready'
+      fullPath: '/health/ready'
+      preLoaderRoute: typeof HealthReadyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/produkt/$slug': {
+      id: '/_app/produkt/$slug'
+      path: '/produkt/$slug'
+      fullPath: '/produkt/$slug'
+      preLoaderRoute: typeof AppProduktSlugRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/zaproponuj/': {
+      id: '/_app/zaproponuj/'
+      path: '/zaproponuj'
+      fullPath: '/zaproponuj/'
+      preLoaderRoute: typeof AppZaproponujIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/api/rpc/$': {
+      id: '/api/rpc/$'
+      path: '/api/rpc/$'
+      fullPath: '/api/rpc/$'
+      preLoaderRoute: typeof ApiRpcSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AppRouteRouteChildren {
-  AppIndexRoute: typeof AppIndexRoute;
-  AppProduktSlugRoute: typeof AppProduktSlugRoute;
-  AppZaproponujIndexRoute: typeof AppZaproponujIndexRoute;
+  AppIndexRoute: typeof AppIndexRoute
+  AppProduktSlugRoute: typeof AppProduktSlugRoute
+  AppZaproponujIndexRoute: typeof AppZaproponujIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppProduktSlugRoute: AppProduktSlugRoute,
   AppZaproponujIndexRoute: AppZaproponujIndexRoute,
-};
+}
 
-const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(AppRouteRouteChildren);
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
@@ -207,17 +209,17 @@ const rootRouteChildren: RootRouteChildren = {
   HealthReadyRoute: HealthReadyRoute,
   HealthIndexRoute: HealthIndexRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx";
-import type { startInstance } from "./start.ts";
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

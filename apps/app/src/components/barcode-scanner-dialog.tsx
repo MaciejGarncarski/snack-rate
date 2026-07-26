@@ -1,6 +1,12 @@
-import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
-import { ScanBarcodeIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {
+  Html5Qrcode,
+  Html5QrcodeScannerState,
+  Html5QrcodeSupportedFormats,
+  type Html5QrcodeFullConfig,
+} from "html5-qrcode";
+import type { Html5QrcodeScannerConfig } from "html5-qrcode/esm/html5-qrcode-scanner";
+import { CameraOffIcon, ScanBarcodeIcon } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   Dialog,
@@ -20,9 +26,42 @@ type BarcodeScannerDialogProps = {
   onScan: (barcode: string) => void;
 };
 
+const cameraConfig: Html5QrcodeScannerConfig = {
+  fps: SCAN_FPS,
+  qrbox: (viewfinderWidth) => {
+    const width = Math.floor(viewfinderWidth * 0.85);
+    const height = Math.floor(width * 0.4);
+
+    return {
+      width,
+      height: Math.max(height, 80),
+    };
+  },
+  disableFlip: false,
+};
+
+const scannerConfig: Html5QrcodeFullConfig = {
+  verbose: true,
+  formatsToSupport: [
+    Html5QrcodeSupportedFormats.EAN_13,
+    Html5QrcodeSupportedFormats.EAN_8,
+    Html5QrcodeSupportedFormats.UPC_A,
+    Html5QrcodeSupportedFormats.UPC_E,
+  ],
+};
+
 export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScannerDialogProps) {
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const [cameraReady, setCameraReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const onScanSuccess = useCallback(
+    (decodedText: string) => {
+      onScan(decodedText);
+      onOpenChange(false);
+    },
+    [onScan, onOpenChange],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -32,6 +71,7 @@ export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScan
       const scanner = scannerRef.current;
       scannerRef.current = null;
       if (!scanner) return;
+
       try {
         if (scanner.getState() === Html5QrcodeScannerState.SCANNING) {
           await scanner.stop();
@@ -41,19 +81,14 @@ export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScan
     };
 
     const startScanner = async () => {
+      setCameraReady(false);
       setError(null);
       try {
-        const scanner = new Html5Qrcode(SCANNER_ID);
+        const scanner = new Html5Qrcode(SCANNER_ID, scannerConfig);
         scannerRef.current = scanner;
-        await scanner.start(
-          { facingMode: "environment" },
-          { fps: SCAN_FPS, qrbox: { width: 250, height: 250 } },
-          (decodedText) => {
-            onScan(decodedText);
-            onOpenChange(false);
-          },
-          () => {},
-        );
+        await scanner.start({ facingMode: "environment" }, cameraConfig, onScanSuccess, () => {});
+
+        setCameraReady(true);
 
         if (cancelled) {
           await stopScanner();
@@ -77,7 +112,7 @@ export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScan
       cancelled = true;
       stopScanner();
     };
-  }, [open, onScan, onOpenChange]);
+  }, [open, onScan, onOpenChange, onScanSuccess]);
 
   return (
     <Dialog isOpen={open} onOpenChange={onOpenChange} className="max-w-sm">
@@ -88,6 +123,9 @@ export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScan
       <div className="flex flex-col items-center gap-4">
         <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl bg-muted">
           <div id={SCANNER_ID} className="size-full [&_video]:rounded-xl" />
+          {!cameraReady && (
+            <CameraOffIcon className="absolute left-1/2 top-1/2 z-10 h-12 w-12 -translate-x-1/2 -translate-y-1/2 text-muted-foreground" />
+          )}
         </div>
         {error && (
           <p className="text-sm text-destructive">
