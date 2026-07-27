@@ -1,5 +1,7 @@
 export const MAXIMUM_IMAGES = 3;
 
+export const PRODUCTS_PER_SCROLL = 8;
+
 export const ALLOWED_MIME_TYPES = new Set([
   "image/jpeg",
   "image/jpg",
@@ -21,13 +23,7 @@ export const THUMBNAIL_ASPECT_RATIO = 4 / 5;
 
 export const OUTPUT_ASPECT_RATIO = 4 / 5;
 
-/*
-  Images with aspect ratio more than EXTREME_THRESHOLD away from the
-  target 4:5 lose too much content when force-cropped (e.g. a 200x1000px
-  phone-booth shot crops down to ~160x200).  These get the pad flow
-  instead: the source is centred and letterboxed into a 4:5 canvas.
-*/
 export const EXTREME_THRESHOLD = 2.5;
 
 export const PAD_OUTPUT_WIDTH = 1024;
-export const PAD_OUTPUT_HEIGHT = Math.round(PAD_OUTPUT_WIDTH / OUTPUT_ASPECT_RATIO); // 1280
+export const PAD_OUTPUT_HEIGHT = Math.round(PAD_OUTPUT_WIDTH / OUTPUT_ASPECT_RATIO);
