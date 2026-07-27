@@ -81,7 +81,7 @@ function RouteComponent() {
     <main className="mx-auto w-full max-w-4xl pb-10">
       <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:gap-12">
         <div className="mx-auto w-full max-w-sm lg:sticky lg:top-8">
-          <SnackImageSlider images={imageUrls} />
+          <SnackImageSlider images={imageUrls} slug={slug} />
         </div>
 
         <div className="pt-1 flex flex-col gap-6 lg:pt-2">

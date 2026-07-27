@@ -16,6 +16,7 @@ const variants = {
 
 type Props = {
   images: string[];
+  slug: string;
 };
 
 export default function SnackImageSlider({ images }: Props) {
@@ -50,7 +51,7 @@ export default function SnackImageSlider({ images }: Props) {
             <ImageWithPlaceholder
               src={images[index]}
               alt={`Slajd ${index + 1}`}
-              className="h-full w-full object-cover"
+              className={`h-full w-full object-cover`}
               blurBackground
             />
           </motion.div>
@@ -64,8 +65,8 @@ export default function SnackImageSlider({ images }: Props) {
             type="button"
             onClick={() => goTo(i)}
             className={cn(
-              "min-h-none relative aspect-4/5 w-full overflow-hidden rounded-lg border-2 p-0 transition-colors",
-              i === index ? "border-accent" : "border-transparent opacity-60 hover:opacity-100",
+              "min-h-none relative w-full h-full overflow-hidden rounded-lg ring-2 p-0 transition-colors",
+              i === index ? "ring-primary" : "ring-transparent opacity-80 hover:opacity-100",
             )}
           >
             <ImageWithPlaceholder
