@@ -111,7 +111,7 @@ export function ImageWithPlaceholder({
             src={src}
             alt={alt}
             className={cn("relative z-10 block", className)}
-            initial={{ opacity: 0 }}
+            initial={{ opacity: isGloballyLoaded ? 1 : 0 }}
             animate={{ opacity: status === "loaded" ? 1 : 0 }}
             transition={{ duration: 0.2 }}
             onLoad={(e) => {

@@ -183,3 +183,10 @@
     font-family: var(--font-mono);
   }
 }
+
+@layer utilities {
+  .bg-gradient-transparency {
+    background-image: repeating-conic-gradient(var(--input) 0% 25%, var(--secondary) 0% 50%);
+    background-size: 40px 40px;
+  }
+}

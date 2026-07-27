@@ -88,34 +88,28 @@ export const ImageDropzone = ({
       onDrop={handleDrop}
     >
       <div className="relative size-full overflow-hidden rounded-lg border border-accent">
-        <AnimatePresence mode="popLayout">
-          {selectedImage ? (
-            <motion.div
-              className="size-full relative select-none bg-secondary"
-              key={selectedImage.id}
-            >
-              <motion.img
-                src={selectedImage.croppedFileUrl}
-                alt="Wybrany obraz"
-                draggable={false}
-                className="size-full object-cover select-none"
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              />
-            </motion.div>
-          ) : (
-            <motion.button
-              key="no-image"
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={onUploadClick}
-              className="absolute left-0 flex select-none h-full w-full flex-col items-center justify-center gap-4 rounded-lg bg-input/50 text-muted-foreground outline-none"
-            >
-              <ImageOffIcon />
-              <p>Brak obrazu</p>
-            </motion.button>
-          )}
-        </AnimatePresence>
+        {selectedImage ? (
+          <div
+            className="size-full relative select-none bg-gradient-transparency"
+            key={selectedImage.id}
+          >
+            <img
+              src={selectedImage.croppedFileUrl}
+              alt="Wybrany obraz"
+              draggable={false}
+              className="size-full object-cover select-none"
+            />
+          </div>
+        ) : (
+          <button
+            key="no-image"
+            onClick={onUploadClick}
+            className="absolute left-0 flex select-none h-full w-full flex-col items-center justify-center gap-4 rounded-lg bg-input/50 text-muted-foreground outline-none"
+          >
+            <ImageOffIcon />
+            <p>Brak obrazu</p>
+          </button>
+        )}
         <AnimatePresence>
           {isDragOver && (
             <motion.div

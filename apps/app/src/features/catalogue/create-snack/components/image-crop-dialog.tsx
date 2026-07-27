@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
 
 import { Button } from "#/components/ui/button";
@@ -38,15 +38,6 @@ export function ImageCropDialog({
   const [error, setError] = useState<string | null>(null);
   const { processImage } = useImageCrop();
 
-  useEffect(() => {
-    if (open) {
-      setCrop({ x: 0, y: 0 });
-      setZoom(1);
-      setCroppedAreaPixels(null);
-      setError(null);
-    }
-  }, [open, imageSrc]);
-
   const handleCropComplete = useCallback((_: Area, cropped: Area) => {
     setCroppedAreaPixels(cropped);
   }, []);
@@ -75,7 +66,7 @@ export function ImageCropDialog({
         <DialogDescription>Przycinaj obraz do wybranego obszaru.</DialogDescription>
       </DialogHeader>
       <div className="flex flex-col items-center gap-4">
-        <div className="relative aspect-4/5 w-full overflow-hidden rounded-xl bg-muted">
+        <div className="relative aspect-4/5 w-full shadow bg-gradient-transparency">
           <Cropper
             key={imageSrc}
             image={imageSrc}
