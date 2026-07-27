@@ -109,7 +109,7 @@ export const snackReviews = pgTable(
       .notNull()
       .references(() => users.id),
     rating: integer("rating").notNull(), // CHECK: 1–5
-    comment: text("comment"),
+    comment: text("comment"), // TODO: DELETE
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
@@ -135,7 +135,7 @@ export const comments = pgTable(
       .default(sql`uuidv7()`),
     reviewId: uuid("review_id")
       .notNull()
-      .references(() => snackReviews.id),
+      .references(() => snackReviews.id), //TODO: DELETE
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id),

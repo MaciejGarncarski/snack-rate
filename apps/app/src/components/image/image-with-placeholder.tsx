@@ -1,3 +1,4 @@
+import { useSelector } from "@tanstack/react-store";
 import { ImageOffIcon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useRef, useState, type ImgHTMLAttributes } from "react";
@@ -5,6 +6,7 @@ import { useInView } from "react-intersection-observer";
 
 import { ImageBlur } from "#/components/image/image-blur";
 import { cn } from "#/lib/utils";
+import { imageLoadStore, markImageLoaded } from "#/stores/image-load-store";
 
 function DefaultFallback() {
   return (
@@ -43,7 +45,8 @@ export function ImageWithPlaceholder({
   ...imgProps
 }: ImageWithPlaceholderProps) {
   const [isVisible, setIsVisible] = useState(!lazy);
-  const [status, setStatus] = useState<Status>("loading");
+  const isGloballyLoaded = useSelector(imageLoadStore, (state) => (src ? state.has(src) : false));
+  const [status, setStatus] = useState<Status>(() => (isGloballyLoaded ? "loaded" : "loading"));
   const [showSkeleton, setShowSkeleton] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -72,7 +75,9 @@ export function ImageWithPlaceholder({
     if (!img) return;
 
     if (img.complete) {
-      setStatus(img.naturalWidth > 0 ? "loaded" : "error");
+      const loaded = img.naturalWidth > 0;
+      setStatus(loaded ? "loaded" : "error");
+      if (loaded && src) markImageLoaded(src);
     } else {
       setStatus("loading");
     }
@@ -109,8 +114,15 @@ export function ImageWithPlaceholder({
             initial={{ opacity: 0 }}
             animate={{ opacity: status === "loaded" ? 1 : 0 }}
             transition={{ duration: 0.2 }}
-            onLoad={() => setStatus("loaded")}
-            onError={() => setStatus("error")}
+            onLoad={(e) => {
+              setStatus("loaded");
+              if (src) markImageLoaded(src);
+              imgProps.onLoad?.(e);
+            }}
+            onError={(e) => {
+              setStatus("error");
+              imgProps.onError?.(e);
+            }}
             {...imgProps}
           />
         </>
