@@ -14,9 +14,10 @@ import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as HealthIndexRouteImport } from './routes/health/index'
 import { Route as HealthReadyRouteImport } from './routes/health/ready'
-import { Route as AppProduktSlugRouteImport } from './routes/_app/produkt/$slug'
+import { Route as AppProduktSlugRouteRouteImport } from './routes/_app/produkt/$slug/route'
 import { Route as AppZaproponujIndexRouteImport } from './routes/_app/zaproponuj/index'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
+import { Route as AppProduktSlugOgDotpngRouteImport } from './routes/_app/produkt/$slug/og[.]png'
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
@@ -42,7 +43,7 @@ const HealthReadyRoute = HealthReadyRouteImport.update({
   path: '/health/ready',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppProduktSlugRoute = AppProduktSlugRouteImport.update({
+const AppProduktSlugRouteRoute = AppProduktSlugRouteRouteImport.update({
   id: '/produkt/$slug',
   path: '/produkt/$slug',
   getParentRoute: () => AppRouteRoute,
@@ -57,24 +58,31 @@ const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   path: '/api/rpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppProduktSlugOgDotpngRoute = AppProduktSlugOgDotpngRouteImport.update({
+  id: '/og.png',
+  path: '/og.png',
+  getParentRoute: () => AppProduktSlugRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/health/': typeof HealthIndexRoute
-  '/produkt/$slug': typeof AppProduktSlugRoute
+  '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/zaproponuj/': typeof AppZaproponujIndexRoute
+  '/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
 }
 export interface FileRoutesByTo {
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/': typeof AppIndexRoute
   '/health': typeof HealthIndexRoute
-  '/produkt/$slug': typeof AppProduktSlugRoute
+  '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/zaproponuj': typeof AppZaproponujIndexRoute
+  '/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -83,9 +91,10 @@ export interface FileRoutesById {
   '/health/ready': typeof HealthReadyRoute
   '/_app/': typeof AppIndexRoute
   '/health/': typeof HealthIndexRoute
-  '/_app/produkt/$slug': typeof AppProduktSlugRoute
+  '/_app/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/_app/zaproponuj/': typeof AppZaproponujIndexRoute
+  '/_app/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/produkt/$slug'
     | '/api/rpc/$'
     | '/zaproponuj/'
+    | '/produkt/$slug/og.png'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/api/$'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/produkt/$slug'
     | '/api/rpc/$'
     | '/zaproponuj'
+    | '/produkt/$slug/og.png'
   id:
     | '__root__'
     | '/_app'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/_app/produkt/$slug'
     | '/api/rpc/$'
     | '/_app/zaproponuj/'
+    | '/_app/produkt/$slug/og.png'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -167,7 +179,7 @@ declare module '@tanstack/react-router' {
       id: '/_app/produkt/$slug'
       path: '/produkt/$slug'
       fullPath: '/produkt/$slug'
-      preLoaderRoute: typeof AppProduktSlugRouteImport
+      preLoaderRoute: typeof AppProduktSlugRouteRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/_app/zaproponuj/': {
@@ -184,18 +196,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiRpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/produkt/$slug/og.png': {
+      id: '/_app/produkt/$slug/og.png'
+      path: '/og.png'
+      fullPath: '/produkt/$slug/og.png'
+      preLoaderRoute: typeof AppProduktSlugOgDotpngRouteImport
+      parentRoute: typeof AppProduktSlugRouteRoute
+    }
   }
 }
 
+interface AppProduktSlugRouteRouteChildren {
+  AppProduktSlugOgDotpngRoute: typeof AppProduktSlugOgDotpngRoute
+}
+
+const AppProduktSlugRouteRouteChildren: AppProduktSlugRouteRouteChildren = {
+  AppProduktSlugOgDotpngRoute: AppProduktSlugOgDotpngRoute,
+}
+
+const AppProduktSlugRouteRouteWithChildren =
+  AppProduktSlugRouteRoute._addFileChildren(AppProduktSlugRouteRouteChildren)
+
 interface AppRouteRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
-  AppProduktSlugRoute: typeof AppProduktSlugRoute
+  AppProduktSlugRouteRoute: typeof AppProduktSlugRouteRouteWithChildren
   AppZaproponujIndexRoute: typeof AppZaproponujIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
-  AppProduktSlugRoute: AppProduktSlugRoute,
+  AppProduktSlugRouteRoute: AppProduktSlugRouteRouteWithChildren,
   AppZaproponujIndexRoute: AppZaproponujIndexRoute,
 }
 

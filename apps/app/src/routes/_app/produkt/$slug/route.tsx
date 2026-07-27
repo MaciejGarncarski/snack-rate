@@ -46,6 +46,25 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
     if (!snack) {
       throw notFound();
     }
+
+    return snack;
+  },
+  head: ({ loaderData }) => {
+    if (!loaderData) return { meta: [] };
+
+    return {
+      meta: [
+        { property: "og:image", content: `/produkt/${loaderData.slug}/og.png` },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        { property: "og:title", content: loaderData.name },
+        {
+          property: "og:description",
+          content: loaderData.description ?? "Sprawdź ten produkt na Snack Rate!",
+        },
+        { property: "og:type", content: "website" },
+      ],
+    };
   },
 });
 
