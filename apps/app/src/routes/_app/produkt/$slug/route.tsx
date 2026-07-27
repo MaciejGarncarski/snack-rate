@@ -55,13 +55,12 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
     return {
       meta: [
         { property: "og:image", content: `/produkt/${loaderData.slug}/og.png` },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
         { property: "og:title", content: loaderData.name },
         {
           property: "og:description",
           content: loaderData.description ?? "Sprawdź ten produkt na Snack Rate!",
         },
+        { property: "og:site_name", content: "Snack Rate" },
         { property: "og:type", content: "website" },
       ],
     };
