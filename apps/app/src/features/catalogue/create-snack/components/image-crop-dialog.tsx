@@ -34,20 +34,22 @@ export function ImageCropDialog({
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [croppedAreaPercent, setCroppedAreaPercent] = useState<Area | null>(null);
   const [isCropping, setIsCropping] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { processImage } = useImageCrop();
 
-  const handleCropComplete = useCallback((_: Area, cropped: Area) => {
-    setCroppedAreaPixels(cropped);
+  const handleCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPercent(croppedArea);
+    setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
   const handleCrop = async () => {
-    if (!croppedAreaPixels) return;
+    if (!croppedAreaPixels || !croppedAreaPercent) return;
     setIsCropping(true);
     setError(null);
     try {
-      const croppedFile = await processImage(imageSrc, croppedAreaPixels, "cropped.png");
+      const croppedFile = await processImage(imageSrc, croppedAreaPercent, "cropped.png");
       onCropComplete(croppedFile);
       onOpenChange(false);
     } catch (err) {

@@ -6,12 +6,17 @@ import { cropImageBitmap } from "#/features/catalogue/create-snack/utils/canvas-
 
 export function useImageCrop() {
   const processImage = useCallback(
-    async (imageSrc: string, pixelCrop: Area, fileName: string): Promise<File> => {
+    async (imageSrc: string, percentCrop: Area, fileName: string): Promise<File> => {
       const response = await fetch(imageSrc);
       const blob = await response.blob();
-      const bitmap = await createImageBitmap(blob, { imageOrientation: "from-image" });
+      const bitmap = await createImageBitmap(blob);
 
-      console.log(pixelCrop);
+      const pixelCrop: Area = {
+        x: (percentCrop.x / 100) * bitmap.width,
+        y: (percentCrop.y / 100) * bitmap.height,
+        width: (percentCrop.width / 100) * bitmap.width,
+        height: (percentCrop.height / 100) * bitmap.height,
+      };
 
       const scale = Math.min(
         1,

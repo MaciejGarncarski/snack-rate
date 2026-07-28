@@ -189,4 +189,9 @@
     background-image: repeating-conic-gradient(var(--input) 0% 25%, var(--secondary) 0% 50%);
     background-size: 40px 40px;
   }
+
+  .bg-gradient-transparency-small {
+    background-image: repeating-conic-gradient(var(--input) 0% 25%, var(--secondary) 0% 50%);
+    background-size: 15px 15px;
+  }
 }

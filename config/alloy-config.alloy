@@ -19,7 +19,7 @@ prometheus.scrape "prometheus" {
   forward_to = [prometheus.remote_write.default.receiver]
 }
 
-prometheus.scrape "tanstack_app" {
+prometheus.scrape "snack_rate_app" {
   targets = [
     { "__address__" = "host.docker.internal:9464" },
     { "__address__" = "app:9464" },

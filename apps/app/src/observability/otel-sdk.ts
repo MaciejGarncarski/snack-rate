@@ -97,11 +97,15 @@ export function initOpenTelemetry(options: OtelSdkOptions = {}) {
   log.info("OpenTelemetry SDK started");
 
   process.on("uncaughtException", (reason) => {
+    // oxlint-disable-next-line no-console
+    console.log("Uncaught Exception:", reason);
     recordError("uncaughtException", reason);
     process.exit(1);
   });
 
   process.on("unhandledRejection", (reason) => {
+    // oxlint-disable-next-line no-console
+    console.log("Unhandled Rejection:", reason);
     recordError("unhandledRejection", reason);
     process.exit(1);
   });

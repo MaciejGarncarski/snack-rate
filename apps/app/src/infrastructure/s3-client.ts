@@ -5,6 +5,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 import { type Readable } from "node:stream";
 
 import { serverEnv } from "#/lib/server.env";
@@ -37,14 +38,17 @@ export async function uploadPublicFileStream(
   stream: Readable,
   options?: { contentType?: string },
 ) {
-  await s3UploadClient.send(
-    new PutObjectCommand({
+  const upload = new Upload({
+    client: s3UploadClient,
+    params: {
       Bucket: PUBLIC_BUCKET,
       Key: key,
       Body: stream,
       ContentType: options?.contentType,
-    }),
-  );
+    },
+  });
+
+  await upload.done();
 }
 
 export async function deletePublicFile(key: string) {
