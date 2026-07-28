@@ -9,6 +9,11 @@ export class Slug {
     const normalized = input
       .trim()
       .toLowerCase()
+      .normalize("NFD")
+      .replaceAll(/[\u0300-\u036F]/gu, "")
+      .replaceAll("ł", "l")
+      .replaceAll("đ", "d")
+      .replaceAll("ß", "ss")
       .replaceAll(/[^a-z0-9]+/gu, "-")
       .replaceAll(/(^-|-$)/gu, "");
 
