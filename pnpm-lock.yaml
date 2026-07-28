@@ -47,10 +47,6 @@ catalogs:
 importers:
 
   .:
-    dependencies:
-      srvx:
-        specifier: ^0.12.4
-        version: 0.12.4
     devDependencies:
       '@tanstack/eslint-plugin-query':
         specifier: ^5.100.10
@@ -253,6 +249,9 @@ importers:
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      srvx:
+        specifier: ^0.12.4
+        version: 0.12.4
       tailwind-merge:
         specifier: ^3.6.0
         version: 3.6.0
