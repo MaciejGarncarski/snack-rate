@@ -11,9 +11,7 @@ export const relations = defineRelations(schema, (r) => ({
       from: r.users.id,
       to: r.emailVerifications.userId,
     }),
-    reviewReactions: r.many.reviewReactions({ from: r.users.id, to: r.reviewReactions.userId }),
     commentReactions: r.many.commentReactions({ from: r.users.id, to: r.commentReactions.userId }),
-    reviewReports: r.many.reviewReports({ from: r.users.id, to: r.reviewReports.reporterId }),
     commentReports: r.many.commentReports({ from: r.users.id, to: r.commentReports.reporterId }),
   },
 
@@ -31,14 +29,9 @@ export const relations = defineRelations(schema, (r) => ({
   snackReviews: {
     snackItem: r.one.snackItems({ from: r.snackReviews.snackItemId, to: r.snackItems.id }),
     user: r.one.users({ from: r.snackReviews.userId, to: r.users.id }),
-    images: r.many.snackReviewImages({ from: r.snackReviews.id, to: r.snackReviewImages.reviewId }),
-    comments: r.many.comments({ from: r.snackReviews.id, to: r.comments.reviewId }),
-    reactions: r.many.reviewReactions({ from: r.snackReviews.id, to: r.reviewReactions.reviewId }),
-    reports: r.many.reviewReports({ from: r.snackReviews.id, to: r.reviewReports.reviewId }),
   },
 
   comments: {
-    review: r.one.snackReviews({ from: r.comments.reviewId, to: r.snackReviews.id }),
     user: r.one.users({ from: r.comments.userId, to: r.users.id }),
     parent: r.one.comments({
       from: r.comments.parentCommentId,
@@ -58,23 +51,9 @@ export const relations = defineRelations(schema, (r) => ({
     snackItem: r.one.snackItems({ from: r.snackItemImages.snackItemId, to: r.snackItems.id }),
   },
 
-  snackReviewImages: {
-    review: r.one.snackReviews({ from: r.snackReviewImages.reviewId, to: r.snackReviews.id }),
-  },
-
-  reviewReactions: {
-    user: r.one.users({ from: r.reviewReactions.userId, to: r.users.id }),
-    review: r.one.snackReviews({ from: r.reviewReactions.reviewId, to: r.snackReviews.id }),
-  },
-
   commentReactions: {
     user: r.one.users({ from: r.commentReactions.userId, to: r.users.id }),
     comment: r.one.comments({ from: r.commentReactions.commentId, to: r.comments.id }),
-  },
-
-  reviewReports: {
-    reporter: r.one.users({ from: r.reviewReports.reporterId, to: r.users.id }),
-    review: r.one.snackReviews({ from: r.reviewReports.reviewId, to: r.snackReviews.id }),
   },
 
   commentReports: {

@@ -21,7 +21,7 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }:
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         ref={listRef}
-        className="flex flex-col gap-1 p-1"
+        className="flex flex-col gap-1 md:gap-2 p-1"
       >
         {items.map((item, index) => (
           <li key={item.slug}>

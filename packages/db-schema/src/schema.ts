@@ -108,48 +108,16 @@ export const snackReviews = pgTable(
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id),
-    rating: integer("rating").notNull(), // CHECK: 1–5
-    comment: text("comment"), // TODO: DELETE
+    rating: integer("rating").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
   },
   (t) => [
-    uniqueIndex("snack_reviews_snack_user_unique_idx")
-      .on(t.snackItemId, t.userId)
+    uniqueIndex("snack_reviews_user_snack_unique_idx")
+      .on(t.userId, t.snackItemId)
       .where(sql`deleted_at IS NULL`),
-    index("snack_reviews_snack_item_id_idx").on(t.snackItemId),
-    index("snack_reviews_user_id_idx").on(t.userId),
-  ],
-);
-
-// ---------------------------------------------------------------------------
-// comments
-// ---------------------------------------------------------------------------
-
-export const comments = pgTable(
-  "comments",
-  {
-    id: uuid("id")
-      .primaryKey()
-      .default(sql`uuidv7()`),
-    reviewId: uuid("review_id")
-      .notNull()
-      .references(() => snackReviews.id), //TODO: DELETE
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id),
-    parentCommentId: uuid("parent_comment_id").references((): AnyPgColumn => comments.id, {
-      onDelete: "cascade",
-    }),
-    body: text("body").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
-    deletedAt: timestamp("deleted_at"),
-  },
-  (t) => [
-    index("comments_review_id_idx").on(t.reviewId),
-    index("comments_parent_comment_id_idx").on(t.parentCommentId),
+    index("snack_reviews_snack_item_idx").on(t.snackItemId),
   ],
 );
 
@@ -181,55 +149,24 @@ export const snackItemImages = pgTable(
 );
 
 // ---------------------------------------------------------------------------
-// snack_review_images
+// comments
 // ---------------------------------------------------------------------------
 
-export const snackReviewImages = pgTable(
-  "snack_review_images",
-  {
-    id: uuid("id")
-      .primaryKey()
-      .default(sql`uuidv7()`),
-    reviewId: uuid("review_id")
-      .notNull()
-      .references(() => snackReviews.id),
-    url: text("url").notNull(),
-    sortOrder: integer("sort_order").notNull().default(0),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
-    deletedAt: timestamp("deleted_at"),
-  },
-  (t) => [
-    index("snack_review_images_review_id_idx")
-      .on(t.reviewId)
-      .where(sql`deleted_at IS NULL`),
-  ],
-);
-
-// ---------------------------------------------------------------------------
-// review_reactions
-// ---------------------------------------------------------------------------
-
-export const reviewReactions = pgTable(
-  "review_reactions",
-  {
-    id: uuid("id")
-      .primaryKey()
-      .default(sql`uuidv7()`),
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id),
-    reviewId: uuid("review_id")
-      .notNull()
-      .references(() => snackReviews.id),
-    type: text("type").notNull(), // 'like' | 'fire' | 'meh'
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-  },
-  (t) => [
-    uniqueIndex("review_reactions_user_review_unique_idx").on(t.userId, t.reviewId),
-    index("review_reactions_review_id_idx").on(t.reviewId),
-  ],
-);
+export const comments = pgTable("comments", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`uuidv7()`),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
+  parentCommentId: uuid("parent_comment_id").references((): AnyPgColumn => comments.id, {
+    onDelete: "cascade",
+  }),
+  body: text("body").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  deletedAt: timestamp("deleted_at"),
+});
 
 // ---------------------------------------------------------------------------
 // comment_reactions
@@ -255,29 +192,6 @@ export const commentReactions = pgTable(
     index("comment_reactions_comment_id_idx").on(t.commentId),
   ],
 );
-
-// ---------------------------------------------------------------------------
-// review_reports
-// ---------------------------------------------------------------------------
-
-export const reviewReports = pgTable(
-  "review_reports",
-  {
-    id: uuid("id")
-      .primaryKey()
-      .default(sql`uuidv7()`),
-    reporterId: uuid("reporter_id")
-      .notNull()
-      .references(() => users.id),
-    reviewId: uuid("review_id")
-      .notNull()
-      .references(() => snackReviews.id),
-    reason: text("reason").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-  },
-  (t) => [uniqueIndex("review_reports_reporter_review_unique_idx").on(t.reporterId, t.reviewId)],
-);
-
 // ---------------------------------------------------------------------------
 // comment_reports
 // ---------------------------------------------------------------------------

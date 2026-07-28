@@ -61,6 +61,15 @@ type SnackRatingProps = {
   size?: "xs" | "sm" | "md" | "lg";
 };
 
+type WithoutUndefined<T> = Exclude<T, undefined>;
+
+const fontSizesMap: Record<WithoutUndefined<SnackRatingProps["size"]>, string> = {
+  xs: "text-xs",
+  sm: "text-sm",
+  md: "text-base",
+  lg: "text-2xl",
+};
+
 export function SnackRating({ rating, withText, size = "md" }: SnackRatingProps) {
   const value = Math.max(0, Math.min(5, rating));
   const color = getColorClass(value);
@@ -71,13 +80,14 @@ export function SnackRating({ rating, withText, size = "md" }: SnackRatingProps)
   return (
     <div className="flex items-center gap-3">
       {withText && (
-        <span className="text-lg mt-0.5 tabular-nums font-bold">{value.toFixed(1)}</span>
+        <span className={cn("tabular-nums relative top-px font-bold", fontSizesMap[size])}>
+          {value.toFixed(1)}
+        </span>
       )}
 
       <div className={cn("flex", gapClass)}>
         {Array.from({ length: 5 }, (_, i) => {
           const fill = Math.max(0, Math.min(1, value - i));
-
           return <Star key={i} fill={fill} size={size} color={color} />;
         })}
       </div>

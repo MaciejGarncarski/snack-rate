@@ -403,190 +403,136 @@ async function seedDatabase() {
   // ---------------------------------------------------------------------------
   // Recenzje
   // ---------------------------------------------------------------------------
-  const reviews = await db
-    .insert(schema.snackReviews)
-    .values([
-      // Monster Original
-      {
-        snackItemId: monsterOriginal.id,
-        userId: anna.id,
-        rating: 5,
-        comment: "Bez Monstera nie ma poranka. Klasyk, który nigdy nie zawodzi.",
-      },
-      {
-        snackItemId: monsterOriginal.id,
-        userId: alfred.id,
-        rating: 4,
-        comment: "Dobry kop energii przed treningiem. Trochę za słodki, ale spełnia swoje zadanie.",
-      },
-      {
-        snackItemId: monsterOriginal.id,
-        userId: celina.id,
-        rating: 3,
-        comment: "Nie rozumiem kultu, ale smak jest ok. Wole wersję bez cukru.",
-      },
-      // Monster Ultra
-      {
-        snackItemId: monsterUltra.id,
-        userId: dawid.id,
-        rating: 5,
-        comment: "Najlepszy energetyk bez cukru na rynku. Lekki i orzeźwiający.",
-      },
-      {
-        snackItemId: monsterUltra.id,
-        userId: anna.id,
-        rating: 4,
-        comment: "Ultra White to mój codzienny rytuał. Nie za słodki, nie za mocny.",
-      },
-      // Monster Mango
-      {
-        snackItemId: monsterMango.id,
-        userId: celina.id,
-        rating: 5,
-        comment: "Mango Loco to absolutny hit! Smakuje jak wakacje w puszce.",
-      },
-      {
-        snackItemId: monsterMango.id,
-        userId: ewa.id,
-        rating: 4,
-        comment: "Owocowy i orzeźwiający. Zdecydowanie najsmaczniejszy Monster.",
-      },
-      // Lay's Klasyczne
-      {
-        snackItemId: laysClassic.id,
-        userId: alfred.id,
-        rating: 4,
-        comment: "Klasyk to klasyk. Zawsze dobre, zawsze chrupiące.",
-      },
-      {
-        snackItemId: laysClassic.id,
-        userId: dawid.id,
-        rating: 3,
-        comment: "Trochę za cienkie dla mnie, wolę grubsze chipsy. Smak jednak solidny.",
-      },
-      // Lay's Ketchup
-      {
-        snackItemId: laysKetchup.id,
-        userId: anna.id,
-        rating: 5,
-        comment: "Smak ketchupowy Lay's to moje dzieciństwo. Nie mogę przestać jeść.",
-      },
-      {
-        snackItemId: laysKetchup.id,
-        userId: celina.id,
-        rating: 4,
-        comment: "Typowo polskie chipsy. Ten smak to obowiązek na każdej imprezie.",
-      },
-      // Pringles Original
-      {
-        snackItemId: pringlesOriginal.id,
-        userId: alfred.id,
-        rating: 4,
-        comment: "Zawsze identyczne, zawsze dobre. Tuba to ikoniczny wynalazek.",
-      },
-      {
-        snackItemId: pringlesOriginal.id,
-        userId: ewa.id,
-        rating: 3,
-        comment: "W porządku, ale po chwili robią się nudne. Mało wyrazisty smak.",
-      },
-      // Pringles Ser & Kebab
-      {
-        snackItemId: pringlesSerKebab.id,
-        userId: dawid.id,
-        rating: 5,
-        comment: "Uzależniające! Smak kebaba w chrupce – genialne połączenie.",
-      },
-      {
-        snackItemId: pringlesSerKebab.id,
-        userId: anna.id,
-        rating: 4,
-        comment: "Mocny, wyrazisty smak. Idealny na wieczór filmowy.",
-      },
-      // Tyrrell's Sól Morska
-      {
-        snackItemId: tyrrellsSeaSalt.id,
-        userId: celina.id,
-        rating: 5,
-        comment: "Najlepsze chipsy jakie jadłam. Grube, chrupiące i naturalne.",
-      },
-      {
-        snackItemId: tyrrellsSeaSalt.id,
-        userId: alfred.id,
-        rating: 5,
-        comment: "Klasa sama w sobie. Czuć jakość w każdym kawałku.",
-      },
-      // Tyrrell's Słodka Papryka
-      {
-        snackItemId: tyrrellsSweet.id,
-        userId: dawid.id,
-        rating: 4,
-        comment: "Delikatna słodycz papryki z chrupiącą bazą. Bardzo udana kombinacja.",
-      },
-      {
-        snackItemId: tyrrellsSweet.id,
-        userId: ewa.id,
-        rating: 3,
-        comment: "Dobre, ale cena trochę odstrasza. Na specjalne okazje.",
-      },
-      // Wedel Ptasie Mleczko
-      {
-        snackItemId: wedelPtasie.id,
-        userId: anna.id,
-        rating: 5,
-        comment: "Polska ikona słodyczy. Nic mi nie smakuje tak dobrze jak Ptasie Mleczko.",
-      },
-      {
-        snackItemId: wedelPtasie.id,
-        userId: celina.id,
-        rating: 5,
-        comment: "Miękkie, kremowe, idealne. Tradycja, która nigdy nie wychodzi z mody.",
-      },
-      // Wedel Gorzka
-      {
-        snackItemId: wedelGorzka.id,
-        userId: alfred.id,
-        rating: 4,
-        comment: "Porządna gorzka czekolada. Głęboki smak kakao, bez zbędnych dodatków.",
-      },
-      {
-        snackItemId: wedelGorzka.id,
-        userId: dawid.id,
-        rating: 5,
-        comment: "Najlepsza czekolada gorzka w polskim sklepie. Kupuję zawsze.",
-      },
-    ])
-    .returning();
-
-  console.log("  ✓ reviews");
-
-  // ---------------------------------------------------------------------------
-  // Review images
-  // ---------------------------------------------------------------------------
-  await db.insert(schema.snackReviewImages).values([
+  await db.insert(schema.snackReviews).values([
+    // Monster Original
     {
-      reviewId: reviews[0].id,
-      url: "https://images.pexels.com/photos/15086389/pexels-photo-15086389.jpeg?cs=srgb&dl=pexels-harryphotographer-15086389.jpg&fm=jpg",
-      sortOrder: 0,
+      snackItemId: monsterOriginal.id,
+      userId: anna.id,
+      rating: 5,
     },
     {
-      reviewId: reviews[5].id,
-      url: "https://images.pexels.com/photos/14448646/pexels-photo-14448646.jpeg?cs=srgb&dl=pexels-breno-cardoso-149064345-14448646.jpg&fm=jpg",
-      sortOrder: 0,
+      snackItemId: monsterOriginal.id,
+      userId: alfred.id,
+      rating: 4,
     },
     {
-      reviewId: reviews[15].id,
-      url: "https://images.pexels.com/photos/6485538/pexels-photo-6485538.jpeg?cs=srgb&dl=pexels-rebbit-visual-18905705-6485538.jpg&fm=jpg",
-      sortOrder: 0,
+      snackItemId: monsterOriginal.id,
+      userId: celina.id,
+      rating: 3,
+    },
+    // Monster Ultra
+    {
+      snackItemId: monsterUltra.id,
+      userId: dawid.id,
+      rating: 5,
     },
     {
-      reviewId: reviews[19].id,
-      url: "https://images.pexels.com/photos/4113303/pexels-photo-4113303.jpeg?cs=srgb&dl=pexels-alleksana-4113303.jpg&fm=jpg",
-      sortOrder: 0,
+      snackItemId: monsterUltra.id,
+      userId: anna.id,
+      rating: 4,
+    },
+    // Monster Mango
+    {
+      snackItemId: monsterMango.id,
+      userId: celina.id,
+      rating: 5,
+    },
+    {
+      snackItemId: monsterMango.id,
+      userId: ewa.id,
+      rating: 4,
+    },
+    // Lay's Klasyczne
+    {
+      snackItemId: laysClassic.id,
+      userId: alfred.id,
+      rating: 4,
+    },
+    {
+      snackItemId: laysClassic.id,
+      userId: dawid.id,
+      rating: 3,
+    },
+    // Lay's Ketchup
+    {
+      snackItemId: laysKetchup.id,
+      userId: anna.id,
+      rating: 5,
+    },
+    {
+      snackItemId: laysKetchup.id,
+      userId: celina.id,
+      rating: 4,
+    },
+    // Pringles Original
+    {
+      snackItemId: pringlesOriginal.id,
+      userId: alfred.id,
+      rating: 4,
+    },
+    {
+      snackItemId: pringlesOriginal.id,
+      userId: ewa.id,
+      rating: 3,
+    },
+    // Pringles Ser & Kebab
+    {
+      snackItemId: pringlesSerKebab.id,
+      userId: dawid.id,
+      rating: 5,
+    },
+    {
+      snackItemId: pringlesSerKebab.id,
+      userId: anna.id,
+      rating: 4,
+    },
+    // Tyrrell's Sól Morska
+    {
+      snackItemId: tyrrellsSeaSalt.id,
+      userId: celina.id,
+      rating: 5,
+    },
+    {
+      snackItemId: tyrrellsSeaSalt.id,
+      userId: alfred.id,
+      rating: 5,
+    },
+    // Tyrrell's Słodka Papryka
+    {
+      snackItemId: tyrrellsSweet.id,
+      userId: dawid.id,
+      rating: 4,
+    },
+    {
+      snackItemId: tyrrellsSweet.id,
+      userId: ewa.id,
+      rating: 3,
+    },
+    // Wedel Ptasie Mleczko
+    {
+      snackItemId: wedelPtasie.id,
+      userId: anna.id,
+      rating: 5,
+    },
+    {
+      snackItemId: wedelPtasie.id,
+      userId: celina.id,
+      rating: 5,
+    },
+    // Wedel Gorzka
+    {
+      snackItemId: wedelGorzka.id,
+      userId: alfred.id,
+      rating: 4,
+    },
+    {
+      snackItemId: wedelGorzka.id,
+      userId: dawid.id,
+      rating: 5,
     },
   ]);
 
-  console.log("  ✓ review images");
+  console.log("  ✓ reviews");
 
   // ---------------------------------------------------------------------------
   // Comments
@@ -595,27 +541,22 @@ async function seedDatabase() {
     .insert(schema.comments)
     .values([
       {
-        reviewId: reviews[0].id,
         userId: alfred.id,
         body: "Całkowita zgoda, bez Monstera dzień się nie liczy.",
       },
       {
-        reviewId: reviews[0].id,
         userId: celina.id,
         body: "Ja wolę Ultra, ale rozumiem ten kult.",
       },
       {
-        reviewId: reviews[5].id,
         userId: dawid.id,
         body: "Mango Loco to naprawdę inny poziom wśród energetyków.",
       },
       {
-        reviewId: reviews[15].id,
         userId: anna.id,
         body: "Tyrrell's to jedyne chipsy, przy których nie mam wyrzutów sumienia.",
       },
       {
-        reviewId: reviews[19].id,
         userId: alfred.id,
         body: "Ptasie Mleczko to skarb polskiej cukiernictwa, nie ma co dodać.",
       },
@@ -625,19 +566,16 @@ async function seedDatabase() {
   // Replies
   await db.insert(schema.comments).values([
     {
-      reviewId: reviews[0].id,
       userId: dawid.id,
       parentCommentId: k1.id,
       body: "Nie zgadzam się, Ultra White jest lepsza – zero cukru, więcej luzu.",
     },
     {
-      reviewId: reviews[5].id,
       userId: anna.id,
       parentCommentId: k3.id,
       body: "Mango Loco + lato + basen = idealne połączenie.",
     },
     {
-      reviewId: reviews[19].id,
       userId: celina.id,
       parentCommentId: k5.id,
       body: "I te ceny są uczciwe jak na taką jakość. Rzadkość.",
@@ -645,25 +583,6 @@ async function seedDatabase() {
   ]);
 
   console.log("  ✓ comments");
-
-  // ---------------------------------------------------------------------------
-  // Review reactions
-  // ---------------------------------------------------------------------------
-  await db.insert(schema.reviewReactions).values([
-    { userId: alfred.id, reviewId: reviews[0].id, type: "fire" },
-    { userId: celina.id, reviewId: reviews[0].id, type: "like" },
-    { userId: dawid.id, reviewId: reviews[4].id, type: "fire" },
-    { userId: anna.id, reviewId: reviews[5].id, type: "like" },
-    { userId: alfred.id, reviewId: reviews[9].id, type: "fire" },
-    { userId: dawid.id, reviewId: reviews[10].id, type: "like" },
-    { userId: celina.id, reviewId: reviews[13].id, type: "fire" },
-    { userId: anna.id, reviewId: reviews[15].id, type: "fire" },
-    { userId: alfred.id, reviewId: reviews[16].id, type: "fire" },
-    { userId: dawid.id, reviewId: reviews[22].id, type: "like" },
-    { userId: ewa.id, reviewId: reviews[12].id, type: "meh" },
-  ]);
-
-  console.log("  ✓ review reactions");
 
   // ---------------------------------------------------------------------------
   // Comment reactions
@@ -698,13 +617,6 @@ async function seedDatabase() {
   // ---------------------------------------------------------------------------
   // Reports
   // ---------------------------------------------------------------------------
-  await db.insert(schema.reviewReports).values([
-    {
-      reporterId: celina.id,
-      reviewId: reviews[12].id,
-      reason: "Recenzja wydaje się fałszywa i nieprzydatna.",
-    },
-  ]);
 
   await db
     .insert(schema.commentReports)

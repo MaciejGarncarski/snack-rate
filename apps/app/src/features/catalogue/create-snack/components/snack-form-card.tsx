@@ -18,8 +18,8 @@ export function SnackFormCard({ children, description, step, title }: Props) {
           <CardDescription className="max-w-lg leading-relaxed">{description}</CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="px-5 py-6 sm:px-7 sm:py-7">
-        <div className="mx-auto flex max-w-xl flex-col gap-7">{children}</div>
+      <CardContent className="px-5 py-6 sm:px-7 sm:pt-7 sm:pb-14">
+        <div className="mx-auto flex max-w-lg flex-col gap-7">{children}</div>
       </CardContent>
     </Card>
   );

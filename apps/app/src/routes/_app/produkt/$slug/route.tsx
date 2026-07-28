@@ -105,7 +105,7 @@ function RouteComponent() {
               <p className="text-xs font-bold tracking-[0.12em] text-muted-foreground uppercase">
                 Średnia ocena
               </p>
-              <SnackRating rating={data.avgRating} withText size="sm" />
+              <SnackRating rating={data.avgRating} withText size="lg" />
             </div>
           </div>
 
