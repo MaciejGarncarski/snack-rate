@@ -52,16 +52,44 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [] };
 
+    const title = loaderData.name;
+    const description = loaderData.description ?? "Sprawdź ten produkt na Snack Rate!";
+    const image = `/produkt/${loaderData.slug}/og.png`;
+    // const url = `https://snackrate.pl/produkt/${loaderData.slug}`;
+    // TODO: Use env or hardcode url.
+
     return {
       meta: [
-        { property: "og:image", content: `/produkt/${loaderData.slug}/og.png` },
-        { property: "og:title", content: loaderData.name },
-        {
-          property: "og:description",
-          content: loaderData.description ?? "Sprawdź ten produkt na Snack Rate!",
-        },
-        { property: "og:site_name", content: "Snack Rate" },
+        // Basic
+        { title },
+        { name: "description", content: description },
+        { name: "robots", content: "index,follow" },
+        { name: "theme-color", content: "#ffffff" },
+
+        // Canonical
+        // { tagName: "link", rel: "canonical", href: url },
+
+        // Open Graph
         { property: "og:type", content: "website" },
+        { property: "og:site_name", content: "Snack Rate" },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:image", content: image },
+        { property: "og:image:alt", content: title },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        // { property: "og:url", content: url },
+        // TODO: Use env or hardcode url.
+
+        // Twitter / X
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: image },
+        { name: "twitter:image:alt", content: title },
+
+        { name: "twitter:site", content: "@mgarncarski" },
+        { name: "twitter:creator", content: "@mgarncarski" },
       ],
     };
   },

@@ -18,7 +18,6 @@ const viteConfig = defineConfig({
   },
   plugins: [
     devtools(),
-    nitro(),
     tailwindcss(),
     tanstackStart({
       importProtection: {
@@ -38,6 +37,9 @@ const viteConfig = defineConfig({
           files: ["**/tests/**", "**/db/**", "**/observability/**", "**/server/**"],
         },
       },
+    }),
+    nitro({
+      plugins: ["./server/plugins/opentelemetry.ts"],
     }),
     viteReact(),
   ],

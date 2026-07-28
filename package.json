@@ -55,5 +55,8 @@
     "oxfmt": "^0.60.0",
     "oxlint": "^1.75.0"
   },
-  "packageManager": "pnpm@11.17.0"
+  "packageManager": "pnpm@11.17.0",
+  "dependencies": {
+    "srvx": "^0.12.4"
+  }
 }

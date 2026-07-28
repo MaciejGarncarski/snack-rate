@@ -1,7 +1,9 @@
 // oxlint-disable no-console
+import { definePlugin } from "nitro";
+
 import { initOpenTelemetry } from "../../src/observability/otel-sdk";
 
-export default function () {
+export default definePlugin(() => {
   console.log("==== Initializing OpenTelemetry ====");
 
   initOpenTelemetry({
@@ -9,6 +11,5 @@ export default function () {
     observabilityTracingEnabled: process.env.OBSERVABILITY_TRACING_ENABLED,
     observabilityMetricsEnabled: process.env.OBSERVABILITY_METRICS_ENABLED,
   });
-
   console.log("==== OpenTelemetry initialized ====");
-}
+});

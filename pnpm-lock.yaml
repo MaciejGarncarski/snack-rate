@@ -47,6 +47,10 @@ catalogs:
 importers:
 
   .:
+    dependencies:
+      srvx:
+        specifier: ^0.12.4
+        version: 0.12.4
     devDependencies:
       '@tanstack/eslint-plugin-query':
         specifier: ^5.100.10
@@ -6800,6 +6804,11 @@ packages:
 
   srvx@0.11.22:
     resolution: {integrity: sha512-LqZxxBDMKuMAZzFzJnDCkFOrs9MZQZr0LvHiO/SuSZVdQaXD7xQ5UWTUxheJrQPve1qk9MG2B/yttUvJxw8egQ==}
+    engines: {node: '>=20.16.0'}
+    hasBin: true
+
+  srvx@0.12.4:
+    resolution: {integrity: sha512-RixzFlMn3dvzDTpKIAXhXrqL4cy6vScNCP0VVwgVbUBU94o+DiXLsFnAZetbyKAEnK6Ox3hzHXWGsyv/Iibv7g==}
     engines: {node: '>=20.16.0'}
     hasBin: true
 
@@ -13900,6 +13909,8 @@ snapshots:
   split2@4.2.0: {}
 
   srvx@0.11.22: {}
+
+  srvx@0.12.4: {}
 
   ssh-remote-port-forward@1.0.4:
     dependencies:
