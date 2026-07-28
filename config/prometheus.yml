@@ -12,7 +12,7 @@ alerting:
       timeout: 10s
       api_version: v2
 scrape_configs:
-  - job_name: snack-rate-app
+  - job_name: snack_rate_app
     metrics_path: /metrics
     static_configs:
       - targets:

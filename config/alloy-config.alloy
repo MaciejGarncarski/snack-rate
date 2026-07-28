@@ -25,7 +25,7 @@ prometheus.scrape "snack_rate_app" {
     { "__address__" = "app:9464" },
   ]
 
-  job_name        = "tanstack-app"
+  job_name        = "snack_rate_app"
   scrape_interval = "15s"
   scrape_timeout  = "10s"
 

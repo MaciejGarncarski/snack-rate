@@ -1,5 +1,7 @@
+import { ClientOnly } from "@tanstack/react-router";
 import { cva, type VariantProps } from "class-variance-authority";
-import Barcode from "react-barcode";
+import JsBarcode from "jsbarcode";
+import { useEffect, useRef } from "react";
 
 import { cn } from "#/lib/utils";
 
@@ -48,20 +50,25 @@ const barcodeContainerVariants = cva("w-fit ", {
   },
 });
 
-export function SnackBarcode({ barcode, size = "md", variant = "default" }: Props) {
+function BarcodeContent({ barcode, size, variant }: Props) {
   const { width, height } = sizeMap[size ?? "md"];
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    if (svgRef.current && barcode) {
+      JsBarcode(svgRef.current, barcode, {
+        format: "EAN13",
+        displayValue: true,
+        width,
+        height,
+      });
+    }
+  }, [barcode, width, height]);
 
   return (
     <div className={cn(barcodeContainerVariants({ variant, size }))}>
       {barcode ? (
-        <Barcode
-          value={barcode}
-          format="EAN13"
-          displayValue={true}
-          width={width}
-          height={height}
-          className="rounded-lg shadow w-fit"
-        />
+        <svg ref={svgRef} className="rounded-lg shadow w-fit" />
       ) : (
         <div
           className={cn(
@@ -78,5 +85,33 @@ export function SnackBarcode({ barcode, size = "md", variant = "default" }: Prop
         </div>
       )}
     </div>
+  );
+}
+
+function SnackBarcodeSkeleton({ size = "md", variant = "default" }: Omit<Props, "barcode">) {
+  return (
+    <div className={cn(barcodeContainerVariants({ variant, size }))}>
+      <div
+        className={cn(
+          "flex h-full w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
+          {
+            "h-19 w-37.5 text-sm": size === "sm",
+            "h-30 w-51": size === "md",
+            "h-40.5 w-72": size === "lg",
+            "bg-muted": variant === "default",
+          },
+        )}
+      >
+        <span className="animate-pulse">Ładowanie kodu kreskowego...</span>
+      </div>
+    </div>
+  );
+}
+
+export function SnackBarcode({ barcode, size = "md", variant = "default" }: Props) {
+  return (
+    <ClientOnly fallback={<SnackBarcodeSkeleton size={size} variant={variant} />}>
+      <BarcodeContent barcode={barcode} size={size || "md"} variant={variant} />
+    </ClientOnly>
   );
 }
