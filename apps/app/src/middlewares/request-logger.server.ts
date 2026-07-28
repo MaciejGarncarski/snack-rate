@@ -7,13 +7,30 @@ import { logger } from "#/observability/logger/logger";
 
 const tracer = trace.getTracer("app");
 
+const SERVER_FN_PREFIX = "/_serverFn/";
 const MAX_URL_LENGTH = 150;
+
+function normalizeHttpRoute(pathname: string): string {
+  if (!pathname.startsWith(SERVER_FN_PREFIX)) return pathname;
+  try {
+    const payloadBase64 = pathname
+      .slice(SERVER_FN_PREFIX.length)
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+    const payload = JSON.parse(atob(payloadBase64));
+    const exportName = payload.export.replace(/_createServerFn_handler$/, "");
+    return `/_serverFn/${exportName}`;
+  } catch {
+    return pathname;
+  }
+}
 
 export const requestLoggerMiddleware = createMiddleware({ type: "request" }).server(
   ({ request, next }) => {
     httpRequestsCounter.add(1);
     const startTime = Date.now();
     const url = new URL(request.url);
+    const httpRoute = normalizeHttpRoute(url.pathname);
 
     const logUrl =
       request.url.length > MAX_URL_LENGTH
@@ -25,7 +42,7 @@ export const requestLoggerMiddleware = createMiddleware({ type: "request" }).ser
       span.setAttributes({
         "http.method": request.method,
         "http.url": logUrl,
-        "http.route": url.pathname,
+        "http.route": httpRoute,
       });
 
       try {
@@ -74,7 +91,7 @@ export const requestLoggerMiddleware = createMiddleware({ type: "request" }).ser
       } finally {
         httpDurationHistogram.record(Date.now() - startTime, {
           "http.method": request.method,
-          "http.route": url.pathname,
+          "http.route": httpRoute,
           ...(statusCode === undefined ? {} : { "http.status_code": statusCode }),
         });
         span.end();
