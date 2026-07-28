@@ -51,6 +51,7 @@ export default function SnackImageSlider({ images }: Props) {
             <ImageWithPlaceholder
               src={images[index]}
               alt={`Slajd ${index + 1}`}
+              containerClassName="h-full w-full"
               className={`h-full w-full object-cover`}
               blurBackground
             />
@@ -73,6 +74,7 @@ export default function SnackImageSlider({ images }: Props) {
               src={src}
               blurBackground
               alt={`Miniatura ${i + 1}`}
+              containerClassName="h-full w-full"
               className="h-full w-full object-cover"
             />
           </button>
