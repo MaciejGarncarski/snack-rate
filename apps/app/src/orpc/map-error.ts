@@ -80,6 +80,14 @@ const UNIQUE_CONSTRAINT_MAP: Record<string, { message: string; field?: string }>
     message: "Już zgłosiłeś ten komentarz.",
   },
 
+  // reviews
+  snack_reviews_user_snack_unique_idx: {
+    message: "Już oceniłeś ten produkt.",
+  },
+  snack_reviews_guest_snack_unique_idx: {
+    message: "Już oceniłeś ten produkt.",
+  },
+
   // auth (unlikely to be hit via normal user flow, but covered)
   sessions_token_hash_unique: {
     message: "Wystąpił konflikt sesji.",

@@ -1,0 +1,1 @@
+ALTER TABLE "snack_reviews" ALTER COLUMN "rating" SET DATA TYPE numeric(2,1) USING "rating"::numeric(2,1);

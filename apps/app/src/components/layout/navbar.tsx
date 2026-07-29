@@ -12,7 +12,7 @@ import { NavbarSearchBox } from "#/features/catalogue/search-snacks/components/s
 export function Navbar() {
   return (
     <nav className="sticky top-0 z-10 grid md:grid-cols-3 grid-cols-[minmax(3rem,auto)_1fr_minmax(3rem,auto)] w-full items-center border-b px-4 py-3  md:px-12">
-      <div className="absolute left-0 top-0 w-full h-full bg-sidebar/90 -z-10 backdrop-blur-sm" />
+      <div className="absolute left-0 top-0 w-full h-full bg-sidebar/90 -z-10 backdrop-blur-lg" />
 
       <Link to="/" className="w-fit relative flex items-center gap-2">
         <Logo />

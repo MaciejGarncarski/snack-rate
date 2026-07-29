@@ -8,6 +8,7 @@ import {
   timestamp,
   decimal,
   integer,
+  numeric,
   primaryKey,
   uniqueIndex,
   index,
@@ -106,9 +107,9 @@ export const snackReviews = pgTable(
       .notNull()
       .references(() => snackItems.id),
     userId: uuid("user_id")
-      .notNull()
       .references(() => users.id),
-    rating: integer("rating").notNull(),
+    guestId: text("guest_id"),
+    rating: numeric("rating", { precision: 2, scale: 1 }).notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
@@ -116,7 +117,10 @@ export const snackReviews = pgTable(
   (t) => [
     uniqueIndex("snack_reviews_user_snack_unique_idx")
       .on(t.userId, t.snackItemId)
-      .where(sql`deleted_at IS NULL`),
+      .where(sql`user_id IS NOT NULL AND deleted_at IS NULL`),
+    uniqueIndex("snack_reviews_guest_snack_unique_idx")
+      .on(t.guestId, t.snackItemId)
+      .where(sql`guest_id IS NOT NULL AND deleted_at IS NULL`),
     index("snack_reviews_snack_item_idx").on(t.snackItemId),
   ],
 );

@@ -57,20 +57,19 @@ const Star = ({
 
 type SnackRatingProps = {
   rating: number;
+  ratingCount?: number;
   withText?: boolean;
   size?: "xs" | "sm" | "md" | "lg";
 };
 
-type WithoutUndefined<T> = Exclude<T, undefined>;
-
-const fontSizesMap: Record<WithoutUndefined<SnackRatingProps["size"]>, string> = {
+const fontSizesMap: Record<"xs" | "sm" | "md" | "lg", string> = {
   xs: "text-xs",
   sm: "text-sm",
   md: "text-base",
   lg: "text-2xl",
 };
 
-export function SnackRating({ rating, withText, size = "md" }: SnackRatingProps) {
+export function SnackRating({ rating, ratingCount, withText, size = "md" }: SnackRatingProps) {
   const value = Math.max(0, Math.min(5, rating));
   const color = getColorClass(value);
 
@@ -91,6 +90,12 @@ export function SnackRating({ rating, withText, size = "md" }: SnackRatingProps)
           return <Star key={i} fill={fill} size={size} color={color} />;
         })}
       </div>
+
+      {ratingCount !== undefined && (
+        <span className="text-xs text-muted-foreground">
+          ({ratingCount} {ratingCount === 1 ? "ocena" : "ocen"})
+        </span>
+      )}
     </div>
   );
 }

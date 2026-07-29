@@ -10,4 +10,5 @@ export const getSnackBySlugQueryOptions = (slug: string) =>
         data: { slug },
       });
     },
+    select: (data) => data!,
   });

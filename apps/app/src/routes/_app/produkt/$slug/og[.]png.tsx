@@ -10,7 +10,7 @@ import stylesheet from "#/styles/app.css?inline";
 export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
   server: {
     handlers: {
-      async GET({ request, params }) {
+      async GET({ params }) {
         const snack = await getSnackBySlugFn({ data: { slug: params.slug } });
 
         if (!snack) {
