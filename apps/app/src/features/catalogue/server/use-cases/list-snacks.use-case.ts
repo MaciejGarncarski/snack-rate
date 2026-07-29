@@ -1,14 +1,12 @@
+import * as z from "zod";
+
 import { decodeCursor, encodeCursor } from "#/features/catalogue/server/use-cases/helpers";
+import { listSnacksSchema } from "#/schemas/catalogue";
 
 import type { SnacksRepository } from "../repositories/snacks.repository";
 
-type ListSnacksInput = {
-  limit: number;
-  cursor: string | undefined;
-};
-
 export async function listSnacksFeed(
-  { limit, cursor }: ListSnacksInput,
+  { limit, cursor }: z.infer<typeof listSnacksSchema>,
   repository: SnacksRepository,
 ) {
   const decodedCursor = cursor ? decodeCursor(cursor) : null;

@@ -1,18 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
-import * as z from "zod";
 
 import { ratingsRepository } from "#/features/ratings/server/repositories/ratings.repository.instance";
 import { rateSnack } from "#/features/ratings/server/use-cases/rate-snack.use-case";
 import { getSnackRatings } from "#/features/ratings/server/use-cases/snack-ratings.use-case";
-
-const rateSnackInputSchema = z.object({
-  snackItemId: z.uuid(),
-  rating: z.number().min(0.5).max(5).multipleOf(0.5),
-  guestId: z.string().optional(),
-});
+import { rateSnackSchema, removeRatingSchema, snackRatingsSchema } from "#/schemas/ratings";
 
 export const rateSnackFn = createServerFn()
-  .validator(rateSnackInputSchema)
+  .validator(rateSnackSchema)
   .handler(({ data }) => {
     return rateSnack(
       {
@@ -24,13 +18,8 @@ export const rateSnackFn = createServerFn()
     );
   });
 
-const getRatingsInputSchema = z.object({
-  snackItemId: z.uuid(),
-  guestId: z.string().optional(),
-});
-
 export const getRatingsForSnackFn = createServerFn({ method: "GET" })
-  .validator(getRatingsInputSchema)
+  .validator(snackRatingsSchema)
   .handler(({ data }) => {
     return getSnackRatings(
       {
@@ -39,4 +28,16 @@ export const getRatingsForSnackFn = createServerFn({ method: "GET" })
       },
       ratingsRepository,
     );
+  });
+
+export const removeRatingFn = createServerFn({ method: "POST" })
+  .validator(removeRatingSchema)
+  .handler(({ data }) => {
+    // TODO: Add userId support when we implement user authentication
+
+    return ratingsRepository.removeRating({
+      snackItemId: data.snackItemId,
+      guestId: data.guestId ?? null,
+      userId: null,
+    });
   });

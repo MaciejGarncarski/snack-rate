@@ -141,6 +141,21 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         .where(eq(snackItems.id, snackItemId));
     },
 
+    removeRating: async (data: {
+      snackItemId: string;
+      userId: string | null;
+      guestId: string | null;
+    }): Promise<void> => {
+      if (!data.userId && !data.guestId) {
+        throw new Error("Either userId or guestId must be provided");
+      }
+
+      await db
+        .update(snackReviews)
+        .set({ deletedAt: new Date() })
+        .where(whereUserOrGuest(data.snackItemId, data.userId, data.guestId));
+    },
+
     getRatingsForSnack: async (data: {
       snackItemId: string;
       userId: string | null;

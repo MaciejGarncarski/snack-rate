@@ -1,7 +1,9 @@
 import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import * as z from "zod";
 
 import { getRatingsForSnackFn, rateSnackFn } from "#/features/ratings/api/ratings.server";
+import { rateSnackSchema } from "#/schemas/ratings";
 
 export const snackRatingsQueryOptions = (snackItemId: string, guestId: string | undefined) =>
   queryOptions({
@@ -19,8 +21,7 @@ export function useRateSnack() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (vars: { snackItemId: string; rating: number; guestId: string | undefined }) =>
-      rateSnackFn({ data: vars }),
+    mutationFn: (vars: z.input<typeof rateSnackSchema>) => rateSnackFn({ data: vars }),
     onError: (error) => {
       const message = error instanceof Error ? error.message : undefined;
       toast.error(message ?? "Nie udało się zapisać oceny");

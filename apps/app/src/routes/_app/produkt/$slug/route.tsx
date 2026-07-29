@@ -1,12 +1,12 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { BarcodeIcon, StarIcon, ThumbsUpIcon, XCircleIcon } from "lucide-react";
+import { BarcodeIcon, StarIcon, XCircleIcon } from "lucide-react";
+import type z from "zod";
 
 import { SnackBarcode } from "#/components/snacks/snack-barcode";
 import SnackImageSlider from "#/components/snacks/snack-image-slider";
 import { SnackRating } from "#/components/snacks/snack-rating";
-import { SnackRatingPicker } from "#/components/snacks/snack-rating-picker";
 import { Badge } from "#/components/ui/badge";
 import { Card, CardContent } from "#/components/ui/card";
 import {
@@ -18,10 +18,13 @@ import {
 } from "#/components/ui/empty";
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query";
 import { ensureGuestId } from "#/features/ratings/api/guest-id.server";
+import { removeRatingFn } from "#/features/ratings/api/ratings.server";
+import { UserRatingCard } from "#/features/ratings/components/user-rating-card";
 import {
   snackRatingsQueryOptions,
   useRateSnack,
 } from "#/features/ratings/queries/ratings.query-options";
+import type { removeRatingSchema } from "#/schemas/ratings";
 
 export const Route = createFileRoute("/_app/produkt/$slug")({
   component: RouteComponent,
@@ -99,6 +102,11 @@ function RouteComponent() {
   const ratings = useSuspenseQuery(snackRatingsQueryOptions(data.id, guestId)).data;
   const rateSnack = useRateSnack();
 
+  const removeRating = useMutation({
+    mutationFn: (mutationData: z.input<typeof removeRatingSchema>) =>
+      removeRatingFn({ data: mutationData }),
+  });
+
   const imageUrls = data.images.filter((img) => img.type === "default").map((img) => img.url);
 
   const handleRate = async (rating: number) => {
@@ -164,32 +172,12 @@ function RouteComponent() {
               <SnackBarcode barcode={data.barcode} size="sm" variant="default" />
             </CardContent>
           </Card>
-
-          <Card className="gap-0 rounded-2xl border border-border/70 py-0 shadow-sm">
-            <CardContent className="flex flex-col gap-3 px-5 py-5">
-              <div className="flex items-center gap-3">
-                <div className="flex size-9 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                  <ThumbsUpIcon className="size-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold">Twoja ocena</p>
-                  <p className="text-sm text-muted-foreground">
-                    {ratings?.userRating
-                      ? "Kliknij, aby zmienić."
-                      : "Kliknij gwiazdki, aby ocenić."}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 pl-12">
-                <SnackRatingPicker
-                  key={data.id}
-                  currentRating={ratings?.userRating ?? null}
-                  onRate={handleRate}
-                  disabled={rateSnack.isPending}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <UserRatingCard
+            isPending={rateSnack.isPending}
+            userRating={ratings?.userRating ?? null}
+            onRate={handleRate}
+            onRemove={() => removeRating.mutate({ snackItemId: data.id, guestId })}
+          />
         </div>
       </div>
     </main>

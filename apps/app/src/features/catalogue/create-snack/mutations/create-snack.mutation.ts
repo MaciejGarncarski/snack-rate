@@ -1,7 +1,3 @@
-export type CreateSnackInput = {
-  formData: FormData;
-};
-
 export const buildCreateSnackPayload = (formData: FormData) => {
   const name = formData.get("name");
   const description = formData.get("description");

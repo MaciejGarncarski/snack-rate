@@ -15,10 +15,10 @@ function normalizeHttpRoute(pathname: string): string {
   try {
     const payloadBase64 = pathname
       .slice(SERVER_FN_PREFIX.length)
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
+      .replaceAll("-", "+")
+      .replaceAll("_", "/");
     const payload = JSON.parse(atob(payloadBase64));
-    const exportName = payload.export.replace(/_createServerFn_handler$/, "");
+    const exportName = payload.export.replace(/_createServerFn_handler$/u, "");
     return `/_serverFn/${exportName}`;
   } catch {
     return pathname;

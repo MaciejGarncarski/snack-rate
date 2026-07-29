@@ -1,16 +1,12 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import * as z from "zod";
 
 import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
 import { searchSnacks } from "#/features/catalogue/server/use-cases/search-snacks.use-case";
-
-const searchInputSchema = z.object({
-  query: z.string().max(100),
-});
+import { searchSchema } from "#/schemas/search";
 
 export const getSearchedItems = createServerFn()
-  .validator(searchInputSchema)
+  .validator(searchSchema)
   .handler(({ data }) => searchSnacks(data.query, snacksRepository));
 
 export const getSearchedItemsQueryOptions = (query: string) => {
