@@ -12,12 +12,12 @@ export function createDb(client: Pool) {
   });
 }
 
-export type Db = ReturnType<typeof createDb>;
-export type DbTransaction = Parameters<Parameters<Db["transaction"]>[0]>[0];
+export type Database = ReturnType<typeof createDb>;
+export type DbTransaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
 
-let mainDb: Db | undefined;
+let mainDb: Database | undefined;
 
-export function getMainDb(): Db {
+export function getMainDb(): Database {
   mainDb ??= createDb(getPool());
   return mainDb;
 }

@@ -1,10 +1,10 @@
 import { createRatingsRepository } from "#/features/ratings/server/repositories/ratings.repository";
-import { rateSnack } from "#/features/ratings/server/use-cases/rate-snack.use-case";
-import type { Db } from "#/infrastructure/db/db";
+import { rateSnackUseCase } from "#/features/ratings/server/use-cases/rate-snack.use-case";
+import type { Database } from "#/infrastructure/db/db";
 import { createSnack } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup.int";
 
-let db: Db;
+let db: Database;
 let repository: ReturnType<typeof createRatingsRepository>;
 
 beforeAll(() => {
@@ -17,7 +17,11 @@ describe("rate snack", () => {
     const snack = await createSnack();
     const guestId = "guest-1";
 
-    const result = await rateSnack({ snackItemId: snack.id, rating: 4, guestId }, repository, db);
+    const result = await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 4, guestId },
+      repository,
+      db,
+    );
 
     expect(result.rating.value).toBe(4);
     expect(result.avgRating).toBe(4);
@@ -29,8 +33,12 @@ describe("rate snack", () => {
     const snack = await createSnack();
     const guestId = "guest-2";
 
-    await rateSnack({ snackItemId: snack.id, rating: 2, guestId }, repository, db);
-    const result = await rateSnack({ snackItemId: snack.id, rating: 5, guestId }, repository, db);
+    await rateSnackUseCase({ snackItemId: snack.id, rating: 2, guestId }, repository, db);
+    const result = await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 5, guestId },
+      repository,
+      db,
+    );
 
     expect(result.rating.value).toBe(5);
     expect(result.avgRating).toBe(5);
@@ -40,10 +48,22 @@ describe("rate snack", () => {
   it("should compute average from multiple guest ratings", async () => {
     const snack = await createSnack();
 
-    await rateSnack({ snackItemId: snack.id, rating: 1, guestId: "guest-a" }, repository, db);
-    await rateSnack({ snackItemId: snack.id, rating: 2, guestId: "guest-b" }, repository, db);
-    await rateSnack({ snackItemId: snack.id, rating: 3, guestId: "guest-c" }, repository, db);
-    const result = await rateSnack(
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 1, guestId: "guest-a" },
+      repository,
+      db,
+    );
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 2, guestId: "guest-b" },
+      repository,
+      db,
+    );
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 3, guestId: "guest-c" },
+      repository,
+      db,
+    );
+    const result = await rateSnackUseCase(
       { snackItemId: snack.id, rating: 4, guestId: "guest-d" },
       repository,
       db,
@@ -62,7 +82,11 @@ describe("rate snack", () => {
   it("should update avgRating on snack_items table", async () => {
     const snack = await createSnack();
 
-    await rateSnack({ snackItemId: snack.id, rating: 3, guestId: "guest-x" }, repository, db);
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 3, guestId: "guest-x" },
+      repository,
+      db,
+    );
 
     const dbSnack = await db.query.snackItems.findFirst({
       where: { slug: snack.slug },
@@ -73,7 +97,7 @@ describe("rate snack", () => {
   it("should throw if neither userId nor guestId provided", async () => {
     const snack = await createSnack();
 
-    expect(() => rateSnack({ snackItemId: snack.id, rating: 4 }, repository, db)).toThrow(
+    expect(() => rateSnackUseCase({ snackItemId: snack.id, rating: 4 }, repository, db)).toThrow(
       "Either userId or guestId must be provided",
     );
   });

@@ -2,13 +2,13 @@ import {
   createSnacksRepository,
   type SnacksRepository,
 } from "#/features/catalogue/server/repositories/snacks.repository";
-import { createSnack } from "#/features/catalogue/server/use-cases/create-snack.use-case";
-import type { Db } from "#/infrastructure/db/db";
+import { createSnackUseCase } from "#/features/catalogue/server/use-cases/create-snack.use-case";
+import type { Database } from "#/infrastructure/db/db";
 import { createSnackType } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup.int";
 import { noopGetFileUrl } from "#/tests/utils";
 
-let db: Db;
+let db: Database;
 let repository: SnacksRepository;
 
 beforeAll(() => {
@@ -30,7 +30,7 @@ describe("create snack", () => {
       images: [],
     };
 
-    const snack = await createSnack(
+    const snack = await createSnackUseCase(
       {
         images: input.images,
         name: input.name,
@@ -59,7 +59,7 @@ describe("create snack", () => {
   it("should create default and thumbnail images when uploading an image", async () => {
     const type = await createSnackType();
 
-    const snack = await createSnack(
+    const snack = await createSnackUseCase(
       {
         images: [
           {

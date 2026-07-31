@@ -2,7 +2,7 @@ import { snackItemImages, snackItems } from "@snack-rate/db-schema/schema";
 import type { TableFilter } from "drizzle-orm";
 
 import type { SnackStatus } from "#/features/shared/value-objects/status.vo";
-import type { Db, DbTransaction } from "#/infrastructure/db/db";
+import type { Database, DbTransaction } from "#/infrastructure/db/db";
 
 export type DecodedCursor = {
   createdAt: Date;
@@ -39,7 +39,7 @@ export type SnackItem = {
 const MAX_SEARCH_RESULTS = 8;
 
 type SnacksRepositoryDeps = {
-  db: Db;
+  db: Database;
   getFileUrl: (storageKey: string) => Promise<string>;
 };
 

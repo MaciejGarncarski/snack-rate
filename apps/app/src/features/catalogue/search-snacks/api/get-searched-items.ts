@@ -2,12 +2,12 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
 import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
-import { searchSnacks } from "#/features/catalogue/server/use-cases/search-snacks.use-case";
+import { searchSnacksUseCase } from "#/features/catalogue/server/use-cases/search-snacks.use-case";
 import { searchSchema } from "#/schemas/search";
 
 export const getSearchedItems = createServerFn()
   .validator(searchSchema)
-  .handler(({ data }) => searchSnacks(data.query, snacksRepository));
+  .handler(({ data }) => searchSnacksUseCase(data.query, snacksRepository));
 
 export const getSearchedItemsQueryOptions = (query: string) => {
   return queryOptions({

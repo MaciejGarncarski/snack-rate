@@ -5,12 +5,12 @@ import { nanoid } from "nanoid";
 import { Pool } from "pg";
 import { inject } from "vitest";
 
-import { createDb, type Db } from "#/infrastructure/db/db";
+import { createDb, type Database } from "#/infrastructure/db/db";
 
-let db: Db;
+let db: Database;
 let dbPool: Pool;
 
-export function getDb(): Db {
+export function getDb(): Database {
   return db;
 }
 

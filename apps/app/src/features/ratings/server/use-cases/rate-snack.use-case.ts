@@ -1,6 +1,6 @@
 import type { RatingsRepository } from "#/features/ratings/server/repositories/ratings.repository";
 import { Rating } from "#/features/shared/value-objects/rating.vo";
-import { type Db } from "#/infrastructure/db/db";
+import { type Database } from "#/infrastructure/db/db";
 
 type RateSnackInput = {
   snackItemId: string;
@@ -9,7 +9,11 @@ type RateSnackInput = {
   guestId?: string | null;
 };
 
-export function rateSnack(input: RateSnackInput, repository: RatingsRepository, db: Db) {
+export function rateSnackUseCase(
+  input: RateSnackInput,
+  repository: RatingsRepository,
+  db: Database,
+) {
   if (!input.userId && !input.guestId) {
     throw new Error("Either userId or guestId must be provided");
   }
@@ -27,12 +31,14 @@ export function rateSnack(input: RateSnackInput, repository: RatingsRepository, 
       tx,
     );
 
-    const ratings = await repository.getRatingsForSnack({
-      snackItemId: input.snackItemId,
-      userId: null,
-      guestId: input.guestId ?? null,
+    const ratings = await repository.getRatingsForSnack(
+      {
+        snackItemId: input.snackItemId,
+        userId: null,
+        guestId: input.guestId ?? null,
+      },
       tx,
-    });
+    );
 
     await repository.recalculateAvgRating(input.snackItemId, tx);
 

@@ -3,10 +3,10 @@ import { and, eq, isNotNull, isNull, sql } from "drizzle-orm";
 import type { TableFilter } from "drizzle-orm";
 
 import { Rating } from "#/features/shared/value-objects/rating.vo";
-import type { Db, DbTransaction } from "#/infrastructure/db/db";
+import type { Database, DbTransaction } from "#/infrastructure/db/db";
 
 type RatingsRepositoryDeps = {
-  db: Db;
+  db: Database;
 };
 
 export type UpsertRatingData = {
@@ -173,13 +173,15 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         .where(whereUserOrGuestSql(data.snackItemId, data.userId, data.guestId));
     },
 
-    getRatingsForSnack: async (data: {
-      snackItemId: string;
-      userId: string | null;
-      guestId: string | null;
-      tx?: DbTransaction;
-    }): Promise<SnackRatingsResult> => {
-      const client = data.tx ?? db;
+    getRatingsForSnack: async (
+      data: {
+        snackItemId: string;
+        userId: string | null;
+        guestId: string | null;
+      },
+      tx?: DbTransaction,
+    ): Promise<SnackRatingsResult> => {
+      const client = tx ?? db;
 
       const [aggregate, userRating] = await Promise.all([
         client

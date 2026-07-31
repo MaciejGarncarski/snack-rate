@@ -3,15 +3,15 @@ import { os } from "@orpc/server";
 
 import { verifyCaptcha } from "#/features/captcha/verify-captcha.server";
 import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
-import { createSnack } from "#/features/catalogue/server/use-cases/create-snack.use-case";
-import { listSnacksFeed } from "#/features/catalogue/server/use-cases/list-snacks.use-case";
+import { createSnackUseCase } from "#/features/catalogue/server/use-cases/create-snack.use-case";
+import { listSnacksUseCase } from "#/features/catalogue/server/use-cases/list-snacks.use-case";
 import { getMainDb } from "#/infrastructure/db/db";
 import { createSnackInputSchema, listSnacksSchema } from "#/schemas/catalogue";
 
 export const listSnacksProcedure = os.input(listSnacksSchema).handler(({ input }) => {
   const { limit, cursor } = input;
 
-  return listSnacksFeed({ limit, cursor }, snacksRepository);
+  return listSnacksUseCase({ limit, cursor }, snacksRepository);
 });
 
 const createSnackInput = createSnackInputSchema.transform((data) => {
@@ -35,7 +35,7 @@ export const createSnackProcedure = os.input(createSnackInput).handler(({ input 
     });
   }
 
-  return createSnack(
+  return createSnackUseCase(
     {
       ...input,
       images: input.images,

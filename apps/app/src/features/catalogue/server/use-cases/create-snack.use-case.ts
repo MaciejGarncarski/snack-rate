@@ -10,7 +10,7 @@ import {
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 import type { SnackStatus } from "#/features/shared/value-objects/status.vo.ts";
 import { StorageKey } from "#/features/shared/value-objects/storage-key.vo";
-import type { Db } from "#/infrastructure/db/db";
+import type { Database } from "#/infrastructure/db/db";
 import { copyPublicFile, deletePublicFile } from "#/infrastructure/s3-client";
 import { logger } from "#/observability/logger/logger";
 
@@ -18,7 +18,11 @@ const UPLOAD_CONCURRENCY = 3;
 
 const tracer = trace.getTracer("catalogue-service");
 
-export function createSnack(input: CreateSnackInput, snackRepository: SnacksRepository, db: Db) {
+export function createSnackUseCase(
+  input: CreateSnackInput,
+  snackRepository: SnacksRepository,
+  db: Database,
+) {
   const isAdminOrModerator = true;
   const snackStatus: SnackStatus = isAdminOrModerator ? "published" : "pending";
 

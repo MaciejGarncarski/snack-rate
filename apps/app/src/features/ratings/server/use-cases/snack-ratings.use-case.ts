@@ -6,7 +6,7 @@ type GetSnackRatingsInput = {
   guestId?: string | null;
 };
 
-export function getSnackRatings(input: GetSnackRatingsInput, repository: RatingsRepository) {
+export function getSnackRatingsUseCase(input: GetSnackRatingsInput, repository: RatingsRepository) {
   return repository.getRatingsForSnack({
     snackItemId: input.snackItemId,
     userId: input.userId ?? null,

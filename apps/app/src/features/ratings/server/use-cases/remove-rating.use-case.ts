@@ -1,4 +1,5 @@
 import type { RatingsRepository } from "#/features/ratings/server/repositories/ratings.repository";
+import type { Database } from "#/infrastructure/db/db";
 
 type RemoveRatingInput = {
   snackItemId: string;
@@ -6,10 +7,18 @@ type RemoveRatingInput = {
   guestId?: string | null;
 };
 
-export function removeRatingUseCase(input: RemoveRatingInput, repository: RatingsRepository) {
-  return repository.removeRating({
-    snackItemId: input.snackItemId,
-    userId: input.userId ?? null,
-    guestId: input.guestId ?? null,
+export function removeRatingUseCase(
+  input: RemoveRatingInput,
+  repository: RatingsRepository,
+  db: Database,
+) {
+  return db.transaction(async (tx) => {
+    await repository.removeRating({
+      snackItemId: input.snackItemId,
+      userId: input.userId ?? null,
+      guestId: input.guestId ?? null,
+    });
+
+    await repository.recalculateAvgRating(input.snackItemId, tx);
   });
 }

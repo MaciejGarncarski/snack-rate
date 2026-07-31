@@ -5,7 +5,7 @@ import { listSnacksSchema } from "#/schemas/catalogue";
 
 import type { SnacksRepository } from "../repositories/snacks.repository";
 
-export async function listSnacksFeed(
+export async function listSnacksUseCase(
   { limit, cursor }: z.infer<typeof listSnacksSchema>,
   repository: SnacksRepository,
 ) {
