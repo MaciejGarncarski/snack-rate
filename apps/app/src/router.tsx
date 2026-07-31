@@ -13,7 +13,7 @@ export function getRouter() {
     context: { queryClient },
     defaultPreload: "intent",
     scrollRestoration: true,
-    scrollRestorationBehavior: "auto",
+    scrollRestorationBehavior: "smooth",
     defaultNotFoundComponent: () => <DefaultNotFound />,
   });
 

@@ -36,7 +36,7 @@
   "rules": {
     "typescript/no-explicit-any": "warn",
     "eslint/no-underscore-dangle": "off",
-    "import/max-dependencies": ["warn", { "max": 15 }],
+    "import/max-dependencies": ["warn", { "max": 20 }],
     "eslint/max-lines-per-function": ["warn", { "max": 250 }],
     "typescript/no-unused-vars": "error",
     "jsx-a11y/prefer-tag-over-role": "warn",

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-explicit-any
 export function debounce<T extends (...args: any[]) => void>(fn: T, delay: number): T {
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 

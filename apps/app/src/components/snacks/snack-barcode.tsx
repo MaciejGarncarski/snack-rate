@@ -1,6 +1,7 @@
 import { ClientOnly } from "@tanstack/react-router";
 import { cva, type VariantProps } from "class-variance-authority";
 import JsBarcode from "jsbarcode";
+import { Loader } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 import { cn } from "#/lib/utils";
@@ -95,14 +96,16 @@ function SnackBarcodeSkeleton({ size = "md", variant = "default" }: Omit<Props, 
         className={cn(
           "flex h-full w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
           {
-            "h-19 w-37.5 text-sm": size === "sm",
+            "h-18.5 w-37.5 text-sm": size === "sm",
             "h-30 w-51": size === "md",
             "h-40.5 w-72": size === "lg",
             "bg-muted": variant === "default",
           },
         )}
       >
-        <span className="animate-pulse">Ładowanie kodu kreskowego...</span>
+        <span className="animate-pulse">
+          <Loader className="size-5 text-muted-foreground animate-ping" />
+        </span>
       </div>
     </div>
   );
