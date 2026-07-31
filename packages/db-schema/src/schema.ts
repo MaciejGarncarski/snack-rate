@@ -11,6 +11,7 @@ import {
   primaryKey,
   uniqueIndex,
   index,
+  check,
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 
@@ -93,11 +94,14 @@ export const snackItems = pgTable(
 );
 
 // ---------------------------------------------------------------------------
-// snack_reviews
+// snack_comments
 // ---------------------------------------------------------------------------
+// A comment on a snack item. A top-level comment (no parent) that carries a
+// `rating` (1-5 stars) is a review; replies are plain comments referencing
+// `parentCommentId`. One rated comment per user/guest per snack.
 
-export const snackReviews = pgTable(
-  "snack_reviews",
+export const snackComments = pgTable(
+  "snack_comments",
   {
     id: uuid("id")
       .primaryKey()
@@ -107,19 +111,28 @@ export const snackReviews = pgTable(
       .references(() => snackItems.id),
     userId: uuid("user_id").references(() => users.id),
     guestId: text("guest_id"),
-    rating: integer("rating").notNull(),
+    parentCommentId: uuid("parent_comment_id").references((): AnyPgColumn => snackComments.id, {
+      onDelete: "cascade",
+    }),
+    rating: integer("rating"), // 1-5 stars; only top-level comments (reviews) may carry one
+    body: text("body"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
   },
   (t) => [
-    uniqueIndex("snack_reviews_user_snack_unique_idx")
+    uniqueIndex("snack_comments_user_snack_unique_idx")
       .on(t.userId, t.snackItemId)
-      .where(sql`user_id IS NOT NULL AND deleted_at IS NULL`),
-    uniqueIndex("snack_reviews_guest_snack_unique_idx")
+      .where(sql`user_id IS NOT NULL AND rating IS NOT NULL AND deleted_at IS NULL`),
+    uniqueIndex("snack_comments_guest_snack_unique_idx")
       .on(t.guestId, t.snackItemId)
-      .where(sql`guest_id IS NOT NULL AND deleted_at IS NULL`),
-    index("snack_reviews_snack_item_idx").on(t.snackItemId),
+      .where(sql`guest_id IS NOT NULL AND rating IS NOT NULL AND deleted_at IS NULL`),
+    index("snack_comments_snack_item_idx").on(t.snackItemId),
+    index("snack_comments_parent_comment_idx").on(t.parentCommentId),
+    check(
+      "snack_comments_rating_check",
+      sql`rating IS NULL OR (parent_comment_id IS NULL AND rating BETWEEN 1 AND 5)`,
+    ),
   ],
 );
 
@@ -151,26 +164,6 @@ export const snackItemImages = pgTable(
 );
 
 // ---------------------------------------------------------------------------
-// comments
-// ---------------------------------------------------------------------------
-
-export const comments = pgTable("comments", {
-  id: uuid("id")
-    .primaryKey()
-    .default(sql`uuidv7()`),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id),
-  parentCommentId: uuid("parent_comment_id").references((): AnyPgColumn => comments.id, {
-    onDelete: "cascade",
-  }),
-  body: text("body").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-  deletedAt: timestamp("deleted_at"),
-});
-
-// ---------------------------------------------------------------------------
 // comment_reactions
 // ---------------------------------------------------------------------------
 
@@ -185,7 +178,7 @@ export const commentReactions = pgTable(
       .references(() => users.id),
     commentId: uuid("comment_id")
       .notNull()
-      .references(() => comments.id),
+      .references(() => snackComments.id),
     type: text("type").notNull(), // 'like' | 'fire' | 'meh'
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
@@ -194,6 +187,7 @@ export const commentReactions = pgTable(
     index("comment_reactions_comment_id_idx").on(t.commentId),
   ],
 );
+
 // ---------------------------------------------------------------------------
 // comment_reports
 // ---------------------------------------------------------------------------
@@ -209,7 +203,7 @@ export const commentReports = pgTable(
       .references(() => users.id),
     commentId: uuid("comment_id")
       .notNull()
-      .references(() => comments.id),
+      .references(() => snackComments.id),
     reason: text("reason").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },

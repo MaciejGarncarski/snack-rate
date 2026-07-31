@@ -403,7 +403,7 @@ async function seedDatabase() {
   // ---------------------------------------------------------------------------
   // Recenzje
   // ---------------------------------------------------------------------------
-  await db.insert(schema.snackReviews).values([
+  await db.insert(schema.snackComments).values([
     // Monster Original
     {
       snackItemId: monsterOriginal.id,
@@ -538,25 +538,30 @@ async function seedDatabase() {
   // Comments
   // ---------------------------------------------------------------------------
   const [k1, k2, k3, k4, k5] = await db
-    .insert(schema.comments)
+    .insert(schema.snackComments)
     .values([
       {
+        snackItemId: monsterOriginal.id,
         userId: alfred.id,
         body: "Całkowita zgoda, bez Monstera dzień się nie liczy.",
       },
       {
+        snackItemId: monsterUltra.id,
         userId: celina.id,
         body: "Ja wolę Ultra, ale rozumiem ten kult.",
       },
       {
+        snackItemId: monsterMango.id,
         userId: dawid.id,
         body: "Mango Loco to naprawdę inny poziom wśród energetyków.",
       },
       {
+        snackItemId: tyrrellsSeaSalt.id,
         userId: anna.id,
         body: "Tyrrell's to jedyne chipsy, przy których nie mam wyrzutów sumienia.",
       },
       {
+        snackItemId: wedelPtasie.id,
         userId: alfred.id,
         body: "Ptasie Mleczko to skarb polskiej cukiernictwa, nie ma co dodać.",
       },
@@ -564,18 +569,21 @@ async function seedDatabase() {
     .returning();
 
   // Replies
-  await db.insert(schema.comments).values([
+  await db.insert(schema.snackComments).values([
     {
+      snackItemId: monsterOriginal.id,
       userId: dawid.id,
       parentCommentId: k1.id,
       body: "Nie zgadzam się, Ultra White jest lepsza – zero cukru, więcej luzu.",
     },
     {
+      snackItemId: monsterMango.id,
       userId: anna.id,
       parentCommentId: k3.id,
       body: "Mango Loco + lato + basen = idealne połączenie.",
     },
     {
+      snackItemId: wedelPtasie.id,
       userId: celina.id,
       parentCommentId: k5.id,
       body: "I te ceny są uczciwe jak na taką jakość. Rzadkość.",

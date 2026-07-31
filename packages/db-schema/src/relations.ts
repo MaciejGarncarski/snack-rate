@@ -4,47 +4,45 @@ import * as schema from "./schema";
 
 export const relations = defineRelations(schema, (r) => ({
   users: {
-    reviews: r.many.snackReviews({ from: r.users.id, to: r.snackReviews.userId }),
-    comments: r.many.comments({ from: r.users.id, to: r.comments.userId }),
+    comments: r.many.snackComments({ from: r.users.id, to: r.snackComments.userId }),
+    commentReactions: r.many.commentReactions({ from: r.users.id, to: r.commentReactions.userId }),
+    commentReports: r.many.commentReports({ from: r.users.id, to: r.commentReports.reporterId }),
     bookmarks: r.many.bookmarks({ from: r.users.id, to: r.bookmarks.userId }),
     emailVerifications: r.many.emailVerifications({
       from: r.users.id,
       to: r.emailVerifications.userId,
     }),
-    commentReactions: r.many.commentReactions({ from: r.users.id, to: r.commentReactions.userId }),
-    commentReports: r.many.commentReports({ from: r.users.id, to: r.commentReports.reporterId }),
-  },
-
-  snackItems: {
-    type: r.one.snackTypes({ from: r.snackItems.typeId, to: r.snackTypes.id }),
-    images: r.many.snackItemImages({ from: r.snackItems.id, to: r.snackItemImages.snackItemId }),
-    reviews: r.many.snackReviews({ from: r.snackItems.id, to: r.snackReviews.snackItemId }),
-    bookmarks: r.many.bookmarks({ from: r.snackItems.id, to: r.bookmarks.snackItemId }),
   },
 
   snackTypes: {
     snackItems: r.many.snackItems({ from: r.snackTypes.id, to: r.snackItems.typeId }),
   },
 
-  snackReviews: {
-    snackItem: r.one.snackItems({ from: r.snackReviews.snackItemId, to: r.snackItems.id }),
-    user: r.one.users({ from: r.snackReviews.userId, to: r.users.id }),
+  snackItems: {
+    type: r.one.snackTypes({ from: r.snackItems.typeId, to: r.snackTypes.id }),
+    images: r.many.snackItemImages({ from: r.snackItems.id, to: r.snackItemImages.snackItemId }),
+    comments: r.many.snackComments({ from: r.snackItems.id, to: r.snackComments.snackItemId }),
+    bookmarks: r.many.bookmarks({ from: r.snackItems.id, to: r.bookmarks.snackItemId }),
   },
 
-  comments: {
-    user: r.one.users({ from: r.comments.userId, to: r.users.id }),
-    parent: r.one.comments({
-      from: r.comments.parentCommentId,
-      to: r.comments.id,
+  snackComments: {
+    snackItem: r.one.snackItems({ from: r.snackComments.snackItemId, to: r.snackItems.id }),
+    user: r.one.users({ from: r.snackComments.userId, to: r.users.id }),
+    parent: r.one.snackComments({
+      from: r.snackComments.parentCommentId,
+      to: r.snackComments.id,
       alias: "comment_replies",
     }),
-    replies: r.many.comments({
-      from: r.comments.id,
-      to: r.comments.parentCommentId,
+    replies: r.many.snackComments({
+      from: r.snackComments.id,
+      to: r.snackComments.parentCommentId,
       alias: "comment_replies",
     }),
-    reactions: r.many.commentReactions({ from: r.comments.id, to: r.commentReactions.commentId }),
-    reports: r.many.commentReports({ from: r.comments.id, to: r.commentReports.commentId }),
+    reactions: r.many.commentReactions({
+      from: r.snackComments.id,
+      to: r.commentReactions.commentId,
+    }),
+    reports: r.many.commentReports({ from: r.snackComments.id, to: r.commentReports.commentId }),
   },
 
   snackItemImages: {
@@ -53,12 +51,12 @@ export const relations = defineRelations(schema, (r) => ({
 
   commentReactions: {
     user: r.one.users({ from: r.commentReactions.userId, to: r.users.id }),
-    comment: r.one.comments({ from: r.commentReactions.commentId, to: r.comments.id }),
+    comment: r.one.snackComments({ from: r.commentReactions.commentId, to: r.snackComments.id }),
   },
 
   commentReports: {
     reporter: r.one.users({ from: r.commentReports.reporterId, to: r.users.id }),
-    comment: r.one.comments({ from: r.commentReports.commentId, to: r.comments.id }),
+    comment: r.one.snackComments({ from: r.commentReports.commentId, to: r.snackComments.id }),
   },
 
   emailVerifications: {

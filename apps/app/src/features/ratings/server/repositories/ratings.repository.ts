@@ -1,5 +1,5 @@
-import { snackItems, snackReviews } from "@snack-rate/db-schema/schema";
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { snackComments, snackItems } from "@snack-rate/db-schema/schema";
+import { and, eq, isNotNull, isNull, sql } from "drizzle-orm";
 import type { TableFilter } from "drizzle-orm";
 
 import { Rating } from "#/features/shared/value-objects/rating.vo";
@@ -21,7 +21,7 @@ export type RatingResult = {
   snackItemId: string;
   userId: string | null;
   guestId: string | null;
-  rating: number;
+  rating: number | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -45,11 +45,21 @@ function whereUserOrGuest(
   snackItemId: string,
   userId: string | null,
   guestId: string | null,
-): TableFilter<typeof snackReviews> {
+): TableFilter<typeof snackComments> {
   const identity = userOrGuestIdentity(userId, guestId);
   return identity.column === "userId"
-    ? { snackItemId, userId: identity.value, deletedAt: { isNull: true } }
-    : { snackItemId, guestId: identity.value, deletedAt: { isNull: true } };
+    ? {
+        snackItemId,
+        userId: identity.value,
+        rating: { isNotNull: true },
+        deletedAt: { isNull: true },
+      }
+    : {
+        snackItemId,
+        guestId: identity.value,
+        rating: { isNotNull: true },
+        deletedAt: { isNull: true },
+      };
 }
 
 function whereUserOrGuestSql(
@@ -58,11 +68,12 @@ function whereUserOrGuestSql(
   guestId: string | null,
 ): ReturnType<typeof and> {
   const identity = userOrGuestIdentity(userId, guestId);
-  const column = identity.column === "userId" ? snackReviews.userId : snackReviews.guestId;
+  const column = identity.column === "userId" ? snackComments.userId : snackComments.guestId;
   return and(
-    eq(snackReviews.snackItemId, snackItemId),
+    eq(snackComments.snackItemId, snackItemId),
     eq(column, identity.value),
-    isNull(snackReviews.deletedAt),
+    isNotNull(snackComments.rating),
+    isNull(snackComments.deletedAt),
   );
 }
 
@@ -75,20 +86,20 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         throw new Error("Either userId or guestId must be provided");
       }
 
-      const existing = await client.query.snackReviews.findFirst({
+      const existing = await client.query.snackComments.findFirst({
         where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
         columns: { id: true },
       });
 
       if (existing) {
         await client
-          .update(snackReviews)
+          .update(snackComments)
           .set({ deletedAt: new Date() })
-          .where(eq(snackReviews.id, existing.id));
+          .where(eq(snackComments.id, existing.id));
       }
 
       const [created] = await client
-        .insert(snackReviews)
+        .insert(snackComments)
         .values({
           snackItemId: data.snackItemId,
           userId: data.userId,
@@ -97,7 +108,7 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         })
         .returning();
 
-      return created;
+      return { ...created, rating: created.rating };
     },
 
     getRating: async (data: {
@@ -110,7 +121,7 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
 
       if (!data.userId && !data.guestId) return null;
 
-      const result = await client.query.snackReviews.findFirst({
+      const result = await client.query.snackComments.findFirst({
         where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
         columns: { rating: true },
       });
@@ -123,10 +134,16 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
 
       const result = await client
         .select({
-          avg: sql<string>`COALESCE(AVG(${snackReviews.rating})::numeric, 0)`,
+          avg: sql<string>`COALESCE(AVG(${snackComments.rating})::numeric, 0)`,
         })
-        .from(snackReviews)
-        .where(and(eq(snackReviews.snackItemId, snackItemId), isNull(snackReviews.deletedAt)));
+        .from(snackComments)
+        .where(
+          and(
+            eq(snackComments.snackItemId, snackItemId),
+            isNotNull(snackComments.rating),
+            isNull(snackComments.deletedAt),
+          ),
+        );
 
       const avgValue = Math.round(Number(result[0]?.avg ?? 0) * 100) / 100;
 
@@ -151,7 +168,7 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
       }
 
       await client
-        .update(snackReviews)
+        .update(snackComments)
         .set({ deletedAt: new Date() })
         .where(whereUserOrGuestSql(data.snackItemId, data.userId, data.guestId));
     },
@@ -167,15 +184,19 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
       const [aggregate, userRating] = await Promise.all([
         client
           .select({
-            avg: sql<string>`COALESCE(AVG(${snackReviews.rating})::numeric, 0)`,
+            avg: sql<string>`COALESCE(AVG(${snackComments.rating})::numeric, 0)`,
             count: sql<number>`COUNT(*)`,
           })
-          .from(snackReviews)
+          .from(snackComments)
           .where(
-            and(eq(snackReviews.snackItemId, data.snackItemId), isNull(snackReviews.deletedAt)),
+            and(
+              eq(snackComments.snackItemId, data.snackItemId),
+              isNotNull(snackComments.rating),
+              isNull(snackComments.deletedAt),
+            ),
           ),
         data.userId || data.guestId
-          ? client.query.snackReviews.findFirst({
+          ? client.query.snackComments.findFirst({
               where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
               columns: { rating: true },
             })
@@ -188,12 +209,16 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
       const distribution: Record<string, number> = {};
       if (count > 0) {
         const rows = await client
-          .select({ rating: snackReviews.rating, count: sql<number>`COUNT(*)` })
-          .from(snackReviews)
+          .select({ rating: snackComments.rating, count: sql<number>`COUNT(*)` })
+          .from(snackComments)
           .where(
-            and(eq(snackReviews.snackItemId, data.snackItemId), isNull(snackReviews.deletedAt)),
+            and(
+              eq(snackComments.snackItemId, data.snackItemId),
+              isNotNull(snackComments.rating),
+              isNull(snackComments.deletedAt),
+            ),
           )
-          .groupBy(snackReviews.rating);
+          .groupBy(snackComments.rating);
 
         for (const row of rows) {
           distribution[String(row.rating)] = Number(row.count);

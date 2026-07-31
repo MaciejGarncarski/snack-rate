@@ -74,7 +74,6 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
         { title },
         { name: "description", content: description },
         { name: "robots", content: "index,follow" },
-        { name: "theme-color", content: "#ffffff" },
         { property: "og:type", content: "website" },
         { property: "og:site_name", content: "Snack Rate" },
         { property: "og:title", content: title },
@@ -103,8 +102,15 @@ function RouteComponent() {
   const rateSnack = useRateSnack();
 
   const removeRating = useMutation({
-    mutationFn: (mutationData: z.input<typeof removeRatingSchema>) =>
-      removeRatingFn({ data: mutationData }),
+    mutationFn: (mutationData: z.input<typeof removeRatingSchema>) => {
+      return removeRatingFn({ data: mutationData });
+    },
+    onSuccess: async (_, __, ___, { client }) => {
+      await Promise.all([
+        client.invalidateQueries(snackRatingsQueryOptions(data.id, guestId)),
+        client.invalidateQueries(getSnackBySlugQueryOptions(slug)),
+      ]);
+    },
   });
 
   const imageUrls = data.images.filter((img) => img.type === "default").map((img) => img.url);

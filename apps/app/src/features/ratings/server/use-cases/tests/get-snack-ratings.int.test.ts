@@ -1,4 +1,4 @@
-import { snackReviews } from "@snack-rate/db-schema/schema";
+import { snackComments } from "@snack-rate/db-schema/schema";
 import { eq } from "drizzle-orm";
 
 import { createRatingsRepository } from "#/features/ratings/server/repositories/ratings.repository";
@@ -20,7 +20,7 @@ async function insertRating(
   rating: number,
   overrides?: { userId?: string; guestId?: string },
 ) {
-  await db.insert(snackReviews).values({
+  await db.insert(snackComments).values({
     snackItemId,
     userId: overrides?.userId ?? null,
     guestId: overrides?.guestId ?? null,
@@ -93,7 +93,10 @@ describe("get snack ratings", () => {
     await insertRating(snack.id, 5, { guestId: "bob" });
     await insertRating(snack.id, 3, { guestId: "carol" });
     await insertRating(snack.id, 1, { guestId: "dave" });
-    await db.update(snackReviews).set({ deletedAt: new Date() }).where(eq(snackReviews.rating, 5));
+    await db
+      .update(snackComments)
+      .set({ deletedAt: new Date() })
+      .where(eq(snackComments.rating, 5));
 
     const result = await getSnackRatings({ snackItemId: snack.id, guestId: "carol" }, repository);
 
