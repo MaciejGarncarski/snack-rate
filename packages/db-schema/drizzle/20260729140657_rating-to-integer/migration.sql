@@ -1,0 +1,1 @@
+ALTER TABLE "snack_reviews" ALTER COLUMN "rating" SET DATA TYPE integer USING "rating"::integer;

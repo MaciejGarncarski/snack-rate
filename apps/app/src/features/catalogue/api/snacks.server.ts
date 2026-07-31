@@ -5,6 +5,7 @@ import { verifyCaptcha } from "#/features/captcha/verify-captcha.server";
 import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
 import { createSnack } from "#/features/catalogue/server/use-cases/create-snack.use-case";
 import { listSnacksFeed } from "#/features/catalogue/server/use-cases/list-snacks.use-case";
+import { getMainDb } from "#/infrastructure/db/db";
 import { createSnackInputSchema, listSnacksSchema } from "#/schemas/catalogue";
 
 export const listSnacksProcedure = os.input(listSnacksSchema).handler(({ input }) => {
@@ -40,6 +41,7 @@ export const createSnackProcedure = os.input(createSnackInput).handler(({ input 
       images: input.images,
     },
     snacksRepository,
+    getMainDb(),
   );
 });
 

@@ -1,3 +1,4 @@
+import { pluralizeRatings } from "#/lib/pluralizer";
 import { cn } from "#/lib/utils";
 
 function getColorClass(rating: number): string {
@@ -62,11 +63,11 @@ type SnackRatingProps = {
   size?: "xs" | "sm" | "md" | "lg";
 };
 
-const fontSizesMap: Record<"xs" | "sm" | "md" | "lg", string> = {
-  xs: "text-xs",
-  sm: "text-sm",
-  md: "text-base",
-  lg: "text-2xl",
+const fontSizesMap: Record<"xs" | "sm" | "md" | "lg", { value: string; count: string }> = {
+  xs: { value: "text-xs", count: "text-xs" },
+  sm: { value: "text-sm", count: "text-sm" },
+  md: { value: "text-base", count: "text-sm" },
+  lg: { value: "text-2xl", count: "text-base" },
 };
 
 export function SnackRating({ rating, ratingCount, withText, size = "md" }: SnackRatingProps) {
@@ -78,12 +79,6 @@ export function SnackRating({ rating, ratingCount, withText, size = "md" }: Snac
 
   return (
     <div className="flex items-center gap-3">
-      {withText && (
-        <span className={cn("tabular-nums relative top-px font-bold", fontSizesMap[size])}>
-          {value.toFixed(1)}
-        </span>
-      )}
-
       <div className={cn("flex", gapClass)}>
         {Array.from({ length: 5 }, (_, i) => {
           const fill = Math.max(0, Math.min(1, value - i));
@@ -91,9 +86,15 @@ export function SnackRating({ rating, ratingCount, withText, size = "md" }: Snac
         })}
       </div>
 
+      {withText && (
+        <span className={cn("tabular-nums relative top-px font-bold", fontSizesMap[size].value)}>
+          {value.toFixed(1)}
+        </span>
+      )}
+
       {ratingCount !== undefined && (
-        <span className="text-xs text-muted-foreground">
-          ({ratingCount} {ratingCount === 1 ? "ocena" : "ocen"})
+        <span className={cn("text-xs text-muted-foreground", fontSizesMap[size].count)}>
+          ({ratingCount} {pluralizeRatings(ratingCount)})
         </span>
       )}
     </div>

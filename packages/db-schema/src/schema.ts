@@ -8,7 +8,6 @@ import {
   timestamp,
   decimal,
   integer,
-  numeric,
   primaryKey,
   uniqueIndex,
   index,
@@ -106,10 +105,9 @@ export const snackReviews = pgTable(
     snackItemId: uuid("snack_item_id")
       .notNull()
       .references(() => snackItems.id),
-    userId: uuid("user_id")
-      .references(() => users.id),
+    userId: uuid("user_id").references(() => users.id),
     guestId: text("guest_id"),
-    rating: numeric("rating", { precision: 2, scale: 1 }).notNull(),
+    rating: integer("rating").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),

@@ -38,6 +38,7 @@ describe("create snack", () => {
         typeSlug: input.typeSlug,
       },
       repository,
+      db,
     );
 
     const dbSnack = await db.query.snackItems.findFirst({
@@ -73,6 +74,7 @@ describe("create snack", () => {
         typeSlug: type.slug,
       },
       repository,
+      db,
     );
 
     const dbSnack = await db.query.snackItems.findFirst({

@@ -1,8 +1,9 @@
 import { snackItems, snackReviews } from "@snack-rate/db-schema/schema";
 import { and, eq, isNull, sql } from "drizzle-orm";
+import type { TableFilter } from "drizzle-orm";
 
 import { Rating } from "#/features/shared/value-objects/rating.vo";
-import type { Db } from "#/infrastructure/db/db";
+import type { Db, DbTransaction } from "#/infrastructure/db/db";
 
 type RatingsRepositoryDeps = {
   db: Db;
@@ -32,65 +33,58 @@ export type SnackRatingsResult = {
   userRating: number | null;
 };
 
-export type TransactionClient = Parameters<Db["transaction"]>[0] extends (tx: infer T) => unknown
-  ? T
-  : never;
+type Identity = { column: "userId" | "guestId"; value: string };
 
-function whereUserOrGuest(snackItemId: string, userId: string | null, guestId: string | null) {
-  if (userId) {
-    return and(
-      eq(snackReviews.userId, userId),
-      eq(snackReviews.snackItemId, snackItemId),
-      isNull(snackReviews.deletedAt),
-    );
-  }
+function userOrGuestIdentity(userId: string | null, guestId: string | null): Identity {
+  if (userId) return { column: "userId", value: userId };
+  if (!guestId) throw new Error("Either userId or guestId must be provided");
+  return { column: "guestId", value: guestId };
+}
 
-  if (!guestId) {
-    throw new Error("Either userId or guestId must be provided");
-  }
+function whereUserOrGuest(
+  snackItemId: string,
+  userId: string | null,
+  guestId: string | null,
+): TableFilter<typeof snackReviews> {
+  const identity = userOrGuestIdentity(userId, guestId);
+  return identity.column === "userId"
+    ? { snackItemId, userId: identity.value, deletedAt: { isNull: true } }
+    : { snackItemId, guestId: identity.value, deletedAt: { isNull: true } };
+}
 
+function whereUserOrGuestSql(
+  snackItemId: string,
+  userId: string | null,
+  guestId: string | null,
+): ReturnType<typeof and> {
+  const identity = userOrGuestIdentity(userId, guestId);
+  const column = identity.column === "userId" ? snackReviews.userId : snackReviews.guestId;
   return and(
-    eq(snackReviews.guestId, guestId),
     eq(snackReviews.snackItemId, snackItemId),
+    eq(column, identity.value),
     isNull(snackReviews.deletedAt),
   );
 }
 
-function toRatingResult(row: {
-  id: string;
-  snackItemId: string;
-  userId: string | null;
-  guestId: string | null;
-  rating: string;
-  createdAt: Date;
-  updatedAt: Date;
-}): RatingResult {
-  return {
-    ...row,
-    rating: Number(row.rating),
-  };
-}
-
 export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
   return {
-    upsertRating: async (data: UpsertRatingData, tx?: TransactionClient): Promise<RatingResult> => {
-      const client = tx ?? (db as unknown as TransactionClient);
+    upsertRating: async (data: UpsertRatingData, tx?: DbTransaction): Promise<RatingResult> => {
+      const client = tx ?? db;
 
       if (!data.userId && !data.guestId) {
         throw new Error("Either userId or guestId must be provided");
       }
 
-      const existing = await client
-        .select({ id: snackReviews.id })
-        .from(snackReviews)
-        .where(whereUserOrGuest(data.snackItemId, data.userId, data.guestId))
-        .limit(1);
+      const existing = await client.query.snackReviews.findFirst({
+        where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
+        columns: { id: true },
+      });
 
-      if (existing.length > 0) {
+      if (existing) {
         await client
           .update(snackReviews)
           .set({ deletedAt: new Date() })
-          .where(eq(snackReviews.id, existing[0].id));
+          .where(eq(snackReviews.id, existing.id));
       }
 
       const [created] = await client
@@ -99,31 +93,33 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
           snackItemId: data.snackItemId,
           userId: data.userId,
           guestId: data.guestId,
-          rating: String(data.rating.getValue()),
+          rating: data.rating.getValue(),
         })
         .returning();
 
-      return toRatingResult(created as typeof created & { rating: string });
+      return created;
     },
 
     getRating: async (data: {
       snackItemId: string;
       userId: string | null;
       guestId: string | null;
+      tx?: DbTransaction;
     }): Promise<number | null> => {
+      const client = data.tx ?? db;
+
       if (!data.userId && !data.guestId) return null;
 
-      const result = await db
-        .select({ rating: snackReviews.rating })
-        .from(snackReviews)
-        .where(whereUserOrGuest(data.snackItemId, data.userId, data.guestId))
-        .limit(1);
+      const result = await client.query.snackReviews.findFirst({
+        where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
+        columns: { rating: true },
+      });
 
-      return result.length > 0 ? Number(result[0].rating) : null;
+      return result ? result.rating : null;
     },
 
-    recalculateAvgRating: async (snackItemId: string, tx?: TransactionClient): Promise<void> => {
-      const client = tx ?? (db as unknown as TransactionClient);
+    recalculateAvgRating: async (snackItemId: string, tx?: DbTransaction): Promise<void> => {
+      const client = tx ?? db;
 
       const result = await client
         .select({
@@ -132,37 +128,41 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         .from(snackReviews)
         .where(and(eq(snackReviews.snackItemId, snackItemId), isNull(snackReviews.deletedAt)));
 
-      const avgValue = Number(result[0]?.avg ?? 0);
-      const rounded = Math.round(avgValue * 100) / 100;
+      const avgValue = Math.round(Number(result[0]?.avg ?? 0) * 100) / 100;
 
       await client
         .update(snackItems)
-        .set({ avgRating: String(rounded) })
+        .set({ avgRating: String(avgValue) })
         .where(eq(snackItems.id, snackItemId));
     },
 
-    removeRating: async (data: {
-      snackItemId: string;
-      userId: string | null;
-      guestId: string | null;
-    }): Promise<void> => {
+    removeRating: async (
+      data: {
+        snackItemId: string;
+        userId: string | null;
+        guestId: string | null;
+      },
+      tx?: DbTransaction,
+    ): Promise<void> => {
+      const client = tx ?? db;
+
       if (!data.userId && !data.guestId) {
         throw new Error("Either userId or guestId must be provided");
       }
 
-      await db
+      await client
         .update(snackReviews)
         .set({ deletedAt: new Date() })
-        .where(whereUserOrGuest(data.snackItemId, data.userId, data.guestId));
+        .where(whereUserOrGuestSql(data.snackItemId, data.userId, data.guestId));
     },
 
     getRatingsForSnack: async (data: {
       snackItemId: string;
       userId: string | null;
       guestId: string | null;
-      tx?: TransactionClient;
+      tx?: DbTransaction;
     }): Promise<SnackRatingsResult> => {
-      const client = data.tx ?? (db as unknown as TransactionClient);
+      const client = data.tx ?? db;
 
       const [aggregate, userRating] = await Promise.all([
         client
@@ -175,12 +175,11 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
             and(eq(snackReviews.snackItemId, data.snackItemId), isNull(snackReviews.deletedAt)),
           ),
         data.userId || data.guestId
-          ? client
-              .select({ rating: snackReviews.rating })
-              .from(snackReviews)
-              .where(whereUserOrGuest(data.snackItemId, data.userId, data.guestId))
-              .limit(1)
-          : Promise.resolve([]),
+          ? client.query.snackReviews.findFirst({
+              where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
+              columns: { rating: true },
+            })
+          : Promise.resolve(null),
       ]);
 
       const count = Number(aggregate[0]?.count ?? 0);
@@ -197,7 +196,7 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
           .groupBy(snackReviews.rating);
 
         for (const row of rows) {
-          distribution[Number(row.rating).toFixed(1)] = Number(row.count);
+          distribution[String(row.rating)] = Number(row.count);
         }
       }
 
@@ -205,11 +204,9 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         avgRating,
         ratingCount: count,
         distribution,
-        userRating: userRating.length > 0 ? Number(userRating[0].rating) : null,
+        userRating: userRating ? userRating.rating : null,
       };
     },
-
-    transaction: db.transaction.bind(db),
   };
 }
 

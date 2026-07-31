@@ -5,59 +5,32 @@ import { cn } from "#/lib/utils";
 
 type StarButtonProps = {
   starIndex: number;
-  fill: number;
+  filled: boolean;
   onRate: (value: number) => void;
   onHover: (value: number) => void;
   onLeave: () => void;
   disabled: boolean;
 };
 
-function getValueFromEvent(e: React.MouseEvent<HTMLButtonElement>, starIndex: number): number {
-  const rect = e.currentTarget.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-
-  return x < rect.width / 2 ? starIndex - 0.5 : starIndex;
-}
-
-function StarButton({ starIndex, fill, onRate, onHover, onLeave, disabled }: StarButtonProps) {
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (disabled) return;
-
-    onHover(getValueFromEvent(e, starIndex));
-  };
-
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (disabled) return;
-
-    onRate(getValueFromEvent(e, starIndex));
-  };
-
+function StarButton({ starIndex, filled, onRate, onHover, onLeave, disabled }: StarButtonProps) {
   return (
     <button
       type="button"
-      className={cn(
-        "relative size-7",
-        disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
-      )}
-      onMouseMove={handleMouseMove}
+      className={cn("size-7", disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer")}
+      onMouseEnter={() => {
+        if (!disabled) onHover(starIndex);
+      }}
       onMouseLeave={onLeave}
-      onClick={handleClick}
+      onClick={() => {
+        if (!disabled) onRate(starIndex);
+      }}
       disabled={disabled}
       aria-label={`Oceń na ${starIndex}`}
     >
       <StarIcon
-        className="absolute inset-0 size-7 text-amber-400 fill-transparent"
+        className={cn("size-7 text-amber-400", filled ? "fill-amber-400" : "fill-transparent")}
         strokeWidth={1.5}
       />
-
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute inset-y-0 left-0 overflow-hidden"
-          style={{ width: `${fill * 100}%` }}
-        >
-          <StarIcon className="size-7 text-amber-400 fill-amber-400" strokeWidth={1.5} />
-        </div>
-      </div>
     </button>
   );
 }
@@ -78,7 +51,7 @@ export function SnackRatingPicker({ currentRating, onRate, disabled }: SnackRati
   }, [currentRating]);
 
   const isDisabled = disabled || isSubmitting;
-  const activeValue = hoveredValue > 0 ? hoveredValue : (displayRating ?? 0);
+  const activeValue = hoveredValue || displayRating || 0;
 
   const handleRate = async (value: number) => {
     if (isDisabled || value === displayRating) return;
@@ -96,32 +69,18 @@ export function SnackRatingPicker({ currentRating, onRate, disabled }: SnackRati
   return (
     <div className="flex items-center gap-3">
       <div className="flex items-center gap-1">
-        {[1, 2, 3, 4, 5].map((starIndex) => {
-          const fill = Math.max(0, Math.min(1, activeValue - (starIndex - 1)));
-
-          return (
-            <StarButton
-              key={starIndex}
-              starIndex={starIndex}
-              fill={fill}
-              onRate={handleRate}
-              onHover={setHoveredValue}
-              onLeave={() => setHoveredValue(0)}
-              disabled={isDisabled}
-            />
-          );
-        })}
+        {[1, 2, 3, 4, 5].map((starIndex) => (
+          <StarButton
+            key={starIndex}
+            starIndex={starIndex}
+            filled={starIndex <= activeValue}
+            onRate={handleRate}
+            onHover={setHoveredValue}
+            onLeave={() => setHoveredValue(0)}
+            disabled={isDisabled}
+          />
+        ))}
       </div>
-
-      {hoveredValue > 0 ? (
-        <span className="min-w-[3ch] text-right text-sm font-bold tabular-nums text-amber-400/80">
-          {hoveredValue.toFixed(1)}
-        </span>
-      ) : displayRating !== null ? (
-        <span className="min-w-[3ch] text-right text-sm font-bold tabular-nums text-amber-400/80">
-          {displayRating.toFixed(1)}
-        </span>
-      ) : null}
     </div>
   );
 }

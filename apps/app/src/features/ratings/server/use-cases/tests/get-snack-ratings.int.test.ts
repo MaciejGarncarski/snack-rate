@@ -24,7 +24,7 @@ async function insertRating(
     snackItemId,
     userId: overrides?.userId ?? null,
     guestId: overrides?.guestId ?? null,
-    rating: String(rating),
+    rating,
   });
 }
 
@@ -66,8 +66,8 @@ describe("get snack ratings", () => {
     const result = await getSnackRatings({ snackItemId: snack.id, guestId: "a" }, repository);
 
     expect(result.distribution).toEqual({
-      "1.0": 2,
-      "5.0": 1,
+      "1": 2,
+      "5": 1,
     });
   });
 
@@ -93,10 +93,7 @@ describe("get snack ratings", () => {
     await insertRating(snack.id, 5, { guestId: "bob" });
     await insertRating(snack.id, 3, { guestId: "carol" });
     await insertRating(snack.id, 1, { guestId: "dave" });
-    await db
-      .update(snackReviews)
-      .set({ deletedAt: new Date() })
-      .where(eq(snackReviews.rating, "5"));
+    await db.update(snackReviews).set({ deletedAt: new Date() }).where(eq(snackReviews.rating, 5));
 
     const result = await getSnackRatings({ snackItemId: snack.id, guestId: "carol" }, repository);
 

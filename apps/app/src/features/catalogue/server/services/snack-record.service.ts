@@ -2,6 +2,7 @@ import type { SnacksRepository } from "#/features/catalogue/server/repositories/
 import type { UploadedImage } from "#/features/catalogue/server/services/snack-image.service";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 import type { SnackStatus } from "#/features/shared/value-objects/status.vo";
+import { type Db } from "#/infrastructure/db/db";
 
 export type CreateSnackInput = {
   name: string;
@@ -17,8 +18,9 @@ export function createSnackRecord(
   status: SnackStatus,
   uploadedImages: UploadedImage[],
   snackRepository: SnacksRepository,
+  db: Db,
 ): Promise<string> {
-  return snackRepository.transaction(async (tx) => {
+  return db.transaction(async (tx) => {
     const snack = await snackRepository.create(
       {
         name: input.name,

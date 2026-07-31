@@ -2,7 +2,9 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { ratingsRepository } from "#/features/ratings/server/repositories/ratings.repository.instance";
 import { rateSnack } from "#/features/ratings/server/use-cases/rate-snack.use-case";
+import { removeRatingUseCase } from "#/features/ratings/server/use-cases/remove-rating.use-case";
 import { getSnackRatings } from "#/features/ratings/server/use-cases/snack-ratings.use-case";
+import { getMainDb } from "#/infrastructure/db/db";
 import { rateSnackSchema, removeRatingSchema, snackRatingsSchema } from "#/schemas/ratings";
 
 export const rateSnackFn = createServerFn()
@@ -15,6 +17,7 @@ export const rateSnackFn = createServerFn()
         guestId: data.guestId ?? null,
       },
       ratingsRepository,
+      getMainDb(),
     );
   });
 
@@ -35,9 +38,11 @@ export const removeRatingFn = createServerFn({ method: "POST" })
   .handler(({ data }) => {
     // TODO: Add userId support when we implement user authentication
 
-    return ratingsRepository.removeRating({
-      snackItemId: data.snackItemId,
-      guestId: data.guestId ?? null,
-      userId: null,
-    });
+    return removeRatingUseCase(
+      {
+        snackItemId: data.snackItemId,
+        guestId: data.guestId ?? null,
+      },
+      ratingsRepository,
+    );
   });

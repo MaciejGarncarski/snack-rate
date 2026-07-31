@@ -2,7 +2,7 @@ import { snackItemImages, snackItems } from "@snack-rate/db-schema/schema";
 import type { TableFilter } from "drizzle-orm";
 
 import type { SnackStatus } from "#/features/shared/value-objects/status.vo";
-import type { Db } from "#/infrastructure/db/db";
+import type { Db, DbTransaction } from "#/infrastructure/db/db";
 
 export type DecodedCursor = {
   createdAt: Date;
@@ -129,13 +129,9 @@ type AddImageData = {
   sortOrder: number;
 };
 
-export type TransactionClient = Parameters<Db["transaction"]>[0] extends (tx: infer T) => unknown
-  ? T
-  : never;
-
 export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps) {
   return {
-    create: async (data: CreateSnackData, tx?: TransactionClient) => {
+    create: async (data: CreateSnackData, tx?: DbTransaction) => {
       const client = tx ?? db;
 
       const snackType = await client.query.snackTypes.findFirst({
@@ -161,7 +157,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
       return created;
     },
 
-    addImage: async (data: AddImageData, tx?: TransactionClient) => {
+    addImage: async (data: AddImageData, tx?: DbTransaction) => {
       const client = tx ?? db;
       const [created] = await client
         .insert(snackItemImages)
@@ -252,8 +248,6 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
         },
       });
     },
-
-    transaction: db.transaction.bind(db),
   };
 }
 
