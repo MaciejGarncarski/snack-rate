@@ -12,6 +12,7 @@ type RatingsRepositoryDeps = {
 export type UpsertRatingData = {
   snackItemId: string;
   rating: Rating;
+  body: string | null;
   userId: string | null;
   guestId: string | null;
 };
@@ -22,6 +23,7 @@ export type RatingResult = {
   userId: string | null;
   guestId: string | null;
   rating: number | null;
+  body: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -31,6 +33,7 @@ export type SnackRatingsResult = {
   ratingCount: number;
   distribution: Record<string, number>;
   userRating: number | null;
+  userBody: string | null;
 };
 
 type Identity = { column: "userId" | "guestId"; value: string };
@@ -105,10 +108,11 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
           userId: data.userId,
           guestId: data.guestId,
           rating: data.rating.getValue(),
+          body: data.body,
         })
         .returning();
 
-      return { ...created, rating: created.rating };
+      return { ...created, rating: created.rating, body: created.body };
     },
 
     getRating: async (data: {
@@ -183,7 +187,7 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
     ): Promise<SnackRatingsResult> => {
       const client = tx ?? db;
 
-      const [aggregate, userRating] = await Promise.all([
+      const [aggregate, userReview] = await Promise.all([
         client
           .select({
             avg: sql<string>`COALESCE(AVG(${snackComments.rating})::numeric, 0)`,
@@ -200,7 +204,7 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         data.userId || data.guestId
           ? client.query.snackComments.findFirst({
               where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
-              columns: { rating: true },
+              columns: { rating: true, body: true },
             })
           : Promise.resolve(null),
       ]);
@@ -231,7 +235,8 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         avgRating,
         ratingCount: count,
         distribution,
-        userRating: userRating ? userRating.rating : null,
+        userRating: userReview ? userReview.rating : null,
+        userBody: userReview?.body ?? null,
       };
     },
   };

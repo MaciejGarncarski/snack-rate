@@ -6,7 +6,7 @@ import { useEffect, useMemo } from "react";
 import { Button } from "#/components/ui/button";
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
-import { getCaptcha } from "#/features/captcha/api/get-captcha.server";
+import { getCaptcha } from "#/features/captcha/transport/get-captcha.server";
 
 type CaptchaFieldProps = {
   value: string;

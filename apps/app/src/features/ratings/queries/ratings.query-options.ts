@@ -2,7 +2,7 @@ import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query
 import { toast } from "sonner";
 import * as z from "zod";
 
-import { getRatingsForSnackFn, rateSnackFn } from "#/features/ratings/api/ratings.server";
+import { getRatingsForSnackFn, rateSnackFn } from "#/features/ratings/transport/ratings.server";
 import { rateSnackSchema } from "#/schemas/ratings";
 
 export const snackRatingsQueryOptions = (snackItemId: string, guestId: string | undefined) =>
@@ -36,6 +36,7 @@ export function useRateSnack() {
             ratingCount: result.ratingCount,
             distribution: result.distribution,
             userRating: result.rating.value,
+            userBody: result.rating.body,
           };
         }
         return {
@@ -43,6 +44,7 @@ export function useRateSnack() {
           ratingCount: result.ratingCount,
           distribution: result.distribution,
           userRating: result.rating.value,
+          userBody: result.rating.body,
         };
       });
       toast.success("Ocena została zapisana");

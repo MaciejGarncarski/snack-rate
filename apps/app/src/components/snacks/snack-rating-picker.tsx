@@ -37,7 +37,7 @@ function StarButton({ starIndex, filled, onRate, onHover, onLeave, disabled }: S
 
 type SnackRatingPickerProps = {
   currentRating: number | null;
-  onRate: (rating: number) => Promise<void>;
+  onRate: (rating: number) => void;
   disabled?: boolean;
 };
 
@@ -68,7 +68,7 @@ export function SnackRatingPicker({ currentRating, onRate, disabled }: SnackRati
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-3">
         {[1, 2, 3, 4, 5].map((starIndex) => (
           <StarButton
             key={starIndex}

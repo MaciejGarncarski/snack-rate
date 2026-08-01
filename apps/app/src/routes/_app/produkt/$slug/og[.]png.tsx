@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import ImageResponse from "takumi-js/response";
 
-import { getSnackBySlugFn } from "#/features/catalogue/api/snacks.api";
+import { getSnackBySlugFn } from "#/features/catalogue/transport/get-snack-by-slug.server";
 import stylesheet from "#/styles/app.css?inline";
 
 // VERY IMPORTANT NOTE:

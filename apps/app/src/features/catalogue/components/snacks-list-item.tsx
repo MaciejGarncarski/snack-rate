@@ -25,6 +25,9 @@ type Props = {
 };
 
 export function SnacksListItem({ name, description, slug, rating, type, lazy, images }: Props) {
+  const isLongDescription = description && description.length > 100;
+  const truncatedDescription = isLongDescription ? description.slice(0, 100) + "..." : description;
+
   return (
     <li className="mx-auto w-full max-w-sm">
       <Link to="/produkt/$slug" params={{ slug }} className="rounded-4xl">
@@ -44,7 +47,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
               </Badge>
             </CardAction>
             <CardTitle>{name}</CardTitle>
-            <CardDescription>{description ?? "Brak opisu"}</CardDescription>
+            <CardDescription>{truncatedDescription ?? "Brak opisu"}</CardDescription>
           </CardHeader>
           <CardFooter>
             <SnackRating rating={rating} withText />

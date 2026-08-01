@@ -1,7 +1,7 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { BarcodeIcon, StarIcon, XCircleIcon } from "lucide-react";
+import { BarcodeIcon, XCircleIcon } from "lucide-react";
 import type z from "zod";
 
 import { SnackBarcode } from "#/components/snacks/snack-barcode";
@@ -17,30 +17,21 @@ import {
   EmptyTitle,
 } from "#/components/ui/empty";
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query";
-import { ensureGuestId } from "#/features/ratings/api/guest-id.server";
-import { removeRatingFn } from "#/features/ratings/api/ratings.server";
-import { UserRatingCard } from "#/features/ratings/components/user-rating-card";
+import { UserRatingDialog } from "#/features/ratings/components/user-rating-dialog";
 import {
   snackRatingsQueryOptions,
   useRateSnack,
 } from "#/features/ratings/queries/ratings.query-options";
+import { ensureGuestId } from "#/features/ratings/transport/guest-id.server";
+import { removeRatingFn } from "#/features/ratings/transport/ratings.server";
+import { cn } from "#/lib/utils";
 import type { removeRatingSchema } from "#/schemas/ratings";
+
+const SMALL_DESCRIPTION_LENGTH = 100;
+const NORMAL_DESCRIPTION_LENGTH = 350;
 
 export const Route = createFileRoute("/_app/produkt/$slug")({
   component: RouteComponent,
-  notFoundComponent: () => {
-    return (
-      <Empty>
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <XCircleIcon />
-          </EmptyMedia>
-          <EmptyTitle>Nie znaleziono produktu</EmptyTitle>
-          <EmptyDescription>Ups, wygląda na to, że ten produkt nie istnieje.</EmptyDescription>
-        </EmptyHeader>
-      </Empty>
-    );
-  },
   loader: async ({
     params,
     context,
@@ -61,6 +52,20 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
 
     return { snack, guestId };
   },
+  notFoundComponent: () => {
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <XCircleIcon />
+          </EmptyMedia>
+          <EmptyTitle>Nie znaleziono produktu</EmptyTitle>
+          <EmptyDescription>Ups, wygląda na to, że ten produkt nie istnieje.</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    );
+  },
+
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [] };
 
@@ -115,47 +120,60 @@ function RouteComponent() {
 
   const imageUrls = data.images.filter((img) => img.type === "default").map((img) => img.url);
 
-  const handleRate = async (rating: number) => {
+  const handleRate = async (rating: number, body: string | null) => {
     await rateSnack.mutateAsync({
       snackItemId: data.id,
       rating,
+      body,
       guestId,
     });
   };
 
+  const isLongDescription = data.description && data.description.length > NORMAL_DESCRIPTION_LENGTH;
+  const isNormalDescription =
+    data.description &&
+    data.description.length <= NORMAL_DESCRIPTION_LENGTH &&
+    data.description.length > SMALL_DESCRIPTION_LENGTH;
+  const isShortDescription =
+    data.description && data.description.length <= SMALL_DESCRIPTION_LENGTH;
+
   return (
-    <main className="mx-auto w-full max-w-4xl pb-10">
-      <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] lg:gap-12">
+    <main className="mx-auto w-full max-w-6xl pb-10 flex flex-col gap-10">
+      <div className="flex gap-8 flex-col lg:flex-row lg:gap-20">
         <div className="mx-auto w-full max-w-sm lg:sticky lg:top-8">
           <SnackImageSlider images={imageUrls} slug={slug} />
         </div>
 
-        <div className="pt-1 flex flex-col gap-6 lg:pt-2">
-          <Badge variant="default" className="mb-4 rounded-full px-3 py-1 font-semibold">
-            {data.type.name}
-          </Badge>
-          <div>
+        <div className="pt-1 flex flex-col gap-6 lg:pt-2 flex-1">
+          <div className="flex flex-col gap-4">
             <h1 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
               {data.name}
             </h1>
-            <p className="max-w-xl text-pretty leading-relaxed text-muted-foreground sm:text-lg">
+            <Badge variant="default" className="rounded-full px-3 py-1 font-semibold">
+              {data.type.name}
+            </Badge>
+            <p
+              className={cn(
+                "max-w-xl text-pretty leading-relaxed text-muted-foreground line-clamp-16",
+                isLongDescription && "sm:text-base",
+                isNormalDescription && "sm:text-lg",
+                isShortDescription && "sm:text-xl",
+              )}
+            >
               {data.description || "Ten produkt nie ma jeszcze opisu."}
             </p>
           </div>
 
-          <div className=" flex items-center gap-3 border-y border-border/70 py-5">
-            <div className="flex size-10 items-center justify-center rounded-full bg-amber-400/15 text-amber-600 dark:text-amber-400">
-              <StarIcon className="size-5 fill-current" />
-            </div>
+          <div className="mt-auto flex items-center gap-3 border-y border-border/70 py-5">
             <div>
-              <p className="text-xs font-bold tracking-[0.12em] text-muted-foreground uppercase">
+              <p className="text-xs pb-2 font-bold tracking-[0.12em] text-muted-foreground uppercase">
                 Średnia ocena
               </p>
               <SnackRating
                 rating={ratings?.avgRating ?? data.avgRating}
                 ratingCount={ratings?.ratingCount}
                 withText
-                size="lg"
+                size="md"
               />
             </div>
           </div>
@@ -181,11 +199,12 @@ function RouteComponent() {
         </div>
       </div>
 
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-3 pt-6 lg:w-2xl lg:mx-auto">
         <h2 className="text-xl font-bold tracking-tight">Twoja ocena</h2>
-        <UserRatingCard
+        <UserRatingDialog
           isPending={rateSnack.isPending}
           userRating={ratings?.userRating ?? null}
+          userBody={ratings?.userBody ?? null}
           onRate={handleRate}
           onRemove={() => removeRating.mutate({ snackItemId: data.id, guestId })}
         />

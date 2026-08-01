@@ -7,9 +7,9 @@ export default defineConfig({
       provider: "v8",
       include: [
         "src/features/catalogue/server/**",
-        "src/features/catalogue/api/**",
+        "src/features/catalogue/transport/**",
         "src/features/catalogue/queries/**",
-        "src/features/catalogue/reviews/api/**",
+        "src/features/catalogue/reviews/transport/**",
         "src/features/catalogue/utils/**",
         "src/features/catalogue/create-snack/utils/**",
         "src/features/shared/value-objects/**",

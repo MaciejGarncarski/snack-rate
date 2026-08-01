@@ -2,7 +2,7 @@ import {
   createSnackProcedure,
   listSnacksProcedure,
   listTypesProcedure,
-} from "#/features/catalogue/api/snacks.server";
+} from "#/features/catalogue/transport/snacks.server";
 
 export default {
   snacks: {

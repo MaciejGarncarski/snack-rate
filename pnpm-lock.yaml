@@ -452,6 +452,10 @@ importers:
       sharp:
         specifier: ^0.35.2
         version: 0.35.3(@types/node@26.1.2)
+    devDependencies:
+      '@types/pg':
+        specifier: ^8.20.0
+        version: 8.20.0
 
 packages:
 

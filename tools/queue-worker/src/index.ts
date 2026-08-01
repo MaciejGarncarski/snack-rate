@@ -1,3 +1,4 @@
+// oxlint-disable require-await
 import pRetry, { type RetryContext } from "p-retry";
 import { Pool } from "pg";
 import { PgBoss } from "pg-boss";

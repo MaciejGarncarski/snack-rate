@@ -8,13 +8,15 @@ export const snackSlugSchema = z.object({
 });
 
 export const listSnacksSchema = z.object({
-  limit: z.number().min(1).max(100).default(20),
+  limit: z.number().min(1),
   cursor: z.string().optional(),
 });
 
+export const MAXIMUM_DESCRIPTION_LENGTH = 500;
+
 export const createSnackInputSchema = z.object({
   name: z.string().min(1).max(200),
-  description: z.string().max(2000).optional(),
+  description: z.string().max(MAXIMUM_DESCRIPTION_LENGTH).optional(),
   barcode: optionalEanSchema,
   typeSlug: z.string(),
   images: z.array(z.string()).min(1).max(MAXIMUM_IMAGES),
@@ -23,7 +25,7 @@ export const createSnackInputSchema = z.object({
 
 export const createSnackFormSchema = z.object({
   name: z.string().min(1, "Nazwa jest wymagana").max(200),
-  description: z.string().max(2000).optional(),
+  description: z.string().max(MAXIMUM_DESCRIPTION_LENGTH, "Opis jest za długi").optional(),
   barcode: optionalEanSchema,
   typeSlug: z.string().min(1, "Rodzaj jest wymagany"),
   images: z

@@ -6,9 +6,16 @@ import { ratingsAddedCounter } from "#/observability/counters";
 type RateSnackInput = {
   snackItemId: string;
   rating: number;
+  body?: string | null;
   userId?: string | null;
   guestId?: string | null;
 };
+
+function normalizeBody(body: string | null | undefined): string | null {
+  if (body === null) return null;
+  const trimmed = body?.trim();
+  return trimmed && trimmed.length > 0 ? trimmed : null;
+}
 
 export function rateSnackUseCase(
   input: RateSnackInput,
@@ -20,12 +27,14 @@ export function rateSnackUseCase(
   }
 
   const ratingVo = Rating.create(input.rating);
+  const body = normalizeBody(input.body);
 
   return db.transaction(async (tx) => {
     const saved = await repository.upsertRating(
       {
         snackItemId: input.snackItemId,
         rating: ratingVo,
+        body,
         userId: input.userId ?? null,
         guestId: input.guestId ?? null,
       },
@@ -51,6 +60,7 @@ export function rateSnackUseCase(
       rating: {
         id: saved.id,
         value: saved.rating,
+        body: saved.body,
       },
       avgRating: ratings.avgRating,
       ratingCount: ratings.ratingCount,
