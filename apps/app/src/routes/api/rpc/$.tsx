@@ -1,5 +1,3 @@
-import { trace } from "@opentelemetry/api";
-
 // oxlint-disable-next-line import/no-unassigned-import
 import "#/polyfill";
 import { RPCHandler } from "@orpc/server/fetch";
@@ -8,6 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { MAX_FILE_SIZE, MAXIMUM_IMAGES } from "#/const/image-const";
 import { logger } from "#/observability/logger/logger";
+import { getActiveSpan } from "#/observability/tracing";
 import { mapError } from "#/orpc/map-error";
 import router from "#/orpc/router";
 import { createFileUploadHandler } from "#/server/lib/automatic-file-upload-handler";
@@ -74,7 +73,7 @@ const handler = new RPCHandler(router, {
   ],
   interceptors: [
     async ({ request, next }) => {
-      const span = trace.getActiveSpan();
+      const span = getActiveSpan();
 
       request.signal?.addEventListener("abort", () => {
         span?.addEvent("aborted", { reason: String(request.signal?.reason) });

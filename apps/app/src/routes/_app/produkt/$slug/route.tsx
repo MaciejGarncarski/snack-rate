@@ -178,14 +178,18 @@ function RouteComponent() {
               <SnackBarcode barcode={data.barcode} size="sm" variant="default" />
             </CardContent>
           </Card>
-          <UserRatingCard
-            isPending={rateSnack.isPending}
-            userRating={ratings?.userRating ?? null}
-            onRate={handleRate}
-            onRemove={() => removeRating.mutate({ snackItemId: data.id, guestId })}
-          />
         </div>
       </div>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-xl font-bold tracking-tight">Twoja ocena</h2>
+        <UserRatingCard
+          isPending={rateSnack.isPending}
+          userRating={ratings?.userRating ?? null}
+          onRate={handleRate}
+          onRemove={() => removeRating.mutate({ snackItemId: data.id, guestId })}
+        />
+      </section>
     </main>
   );
 }

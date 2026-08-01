@@ -1,5 +1,6 @@
 import type { RatingsRepository } from "#/features/ratings/server/repositories/ratings.repository";
 import type { Database } from "#/infrastructure/db/db";
+import { ratingsRemovedCounter } from "#/observability/counters";
 
 type RemoveRatingInput = {
   snackItemId: string;
@@ -20,5 +21,7 @@ export function removeRatingUseCase(
     });
 
     await repository.recalculateAvgRating(input.snackItemId, tx);
+
+    ratingsRemovedCounter.add(1);
   });
 }

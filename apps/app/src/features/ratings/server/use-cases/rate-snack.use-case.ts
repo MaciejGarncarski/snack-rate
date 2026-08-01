@@ -1,6 +1,7 @@
 import type { RatingsRepository } from "#/features/ratings/server/repositories/ratings.repository";
 import { Rating } from "#/features/shared/value-objects/rating.vo";
 import { type Database } from "#/infrastructure/db/db";
+import { ratingsAddedCounter } from "#/observability/counters";
 
 type RateSnackInput = {
   snackItemId: string;
@@ -41,6 +42,10 @@ export function rateSnackUseCase(
     );
 
     await repository.recalculateAvgRating(input.snackItemId, tx);
+
+    ratingsAddedCounter.add(1, {
+      "rating.value": String(ratingVo.getValue()),
+    });
 
     return {
       rating: {

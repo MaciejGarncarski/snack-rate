@@ -1,11 +1,9 @@
-import { SpanStatusCode, trace } from "@opentelemetry/api";
 import { createMiddleware } from "@tanstack/react-start";
 
 import { httpRequestsCounter, httpStatusCodesCounter } from "#/observability/counters";
 import { httpDurationHistogram } from "#/observability/http-duration";
 import { logger } from "#/observability/logger/logger";
-
-const tracer = trace.getTracer("app");
+import { getTracer, markSpanOk, recordSpanError, startActiveSpan } from "#/observability/tracing";
 
 const SERVER_FN_PREFIX = "/_serverFn/";
 const MAX_URL_LENGTH = 150;
@@ -37,65 +35,67 @@ export const requestLoggerMiddleware = createMiddleware({ type: "request" }).ser
         ? request.url.slice(0, MAX_URL_LENGTH) + "..."
         : request.url;
 
-    return tracer.startActiveSpan(`${request.method} ${url.pathname}`, async (span) => {
-      let statusCode: number | undefined;
-      span.setAttributes({
-        "http.method": request.method,
-        "http.url": logUrl,
-        "http.route": httpRoute,
-      });
-
-      try {
-        const res = await next();
-        statusCode = res.response.status;
-        const status = String(statusCode);
-
-        httpStatusCodesCounter.add(1, { "http.status_code": statusCode });
-        span.setAttribute("http.status_code", statusCode);
-        span.setStatus({ code: SpanStatusCode.OK });
-
-        logger.info(
-          {
-            method: request.method,
-            url: logUrl,
-            status,
-          },
-          "Request completed",
-        );
-
-        return res;
-      } catch (err) {
-        span.recordException(err as Error);
-        span.setStatus({ code: SpanStatusCode.ERROR });
-
-        logger.error(
-          {
-            method: request.method,
-            url: request.url,
-            error: err,
-          },
-          "Request failed",
-        );
-
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: "Internal Server Error",
-            traceId: span.spanContext().traceId,
-          }),
-          {
-            status: 500,
-            headers: { "Content-Type": "application/json" },
-          },
-        );
-      } finally {
-        httpDurationHistogram.record(Date.now() - startTime, {
+    return startActiveSpan(
+      `${request.method} ${url.pathname}`,
+      async (span) => {
+        let statusCode: number | undefined;
+        span.setAttributes({
           "http.method": request.method,
+          "http.url": logUrl,
           "http.route": httpRoute,
-          ...(statusCode === undefined ? {} : { "http.status_code": statusCode }),
         });
-        span.end();
-      }
-    });
+
+        try {
+          const res = await next();
+          statusCode = res.response.status;
+          const status = String(statusCode);
+
+          httpStatusCodesCounter.add(1, { "http.status_code": statusCode });
+          span.setAttribute("http.status_code", statusCode);
+          markSpanOk(span);
+
+          logger.info(
+            {
+              method: request.method,
+              url: logUrl,
+              status,
+            },
+            "Request completed",
+          );
+
+          return res;
+        } catch (err) {
+          recordSpanError(span, err);
+
+          logger.error(
+            {
+              method: request.method,
+              url: request.url,
+              error: err,
+            },
+            "Request failed",
+          );
+
+          return new Response(
+            JSON.stringify({
+              success: false,
+              message: "Internal Server Error",
+              traceId: span.spanContext().traceId,
+            }),
+            {
+              status: 500,
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+        } finally {
+          httpDurationHistogram.record(Date.now() - startTime, {
+            "http.method": request.method,
+            "http.route": httpRoute,
+            ...(statusCode === undefined ? {} : { "http.status_code": statusCode }),
+          });
+        }
+      },
+      { tracer: getTracer("app") },
+    );
   },
 );
