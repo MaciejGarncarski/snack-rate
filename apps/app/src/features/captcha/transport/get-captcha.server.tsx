@@ -50,9 +50,10 @@ function generateWavySegments(w: number, h: number) {
 
 export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => {
   const code = generateCode();
-  const signature = signCode(code + ":", serverEnv.CAPTCHA_SECRET, Math.floor(Date.now() / 1000));
+  const issuedAt = Math.floor(Date.now() / 1000);
+  const signature = signCode(code + ":", serverEnv.CAPTCHA_SECRET, issuedAt);
 
-  setCookie(COOKIE_NAME, `${code}:${signature}`, {
+  setCookie(COOKIE_NAME, `${code}:${issuedAt}:${signature}`, {
     httpOnly: true,
     secure: true,
     sameSite: "strict",

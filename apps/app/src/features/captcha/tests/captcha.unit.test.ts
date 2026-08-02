@@ -4,31 +4,49 @@ import { generateCode, signCode, verifySignature } from "#/features/captcha/capt
 
 const SECRET = "test-secret-that-is-at-least-32-chars-long!!";
 
+const issuedAt = Math.floor(Date.now() / 1000);
+
 describe("signCode / verifySignature", () => {
   it("signs and verifies a code correctly", () => {
     const code = "ABC23";
-    const sig = signCode(code, SECRET);
-    expect(verifySignature(code, sig, SECRET)).toBe(true);
+    const sig = signCode(code, SECRET, issuedAt);
+    expect(verifySignature(code, sig, SECRET, issuedAt)).toBe(true);
   });
 
   it("rejects when code is modified (tampered cookie)", () => {
     const code = "ABC23";
-    const sig = signCode(code, SECRET);
+    const sig = signCode(code, SECRET, issuedAt);
     const tamperedCode = "XYZ99";
-    expect(verifySignature(tamperedCode, sig, SECRET)).toBe(false);
+    expect(verifySignature(tamperedCode, sig, SECRET, issuedAt)).toBe(false);
   });
 
   it("rejects when signature is modified", () => {
     const code = "ABC23";
-    const sig = signCode(code, SECRET);
+    const sig = signCode(code, SECRET, issuedAt);
     const tamperedSig = sig.slice(0, -1) + "0";
-    expect(verifySignature(code, tamperedSig, SECRET)).toBe(false);
+    expect(verifySignature(code, tamperedSig, SECRET, issuedAt)).toBe(false);
   });
 
   it("rejects when a different secret is used", () => {
     const code = "ABC23";
-    const sig = signCode(code, SECRET);
-    expect(verifySignature(code, sig, "different-secret-that-is-also-32-chars!!")).toBe(false);
+    const sig = signCode(code, SECRET, issuedAt);
+    expect(verifySignature(code, sig, "different-secret-that-is-also-32-chars!!", issuedAt)).toBe(
+      false,
+    );
+  });
+
+  it("rejects an expired signature", () => {
+    const code = "ABC23";
+    const expiredAt = issuedAt - 601;
+    const sig = signCode(code, SECRET, expiredAt);
+    expect(verifySignature(code, sig, SECRET, expiredAt)).toBe(false);
+  });
+
+  it("rejects a signature issued in the future", () => {
+    const code = "ABC23";
+    const futureAt = issuedAt + 10;
+    const sig = signCode(code, SECRET, futureAt);
+    expect(verifySignature(code, sig, SECRET, futureAt)).toBe(false);
   });
 });
 

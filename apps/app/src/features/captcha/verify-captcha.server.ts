@@ -13,16 +13,20 @@ export function verifyCaptcha(userCode: string): boolean {
   const cookie = getCookie(COOKIE_NAME);
   if (!cookie) return false;
 
-  const parts = cookie.split(":");
+  const [storedCode, issuedAt, signature] = cookie.split(":");
 
-  const [storedCode, signature] = parts;
-
-  if (!storedCode || !signature) {
+  if (!storedCode || !issuedAt || !signature) {
     deleteCookie(COOKIE_NAME, { path: "/" });
     return false;
   }
 
-  if (!verifySignature(storedCode + ":", signature, getSecret())) {
+  const issuedAtNum = Number(issuedAt);
+  if (!Number.isFinite(issuedAtNum)) {
+    deleteCookie(COOKIE_NAME, { path: "/" });
+    return false;
+  }
+
+  if (!verifySignature(storedCode + ":", signature, getSecret(), issuedAtNum)) {
     deleteCookie(COOKIE_NAME, { path: "/" });
     return false;
   }

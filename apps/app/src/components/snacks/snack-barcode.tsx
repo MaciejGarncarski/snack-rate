@@ -1,7 +1,7 @@
 import { ClientOnly } from "@tanstack/react-router";
 import { cva, type VariantProps } from "class-variance-authority";
 import JsBarcode from "jsbarcode";
-import { Loader } from "lucide-react";
+import { BarcodeIcon, Loader2Icon } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 import { cn } from "#/lib/utils";
@@ -74,7 +74,7 @@ function BarcodeContent({ barcode, size, variant }: Props) {
       ) : (
         <div
           className={cn(
-            "flex h-full w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
+            "flex h-full gap-2 w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
             {
               "h-19 w-37.5 text-sm": size === "sm",
               "h-30 w-51": size === "md",
@@ -83,7 +83,8 @@ function BarcodeContent({ barcode, size, variant }: Props) {
             },
           )}
         >
-          Brak dla tego produktu.
+          <BarcodeIcon className="size-5 text-muted-foreground" />
+          Nie dodano
         </div>
       )}
     </div>
@@ -95,18 +96,17 @@ function SnackBarcodeSkeleton({ size = "md", variant = "default" }: Omit<Props, 
     <div className={cn(barcodeContainerVariants({ variant, size }))}>
       <div
         className={cn(
-          "flex h-full w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
+          "flex h-full gap-2 w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
           {
-            "h-18.5 w-37.5 text-sm": size === "sm",
+            "h-19 w-37.5 text-sm": size === "sm",
             "h-30 w-51": size === "md",
             "h-40.5 w-72": size === "lg",
             "bg-muted": variant === "default",
           },
         )}
       >
-        <span className="animate-pulse">
-          <Loader className="size-5 text-muted-foreground animate-ping" />
-        </span>
+        <Loader2Icon className="size-4 text-muted-foreground animate-spin animation-duration-[2s]" />
+        Sprawdzam
       </div>
     </div>
   );

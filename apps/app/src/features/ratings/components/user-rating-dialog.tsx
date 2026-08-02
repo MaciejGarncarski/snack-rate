@@ -49,7 +49,7 @@ export function UserRatingDialog({
       onChange: rateSnackFormSchema,
       onSubmit: rateSnackFormSchema,
     },
-    onSubmit: ({ value, formApi }) => {
+    onSubmit: ({ value }) => {
       if (value.rating === null) return;
 
       const trimmedBody = value.body.trim();
@@ -58,7 +58,6 @@ export function UserRatingDialog({
         body: trimmedBody.length > 0 ? trimmedBody : null,
         captchaCode: value.captchaCode,
       });
-      formApi.reset();
     },
   });
 
@@ -82,6 +81,7 @@ export function UserRatingDialog({
       {
         onSuccess: () => {
           setIsOpen(false);
+          form.reset();
         },
         onError: () => {
           form.resetField("captchaCode");

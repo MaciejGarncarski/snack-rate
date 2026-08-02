@@ -27,7 +27,6 @@ import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-sna
 import { ReviewSection } from "#/features/ratings/components/review-section";
 import { snackRatingsQueryOptions } from "#/features/ratings/queries/ratings.query-options";
 import { ensureGuestId } from "#/features/ratings/transport/guest-id.server";
-import { useIsMobile } from "#/hooks/use-mobile";
 import { cn } from "#/lib/utils";
 
 const SMALL_DESCRIPTION_LENGTH = 100;
@@ -104,8 +103,6 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
 });
 
 function RouteComponent() {
-  const { isMobile } = useIsMobile();
-
   const { guestId } = Route.useLoaderData();
   const { slug } = Route.useParams();
   const { data } = useSuspenseQuery(getSnackBySlugQueryOptions(slug));
