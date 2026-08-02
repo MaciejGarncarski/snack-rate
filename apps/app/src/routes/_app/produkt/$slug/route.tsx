@@ -1,14 +1,13 @@
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { BarcodeIcon, XCircleIcon } from "lucide-react";
-import type z from "zod";
+import { XCircleIcon } from "lucide-react";
 
 import { SnackBarcode } from "#/components/snacks/snack-barcode";
 import SnackImageSlider from "#/components/snacks/snack-image-slider";
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { Badge } from "#/components/ui/badge";
-import { Card, CardContent } from "#/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "#/components/ui/card";
 import {
   Empty,
   EmptyDescription,
@@ -16,16 +15,20 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "#/components/ui/empty";
-import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query";
-import { UserRatingDialog } from "#/features/ratings/components/user-rating-dialog";
 import {
-  snackRatingsQueryOptions,
-  useRateSnack,
-} from "#/features/ratings/queries/ratings.query-options";
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
+} from "#/components/ui/item";
+import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query";
+import { ReviewSection } from "#/features/ratings/components/review-section";
+import { snackRatingsQueryOptions } from "#/features/ratings/queries/ratings.query-options";
 import { ensureGuestId } from "#/features/ratings/transport/guest-id.server";
-import { removeRatingFn } from "#/features/ratings/transport/ratings.server";
+import { useIsMobile } from "#/hooks/use-mobile";
 import { cn } from "#/lib/utils";
-import type { removeRatingSchema } from "#/schemas/ratings";
 
 const SMALL_DESCRIPTION_LENGTH = 100;
 const NORMAL_DESCRIPTION_LENGTH = 350;
@@ -52,6 +55,7 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
 
     return { snack, guestId };
   },
+
   notFoundComponent: () => {
     return (
       <Empty>
@@ -100,34 +104,14 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
 });
 
 function RouteComponent() {
+  const { isMobile } = useIsMobile();
+
   const { guestId } = Route.useLoaderData();
   const { slug } = Route.useParams();
   const { data } = useSuspenseQuery(getSnackBySlugQueryOptions(slug));
   const ratings = useSuspenseQuery(snackRatingsQueryOptions(data.id, guestId)).data;
-  const rateSnack = useRateSnack();
-
-  const removeRating = useMutation({
-    mutationFn: (mutationData: z.input<typeof removeRatingSchema>) => {
-      return removeRatingFn({ data: mutationData });
-    },
-    onSuccess: async (_, __, ___, { client }) => {
-      await Promise.all([
-        client.invalidateQueries(snackRatingsQueryOptions(data.id, guestId)),
-        client.invalidateQueries(getSnackBySlugQueryOptions(slug)),
-      ]);
-    },
-  });
 
   const imageUrls = data.images.filter((img) => img.type === "default").map((img) => img.url);
-
-  const handleRate = async (rating: number, body: string | null) => {
-    await rateSnack.mutateAsync({
-      snackItemId: data.id,
-      rating,
-      body,
-      guestId,
-    });
-  };
 
   const isLongDescription = data.description && data.description.length > NORMAL_DESCRIPTION_LENGTH;
   const isNormalDescription =
@@ -149,9 +133,7 @@ function RouteComponent() {
             <h1 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
               {data.name}
             </h1>
-            <Badge variant="default" className="rounded-full px-3 py-1 font-semibold">
-              {data.type.name}
-            </Badge>
+
             <p
               className={cn(
                 "max-w-xl text-pretty leading-relaxed text-muted-foreground line-clamp-16",
@@ -164,51 +146,58 @@ function RouteComponent() {
             </p>
           </div>
 
-          <div className="mt-auto flex items-center gap-3 border-y border-border/70 py-5">
-            <div>
-              <p className="text-xs pb-2 font-bold tracking-[0.12em] text-muted-foreground uppercase">
-                Średnia ocena
-              </p>
-              <SnackRating
-                rating={ratings?.avgRating ?? data.avgRating}
-                ratingCount={ratings?.ratingCount}
-                withText
-                size="md"
-              />
-            </div>
-          </div>
+          <Card className="mt-auto [--card-spacing:--spacing(4)]">
+            <CardHeader>
+              <CardTitle>Informacje o produkcie</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ItemGroup>
+                <Item variant={"muted"}>
+                  <ItemContent>
+                    <ItemTitle>Rodzaj</ItemTitle>
+                  </ItemContent>
+                  <ItemActions>
+                    <Badge className="text-base rounded-full h-6 px-3 py-1 font-semibold">
+                      {data.type.name}
+                    </Badge>
+                  </ItemActions>
+                </Item>
+                <Item variant={"muted"}>
+                  <ItemContent>
+                    <ItemTitle>Średnia ocena</ItemTitle>
+                  </ItemContent>
+                  <ItemActions>
+                    <SnackRating
+                      rating={ratings?.avgRating ?? data.avgRating}
+                      ratingCount={ratings?.ratingCount}
+                      withText
+                      size="md"
+                    />
+                  </ItemActions>
+                </Item>
 
-          <Card className="gap-0 rounded-2xl border border-border/70 py-0 shadow-sm">
-            <CardContent className="flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex size-9 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                  <BarcodeIcon className="size-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-bold">Kod kreskowy</p>
-                  <p className="text-sm text-muted-foreground">
-                    {data.barcode
-                      ? "Zeskanuj, aby rozpoznać wariant."
-                      : "Nie dodano kodu kreskowego."}
-                  </p>
-                </div>
-              </div>
-              <SnackBarcode barcode={data.barcode} size="sm" variant="default" />
+                <Item variant={"muted"}>
+                  <ItemContent>
+                    <ItemTitle>Kod kreskowy</ItemTitle>
+                    <ItemDescription>Pomaga w wyszukiwaniu produktu.</ItemDescription>
+                  </ItemContent>
+                  <ItemActions>
+                    <SnackBarcode barcode={data.barcode} size="sm" variant="default" />
+                  </ItemActions>
+                </Item>
+              </ItemGroup>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      <section className="flex flex-col gap-3 pt-6 lg:w-2xl lg:mx-auto">
-        <h2 className="text-xl font-bold tracking-tight">Twoja ocena</h2>
-        <UserRatingDialog
-          isPending={rateSnack.isPending}
-          userRating={ratings?.userRating ?? null}
-          userBody={ratings?.userBody ?? null}
-          onRate={handleRate}
-          onRemove={() => removeRating.mutate({ snackItemId: data.id, guestId })}
-        />
-      </section>
+      <ReviewSection
+        snackId={data.id}
+        guestId={guestId}
+        slug={slug}
+        userRating={ratings?.userRating ?? null}
+        userBody={ratings?.userBody ?? null}
+      />
     </main>
   );
 }

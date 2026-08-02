@@ -2,11 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { setCookie } from "@tanstack/react-start/server";
 import { renderSvg } from "takumi-js";
 
-import { generateCode, signCode } from "#/features/captcha/captcha";
+import { COOKIE_MAX_AGE, COOKIE_NAME, generateCode, signCode } from "#/features/captcha/captcha";
 import { serverEnv } from "#/lib/server.env";
-
-const COOKIE_NAME = "captcha_token";
-const COOKIE_MAX_AGE = 600;
 
 // Refined, deeper color palette — less saturated, more sophisticated
 const TEXT_COLORS = ["#1e3a5f", "#4a2545", "#1a4a4a", "#5c3d1e", "#2d2b55", "#3d2b4a"];
@@ -53,7 +50,7 @@ function generateWavySegments(w: number, h: number) {
 
 export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => {
   const code = generateCode();
-  const signature = signCode(code + ":", serverEnv.CAPTCHA_SECRET);
+  const signature = signCode(code + ":", serverEnv.CAPTCHA_SECRET, Math.floor(Date.now() / 1000));
 
   setCookie(COOKIE_NAME, `${code}:${signature}`, {
     httpOnly: true,
@@ -68,7 +65,6 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
   const spacing = 38;
   const startX = 30;
 
-  // Characters with more personality — varied baseline, scale, and slight skew
   const chars = code.split("").map((char, i) => {
     const baselineY = randomInt(20, 30);
     const scale = randomFloat(0.95, 1.15);
@@ -84,7 +80,6 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
     };
   });
 
-  // Wavy distortion lines (harder for OCR than straight lines)
   const wavyLines: Array<{
     x1: number;
     y1: number;
@@ -102,7 +97,6 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
     segments.forEach((seg) => wavyLines.push({ ...seg, color, width, opacity }));
   }
 
-  // Fine noise dots
   const dots = Array.from({ length: randomInt(30, 50) }, () => ({
     cx: randomInt(2, w - 2),
     cy: randomInt(2, h - 2),
@@ -110,7 +104,6 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
     opacity: randomFloat(0.08, 0.28),
   }));
 
-  // Larger soft blobs for background texture
   const blobs = Array.from({ length: randomInt(2, 4) }, () => ({
     x: randomInt(-10, w - 20),
     y: randomInt(-10, h - 20),
@@ -119,7 +112,6 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
     opacity: randomFloat(0.2, 0.4),
   }));
 
-  // Subtle horizontal scan lines
   const scanLines = Array.from({ length: 6 }, (_, i) => ({
     y: Math.round((h / 7) * (i + 1)),
     opacity: randomFloat(0.02, 0.05),
@@ -222,7 +214,7 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
             position: "absolute",
             left: char.x,
             top: char.top,
-            fontSize: 34,
+            fontSize: 28,
             fontWeight: 700,
             color: char.color,
             fontFamily: "monospace, sans-serif",
@@ -230,6 +222,7 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
             transformOrigin: "center center",
             textShadow: "0 1px 2px rgba(0,0,0,0.12), 0 0 1px rgba(0,0,0,0.08)",
             letterSpacing: "-0.5px",
+            opacity: 0.6,
           }}
         >
           {char.char}

@@ -1,5 +1,7 @@
+import { ORPCError } from "@orpc/client";
 import { createServerFn } from "@tanstack/react-start";
 
+import { verifyCaptcha } from "#/features/captcha/verify-captcha.server";
 import { ratingsRepository } from "#/features/ratings/server/repositories/ratings.repository.instance";
 import { getSnackRatingsUseCase } from "#/features/ratings/server/use-cases/get-snack-rating.use-case";
 import { rateSnackUseCase } from "#/features/ratings/server/use-cases/rate-snack.use-case";
@@ -10,6 +12,12 @@ import { rateSnackSchema, removeRatingSchema, snackRatingsSchema } from "#/schem
 export const rateSnackFn = createServerFn()
   .validator(rateSnackSchema)
   .handler(({ data }) => {
+    if (!verifyCaptcha(data.captchaCode)) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Nieprawidłowy kod captcha. Spróbuj odświeżyć obrazek.",
+      });
+    }
+
     return rateSnackUseCase(
       {
         snackItemId: data.snackItemId,

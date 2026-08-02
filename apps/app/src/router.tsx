@@ -2,6 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
+import { DefaultErrorComponent } from "#/components/layout/default-error";
 import { DefaultNotFound } from "#/components/layout/default-not-found";
 import { routeTree } from "#/routeTree.gen";
 
@@ -15,6 +16,8 @@ export function getRouter() {
     scrollRestoration: true,
     scrollRestorationBehavior: "smooth",
     defaultNotFoundComponent: () => <DefaultNotFound />,
+    defaultErrorComponent: DefaultErrorComponent,
+    defaultPendingComponent: () => <div>Wczytywanie...</div>,
   });
 
   setupRouterSsrQueryIntegration({

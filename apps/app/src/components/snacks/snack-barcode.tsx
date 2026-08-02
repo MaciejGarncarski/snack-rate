@@ -60,6 +60,7 @@ function BarcodeContent({ barcode, size, variant }: Props) {
       JsBarcode(svgRef.current, barcode, {
         format: "EAN13",
         displayValue: true,
+        textAlign: "center",
         width,
         height,
       });
@@ -82,7 +83,7 @@ function BarcodeContent({ barcode, size, variant }: Props) {
             },
           )}
         >
-          Brak kodu kreskowego
+          Brak dla tego produktu.
         </div>
       )}
     </div>

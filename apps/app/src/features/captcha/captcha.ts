@@ -1,9 +1,9 @@
 import crypto from "node:crypto";
 
-const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
-const CODE_LENGTH = 5;
-const COOKIE_NAME = "captcha_token";
-const COOKIE_MAX_AGE = 600;
+export const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+export const CODE_LENGTH = 5;
+export const COOKIE_NAME = "captcha_token";
+export const COOKIE_MAX_AGE = 600;
 
 export function generateCode(): string {
   const maxValid = Math.floor(256 / ALPHABET.length) * ALPHABET.length;
@@ -20,14 +20,27 @@ export function generateCode(): string {
   return code;
 }
 
-export function signCode(code: string, secret: string): string {
-  return crypto.createHmac("sha256", secret).update(code).digest("hex");
+export function signCode(code: string, secret: string, issuedAt: number): string {
+  const payload = `${code}.${issuedAt}`;
+  return crypto.createHmac("sha256", secret).update(payload).digest("hex");
 }
 
-export function verifySignature(code: string, signature: string, secret: string): boolean {
-  const expected = signCode(code, secret);
-  if (expected.length !== signature.length) return false;
-  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
-}
+export function verifySignature(
+  code: string,
+  signature: string,
+  secret: string,
+  issuedAt: number,
+  maxAgeSeconds: number = COOKIE_MAX_AGE,
+): boolean {
+  const now = Math.floor(Date.now() / 1000);
+  if (now - issuedAt > maxAgeSeconds || issuedAt > now) {
+    return false;
+  }
 
-export { ALPHABET, CODE_LENGTH, COOKIE_NAME, COOKIE_MAX_AGE };
+  const expected = signCode(code, secret, issuedAt);
+  const expectedBuf = Buffer.from(expected);
+  const signatureBuf = Buffer.from(signature);
+  if (expectedBuf.length !== signatureBuf.length) return false;
+
+  return crypto.timingSafeEqual(expectedBuf, signatureBuf);
+}
