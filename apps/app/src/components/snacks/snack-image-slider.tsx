@@ -1,4 +1,5 @@
 import { useHotkey } from "@tanstack/react-hotkeys";
+import { ImageOffIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
@@ -36,7 +37,7 @@ export default function SnackImageSlider({ images }: Props) {
 
   return (
     <div className="mx-auto w-full">
-      <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl border bg-muted border-border">
+      <div className="relative aspect-4/5 w-full overflow-hidden rounded-4xl border bg-muted border-border">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={index}
@@ -73,6 +74,8 @@ export default function SnackImageSlider({ images }: Props) {
             <ImageWithPlaceholder
               src={src}
               blurBackground
+              width={100}
+              height={100}
               alt={`Miniatura ${i + 1}`}
               containerClassName="h-full w-full"
               className="h-full w-full object-cover"
@@ -83,8 +86,11 @@ export default function SnackImageSlider({ images }: Props) {
           Array.from({ length: emptySpaces }).map((_, i) => (
             <div
               key={i}
-              className="aspect-4/5 w-full rounded-lg border-2 border-dashed border-border bg-muted"
-            />
+              className="aspect-4/5 flex-col w-full rounded-lg text-card-foreground flex items-center justify-center border text-xs gap-2 border-border bg-card"
+            >
+              <ImageOffIcon className="opacity-30 size-6" />
+              <span className="opacity-50">Brak podglądu</span>
+            </div>
           ))}
       </div>
     </div>

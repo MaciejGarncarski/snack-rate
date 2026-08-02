@@ -164,12 +164,7 @@ function RouteComponent() {
                     <ItemTitle>Średnia ocena</ItemTitle>
                   </ItemContent>
                   <ItemActions>
-                    <SnackRating
-                      rating={ratings?.avgRating ?? data.avgRating}
-                      ratingCount={ratings?.ratingCount}
-                      withText
-                      size="md"
-                    />
+                    <SnackRating rating={ratings?.avgRating ?? data.avgRating} withText size="md" />
                   </ItemActions>
                 </Item>
 
@@ -192,6 +187,7 @@ function RouteComponent() {
         snackId={data.id}
         guestId={guestId}
         slug={slug}
+        ratingsCount={ratings.ratingCount ?? null}
         userRating={ratings?.userRating ?? null}
         userBody={ratings?.userBody ?? null}
       />

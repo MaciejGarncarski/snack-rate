@@ -19,8 +19,8 @@ const sizeMap: Record<"sm" | "md" | "lg", { width: number; height: number }> = {
 const barcodeContainerVariants = cva("w-fit ", {
   variants: {
     variant: {
-      default: "shadow-lg border border-border rounded-xl",
-      padding: "flex justify-center bg-secondary rounded-2xl shadow border border-border",
+      default: "shadow-sm ",
+      padding: "flex justify-center bg-secondary  border border-border",
     },
     size: {
       sm: "",
@@ -70,11 +70,11 @@ function BarcodeContent({ barcode, size, variant }: Props) {
   return (
     <div className={cn(barcodeContainerVariants({ variant, size }))}>
       {barcode ? (
-        <svg ref={svgRef} className="rounded-lg shadow w-fit" />
+        <svg ref={svgRef} className="rounded-2xl shadow w-fit" />
       ) : (
         <div
           className={cn(
-            "flex h-full gap-2 w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
+            "flex h-full gap-2 w-full items-center text-center justify-center rounded-2xl p-2 text-muted-foreground",
             {
               "h-19 w-37.5 text-sm": size === "sm",
               "h-30 w-51": size === "md",
@@ -96,7 +96,7 @@ function SnackBarcodeSkeleton({ size = "md", variant = "default" }: Omit<Props, 
     <div className={cn(barcodeContainerVariants({ variant, size }))}>
       <div
         className={cn(
-          "flex h-full gap-2 w-full items-center text-center justify-center rounded-lg p-2 text-muted-foreground",
+          "flex h-full gap-2 w-full items-center text-center justify-center rounded-2xl p-2 text-muted-foreground",
           {
             "h-19 w-37.5 text-sm": size === "sm",
             "h-30 w-51": size === "md",
