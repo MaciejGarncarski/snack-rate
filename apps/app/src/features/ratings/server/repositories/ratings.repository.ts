@@ -94,6 +94,8 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         columns: { id: true },
       });
 
+      const isUpdate = !!existing;
+
       if (existing) {
         await client
           .update(snackComments)
@@ -108,6 +110,7 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
           userId: data.userId,
           guestId: data.guestId,
           rating: data.rating.getValue(),
+          updatedAt: isUpdate ? new Date() : undefined,
           body: data.body,
         })
         .returning();

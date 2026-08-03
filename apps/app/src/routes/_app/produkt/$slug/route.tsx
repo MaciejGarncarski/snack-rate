@@ -182,15 +182,7 @@ function RouteComponent() {
           </Card>
         </div>
       </div>
-
-      <ReviewSection
-        snackId={data.id}
-        guestId={guestId}
-        slug={slug}
-        ratingsCount={ratings.ratingCount ?? null}
-        userRating={ratings?.userRating ?? null}
-        userBody={ratings?.userBody ?? null}
-      />
+      <ReviewSection ratingsCount={ratings.ratingCount ?? null} />
     </main>
   );
 }

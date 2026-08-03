@@ -16,7 +16,7 @@ type Props = {
   proceedText: string;
   onCancel: () => void;
   onProceed: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -33,23 +33,35 @@ export function CommonAlertDialog({
   onOpenChange,
   open,
 }: Props) {
+  const body = (
+    <>
+      <AlertDialogHeader>
+        <AlertDialogTitle>{title}</AlertDialogTitle>
+        <AlertDialogDescription>{description}</AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel variant="ghost" onClick={onCancel}>
+          {cancelText}
+        </AlertDialogCancel>
+        <AlertDialogAction variant="destructive" onClick={onProceed}>
+          {proceedText}
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </>
+  );
+
+  if (!children) {
+    return (
+      <AlertDialog isOpen={open} onOpenChange={onOpenChange}>
+        {body}
+      </AlertDialog>
+    );
+  }
+
   return (
     <AlertDialogTrigger isOpen={open} onOpenChange={onOpenChange}>
       {children}
-      <AlertDialog>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel variant="ghost" onClick={onCancel}>
-            {cancelText}
-          </AlertDialogCancel>
-          <AlertDialogAction variant="destructive" onClick={onProceed}>
-            {proceedText}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialog>
+      <AlertDialog>{body}</AlertDialog>
     </AlertDialogTrigger>
   );
 }

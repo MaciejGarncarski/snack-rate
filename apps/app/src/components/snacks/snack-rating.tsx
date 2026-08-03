@@ -1,7 +1,7 @@
 import { pluralizeRatings } from "#/lib/pluralizer";
 import { cn } from "#/lib/utils";
 
-function getColorClass(rating: number): string {
+export function getColorClass(rating: number): string {
   if (rating <= 1) return "text-red-500";
   if (rating <= 2) return "text-orange-500";
   if (rating <= 3) return "text-yellow-500";
