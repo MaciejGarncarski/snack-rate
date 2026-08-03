@@ -116,7 +116,7 @@ export const snackComments = pgTable(
     }),
     rating: integer("rating"), // 1-5 stars; only top-level comments (reviews) may carry one
     body: text("body"),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    createdAt: timestamp("created_at", { precision: 3 }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
   },

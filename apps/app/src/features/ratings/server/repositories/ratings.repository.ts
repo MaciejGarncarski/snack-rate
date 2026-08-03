@@ -1,9 +1,15 @@
-import { snackComments, snackItems } from "@snack-rate/db-schema/schema";
-import { and, eq, isNotNull, isNull, sql } from "drizzle-orm";
+import { snackComments, snackItems, users } from "@snack-rate/db-schema/schema";
+import { and, asc, desc, eq, inArray, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
 import type { TableFilter } from "drizzle-orm";
 
+import type { SnackReview, SnackReviewReply } from "#/features/ratings/contracts/reviews";
 import { Rating } from "#/features/shared/value-objects/rating.vo";
 import type { Database, DbTransaction } from "#/infrastructure/db/db";
+
+export type DecodedCursor = {
+  createdAt: Date;
+  id: string;
+};
 
 type RatingsRepositoryDeps = {
   db: Database;
@@ -78,6 +84,97 @@ function whereUserOrGuestSql(
     isNotNull(snackComments.rating),
     isNull(snackComments.deletedAt),
   );
+}
+
+function resolveAuthorName(firstName: string | null, lastName: string | null): string {
+  const name = [firstName, lastName].filter(Boolean).join(" ").trim();
+  return name || "Gość";
+}
+
+async function queryReviewsForSnack(
+  client: Database | DbTransaction,
+  data: { snackItemId: string; limit: number; cursor: DecodedCursor | null },
+): Promise<SnackReview[]> {
+  const conditions = [
+    eq(snackComments.snackItemId, data.snackItemId),
+    isNull(snackComments.parentCommentId),
+    isNotNull(snackComments.rating),
+    isNull(snackComments.deletedAt),
+    data.cursor
+      ? or(
+          lt(snackComments.createdAt, data.cursor.createdAt),
+          and(
+            eq(snackComments.createdAt, data.cursor.createdAt),
+            lt(snackComments.id, data.cursor.id),
+          ),
+        )
+      : undefined,
+  ];
+
+  const reviewRows = await client
+    .select({
+      id: snackComments.id,
+      rating: snackComments.rating,
+      body: snackComments.body,
+      createdAt: snackComments.createdAt,
+      updatedAt: snackComments.updatedAt,
+      firstName: users.firstName,
+      lastName: users.lastName,
+    })
+    .from(snackComments)
+    .leftJoin(users, eq(snackComments.userId, users.id))
+    .where(and(...conditions))
+    .orderBy(desc(snackComments.createdAt), desc(snackComments.id))
+    .limit(data.limit);
+
+  const reviewIds = reviewRows.map((row) => row.id);
+
+  const replyRows =
+    reviewIds.length > 0
+      ? await client
+          .select({
+            id: snackComments.id,
+            parentCommentId: snackComments.parentCommentId,
+            body: snackComments.body,
+            createdAt: snackComments.createdAt,
+            firstName: users.firstName,
+            lastName: users.lastName,
+          })
+          .from(snackComments)
+          .leftJoin(users, eq(snackComments.userId, users.id))
+          .where(
+            and(inArray(snackComments.parentCommentId, reviewIds), isNull(snackComments.deletedAt)),
+          )
+          .orderBy(asc(snackComments.createdAt), asc(snackComments.id))
+      : [];
+
+  const repliesByReview = new Map<string, SnackReviewReply[]>();
+  for (const reply of replyRows) {
+    if (!reply.parentCommentId) continue;
+    const list = repliesByReview.get(reply.parentCommentId) ?? [];
+    list.push({
+      id: reply.id,
+      authorName: resolveAuthorName(reply.firstName, reply.lastName),
+      body: reply.body,
+      createdAt: reply.createdAt,
+    });
+    repliesByReview.set(reply.parentCommentId, list);
+  }
+
+  return reviewRows.map((row) => {
+    const replies = repliesByReview.get(row.id) ?? [];
+    return {
+      id: row.id,
+      rating: row.rating!,
+      body: row.body,
+      authorName: resolveAuthorName(row.firstName, row.lastName),
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+      isEdited: row.updatedAt.getTime() > row.createdAt.getTime(),
+      repliesCount: replies.length,
+      replies,
+    };
+  });
 }
 
 export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
@@ -241,6 +338,18 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         userRating: userReview ? userReview.rating : null,
         userBody: userReview?.body ?? null,
       };
+    },
+
+    listReviewsForSnack: (
+      data: {
+        snackItemId: string;
+        limit: number;
+        cursor: DecodedCursor | null;
+      },
+      tx?: DbTransaction,
+    ): Promise<SnackReview[]> => {
+      const client = tx ?? db;
+      return queryReviewsForSnack(client, data);
     },
   };
 }

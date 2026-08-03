@@ -1,4 +1,4 @@
-import { snackItemImages, snackItems, snackTypes } from "@snack-rate/db-schema/schema";
+import { snackItemImages, snackItems, snackTypes, users } from "@snack-rate/db-schema/schema";
 import type { InferInsertModel } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
@@ -7,6 +7,22 @@ import { getDb } from "#/tests/setup.int";
 type SnackInsert = InferInsertModel<typeof snackItems>;
 type SnackTypeInsert = InferInsertModel<typeof snackTypes>;
 type SnackImageInsert = InferInsertModel<typeof snackItemImages>;
+type UserInsert = InferInsertModel<typeof users>;
+
+export async function createUser(overrides?: Partial<UserInsert>) {
+  const db = getDb();
+  const [user] = await db
+    .insert(users)
+    .values({
+      email: `user-${nanoid(8)}@example.com`,
+      passwordHash: "hash",
+      firstName: "Jan",
+      lastName: "Kowalski",
+      ...overrides,
+    })
+    .returning();
+  return user;
+}
 
 export async function createSnackType(overrides?: Partial<SnackTypeInsert>) {
   const db = getDb();

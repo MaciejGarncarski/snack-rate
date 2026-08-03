@@ -26,6 +26,7 @@ import {
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query";
 import { ReviewSection } from "#/features/ratings/components/review-section";
 import { snackRatingsQueryOptions } from "#/features/ratings/queries/ratings.query-options";
+import { snackReviewsQueryOptions } from "#/features/ratings/queries/reviews.query-options";
 import { ensureGuestId } from "#/features/ratings/transport/guest-id.server";
 import { cn } from "#/lib/utils";
 
@@ -51,6 +52,7 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
     }
 
     context.queryClient.ensureQueryData(snackRatingsQueryOptions(snack.id, guestId));
+    context.queryClient.ensureInfiniteQueryData(snackReviewsQueryOptions(snack.id));
 
     return { snack, guestId };
   },
@@ -182,7 +184,7 @@ function RouteComponent() {
           </Card>
         </div>
       </div>
-      <ReviewSection ratingsCount={ratings.ratingCount ?? null} />
+      <ReviewSection snackItemId={data.id} ratingsCount={ratings.ratingCount ?? null} />
     </main>
   );
 }

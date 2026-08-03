@@ -35,3 +35,9 @@ export const removeRatingSchema = z.object({
   snackItemId: z.uuid(),
   guestId: z.string().optional(),
 });
+
+export const listReviewsSchema = z.object({
+  snackItemId: z.uuid(),
+  limit: z.number().int().min(1).max(50),
+  cursor: z.string().optional(),
+});

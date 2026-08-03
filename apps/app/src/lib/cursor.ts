@@ -1,4 +1,7 @@
-import type { DecodedCursor } from "#/features/catalogue/server/repositories/snacks.repository";
+export type DecodedCursor = {
+  createdAt: Date;
+  id: string;
+};
 
 export function encodeCursor(createdAt: Date, id: string): string {
   const payload = JSON.stringify({
@@ -24,4 +27,20 @@ export function decodeCursor(cursor: string): DecodedCursor | null {
   } catch {
     return null;
   }
+}
+
+export function slicePage<T extends DecodedCursor>(
+  items: T[],
+  limit: number,
+): { items: T[]; nextCursor: string | null } {
+  const hasNextPage = items.length > limit;
+  const pageItems = hasNextPage ? items.slice(0, limit) : items;
+
+  const lastItem = pageItems.at(-1);
+  const nextCursor = hasNextPage && lastItem ? encodeCursor(lastItem.createdAt, lastItem.id) : null;
+
+  return {
+    items: pageItems,
+    nextCursor,
+  };
 }

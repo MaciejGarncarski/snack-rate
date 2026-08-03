@@ -10,7 +10,7 @@ import {
   EmptyTitle,
 } from "#/components/ui/empty";
 
-export function DefaultErrorComponent({ error, reset }: ErrorComponentProps) {
+export function DefaultErrorComponent({ reset }: ErrorComponentProps) {
   return (
     <div className="">
       <Empty className="h-full">
