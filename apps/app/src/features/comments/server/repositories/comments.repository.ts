@@ -310,7 +310,7 @@ export function createCommentsRepository({ db }: CommentsRepositoryDeps) {
         data.userId || data.guestId
           ? client.query.snackComments.findFirst({
               where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
-              columns: { rating: true, body: true, updatedAt: true },
+              columns: { rating: true, body: true, updatedAt: true, createdAt: true },
             })
           : Promise.resolve(null),
       ]);
@@ -337,6 +337,10 @@ export function createCommentsRepository({ db }: CommentsRepositoryDeps) {
         }
       }
 
+      const isUpdated = userComment
+        ? userComment.updatedAt.getTime() > userComment.createdAt.getTime()
+        : false;
+
       return {
         avgRating,
         ratingCount: count,
@@ -345,7 +349,7 @@ export function createCommentsRepository({ db }: CommentsRepositoryDeps) {
           ? {
               body: userComment.body,
               value: userComment.rating ?? 0,
-              updatedAt: userComment.updatedAt,
+              updatedAt: isUpdated ? userComment.updatedAt : null,
             }
           : null,
       };
