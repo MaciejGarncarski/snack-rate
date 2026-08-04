@@ -23,7 +23,7 @@ export function UserReviewItem({ userRating, userBody, onEdit, onRemove }: Props
   const [isRemoveOpen, setIsRemoveOpen] = useState(false);
 
   return (
-    <div className="flex items-start md:items-center md:justify-between gap-4 flex-col md:flex-row">
+    <div className="flex items-start justify-between gap-4 flex-row">
       <div className="flex min-w-0 flex-col items-center gap-2">
         <div className="flex flex-col gap-4">
           <SnackRating rating={userRating} size="md" />

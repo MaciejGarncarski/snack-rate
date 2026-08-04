@@ -81,13 +81,13 @@ export const ImageDropzone = ({
 
   return (
     <motion.div
-      className="relative flex aspect-4/5 h-auto w-full items-center justify-center rounded-lg ring-ring ring-offset-2 ring-offset-background focus-within:ring-2"
+      className="relative flex aspect-4/5 h-auto w-full items-center justify-center rounded-2xl ring-ring ring-offset-2 ring-offset-background focus-within:ring-2"
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <div className="relative size-full overflow-hidden rounded-lg border border-accent">
+      <div className="relative size-full overflow-hidden rounded-2xl border border-accent">
         {selectedImage ? (
           <div
             className="size-full relative select-none bg-gradient-transparency"

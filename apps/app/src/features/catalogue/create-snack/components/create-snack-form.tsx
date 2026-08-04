@@ -16,6 +16,7 @@ import {
 import { Field, FieldDescription, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
+import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
 import { CaptchaField } from "#/features/captcha/components/captcha-field";
 import { ImagePicker } from "#/features/catalogue/create-snack/components/image-picker";
 import { SnackFormCard } from "#/features/catalogue/create-snack/components/snack-form-card";
@@ -181,7 +182,7 @@ export function CreateSnackForm({ types }: Props) {
             const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
             return (
-              <Field className="mx-auto w-full max-w-120" data-invalid={isInvalid}>
+              <Field className="mx-auto w-full max-w-110" data-invalid={isInvalid}>
                 <ImagePicker
                   value={field.state.value}
                   onChange={(files) => field.handleChange(files)}
@@ -223,15 +224,20 @@ export function CreateSnackForm({ types }: Props) {
                     onBlur={field.handleBlur}
                     className="flex-1"
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onPress={() => setIsBarcodeScannerOpen(true)}
-                    aria-label="Skanuj kod kreskowy"
-                  >
-                    <ScanBarcodeIcon />
-                  </Button>
+                  <TooltipTrigger>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onPress={() => setIsBarcodeScannerOpen(true)}
+                      aria-label="Skanuj kod kreskowy"
+                    >
+                      <ScanBarcodeIcon />
+                    </Button>
+                    <Tooltip>
+                      <p>Skanuj kod kreskowy</p>
+                    </Tooltip>
+                  </TooltipTrigger>
                 </div>
                 <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
               </Field>

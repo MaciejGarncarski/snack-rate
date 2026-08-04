@@ -121,11 +121,11 @@ export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScan
         <DialogTitle>Skanuj kod kreskowy</DialogTitle>
         <DialogDescription>Umieść kod kreskowy w polu widzenia kamery.</DialogDescription>
       </DialogHeader>
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 py-4">
         <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl bg-muted">
           <div
             id={SCANNER_ID}
-            className="size-full [&_video]:!h-full [&_video]:!w-full [&_video]:object-cover [&_video]:rounded-xl"
+            className="size-full [&_video]:h-full! [&_video]:w-full! [&_video]:object-cover [&_video]:rounded-xl"
           />
           {!cameraReady && (
             <CameraOffIcon className="absolute left-1/2 top-1/2 z-10 h-12 w-12 -translate-x-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -139,7 +139,7 @@ export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScan
         )}
       </div>
       <DialogFooter>
-        <DialogClose variant="ghost">Anuluj</DialogClose>
+        <DialogClose variant="outline">Anuluj</DialogClose>
       </DialogFooter>
     </Dialog>
   );

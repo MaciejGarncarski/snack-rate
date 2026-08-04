@@ -68,10 +68,14 @@ export function UserReview() {
     return (
       <Item variant="muted">
         <ItemHeader>
-          <ItemTitle>
+          <ItemTitle className="flex-wrap">
             <span>Twoja ocena</span>
-            <span className="text-muted-foreground">- {instant.toLocaleString("pl-PL")}</span>
-            {isEdited && <span className="text-muted-foreground"> - (edytowany)</span>}
+            <span className="text-muted-foreground text-xs md:text-sm">
+              {instant.toLocaleString("pl-PL")}
+            </span>
+            {isEdited && (
+              <span className="text-xs text-muted-foreground md:text-sm">(edytowany)</span>
+            )}
           </ItemTitle>
         </ItemHeader>
         <ItemContent>

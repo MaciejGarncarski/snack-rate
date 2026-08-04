@@ -20,10 +20,14 @@ export function ReviewItem({ review }: { review: SnackReview }) {
     <div className="py-2 max-w-full relative">
       <Item variant="muted">
         <ItemHeader>
-          <ItemTitle>
+          <ItemTitle className="flex-wrap items-baseline">
             <span>{review.authorName}</span>
-            <span className="text-muted-foreground">- {instant.toLocaleString("pl-PL")}</span>
-            {review.isEdited && <span className="text-muted-foreground"> - (edytowany)</span>}
+            <span className="text-muted-foreground text-xs md:text-sm">
+              {instant.toLocaleString("pl-PL")}
+            </span>
+            {review.isEdited && (
+              <span className="text-muted-foreground text-xs md:text-sm">(edytowany)</span>
+            )}
           </ItemTitle>
         </ItemHeader>
         <ItemContent>
