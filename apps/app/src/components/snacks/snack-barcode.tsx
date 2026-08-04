@@ -19,8 +19,8 @@ const sizeMap: Record<"sm" | "md" | "lg", { width: number; height: number }> = {
 const barcodeContainerVariants = cva("w-fit ", {
   variants: {
     variant: {
-      default: "shadow-sm ",
-      padding: "flex justify-center bg-secondary  border border-border",
+      default: "",
+      padding: "flex justify-center bg-secondary border border-border rounded-2xl",
     },
     size: {
       sm: "",
