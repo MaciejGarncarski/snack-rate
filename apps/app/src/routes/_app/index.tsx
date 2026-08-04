@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SnacksList } from "#/features/catalogue/components/snacks-list";
 import { SnacksListSkeleton } from "#/features/catalogue/components/snacks-list-skeleton";
-import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query";
+import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query-options";
 
 export const Route = createFileRoute("/_app/")({
   component: RouteComponent,

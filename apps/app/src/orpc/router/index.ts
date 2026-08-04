@@ -3,7 +3,7 @@ import {
   listSnacksProcedure,
   listTypesProcedure,
 } from "#/features/catalogue/transport/snacks.server";
-import { listReviewsProcedure } from "#/features/ratings/transport/reviews.server";
+import { listCommentsProcedure } from "#/features/comments/transport/comments.server";
 
 export default {
   snacks: {
@@ -11,7 +11,7 @@ export default {
     create: createSnackProcedure,
     listTypes: listTypesProcedure,
   },
-  reviews: {
-    list: listReviewsProcedure,
+  comments: {
+    list: listCommentsProcedure,
   },
 };

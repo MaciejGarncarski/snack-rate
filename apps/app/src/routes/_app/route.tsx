@@ -3,7 +3,7 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import * as z from "zod";
 
 import { AppLayout } from "#/components/layout/app-layout";
-import { getSearchedItemsQueryOptions } from "#/features/catalogue/search-snacks/queries/get-searched-items.query";
+import { getSearchedItemsQueryOptions } from "#/features/catalogue/search-snacks/queries/get-searched-items.query-options";
 
 const sharedParamsSchema = z.object({
   page: z.number().optional(),

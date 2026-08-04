@@ -2,7 +2,7 @@ import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 
 import { SnacksListItem } from "#/features/catalogue/components/snacks-list-item";
-import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query";
+import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query-options";
 
 export function SnacksList() {
   const { data, hasNextPage, fetchNextPage } = useSuspenseInfiniteQuery(listSnacksQueryOptions());

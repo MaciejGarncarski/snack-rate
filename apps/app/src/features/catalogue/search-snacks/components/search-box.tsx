@@ -7,7 +7,7 @@ import { SearchBoxMessage } from "#/features/catalogue/search-snacks/components/
 import { SearchBoxResults } from "#/features/catalogue/search-snacks/components/search-box-results";
 import { useSearchBoxInput } from "#/features/catalogue/search-snacks/hooks/use-search-box-input";
 import { useSearchBoxNavigation } from "#/features/catalogue/search-snacks/hooks/use-search-box-navigation";
-import { getSearchedItemsQueryOptions } from "#/features/catalogue/search-snacks/queries/get-searched-items.query";
+import { getSearchedItemsQueryOptions } from "#/features/catalogue/search-snacks/queries/get-searched-items.query-options";
 
 export function NavbarSearchBox() {
   const { debouncedQuery, inputValue, setInputValue, suggestionsOpen, setSuggestionsOpen } =

@@ -9,7 +9,7 @@ export default defineConfig({
         "src/features/catalogue/server/**",
         "src/features/catalogue/transport/**",
         "src/features/catalogue/queries/**",
-        "src/features/catalogue/reviews/transport/**",
+        "src/features/ratings/transport/**",
         "src/features/catalogue/utils/**",
         "src/features/catalogue/create-snack/utils/**",
         "src/features/shared/value-objects/**",

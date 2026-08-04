@@ -23,11 +23,11 @@ import {
   ItemGroup,
   ItemTitle,
 } from "#/components/ui/item";
-import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query";
-import { ReviewSection } from "#/features/ratings/components/review-section";
-import { snackRatingsQueryOptions } from "#/features/ratings/queries/ratings.query-options";
-import { snackReviewsQueryOptions } from "#/features/ratings/queries/reviews.query-options";
-import { ensureGuestId } from "#/features/ratings/transport/guest-id.server";
+import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query-options";
+import { CommentSection } from "#/features/comments/components/comment-section";
+import { snackCommentsQueryOptions } from "#/features/comments/queries/comments.query-options";
+import { snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
+import { ensureGuestId } from "#/features/comments/transport/guest-id.server";
 import { cn } from "#/lib/utils";
 
 const SMALL_DESCRIPTION_LENGTH = 100;
@@ -52,7 +52,7 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
     }
 
     context.queryClient.ensureQueryData(snackRatingsQueryOptions(snack.id, guestId));
-    context.queryClient.ensureInfiniteQueryData(snackReviewsQueryOptions(snack.id));
+    context.queryClient.ensureInfiniteQueryData(snackCommentsQueryOptions(snack.id));
 
     return { snack, guestId };
   },
@@ -184,7 +184,7 @@ function RouteComponent() {
           </Card>
         </div>
       </div>
-      <ReviewSection snackItemId={data.id} ratingsCount={ratings.ratingCount ?? null} />
+      <CommentSection snackItemId={data.id} ratingsCount={ratings.ratingCount ?? null} />
     </main>
   );
 }
