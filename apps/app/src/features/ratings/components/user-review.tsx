@@ -38,6 +38,10 @@ export function UserReview() {
 
   const userRating = ratings.userRating;
   const isRated = userRating !== null;
+  const isEdited = ratings.userRating?.updatedAt !== null;
+  const instant = Temporal.Instant.from(
+    userRating?.updatedAt?.toISOString() ?? new Date().toISOString(),
+  );
 
   if (isFormOpen) {
     return (
@@ -47,8 +51,8 @@ export function UserReview() {
         </ItemHeader>
         <ItemContent>
           <UserReviewForm
-            initialRating={userRating}
-            initialBody={ratings.userBody ?? null}
+            initialRating={userRating?.value ?? 0}
+            initialBody={ratings.userRating?.body ?? null}
             snackItemId={data.id}
             guestId={guestId}
             isPending={rateSnack.isPending}
@@ -64,12 +68,16 @@ export function UserReview() {
     return (
       <Item variant="muted">
         <ItemHeader>
-          <ItemTitle>Twoja ocena</ItemTitle>
+          <ItemTitle>
+            <span>Twoja ocena</span>
+            <span className="text-muted-foreground">- {instant.toLocaleString("pl-PL")}</span>
+            {isEdited && <span className="text-muted-foreground"> - (edytowany)</span>}
+          </ItemTitle>
         </ItemHeader>
         <ItemContent>
           <UserReviewItem
-            userRating={userRating}
-            userBody={ratings.userBody ?? null}
+            userRating={userRating.value}
+            userBody={ratings.userRating?.body ?? null}
             onEdit={() => setIsFormOpen(true)}
             onRemove={() => removeRating.mutate({ snackItemId: data.id, guestId })}
           />

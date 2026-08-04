@@ -30,7 +30,7 @@ export function UserReviewItem({ userRating, userBody, onEdit, onRemove }: Props
           {userBody ? (
             <p className="line-clamp-3 text-sm text-muted-foreground">{userBody}</p>
           ) : (
-            <p className="text-sm text-muted-foreground">Bez komentarza.</p>
+            <p className="text-sm text-muted-foreground">Brak treści recenzji.</p>
           )}
         </div>
       </div>

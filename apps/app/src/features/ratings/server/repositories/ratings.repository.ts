@@ -38,8 +38,11 @@ export type SnackRatingsResult = {
   avgRating: number;
   ratingCount: number;
   distribution: Record<string, number>;
-  userRating: number | null;
-  userBody: string | null;
+  userRating: {
+    body: string | null;
+    value: number;
+    updatedAt: Date | null;
+  } | null;
 };
 
 type Identity = { column: "userId" | "guestId"; value: string };
@@ -165,7 +168,7 @@ async function queryReviewsForSnack(
     const replies = repliesByReview.get(row.id) ?? [];
     return {
       id: row.id,
-      rating: row.rating!,
+      rating: row.rating ?? 0,
       body: row.body,
       authorName: resolveAuthorName(row.firstName, row.lastName),
       createdAt: row.createdAt,
@@ -304,7 +307,7 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         data.userId || data.guestId
           ? client.query.snackComments.findFirst({
               where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
-              columns: { rating: true, body: true },
+              columns: { rating: true, body: true, updatedAt: true },
             })
           : Promise.resolve(null),
       ]);
@@ -335,8 +338,13 @@ export function createRatingsRepository({ db }: RatingsRepositoryDeps) {
         avgRating,
         ratingCount: count,
         distribution,
-        userRating: userReview ? userReview.rating : null,
-        userBody: userReview?.body ?? null,
+        userRating: userReview
+          ? {
+              body: userReview.body,
+              value: userReview.rating ?? 0,
+              updatedAt: userReview.updatedAt,
+            }
+          : null,
       };
     },
 
