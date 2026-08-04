@@ -23,6 +23,7 @@ import {
   ItemGroup,
   ItemTitle,
 } from "#/components/ui/item";
+import { Skeleton } from "#/components/ui/skeleton";
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query-options";
 import { CommentSection } from "#/features/comments/components/comment-section";
 import { snackCommentsQueryOptions } from "#/features/comments/queries/comments.query-options";
@@ -68,6 +69,60 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
           <EmptyDescription>Ups, wygląda na to, że ten produkt nie istnieje.</EmptyDescription>
         </EmptyHeader>
       </Empty>
+    );
+  },
+
+  pendingComponent: () => {
+    return (
+      <main className="mx-auto w-full max-w-6xl pb-10 flex flex-col gap-10">
+        <div className="flex gap-8 flex-col lg:flex-row lg:gap-20">
+          <div className="mx-auto w-full max-w-sm lg:sticky lg:top-8">
+            <Skeleton className="aspect-4/5 w-full" />
+            <div className="flex justify-center gap-4 mt-4">
+              <Skeleton className="aspect-4/5 w-1/3 rounded-xl" />
+              <Skeleton className="aspect-4/5 w-1/3 rounded-xl" />
+              <Skeleton className="aspect-4/5 w-1/3 rounded-xl" />
+            </div>
+          </div>
+
+          <div className="pt-1 flex flex-col gap-6 lg:pt-2 flex-1">
+            <div className="flex flex-col gap-4">
+              <Skeleton className="h-10 w-3/4" />
+              <div className="flex flex-col gap-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+              </div>
+            </div>
+
+            <Card className="mt-auto [--card-spacing:--spacing(4)]">
+              <CardHeader>
+                <Skeleton className="h-5 w-40" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-6 w-16 rounded-full" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-4 w-28" />
+                    <Skeleton className="h-5 w-24" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-3 w-40" />
+                    </div>
+                    <Skeleton className="h-6 w-28 rounded-md" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        <Skeleton className="h-48 w-full rounded-xl" />
+      </main>
     );
   },
 
