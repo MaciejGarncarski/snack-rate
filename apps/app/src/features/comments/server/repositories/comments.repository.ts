@@ -41,6 +41,7 @@ export type SnackRatingsResult = {
   userRating: {
     body: string | null;
     value: number;
+    createdAt: Date;
     updatedAt: Date | null;
   } | null;
 };
@@ -349,6 +350,7 @@ export function createCommentsRepository({ db }: CommentsRepositoryDeps) {
           ? {
               body: userComment.body,
               value: userComment.rating ?? 0,
+              createdAt: userComment.createdAt,
               updatedAt: isUpdated ? userComment.updatedAt : null,
             }
           : null,

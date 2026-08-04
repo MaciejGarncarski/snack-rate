@@ -1,11 +1,11 @@
 import { RefreshCw } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { Button } from "#/components/ui/button";
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
-import { useGenerateCaptcha } from "#/features/captcha/hooks/use-generate-chaptcha";
+import { useCaptcha } from "#/features/captcha/hooks/use-captcha";
 
 type CaptchaFieldProps = {
   value: string;
@@ -24,23 +24,18 @@ export function CaptchaField({
   isInvalid,
   errors,
 }: CaptchaFieldProps) {
-  const {
-    mutate,
-    data: svg,
-    isPending,
-    isError,
-  } = useGenerateCaptcha({
-    onSuccess: () => {
-      onChange("");
-    },
-  });
+  const { svg, isPending, isError, regenerate } = useCaptcha();
+  const prevSvgRef = useRef(svg);
 
   useEffect(() => {
-    mutate();
-  }, [mutate]);
+    if (prevSvgRef.current !== svg && svg !== null) {
+      onChange("");
+    }
+    prevSvgRef.current = svg;
+  }, [svg, onChange]);
 
   const handleRefresh = () => {
-    mutate();
+    regenerate();
   };
 
   const view = useMemo(() => {

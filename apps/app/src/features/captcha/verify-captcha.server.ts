@@ -5,10 +5,6 @@ import { serverEnv } from "#/lib/server.env";
 
 const COOKIE_NAME = "captcha_token";
 
-function getSecret(): string {
-  return serverEnv.CAPTCHA_SECRET;
-}
-
 export function verifyCaptcha(userCode: string): boolean {
   const cookie = getCookie(COOKIE_NAME);
   if (!cookie) return false;
@@ -26,12 +22,12 @@ export function verifyCaptcha(userCode: string): boolean {
     return false;
   }
 
-  if (!verifySignature(storedCode + ":", signature, getSecret(), issuedAtNum)) {
+  if (!verifySignature(storedCode + ":", signature, serverEnv.CAPTCHA_SECRET, issuedAtNum)) {
     deleteCookie(COOKIE_NAME, { path: "/" });
     return false;
   }
 
-  if (userCode.trim().toLowerCase() !== storedCode.toLowerCase()) {
+  if (userCode.trim() !== storedCode) {
     deleteCookie(COOKIE_NAME, { path: "/" });
     return false;
   }

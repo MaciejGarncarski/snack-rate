@@ -5,6 +5,7 @@ import { Button } from "#/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "#/components/ui/field";
 import { Textarea } from "#/components/ui/textarea";
 import { CaptchaField } from "#/features/captcha/components/captcha-field";
+import { regenerateCaptcha } from "#/features/captcha/store";
 import { useCommentSnack } from "#/features/comments/queries/use-comment-snack";
 import { MAXIMUM_COMMENT_BODY_LENGTH, rateSnackFormSchema } from "#/schemas/comments";
 
@@ -54,6 +55,7 @@ export function UserCommentForm({
         {
           onError: () => {
             form.resetField("captchaCode");
+            regenerateCaptcha();
           },
           onSuccess: () => {
             onRated?.();

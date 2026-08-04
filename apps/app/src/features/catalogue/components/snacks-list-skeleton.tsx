@@ -13,7 +13,7 @@ export function SnacksListItemSkeleton() {
   return (
     <li className="mx-auto w-full max-w-sm">
       <Card className="pt-0">
-        <Skeleton className="h-full aspect-4/5 rounded-none w-sm" />
+        <Skeleton className="h-full aspect-4/5 rounded-none w-xs md:w-sm" />
         <CardHeader>
           <CardAction>
             <Skeleton className="mb-2 h-6 w-20 rounded-full" />
