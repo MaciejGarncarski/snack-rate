@@ -146,7 +146,7 @@ export function ImagePicker({ onChange }: Props) {
 
       <div className="flex flex-col gap-2">
         <LayoutGroup>
-          <div className="grid grid-cols-3 gap-2 overflow-hidden py-0.5 px-0.5">
+          <div className="grid grid-cols-3 gap-4 overflow-hidden py-0.5 px-0.5">
             <AnimatePresence mode="popLayout">
               {images.map((image, index) => {
                 return (

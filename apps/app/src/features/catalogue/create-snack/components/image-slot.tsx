@@ -48,7 +48,7 @@ export function ImageSlot({ isSelected, onClick, onMoveLeft, onMoveRight, imageS
           <motion.button
             type="button"
             className={cn(
-              "outline-none flex aspect-4/5 h-auto bg-gradient-transparency-small w-full items-center justify-center overflow-hidden rounded-lg border border-dashed border-accent  outline-0 focus:border-solid focus:ring focus:ring-ring",
+              "outline-none flex aspect-4/5 h-auto bg-gradient-transparency-small w-full items-center justify-center overflow-hidden rounded-xl border border-dashed border-accent  outline-0 focus:border-solid focus:ring focus:ring-ring",
               isSelected && "border-solid ring-2 ring-primary",
             )}
             onClick={onClick}

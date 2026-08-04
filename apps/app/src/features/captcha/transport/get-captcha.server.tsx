@@ -63,7 +63,7 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
 
   const w = 240;
   const h = 76;
-  const spacing = 38;
+  const spacing = 40;
   const startX = 30;
 
   const chars = code.split("").map((char, i) => {
@@ -215,7 +215,7 @@ export const getCaptcha = createServerFn({ method: "GET" }).handler(async () => 
             position: "absolute",
             left: char.x,
             top: char.top,
-            fontSize: 28,
+            fontSize: 32,
             fontWeight: 700,
             color: char.color,
             fontFamily: "monospace, sans-serif",

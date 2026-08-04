@@ -54,7 +54,7 @@ export function CaptchaField({
     <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={name}>Kod z obrazka</FieldLabel>
 
-      <div className="flex flex-row items-center gap-4">
+      <div className="flex flex-row items-center gap-2 md:gap-4">
         <Input
           id={name}
           name={name}
@@ -70,7 +70,7 @@ export function CaptchaField({
         />
 
         <div
-          className="relative aspect-200/64 max-w-32 shrink-0 w-40 overflow-hidden rounded-xl border bg-muted/40"
+          className="relative aspect-200/64 w-26 md:w-32 shrink-0  overflow-hidden rounded-xl border bg-muted/40"
           aria-live="polite"
         >
           <AnimatePresence mode="wait" initial={false}>
