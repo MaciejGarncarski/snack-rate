@@ -121,8 +121,8 @@ describe("rate snack", () => {
       guestId,
     });
 
-    expect(ratings.userRating).toBe(5);
-    expect(ratings.userBody).toBe("Super chrupki");
+    expect(ratings.userRating?.value).toBe(5);
+    expect(ratings.userRating?.body).toBe("Super chrupki");
   });
 
   it("should store null body when review text is empty", async () => {

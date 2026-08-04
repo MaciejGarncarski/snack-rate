@@ -41,7 +41,6 @@ describe("get snack ratings", () => {
     expect(result.ratingCount).toBe(0);
     expect(result.distribution).toEqual({});
     expect(result.userRating).toBeNull();
-    expect(result.userBody).toBeNull();
   });
 
   it("should return correct average and count", async () => {
@@ -88,15 +87,15 @@ describe("get snack ratings", () => {
       { snackItemId: snack.id, guestId: "alice" },
       repository,
     );
-    expect(aliceResult.userRating).toBe(5);
-    expect(aliceResult.userBody).toBeNull();
+    expect(aliceResult.userRating?.value).toBe(5);
+    expect(aliceResult.userRating?.body).toBeNull();
 
     const bobResult = await getSnackRatingsUseCase(
       { snackItemId: snack.id, guestId: "bob" },
       repository,
     );
-    expect(bobResult.userRating).toBe(3);
-    expect(bobResult.userBody).toBeNull();
+    expect(bobResult.userRating?.value).toBe(3);
+    expect(bobResult.userRating?.body).toBeNull();
   });
 
   it("should return userBody for the requesting guest", async () => {
@@ -114,8 +113,8 @@ describe("get snack ratings", () => {
       repository,
     );
 
-    expect(result.userRating).toBe(4);
-    expect(result.userBody).toBe("Pyszny, ale drogi.");
+    expect(result.userRating?.value).toBe(4);
+    expect(result.userRating?.body).toBe("Pyszny, ale drogi.");
   });
 
   it("should exclude soft-deleted ratings from aggregation", async () => {
@@ -136,7 +135,7 @@ describe("get snack ratings", () => {
 
     expect(result.avgRating).toBe(2);
     expect(result.ratingCount).toBe(2);
-    expect(result.userRating).toBe(3);
+    expect(result.userRating?.value).toBe(3);
   });
 
   it("should return null userRating when guest has not rated", async () => {
