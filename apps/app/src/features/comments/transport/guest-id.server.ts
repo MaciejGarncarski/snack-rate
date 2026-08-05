@@ -1,10 +1,10 @@
-import { createServerFn } from "@tanstack/react-start";
+import { os } from "@orpc/server";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
 import { nanoid } from "nanoid";
 
 import { cookies } from "#/lib/cookie.config";
 
-export const ensureGuestId = createServerFn({ method: "GET" }).handler(() => {
+export const ensureGuestIdProcedure = os.handler(() => {
   const existing = getCookie(cookies.guestId.name);
 
   if (existing) {

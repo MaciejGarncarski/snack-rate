@@ -1,14 +1,12 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { getRatingsForSnackFn } from "#/features/comments/transport/rate-snack.server";
+import { client } from "#/orpc/client";
 
 export const snackRatingsQueryOptions = (snackItemId: string, guestId: string | undefined) =>
   queryOptions({
     queryKey: ["snackRatings", snackItemId, guestId],
     queryFn: () => {
-      return getRatingsForSnackFn({
-        data: { snackItemId, guestId },
-      });
+      return client.comments.getRatings({ snackItemId, guestId });
     },
     staleTime: 30_000,
     enabled: !!snackItemId,

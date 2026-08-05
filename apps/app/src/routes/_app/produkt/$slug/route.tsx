@@ -28,8 +28,8 @@ import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-sna
 import { CommentSection } from "#/features/comments/components/comment-section";
 import { snackCommentsQueryOptions } from "#/features/comments/queries/comments.query-options";
 import { snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
-import { ensureGuestId } from "#/features/comments/transport/guest-id.server";
 import { cn } from "#/lib/utils";
+import { client } from "#/orpc/client";
 
 const SMALL_DESCRIPTION_LENGTH = 100;
 const NORMAL_DESCRIPTION_LENGTH = 350;
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
   }) => {
     const [snack, { guestId }] = await Promise.all([
       context.queryClient.ensureQueryData(getSnackBySlugQueryOptions(params.slug)),
-      ensureGuestId(),
+      client.guest.ensureId(),
     ]);
 
     if (!snack) {

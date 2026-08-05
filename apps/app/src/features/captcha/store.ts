@@ -1,6 +1,6 @@
 import { createStore } from "@tanstack/react-store";
 
-import { getCaptcha } from "#/features/captcha/transport/get-captcha.server";
+import { client } from "#/orpc/client";
 
 type CaptchaState = {
   svg: string | null;
@@ -20,7 +20,7 @@ export function regenerateCaptcha(): void {
 
   void (async () => {
     try {
-      const svg = await getCaptcha();
+      const svg = await client.captcha.get();
       captchaStore.setState(() => success(svg));
     } catch {
       captchaStore.setState(error);

@@ -1,14 +1,12 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { getSnackBySlugFn } from "#/features/catalogue/transport/get-snack-by-slug.server";
+import { client } from "#/orpc/client";
 
 export const getSnackBySlugQueryOptions = (slug: string) =>
   queryOptions({
     queryKey: ["snack", slug],
     queryFn: () => {
-      return getSnackBySlugFn({
-        data: { slug },
-      });
+      return client.snacks.getBySlug({ slug });
     },
     select: (data) => data!,
   });

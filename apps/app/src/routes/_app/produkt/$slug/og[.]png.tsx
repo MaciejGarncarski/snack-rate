@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import ImageResponse from "takumi-js/response";
 
-import { getSnackBySlugFn } from "#/features/catalogue/transport/get-snack-by-slug.server";
+import { client } from "#/orpc/client";
 import stylesheet from "#/styles/app.css?inline";
 
 // VERY IMPORTANT NOTE:
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
   server: {
     handlers: {
       async GET({ params }) {
-        const snack = await getSnackBySlugFn({ data: { slug: params.slug } });
+        const snack = await client.snacks.getBySlug({ slug: params.slug });
 
         if (!snack) {
           return new Response("Snack not found", { status: 404 });
