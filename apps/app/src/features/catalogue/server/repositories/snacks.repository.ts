@@ -1,7 +1,7 @@
 import { snackItemImages, snackItems } from "@snack-rate/db-schema/schema";
 import type { TableFilter } from "drizzle-orm";
 
-import type { SnackStatus } from "#/features/shared/value-objects/status.vo";
+import { Status, type SnackStatus } from "#/features/shared/value-objects/status.vo";
 import type { Database, DbTransaction } from "#/infrastructure/db/db";
 
 export type DecodedCursor = {
@@ -90,10 +90,7 @@ async function toSnackItem(
   const thumbnailImage = row.images.find((img) => img.type === "thumbnail");
   const thumbnailUrl = thumbnailImage ? await getFileUrl(thumbnailImage.storageKey) : null;
 
-  const parsedStatus =
-    row.status === "pending" || row.status === "published" || row.status === "rejected"
-      ? row.status
-      : "pending";
+  const status = Status.create(row.status).getValue();
 
   return {
     id: row.id,
@@ -105,7 +102,7 @@ async function toSnackItem(
     typeId: row.typeId,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
-    status: parsedStatus,
+    status,
     deletedAt: row.deletedAt,
     thumbnailUrl,
     images,
