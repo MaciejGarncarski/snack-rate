@@ -1,8 +1,8 @@
 import { ClientOnly } from "@tanstack/react-router";
-import { cva, type VariantProps } from "class-variance-authority";
 import JsBarcode from "jsbarcode";
 import { BarcodeIcon, Loader2Icon } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { tv, type VariantProps } from "tailwind-variants";
 
 import { cn } from "#/lib/utils";
 
@@ -16,7 +16,8 @@ const sizeMap: Record<"sm" | "md" | "lg", { width: number; height: number }> = {
   lg: { width: 2.5, height: 120 },
 };
 
-const barcodeContainerVariants = cva("w-fit ", {
+const barcodeContainerVariants = tv({
+  base: "w-fit",
   variants: {
     variant: {
       default: "",
@@ -68,7 +69,7 @@ function BarcodeContent({ barcode, size, variant }: Props) {
   }, [barcode, width, height]);
 
   return (
-    <div className={cn(barcodeContainerVariants({ variant, size }))}>
+    <div className={barcodeContainerVariants({ variant, size })}>
       {barcode ? (
         <svg ref={svgRef} className="rounded-2xl shadow w-fit" />
       ) : (
@@ -93,7 +94,7 @@ function BarcodeContent({ barcode, size, variant }: Props) {
 
 function SnackBarcodeSkeleton({ size = "md", variant = "default" }: Omit<Props, "barcode">) {
   return (
-    <div className={cn(barcodeContainerVariants({ variant, size }))}>
+    <div className={barcodeContainerVariants({ variant, size })}>
       <div
         className={cn(
           "flex h-full gap-2 w-full items-center text-center justify-center rounded-2xl p-2 text-muted-foreground",
