@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
-import { ImageWithPlaceholder } from "#/components/image/image-with-placeholder";
+import { Image } from "#/components/image/image";
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { ScrollArea } from "#/components/ui/scroll-area";
 import type { SnackItem } from "#/features/catalogue/server/repositories/snacks.repository";
@@ -40,7 +40,7 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }:
               {...(index === 0 && { "data-first": "" })}
               onClick={onLinkClick}
             >
-              <ImageWithPlaceholder
+              <Image
                 alt=""
                 src={item.thumbnailUrl ?? item.images[0]?.url}
                 containerClassName="w-9 aspect-4/5 shrink-0 overflow-hidden rounded-md bg-muted md:w-10"

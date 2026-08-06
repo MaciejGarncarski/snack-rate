@@ -3,7 +3,7 @@ import { ImageOffIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
-import { ImageWithPlaceholder } from "#/components/image/image-with-placeholder";
+import { Image } from "#/components/image/image";
 import { MAXIMUM_IMAGES } from "#/const/image-const";
 import { cn } from "#/lib/utils";
 
@@ -49,7 +49,7 @@ export default function SnackImageSlider({ images }: Props) {
             transition={{ duration: 0.15, ease: "easeInOut" }}
             className="absolute inset-0"
           >
-            <ImageWithPlaceholder
+            <Image
               src={images[index]}
               alt={`Slajd ${index + 1}`}
               containerClassName="h-full w-full"
@@ -71,7 +71,7 @@ export default function SnackImageSlider({ images }: Props) {
               i === index ? "ring-primary" : "ring-transparent opacity-80 hover:opacity-100",
             )}
           >
-            <ImageWithPlaceholder
+            <Image
               src={src}
               blurBackground
               width={100}

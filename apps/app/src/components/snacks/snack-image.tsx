@@ -1,4 +1,4 @@
-import { ImageWithPlaceholder } from "#/components/image/image-with-placeholder";
+import { Image } from "#/components/image/image";
 import { cn } from "#/lib/utils";
 
 type Size = "sm" | "md" | "lg" | "xl";
@@ -24,7 +24,7 @@ export function SnackImage({ src, alt, size = "md" }: Props) {
         sizeClasses[size] || sizeClasses["md"],
       )}
     >
-      <ImageWithPlaceholder src={src} alt={alt} />
+      <Image src={src} alt={alt} />
     </div>
   );
 }
