@@ -14,9 +14,7 @@ export function useCommentSnack() {
       },
       onSuccess: async (_result, vars, _a, context) => {
         await Promise.all([
-          context.client.invalidateQueries(
-            snackRatingsQueryOptions(vars.snackItemId, vars.guestId),
-          ),
+          context.client.invalidateQueries(snackRatingsQueryOptions(vars.snackItemId)),
           context.client.invalidateQueries(snackCommentsQueryOptions(vars.snackItemId)),
         ]);
         toast.success("Ocena została zapisana");

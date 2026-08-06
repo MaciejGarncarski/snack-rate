@@ -29,7 +29,6 @@ import { CommentSection } from "#/features/comments/components/comment-section";
 import { snackCommentsQueryOptions } from "#/features/comments/queries/comments.query-options";
 import { snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
 import { cn } from "#/lib/utils";
-import { client } from "#/orpc/client";
 
 const SMALL_DESCRIPTION_LENGTH = 100;
 const NORMAL_DESCRIPTION_LENGTH = 350;
@@ -43,19 +42,18 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
     params: { slug: string };
     context: { queryClient: QueryClient };
   }) => {
-    const [snack, { guestId }] = await Promise.all([
-      context.queryClient.ensureQueryData(getSnackBySlugQueryOptions(params.slug)),
-      client.guest.ensureId(),
-    ]);
+    const snack = await context.queryClient.ensureQueryData(
+      getSnackBySlugQueryOptions(params.slug),
+    );
 
     if (!snack) {
       throw notFound();
     }
 
-    context.queryClient.ensureQueryData(snackRatingsQueryOptions(snack.id, guestId));
+    context.queryClient.ensureQueryData(snackRatingsQueryOptions(snack.id));
     context.queryClient.ensureInfiniteQueryData(snackCommentsQueryOptions(snack.id));
 
-    return { snack, guestId };
+    return { snack };
   },
 
   notFoundComponent: () => {
@@ -160,10 +158,9 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
 });
 
 function RouteComponent() {
-  const { guestId } = Route.useLoaderData();
   const { slug } = Route.useParams();
   const { data } = useSuspenseQuery(getSnackBySlugQueryOptions(slug));
-  const ratings = useSuspenseQuery(snackRatingsQueryOptions(data.id, guestId)).data;
+  const ratings = useSuspenseQuery(snackRatingsQueryOptions(data.id)).data;
 
   const imageUrls = data.images.filter((img) => img.type === "default").map((img) => img.url);
 

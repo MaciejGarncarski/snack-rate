@@ -7,7 +7,6 @@ import {
   listTypesProcedure,
 } from "#/features/catalogue/transport/snacks.server";
 import { listCommentsProcedure } from "#/features/comments/transport/comments.server";
-import { ensureGuestIdProcedure } from "#/features/comments/transport/guest-id.server";
 import {
   getRatingsForSnackProcedure,
   rateSnackProcedure,
@@ -30,8 +29,5 @@ export default {
   },
   captcha: {
     get: getCaptchaProcedure,
-  },
-  guest: {
-    ensureId: ensureGuestIdProcedure,
   },
 };

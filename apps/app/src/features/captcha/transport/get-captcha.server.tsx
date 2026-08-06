@@ -1,11 +1,11 @@
-import { os } from "@orpc/server";
 import { setCookie } from "@tanstack/react-start/server";
 
 import { COOKIE_MAX_AGE, COOKIE_NAME, generateCode, signCode } from "#/features/captcha/captcha";
 import { renderCaptcha } from "#/features/captcha/renderer.tsx";
+import { baseProcedure } from "#/lib/orpc/procedure";
 import { serverEnv } from "#/lib/server.env";
 
-export const getCaptchaProcedure = os.handler(async () => {
+export const getCaptchaProcedure = baseProcedure.handler(() => {
   const code = generateCode();
   const issuedAt = Math.floor(Date.now() / 1000);
   const signature = signCode(code + ":", serverEnv.CAPTCHA_SECRET, issuedAt);

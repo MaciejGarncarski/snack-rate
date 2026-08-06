@@ -6,7 +6,6 @@ export const rateSnackSchema = z.object({
   snackItemId: z.uuid(),
   rating: z.number().int().min(1).max(5),
   body: z.string().max(MAXIMUM_COMMENT_BODY_LENGTH).optional().nullable(),
-  guestId: z.string().optional(),
   captchaCode: z.string().length(5),
 });
 
@@ -28,12 +27,10 @@ export const rateSnackFormSchema = z
 
 export const snackRatingsSchema = z.object({
   snackItemId: z.uuid(),
-  guestId: z.string().optional(),
 });
 
 export const removeRatingSchema = z.object({
   snackItemId: z.uuid(),
-  guestId: z.string().optional(),
 });
 
 export const listCommentsSchema = z.object({

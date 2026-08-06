@@ -408,126 +408,149 @@ async function seedDatabase() {
     {
       snackItemId: monsterOriginal.id,
       userId: anna.id,
+      body: "Klasyka, która nigdy się nie nudzi. Uwielbiam ten smak i to uczucie, kiedy otwieram puszkę rano – od razu działa. Kupuję ją od lat.",
       rating: 5,
     },
     {
       snackItemId: monsterOriginal.id,
       userId: alfred.id,
+      body: "Bardzo dobry energetyk, choć gdyby był choć odrobinę mniej słodki, byłby idealny. W połączeniu z mocną kawą to już przesada, ale generalnie polecam.",
       rating: 4,
     },
     {
       snackItemId: monsterOriginal.id,
       userId: celina.id,
+      body: "Dla mnie za słodki i ten sztuczny posmak gumy mnie odrzuca. Wolę coś bardziej wytrawnego, ale rozumiem, że wielu osobom smakuje.",
       rating: 3,
     },
     // Monster Ultra
     {
       snackItemId: monsterUltra.id,
       userId: dawid.id,
+      body: "Zero cukru, a smak nie udaje czegoś, czym nie jest. W końcu lekki napój, który nie zostawia lepkiego filmu w ustach. Picie go to mój codzienny rytuał w pracy.",
       rating: 5,
     },
     {
       snackItemId: monsterUltra.id,
       userId: anna.id,
+      body: "Ultra jest naprawdę dobra, chociaż i tak wolę klasykę. W porównaniu z oryginałem smakuje trochę płasko, ale za to bez tych kalorii.",
       rating: 4,
     },
     // Monster Mango
     {
       snackItemId: monsterMango.id,
       userId: celina.id,
+      body: "Ten smak mango to strzał w dziesiątkę – czuć sok, a nie chemię. Jedyny energetyk, który piję dla smaku, a nie tylko po kofeinę.",
       rating: 5,
     },
     {
       snackItemId: monsterMango.id,
       userId: ewa.id,
+      body: "Ładny, owocowy profil, choć momentami troszkę za słodki. Świetna opcja na lato, ale nie na co dzień.",
       rating: 4,
     },
     // Lay's Klasyczne
     {
       snackItemId: laysClassic.id,
       userId: alfred.id,
+      body: "Solidna klasyka – dobrze posolone, chrupiące, nie za tłuste. Do serialu wieczorem nie wyobrażam sobie innego towarzystwa.",
       rating: 4,
     },
     {
       snackItemId: laysClassic.id,
       userId: dawid.id,
+      body: "Przeciętne. Smakują jak marka własna, tylko kosztują więcej. Po otwarciu połowa paczki to okruchy, a smak szybko się nudzi.",
       rating: 3,
     },
     // Lay's Ketchup
     {
       snackItemId: laysKetchup.id,
       userId: anna.id,
+      body: "Ketchupowy smak jest wyrazisty i mocno 'lay'sowy'. Otworzysz paczkę i nie zauważysz, jak zniknęła cała. Genialne na imprezy.",
       rating: 5,
     },
     {
       snackItemId: laysKetchup.id,
       userId: celina.id,
+      body: "Bardzo fajne, choć odrobinę przesadzone ze słodyczą. Moje dzieciaki je uwielbiają, więc u nas to pozycja obowiązkowa na weekend.",
       rating: 4,
     },
     // Pringles Original
     {
       snackItemId: pringlesOriginal.id,
       userId: alfred.id,
+      body: "Idealna chrupkość i ta kultowa tuba. Smak jest prosty, ale czasem prostota to największa zaleta. Szkoda tylko, że tyle powietrza w środku.",
       rating: 4,
     },
     {
       snackItemId: pringlesOriginal.id,
       userId: ewa.id,
+      body: "Dla mnie Pringlesy są zbyt przewidywalne – niby chipsy, a jednak bardziej produkt ekspandowany. Smakuje ok, ale wolę coś bardziej naturalnego.",
       rating: 3,
     },
     // Pringles Ser & Kebab
     {
       snackItemId: pringlesSerKebab.id,
       userId: dawid.id,
+      body: "Ser i kebab w jednym? Brzmi absurdalnie, a smakuje obłędnie. To jedyny smak, który zawsze ląduje u mnie w koszyku na imprezę.",
       rating: 5,
     },
     {
       snackItemId: pringlesSerKebab.id,
       userId: anna.id,
+      body: "Bardzo intensywne, wręcz czuć kebab przy otwieraniu tuby. Czasem przesadzają z proszkiem, ale skoro smakuje tak dobrze, nie narzekam.",
       rating: 4,
     },
     // Tyrrell's Sól Morska
     {
       snackItemId: tyrrellsSeaSalt.id,
       userId: celina.id,
+      body: "W końcu chipsy, które smakują jak ziemniaki, a nie jak przyprawa. Grube, chrupiące, z porządną ilością soli. Dla mnie mistrzostwo.",
       rating: 5,
     },
     {
       snackItemId: tyrrellsSeaSalt.id,
       userId: alfred.id,
+      body: "Pierwszy raz poczułem, że jem coś rzemieślniczego. Ta chrupkość i głębia smaku nie mają sobie równych wśród zwykłych chipsów.",
       rating: 5,
     },
     // Tyrrell's Słodka Papryka
     {
       snackItemId: tyrrellsSweet.id,
       userId: dawid.id,
+      body: "Papryka czuć mocno, a słodycz jest dobrze zbalansowana. Trochę za twarde jak na mój gust, ale smakowo stoją wysoko.",
       rating: 4,
     },
     {
       snackItemId: tyrrellsSweet.id,
       userId: ewa.id,
+      body: "Chrupiące, to fakt, ale smak papryki jest dla mnie za intensywny i zostaje w ustach na długo po skończeniu paczki.",
       rating: 3,
     },
     // Wedel Ptasie Mleczko
     {
       snackItemId: wedelPtasie.id,
       userId: anna.id,
+      body: "Miękkie, puszyste, a czekolada idealnie się rozpuszcza. Ptasie mleczko nigdy mnie nie zawodzi – to smak mojego dzieciństwa.",
       rating: 5,
     },
     {
       snackItemId: wedelPtasie.id,
       userId: celina.id,
+      body: "Klasyka gatunku. Waniliowy środek rozpływa się w ustach, a cienka warstwa czekolady dopełnia całość. Polska jakość bez dyskusji.",
       rating: 5,
     },
     // Wedel Gorzka
     {
       snackItemId: wedelGorzka.id,
       userId: alfred.id,
+      body: "Gorzka, ale nie gryząca. Wyraźny smak kakao i żadnego nieprzyjemnego posmaku. Czasem mam ochotę na coś słodszego, ale na co dzień wybieram tę.",
       rating: 4,
     },
     {
       snackItemId: wedelGorzka.id,
       userId: dawid.id,
+      body: "70% kakao to dla mnie idealny balans – gorzkość czuć, a mimo to jest gładka w smaku. Jedna z lepszych gorzkich czekolad w zwykłym sklepie.",
       rating: 5,
     },
   ]);

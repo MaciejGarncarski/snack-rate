@@ -13,13 +13,12 @@ import { useRemoveComment } from "#/features/comments/queries/use-remove-comment
 import { Route } from "#/routes/_app/produkt/$slug/route";
 
 export function UserComment() {
-  const { guestId } = Route.useLoaderData();
   const { slug } = Route.useParams();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const { data } = useSuspenseQuery(getSnackBySlugQueryOptions(slug));
-  const { userRating } = useSuspenseQuery(snackRatingsQueryOptions(data.id, guestId)).data;
+  const { userRating } = useSuspenseQuery(snackRatingsQueryOptions(data.id)).data;
   const rateSnack = useCommentSnack();
-  const removeRating = useRemoveComment({ snackItemId: data.id, guestId, slug });
+  const removeRating = useRemoveComment({ snackItemId: data.id, slug });
 
   if (isFormOpen) {
     return (
@@ -32,7 +31,6 @@ export function UserComment() {
             initialRating={userRating?.value ?? 0}
             initialBody={userRating?.body ?? null}
             snackItemId={data.id}
-            guestId={guestId}
             isPending={rateSnack.isPending}
             onCancel={() => setIsFormOpen(false)}
             onRated={() => setIsFormOpen(false)}
@@ -80,7 +78,7 @@ export function UserComment() {
           userRating={userRating.value}
           userBody={userRating?.body ?? null}
           onEdit={() => setIsFormOpen(true)}
-          onRemove={() => removeRating.mutate({ snackItemId: data.id, guestId })}
+          onRemove={() => removeRating.mutate({ snackItemId: data.id })}
         />
       </ItemContent>
     </Item>

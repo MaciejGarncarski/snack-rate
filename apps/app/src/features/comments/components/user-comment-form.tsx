@@ -13,7 +13,6 @@ type Props = {
   initialRating: number | null;
   initialBody: string | null;
   snackItemId: string;
-  guestId: string;
   isPending: boolean;
   onCancel?: () => void;
   onRated?: () => void;
@@ -23,7 +22,6 @@ export function UserCommentForm({
   initialRating,
   initialBody,
   snackItemId,
-  guestId,
   isPending,
   onCancel,
   onRated,
@@ -49,7 +47,6 @@ export function UserCommentForm({
           snackItemId,
           rating: value.rating,
           body: trimmedBody.length > 0 ? trimmedBody : null,
-          guestId,
           captchaCode: value.captchaCode,
         },
         {
