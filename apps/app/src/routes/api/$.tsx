@@ -25,8 +25,8 @@ const handler = new OpenAPIHandler(router, {
       schemaConverters: [new ZodToJsonSchemaConverter()],
       specGenerateOptions: {
         info: {
-          title: "TanStack ORPC Playground",
-          version: "1.0.0",
+          title: "Snack Rate API",
+          version: "0.0.1",
         },
         commonSchemas: {
           UndefinedError: { error: "UndefinedError" },
@@ -41,6 +41,9 @@ const handler = new OpenAPIHandler(router, {
           },
         },
       },
+      docsProvider: "scalar",
+      docsPath: "/docs",
+      docsTitle: "Snack Rate API Reference",
       docsConfig: {
         authentication: {
           securitySchemes: {

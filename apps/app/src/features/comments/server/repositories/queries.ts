@@ -75,8 +75,10 @@ export async function queryCommentsForSnack(
       : [];
 
   const repliesByComment = new Map<string, SnackCommentReply[]>();
+
   for (const reply of replyRows) {
     if (!reply.parentCommentId) continue;
+
     const list = repliesByComment.get(reply.parentCommentId) ?? [];
     list.push({
       id: reply.id,
