@@ -11,6 +11,10 @@
 		reverse_proxy grafana:3000
 	}
 
+	handle /health* {
+		respond "Not found" 404
+	}
+
 	handle {
 		reverse_proxy app:{$APP_PORT}
 	}

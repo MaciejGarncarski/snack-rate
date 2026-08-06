@@ -7,6 +7,7 @@ import { getTracer, markSpanOk, recordSpanError, startActiveSpan } from "#/obser
 
 const SERVER_FN_PREFIX = "/_serverFn/";
 const MAX_URL_LENGTH = 150;
+const HEALTH_ROUTE_PREFIX = "/health";
 
 function normalizeHttpRoute(pathname: string): string {
   if (!pathname.startsWith(SERVER_FN_PREFIX)) return pathname;
@@ -25,9 +26,14 @@ function normalizeHttpRoute(pathname: string): string {
 
 export const requestLoggerMiddleware = createMiddleware({ type: "request" }).server(
   ({ request, next }) => {
+    const url = new URL(request.url);
+
+    if (url.pathname.startsWith(HEALTH_ROUTE_PREFIX)) {
+      return next();
+    }
+
     httpRequestsCounter.add(1);
     const startTime = Date.now();
-    const url = new URL(request.url);
     const httpRoute = normalizeHttpRoute(url.pathname);
 
     const logUrl =
