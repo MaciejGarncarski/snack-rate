@@ -266,13 +266,13 @@ describe("rate snack", () => {
   it("should throw when authorId is an empty string", async () => {
     const snack = await createSnack();
 
-    expect(() =>
+    await expect(
       rateSnackUseCase(
         { snackItemId: snack.id, rating: 4, authorId: "", authorType: "guest" },
         repository,
         db,
       ),
-    ).toThrow("Either authorId with authorType must be provided");
+    ).rejects.toThrow("Either authorId with authorType must be provided");
   });
 
   it("should reject when the snack does not exist", async () => {
