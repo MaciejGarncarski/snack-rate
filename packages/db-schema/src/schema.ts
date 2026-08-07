@@ -27,8 +27,7 @@ export const users = pgTable(
       .default(sql`uuidv7()`),
     email: text("email").notNull(),
     passwordHash: text("password_hash").notNull(),
-    firstName: text("first_name"),
-    lastName: text("last_name"),
+    username: text("username"),
     profilePictureUrl: text("profile_picture_url"),
     role: text("role").notNull().default("user"), // 'user' | 'moderator' | 'admin'
     status: text("status").notNull().default("active"), // 'active' | 'suspended' | 'banned'
@@ -98,7 +97,7 @@ export const snackItems = pgTable(
 // ---------------------------------------------------------------------------
 // A comment on a snack item. A top-level comment (no parent) that carries a
 // `rating` (1-5 stars) is a review; replies are plain comments referencing
-// `parentCommentId`. One rated comment per user/guest per snack.
+// `parentCommentId`. One rated comment per author per snack.
 
 export const snackComments = pgTable(
   "snack_comments",
@@ -109,8 +108,8 @@ export const snackComments = pgTable(
     snackItemId: uuid("snack_item_id")
       .notNull()
       .references(() => snackItems.id),
-    userId: uuid("user_id").references(() => users.id),
-    guestId: text("guest_id"),
+    authorId: uuid("author_id").notNull(),
+    authorType: text("author_type").notNull(), // 'user' | 'guest'
     parentCommentId: uuid("parent_comment_id").references((): AnyPgColumn => snackComments.id, {
       onDelete: "cascade",
     }),
@@ -121,18 +120,16 @@ export const snackComments = pgTable(
     deletedAt: timestamp("deleted_at"),
   },
   (t) => [
-    uniqueIndex("snack_comments_user_snack_unique_idx")
-      .on(t.userId, t.snackItemId)
-      .where(sql`user_id IS NOT NULL AND rating IS NOT NULL AND deleted_at IS NULL`),
-    uniqueIndex("snack_comments_guest_snack_unique_idx")
-      .on(t.guestId, t.snackItemId)
-      .where(sql`guest_id IS NOT NULL AND rating IS NOT NULL AND deleted_at IS NULL`),
+    uniqueIndex("snack_comments_author_snack_unique_idx")
+      .on(t.authorId, t.snackItemId)
+      .where(sql`rating IS NOT NULL AND deleted_at IS NULL`),
     index("snack_comments_snack_item_idx").on(t.snackItemId),
     index("snack_comments_parent_comment_idx").on(t.parentCommentId),
     check(
       "snack_comments_rating_check",
       sql`rating IS NULL OR (parent_comment_id IS NULL AND rating BETWEEN 1 AND 5)`,
     ),
+    check("snack_comments_author_type_check", sql`author_type IN ('user', 'guest')`),
   ],
 );
 

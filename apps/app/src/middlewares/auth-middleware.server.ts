@@ -1,6 +1,7 @@
 import { getCookie } from "@orpc/server/helpers";
 import { setCookie } from "@tanstack/react-start/server";
-import { nanoid } from "nanoid";
+import { uuidv7 } from "uuidv7";
+import z from "zod";
 
 import { cookies } from "#/lib/cookie.config";
 import { baseORPC } from "#/lib/orpc/base";
@@ -16,10 +17,13 @@ export const sessionMiddleware = baseORPC.middleware(({ context, next }) => {
   });
 });
 
+const guestIdSchema = z.uuidv7();
+
 export const guestMiddleware = baseORPC.middleware(({ context, next }) => {
   const guestId = getCookie(context.request.headers, cookies.guestId.name);
+  const parsedGuestId = guestIdSchema.safeParse(guestId);
 
-  if (guestId) {
+  if (guestId && parsedGuestId.success) {
     return next({
       context: {
         ...context,
@@ -28,7 +32,7 @@ export const guestMiddleware = baseORPC.middleware(({ context, next }) => {
     });
   }
 
-  const newGuestId = nanoid(32);
+  const newGuestId = uuidv7();
   setCookie(cookies.guestId.name, newGuestId, cookies.guestId.options);
 
   return next({

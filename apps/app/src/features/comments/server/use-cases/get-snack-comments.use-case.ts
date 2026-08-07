@@ -2,8 +2,8 @@ import type { CommentsRepository } from "#/features/comments/server/repositories
 
 type GetSnackRatingsInput = {
   snackItemId: string;
-  userId?: string | null;
-  guestId?: string | null;
+  authorId: string | null;
+  authorType: "user" | "guest" | null;
 };
 
 export function getSnackRatingsUseCase(
@@ -12,7 +12,7 @@ export function getSnackRatingsUseCase(
 ) {
   return repository.getRatingsForSnack({
     snackItemId: input.snackItemId,
-    userId: input.userId ?? null,
-    guestId: input.guestId ?? null,
+    authorId: input.authorId,
+    authorType: input.authorType,
   });
 }

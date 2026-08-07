@@ -7,8 +7,8 @@ type RateSnackInput = {
   snackItemId: string;
   rating: number;
   body?: string | null;
-  userId?: string | null;
-  guestId?: string | null;
+  authorId: string;
+  authorType: "user" | "guest";
 };
 
 function normalizeBody(body: string | null | undefined): string | null {
@@ -22,10 +22,6 @@ export function rateSnackUseCase(
   repository: CommentsRepository,
   db: Database,
 ) {
-  if (!input.userId && !input.guestId) {
-    throw new Error("Either userId or guestId must be provided");
-  }
-
   const ratingVo = Rating.create(input.rating);
   const body = normalizeBody(input.body);
 
@@ -35,8 +31,8 @@ export function rateSnackUseCase(
         snackItemId: input.snackItemId,
         rating: ratingVo,
         body,
-        userId: input.userId ?? null,
-        guestId: input.guestId ?? null,
+        authorId: input.authorId,
+        authorType: input.authorType,
       },
       tx,
     );
@@ -44,8 +40,8 @@ export function rateSnackUseCase(
     const ratings = await repository.getRatingsForSnack(
       {
         snackItemId: input.snackItemId,
-        userId: null,
-        guestId: input.guestId ?? null,
+        authorId: input.authorId,
+        authorType: input.authorType,
       },
       tx,
     );

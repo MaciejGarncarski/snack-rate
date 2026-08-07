@@ -9,6 +9,12 @@ import { getMainDb } from "#/infrastructure/db/db";
 import { baseProcedure } from "#/lib/orpc/procedure";
 import { rateSnackSchema, removeRatingSchema, snackRatingsSchema } from "#/schemas/comments";
 
+function resolveAuthor(context: { userId: string | null; guestId: string | null }) {
+  if (context.userId) return { authorId: context.userId, authorType: "user" as const };
+  if (context.guestId) return { authorId: context.guestId, authorType: "guest" as const };
+  throw new Error("No author identity available");
+}
+
 export const rateSnackProcedure = baseProcedure
   .input(rateSnackSchema)
   .handler(({ input, context }) => {
@@ -23,7 +29,7 @@ export const rateSnackProcedure = baseProcedure
         snackItemId: input.snackItemId,
         rating: input.rating,
         body: input.body ?? null,
-        guestId: context.guestId,
+        ...resolveAuthor(context),
       },
       commentsRepository,
       getMainDb(),
@@ -36,7 +42,7 @@ export const getRatingsForSnackProcedure = baseProcedure
     return getSnackRatingsUseCase(
       {
         snackItemId: input.snackItemId,
-        guestId: context.guestId,
+        ...resolveAuthor(context),
       },
       commentsRepository,
     );
@@ -48,7 +54,7 @@ export const removeRatingProcedure = baseProcedure
     return removeRatingUseCase(
       {
         snackItemId: input.snackItemId,
-        guestId: context.guestId,
+        ...resolveAuthor(context),
       },
       commentsRepository,
       getMainDb(),

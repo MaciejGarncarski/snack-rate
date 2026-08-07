@@ -1,3 +1,5 @@
+import { uuidv7 } from "uuidv7";
+
 import { createCommentsRepository } from "#/features/comments/server/repositories/comments.repository";
 import { rateSnackUseCase } from "#/features/comments/server/use-cases/comment-snack.use-case";
 import type { Database } from "#/infrastructure/db/db";
@@ -15,10 +17,10 @@ beforeAll(() => {
 describe("rate snack", () => {
   it("should rate a snack as guest", async () => {
     const snack = await createSnack();
-    const guestId = "guest-1";
+    const authorId = uuidv7();
 
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 4, guestId },
+      { snackItemId: snack.id, rating: 4, authorId, authorType: "guest" },
       repository,
       db,
     );
@@ -31,11 +33,15 @@ describe("rate snack", () => {
 
   it("should update an existing rating on re-rate", async () => {
     const snack = await createSnack();
-    const guestId = "guest-2";
+    const authorId = uuidv7();
 
-    await rateSnackUseCase({ snackItemId: snack.id, rating: 2, guestId }, repository, db);
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 2, authorId, authorType: "guest" },
+      repository,
+      db,
+    );
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 5, guestId },
+      { snackItemId: snack.id, rating: 5, authorId, authorType: "guest" },
       repository,
       db,
     );
@@ -49,22 +55,22 @@ describe("rate snack", () => {
     const snack = await createSnack();
 
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 1, guestId: "guest-a" },
+      { snackItemId: snack.id, rating: 1, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 2, guestId: "guest-b" },
+      { snackItemId: snack.id, rating: 2, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 3, guestId: "guest-c" },
+      { snackItemId: snack.id, rating: 3, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 4, guestId: "guest-d" },
+      { snackItemId: snack.id, rating: 4, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
@@ -83,7 +89,7 @@ describe("rate snack", () => {
     const snack = await createSnack();
 
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 3, guestId: "guest-x" },
+      { snackItemId: snack.id, rating: 3, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
@@ -94,20 +100,24 @@ describe("rate snack", () => {
     expect(Number(dbSnack?.avgRating)).toBe(3);
   });
 
-  it("should throw if neither userId nor guestId provided", async () => {
-    const snack = await createSnack();
-
-    expect(() => rateSnackUseCase({ snackItemId: snack.id, rating: 4 }, repository, db)).toThrow(
-      "Either userId or guestId must be provided",
-    );
+  it("should require authorId and authorType at type level", () => {
+    // @ts-expect-error — authorId and authorType are required params
+    const call = () => rateSnackUseCase({ snackItemId: "x", rating: 4 }, repository, db);
+    expect(call).toBeDefined();
   });
 
   it("should save optional comment body with the rating", async () => {
     const snack = await createSnack();
-    const guestId = "guest-body";
+    const authorId = uuidv7();
 
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 5, body: "  Super chrupki  ", guestId },
+      {
+        snackItemId: snack.id,
+        rating: 5,
+        body: "  Super chrupki  ",
+        authorId,
+        authorType: "guest",
+      },
       repository,
       db,
     );
@@ -117,8 +127,8 @@ describe("rate snack", () => {
 
     const ratings = await repository.getRatingsForSnack({
       snackItemId: snack.id,
-      userId: null,
-      guestId,
+      authorId,
+      authorType: "guest",
     });
 
     expect(ratings.userRating?.value).toBe(5);
@@ -127,10 +137,9 @@ describe("rate snack", () => {
 
   it("should store null body when comment text is empty", async () => {
     const snack = await createSnack();
-    const guestId = "guest-empty-body";
 
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 3, body: "   ", guestId },
+      { snackItemId: snack.id, rating: 3, body: "   ", authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
@@ -140,10 +149,9 @@ describe("rate snack", () => {
 
   it("should accept the minimum rating of 1", async () => {
     const snack = await createSnack();
-    const guestId = "guest-min";
 
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 1, guestId },
+      { snackItemId: snack.id, rating: 1, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
@@ -156,10 +164,9 @@ describe("rate snack", () => {
 
   it("should accept the maximum rating of 5", async () => {
     const snack = await createSnack();
-    const guestId = "guest-max";
 
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 5, guestId },
+      { snackItemId: snack.id, rating: 5, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
@@ -173,10 +180,18 @@ describe("rate snack", () => {
   it("should round the average rating to two decimals", async () => {
     const snack = await createSnack();
 
-    await rateSnackUseCase({ snackItemId: snack.id, rating: 1, guestId: "r1" }, repository, db);
-    await rateSnackUseCase({ snackItemId: snack.id, rating: 2, guestId: "r2" }, repository, db);
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 1, authorId: uuidv7(), authorType: "guest" },
+      repository,
+      db,
+    );
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 2, authorId: uuidv7(), authorType: "guest" },
+      repository,
+      db,
+    );
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 4, guestId: "r3" },
+      { snackItemId: snack.id, rating: 4, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
@@ -186,13 +201,21 @@ describe("rate snack", () => {
 
   it("should soft-delete the previous rating when the same guest re-rates", async () => {
     const snack = await createSnack();
-    const guestId = "guest-soft-delete";
+    const guestId = uuidv7();
 
-    await rateSnackUseCase({ snackItemId: snack.id, rating: 2, guestId }, repository, db);
-    await rateSnackUseCase({ snackItemId: snack.id, rating: 5, guestId }, repository, db);
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 2, authorId: guestId, authorType: "guest" },
+      repository,
+      db,
+    );
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 5, authorId: guestId, authorType: "guest" },
+      repository,
+      db,
+    );
 
     const rows = await db.query.snackComments.findMany({
-      where: { snackItemId: snack.id, guestId, rating: { isNotNull: true } },
+      where: { snackItemId: snack.id, authorId: guestId, rating: { isNotNull: true } },
     });
 
     const active = rows.filter((row) => row.deletedAt === null);
@@ -208,7 +231,11 @@ describe("rate snack", () => {
     const snack = await createSnack();
 
     expect(() =>
-      rateSnackUseCase({ snackItemId: snack.id, rating: 0, guestId: "guest-low" }, repository, db),
+      rateSnackUseCase(
+        { snackItemId: snack.id, rating: 0, authorId: uuidv7(), authorType: "guest" },
+        repository,
+        db,
+      ),
     ).toThrow("Rating must be an integer between 1 and 5");
   });
 
@@ -216,7 +243,11 @@ describe("rate snack", () => {
     const snack = await createSnack();
 
     expect(() =>
-      rateSnackUseCase({ snackItemId: snack.id, rating: 6, guestId: "guest-high" }, repository, db),
+      rateSnackUseCase(
+        { snackItemId: snack.id, rating: 6, authorId: uuidv7(), authorType: "guest" },
+        repository,
+        db,
+      ),
     ).toThrow("Rating must be an integer between 1 and 5");
   });
 
@@ -225,19 +256,23 @@ describe("rate snack", () => {
 
     expect(() =>
       rateSnackUseCase(
-        { snackItemId: snack.id, rating: 2.5, guestId: "guest-fraction" },
+        { snackItemId: snack.id, rating: 2.5, authorId: uuidv7(), authorType: "guest" },
         repository,
         db,
       ),
     ).toThrow("Rating must be an integer between 1 and 5");
   });
 
-  it("should throw when guestId is an empty string", async () => {
+  it("should throw when authorId is an empty string", async () => {
     const snack = await createSnack();
 
     expect(() =>
-      rateSnackUseCase({ snackItemId: snack.id, rating: 4, guestId: "" }, repository, db),
-    ).toThrow("Either userId or guestId must be provided");
+      rateSnackUseCase(
+        { snackItemId: snack.id, rating: 4, authorId: "", authorType: "guest" },
+        repository,
+        db,
+      ),
+    ).toThrow("Either authorId with authorType must be provided");
   });
 
   it("should reject when the snack does not exist", async () => {
@@ -245,7 +280,7 @@ describe("rate snack", () => {
 
     await expect(
       rateSnackUseCase(
-        { snackItemId: missingSnackId, rating: 4, guestId: "guest-missing" },
+        { snackItemId: missingSnackId, rating: 4, authorId: uuidv7(), authorType: "guest" },
         repository,
         db,
       ),

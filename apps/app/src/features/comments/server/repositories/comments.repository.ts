@@ -27,8 +27,8 @@ export function createCommentsRepository({ db }: CommentsRepositoryDeps) {
 
     getRating: (data: {
       snackItemId: string;
-      userId: string | null;
-      guestId: string | null;
+      authorId: string;
+      authorType: "user" | "guest";
       tx?: DbTransaction;
     }): Promise<number | null> => {
       return getRatingFn(db, data);
@@ -41,8 +41,8 @@ export function createCommentsRepository({ db }: CommentsRepositoryDeps) {
     removeRating: (
       data: {
         snackItemId: string;
-        userId: string | null;
-        guestId: string | null;
+        authorId: string;
+        authorType: "user" | "guest";
       },
       tx?: DbTransaction,
     ): Promise<void> => {
@@ -52,8 +52,8 @@ export function createCommentsRepository({ db }: CommentsRepositoryDeps) {
     getRatingsForSnack: (
       data: {
         snackItemId: string;
-        userId: string | null;
-        guestId: string | null;
+        authorId: string | null;
+        authorType: "user" | "guest" | null;
       },
       tx?: DbTransaction,
     ): Promise<SnackRatingsResult> => {

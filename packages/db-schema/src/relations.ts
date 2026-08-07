@@ -4,7 +4,6 @@ import * as schema from "./schema";
 
 export const relations = defineRelations(schema, (r) => ({
   users: {
-    comments: r.many.snackComments({ from: r.users.id, to: r.snackComments.userId }),
     commentReactions: r.many.commentReactions({ from: r.users.id, to: r.commentReactions.userId }),
     commentReports: r.many.commentReports({ from: r.users.id, to: r.commentReports.reporterId }),
     bookmarks: r.many.bookmarks({ from: r.users.id, to: r.bookmarks.userId }),
@@ -27,7 +26,6 @@ export const relations = defineRelations(schema, (r) => ({
 
   snackComments: {
     snackItem: r.one.snackItems({ from: r.snackComments.snackItemId, to: r.snackItems.id }),
-    user: r.one.users({ from: r.snackComments.userId, to: r.users.id }),
     parent: r.one.snackComments({
       from: r.snackComments.parentCommentId,
       to: r.snackComments.id,

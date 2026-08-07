@@ -4,21 +4,21 @@ import { and, eq, isNotNull, isNull, sql } from "drizzle-orm";
 import { Rating } from "#/features/shared/value-objects/rating.vo";
 import type { Database, DbTransaction } from "#/infrastructure/db/db";
 
-import { whereUserOrGuest, whereUserOrGuestSql } from "./identity";
+import { whereAuthor, whereAuthorSql } from "./identity";
 
 export type UpsertRatingData = {
   snackItemId: string;
   rating: Rating;
   body: string | null;
-  userId: string | null;
-  guestId: string | null;
+  authorId: string;
+  authorType: "user" | "guest";
 };
 
 export type RatingResult = {
   id: string;
   snackItemId: string;
-  userId: string | null;
-  guestId: string | null;
+  authorId: string;
+  authorType: "user" | "guest";
   rating: number | null;
   body: string | null;
   createdAt: Date;
@@ -44,12 +44,8 @@ export async function upsertRating(
 ): Promise<RatingResult> {
   const client = tx ?? db;
 
-  if (!data.userId && !data.guestId) {
-    throw new Error("Either userId or guestId must be provided");
-  }
-
   const existing = await client.query.snackComments.findFirst({
-    where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
+    where: whereAuthor(data.snackItemId, data.authorId, data.authorType),
     columns: { id: true },
   });
 
@@ -66,32 +62,35 @@ export async function upsertRating(
     .insert(snackComments)
     .values({
       snackItemId: data.snackItemId,
-      userId: data.userId,
-      guestId: data.guestId,
+      authorId: data.authorId,
+      authorType: data.authorType,
       rating: data.rating.getValue(),
       updatedAt: isUpdate ? new Date() : undefined,
       body: data.body,
     })
     .returning();
 
-  return { ...created, rating: created.rating, body: created.body };
+  return {
+    ...created,
+    rating: created.rating,
+    body: created.body,
+    authorType: created.authorType as "user" | "guest",
+  };
 }
 
 export async function getRating(
   db: Database,
   data: {
     snackItemId: string;
-    userId: string | null;
-    guestId: string | null;
+    authorId: string;
+    authorType: "user" | "guest";
     tx?: DbTransaction;
   },
 ): Promise<number | null> {
   const client = data.tx ?? db;
 
-  if (!data.userId && !data.guestId) return null;
-
   const result = await client.query.snackComments.findFirst({
-    where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
+    where: whereAuthor(data.snackItemId, data.authorId, data.authorType),
     columns: { rating: true },
   });
 
@@ -130,29 +129,25 @@ export async function removeRating(
   db: Database,
   data: {
     snackItemId: string;
-    userId: string | null;
-    guestId: string | null;
+    authorId: string;
+    authorType: "user" | "guest";
   },
   tx?: DbTransaction,
 ): Promise<void> {
   const client = tx ?? db;
 
-  if (!data.userId && !data.guestId) {
-    throw new Error("Either userId or guestId must be provided");
-  }
-
   await client
     .update(snackComments)
     .set({ deletedAt: new Date() })
-    .where(whereUserOrGuestSql(data.snackItemId, data.userId, data.guestId));
+    .where(whereAuthorSql(data.snackItemId, data.authorId, data.authorType));
 }
 
 export async function getRatingsForSnack(
   db: Database,
   data: {
     snackItemId: string;
-    userId: string | null;
-    guestId: string | null;
+    authorId: string | null;
+    authorType: "user" | "guest" | null;
   },
   tx?: DbTransaction,
 ): Promise<SnackRatingsResult> {
@@ -172,9 +167,9 @@ export async function getRatingsForSnack(
           isNull(snackComments.deletedAt),
         ),
       ),
-    data.userId || data.guestId
+    data.authorId && data.authorType
       ? client.query.snackComments.findFirst({
-          where: whereUserOrGuest(data.snackItemId, data.userId, data.guestId),
+          where: whereAuthor(data.snackItemId, data.authorId, data.authorType),
           columns: { rating: true, body: true, updatedAt: true, createdAt: true },
         })
       : Promise.resolve(null),

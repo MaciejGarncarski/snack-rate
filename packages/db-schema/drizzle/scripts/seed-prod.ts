@@ -37,8 +37,7 @@ async function main() {
     await db.insert(schema.users).values({
       email: demoEmail,
       passwordHash,
-      firstName: "Demo",
-      lastName: "User",
+      username: "Demo",
       role: "admin",
       status: "active",
       emailVerifiedAt: new Date(),

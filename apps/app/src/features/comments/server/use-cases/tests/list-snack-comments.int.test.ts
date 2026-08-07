@@ -1,6 +1,7 @@
 import { snackComments } from "@snack-rate/db-schema/schema";
 import { eq } from "drizzle-orm";
 import type { InferInsertModel } from "drizzle-orm";
+import { uuidv7 } from "uuidv7";
 
 import { createCommentsRepository } from "#/features/comments/server/repositories/comments.repository";
 import { listSnackCommentsUseCase } from "#/features/comments/server/use-cases/list-snack-comments.use-case";
@@ -25,6 +26,8 @@ async function insertComment(
     .values({
       snackItemId,
       rating: 4,
+      authorId: uuidv7(),
+      authorType: "guest",
       ...overrides,
     })
     .returning();
@@ -43,15 +46,20 @@ describe("list snack comments", () => {
 
   it("should return comments with author name from user", async () => {
     const snack = await createSnack();
-    const user = await createUser({ firstName: "Anna", lastName: "Nowak" });
+    const user = await createUser({ username: "Anna" });
 
-    await insertComment(snack.id, { userId: user.id, body: "Super produkt", rating: 5 });
+    await insertComment(snack.id, {
+      authorId: user.id,
+      authorType: "user",
+      body: "Super produkt",
+      rating: 5,
+    });
 
     const result = await listSnackCommentsUseCase({ snackItemId: snack.id, limit: 10 }, repository);
 
     expect(result.items).toHaveLength(1);
     expect(result.items[0]).toMatchObject({
-      authorName: "Anna Nowak",
+      authorName: "Anna",
       rating: 5,
       body: "Super produkt",
     });
@@ -61,7 +69,12 @@ describe("list snack comments", () => {
   it("should display Gość for guest comments", async () => {
     const snack = await createSnack();
 
-    await insertComment(snack.id, { guestId: "guest-1", body: "Anonimowa recenzja", rating: 3 });
+    await insertComment(snack.id, {
+      authorId: uuidv7(),
+      authorType: "guest",
+      body: "Anonimowa recenzja",
+      rating: 3,
+    });
 
     const result = await listSnackCommentsUseCase({ snackItemId: snack.id, limit: 10 }, repository);
 
@@ -72,12 +85,14 @@ describe("list snack comments", () => {
     const snack = await createSnack();
 
     const older = await insertComment(snack.id, {
-      guestId: "g1",
+      authorId: uuidv7(),
+      authorType: "guest",
       rating: 3,
       createdAt: new Date("2026-01-01T00:00:00.000Z"),
     });
     const newer = await insertComment(snack.id, {
-      guestId: "g2",
+      authorId: uuidv7(),
+      authorType: "guest",
       rating: 5,
       createdAt: new Date("2026-01-02T00:00:00.000Z"),
     });
@@ -90,21 +105,24 @@ describe("list snack comments", () => {
   it("should group replies under their parent comment and exclude rating-less comments from top level", async () => {
     const snack = await createSnack();
     const author = await createUser();
-    const replyAuthor = await createUser({ firstName: "Ewa", lastName: "Kamińska" });
+    const replyAuthor = await createUser({ username: "Ewa" });
 
     const comment = await insertComment(snack.id, {
-      userId: author.id,
+      authorId: author.id,
+      authorType: "user",
       body: "Recenzja",
       rating: 4,
     });
     await insertComment(snack.id, {
-      guestId: "guest-plain",
+      authorId: uuidv7(),
+      authorType: "guest",
       body: "Zwykły komentarz",
       rating: null,
     });
     await insertComment(snack.id, {
       parentCommentId: comment.id,
-      userId: replyAuthor.id,
+      authorId: replyAuthor.id,
+      authorType: "user",
       body: "Odpowiedź",
       rating: null,
     });
@@ -116,7 +134,7 @@ describe("list snack comments", () => {
     expect(result.items[0].repliesCount).toBe(1);
     expect(result.items[0].replies).toHaveLength(1);
     expect(result.items[0].replies[0]).toMatchObject({
-      authorName: "Ewa Kamińska",
+      authorName: "Ewa",
       body: "Odpowiedź",
     });
   });
@@ -124,10 +142,16 @@ describe("list snack comments", () => {
   it("should exclude soft-deleted comments and replies", async () => {
     const snack = await createSnack();
 
-    const comment = await insertComment(snack.id, { guestId: "g1", body: "Usunięta", rating: 5 });
+    const comment = await insertComment(snack.id, {
+      authorId: uuidv7(),
+      authorType: "guest",
+      body: "Usunięta",
+      rating: 5,
+    });
     const reply = await insertComment(snack.id, {
       parentCommentId: comment.id,
-      guestId: "g2",
+      authorId: uuidv7(),
+      authorType: "guest",
       body: "Usunięta odpowiedź",
       rating: null,
     });
@@ -139,7 +163,12 @@ describe("list snack comments", () => {
       .update(snackComments)
       .set({ deletedAt: new Date() })
       .where(eq(snackComments.id, reply.id));
-    await insertComment(snack.id, { guestId: "g3", body: "Aktywna", rating: 3 });
+    await insertComment(snack.id, {
+      authorId: uuidv7(),
+      authorType: "guest",
+      body: "Aktywna",
+      rating: 3,
+    });
 
     const result = await listSnackCommentsUseCase({ snackItemId: snack.id, limit: 10 }, repository);
 
@@ -153,13 +182,15 @@ describe("list snack comments", () => {
     const createdAt = new Date("2026-01-01T10:00:00.000Z");
 
     const untouched = await insertComment(snack.id, {
-      guestId: "g1",
+      authorId: uuidv7(),
+      authorType: "guest",
       rating: 4,
       createdAt,
       updatedAt: createdAt,
     });
     const edited = await insertComment(snack.id, {
-      guestId: "g2",
+      authorId: uuidv7(),
+      authorType: "guest",
       rating: 5,
       createdAt,
       updatedAt: new Date("2026-01-02T10:00:00.000Z"),
@@ -178,7 +209,8 @@ describe("list snack comments", () => {
     const comments = await Promise.all(
       Array.from({ length: 5 }, (_, index) =>
         insertComment(snack.id, {
-          guestId: `guest-${index}`,
+          authorId: uuidv7(),
+          authorType: "guest",
           rating: (index % 5) + 1,
           body: `Recenzja ${index}`,
           createdAt: new Date(2026, 0, 1 + index, 12, 0, 0),
@@ -216,7 +248,7 @@ describe("list snack comments", () => {
   it("should return null nextCursor when all comments fit in the page", async () => {
     const snack = await createSnack();
 
-    await insertComment(snack.id, { guestId: "g1", rating: 4 });
+    await insertComment(snack.id, { authorId: uuidv7(), authorType: "guest", rating: 4 });
 
     const result = await listSnackCommentsUseCase({ snackItemId: snack.id, limit: 10 }, repository);
 

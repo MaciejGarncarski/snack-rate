@@ -9,9 +9,8 @@ export type DecodedCursor = {
   id: string;
 };
 
-function resolveAuthorName(firstName: string | null, lastName: string | null): string {
-  const name = [firstName, lastName].filter(Boolean).join(" ").trim();
-  return name || "Gość";
+function resolveAuthorName(username: string | null): string {
+  return username?.trim() || "Gość";
 }
 
 export async function queryCommentsForSnack(
@@ -41,11 +40,13 @@ export async function queryCommentsForSnack(
       body: snackComments.body,
       createdAt: snackComments.createdAt,
       updatedAt: snackComments.updatedAt,
-      firstName: users.firstName,
-      lastName: users.lastName,
+      username: users.username,
     })
     .from(snackComments)
-    .leftJoin(users, eq(snackComments.userId, users.id))
+    .leftJoin(
+      users,
+      and(eq(snackComments.authorType, "user"), eq(snackComments.authorId, users.id)),
+    )
     .where(and(...conditions))
     .orderBy(desc(snackComments.createdAt), desc(snackComments.id))
     .limit(data.limit);
@@ -60,11 +61,13 @@ export async function queryCommentsForSnack(
             parentCommentId: snackComments.parentCommentId,
             body: snackComments.body,
             createdAt: snackComments.createdAt,
-            firstName: users.firstName,
-            lastName: users.lastName,
+            username: users.username,
           })
           .from(snackComments)
-          .leftJoin(users, eq(snackComments.userId, users.id))
+          .leftJoin(
+            users,
+            and(eq(snackComments.authorType, "user"), eq(snackComments.authorId, users.id)),
+          )
           .where(
             and(
               inArray(snackComments.parentCommentId, commentIds),
@@ -82,7 +85,7 @@ export async function queryCommentsForSnack(
     const list = repliesByComment.get(reply.parentCommentId) ?? [];
     list.push({
       id: reply.id,
-      authorName: resolveAuthorName(reply.firstName, reply.lastName),
+      authorName: resolveAuthorName(reply.username),
       body: reply.body,
       createdAt: reply.createdAt,
     });
@@ -95,7 +98,7 @@ export async function queryCommentsForSnack(
       id: row.id,
       rating: row.rating ?? 0,
       body: row.body,
-      authorName: resolveAuthorName(row.firstName, row.lastName),
+      authorName: resolveAuthorName(row.username),
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       isEdited: row.updatedAt.getTime() > row.createdAt.getTime(),

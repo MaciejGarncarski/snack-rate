@@ -81,10 +81,7 @@ const UNIQUE_CONSTRAINT_MAP: Record<string, { message: string; field?: string }>
   },
 
   // comments
-  snack_comments_user_snack_unique_idx: {
-    message: "Już oceniłeś ten produkt.",
-  },
-  snack_comments_guest_snack_unique_idx: {
+  snack_comments_author_snack_unique_idx: {
     message: "Już oceniłeś ten produkt.",
   },
 
