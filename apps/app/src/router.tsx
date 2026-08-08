@@ -14,6 +14,7 @@ export function getRouter() {
     context: { queryClient },
     defaultPreload: "intent",
     scrollRestoration: true,
+    scrollRestorationBehavior: "smooth",
     defaultNotFoundComponent: () => <DefaultNotFound />,
     defaultErrorComponent: DefaultErrorComponent,
     defaultPendingComponent: () => <div>Wczytywanie...</div>,

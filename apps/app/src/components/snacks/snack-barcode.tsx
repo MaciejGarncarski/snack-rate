@@ -20,7 +20,7 @@ const barcodeContainerVariants = tv({
   base: "w-fit",
   variants: {
     variant: {
-      default: "",
+      default: "border border-border/20 rounded-md",
       padding: "flex justify-center bg-secondary border border-border rounded-2xl",
     },
     size: {
@@ -71,7 +71,7 @@ function BarcodeContent({ barcode, size, variant }: Props) {
   return (
     <div className={barcodeContainerVariants({ variant, size })}>
       {barcode ? (
-        <svg ref={svgRef} className="rounded-2xl shadow w-fit" />
+        <svg ref={svgRef} className="rounded-md shadow w-fit" />
       ) : (
         <div
           className={cn(
@@ -99,7 +99,7 @@ function SnackBarcodeSkeleton({ size = "md", variant = "default" }: Omit<Props, 
         className={cn(
           "flex h-full gap-2 w-full items-center text-center justify-center rounded-2xl p-2 text-muted-foreground",
           {
-            "h-19 w-37.5 text-sm": size === "sm",
+            "h-18.5 w-37.5 text-sm": size === "sm",
             "h-30 w-51": size === "md",
             "h-40.5 w-72": size === "lg",
             "bg-muted": variant === "default",

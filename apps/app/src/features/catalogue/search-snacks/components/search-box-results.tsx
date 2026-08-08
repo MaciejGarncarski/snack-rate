@@ -23,36 +23,42 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }:
         ref={listRef}
         className="flex flex-col gap-1 md:gap-2 p-1"
       >
-        {items.map((item, index) => (
-          <li key={item.slug}>
-            <Link
-              to="/produkt/$slug"
-              params={{ slug: item.slug }}
-              className={cn(
-                "relative flex w-full items-center gap-2.5 rounded-xl",
-                "py-2 pr-3 pl-3",
-                "text-sm font-medium",
-                "outline-none transition-colors",
-                "hover:bg-foreground/10 hover:text-accent-foreground",
-                "focus:bg-foreground/10 focus:text-accent-foreground",
-                index === selectedIndex && "bg-foreground/10 text-accent-foreground",
-              )}
-              {...(index === 0 && { "data-first": "" })}
-              onClick={onLinkClick}
-            >
-              <Image
-                alt=""
-                src={item.thumbnailUrl ?? item.images[0]?.url}
-                containerClassName="w-9 aspect-4/5 shrink-0 overflow-hidden rounded-md bg-muted md:w-10"
-                className="h-full w-full object-cover"
-              />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{item.name}</p>
-                <SnackRating rating={item.avgRating} size="xs" />
-              </div>
-            </Link>
-          </li>
-        ))}
+        {items.map((item, index) => {
+          const itemPrimaryImgThumb =
+            item.images.find((img) => img.type === "thumbnail" && img.sortOrder === 0)?.url ??
+            item.images[0]?.url;
+
+          return (
+            <li key={item.slug}>
+              <Link
+                to="/produkt/$slug"
+                params={{ slug: item.slug }}
+                className={cn(
+                  "relative flex w-full items-center gap-2.5 rounded-xl",
+                  "py-2 pr-3 pl-3",
+                  "text-sm font-medium",
+                  "outline-none transition-colors",
+                  "hover:bg-foreground/10 hover:text-accent-foreground",
+                  "focus:bg-foreground/10 focus:text-accent-foreground",
+                  index === selectedIndex && "bg-foreground/10 text-accent-foreground",
+                )}
+                {...(index === 0 && { "data-first": "" })}
+                onClick={onLinkClick}
+              >
+                <Image
+                  alt=""
+                  src={itemPrimaryImgThumb}
+                  containerClassName="w-9 aspect-4/5 shrink-0 overflow-hidden rounded-md bg-muted md:w-10"
+                  className="h-full w-full object-cover"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">{item.name}</p>
+                  <SnackRating rating={item.avgRating} size="xs" />
+                </div>
+              </Link>
+            </li>
+          );
+        })}
       </motion.ul>
     </ScrollArea>
   );

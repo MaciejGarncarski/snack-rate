@@ -21,7 +21,6 @@ export type SnackItem = {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
-  thumbnailUrl: string | null;
   images: {
     id: string;
     url: string;
@@ -64,6 +63,7 @@ type DbSnackItem = {
     updatedAt: Date;
     deletedAt: Date | null;
   }[];
+
   type: {
     id: string;
     name: string;
@@ -87,9 +87,6 @@ async function toSnackItem(
     ),
   );
 
-  const thumbnailImage = row.images.find((img) => img.type === "thumbnail");
-  const thumbnailUrl = thumbnailImage ? await getFileUrl(thumbnailImage.storageKey) : null;
-
   const status = Status.create(row.status).getValue();
 
   return {
@@ -104,7 +101,6 @@ async function toSnackItem(
     updatedAt: row.updatedAt,
     status,
     deletedAt: row.deletedAt,
-    thumbnailUrl,
     images,
     type: row.type,
   };

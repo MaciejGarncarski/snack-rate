@@ -163,6 +163,7 @@ function RouteComponent() {
   const ratings = useSuspenseQuery(snackRatingsQueryOptions(data.id)).data;
 
   const imageUrls = data.images.filter((img) => img.type === "default").map((img) => img.url);
+  const thumbnailUrls = data.images.filter((img) => img.type === "thumbnail").map((img) => img.url);
 
   const isLongDescription = data.description && data.description.length > NORMAL_DESCRIPTION_LENGTH;
   const isNormalDescription =
@@ -173,13 +174,13 @@ function RouteComponent() {
     data.description && data.description.length <= SMALL_DESCRIPTION_LENGTH;
 
   return (
-    <main className="mx-auto w-full max-w-6xl pb-10 flex flex-col gap-10">
-      <div className="flex gap-8 flex-col lg:flex-row lg:gap-20">
-        <div className="mx-auto w-full max-w-sm lg:sticky lg:top-8">
-          <SnackImageSlider images={imageUrls} slug={slug} />
+    <main className="mx-auto w-full pb-10 flex flex-col gap-10">
+      <div className="flex gap-8 flex-col lg:flex-row lg:gap-15">
+        <div className="mx-auto w-full max-w-md lg:sticky lg:top-8 shrink-0">
+          <SnackImageSlider images={imageUrls} thumbnailUrls={thumbnailUrls} slug={slug} />
         </div>
 
-        <div className="pt-1 flex flex-col gap-6 lg:pt-2 flex-1">
+        <div className="pt-1 shrink flex flex-col gap-6 lg:pt-2 flex-1">
           <div className="flex flex-col gap-4">
             <h1 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
               {data.name}
@@ -187,7 +188,7 @@ function RouteComponent() {
 
             <p
               className={cn(
-                "max-w-xl text-pretty leading-relaxed text-muted-foreground line-clamp-16",
+                "max-w-xl text-pretty break-all leading-relaxed text-muted-foreground line-clamp-16",
                 isLongDescription && "sm:text-base",
                 isNormalDescription && "sm:text-lg",
                 isShortDescription && "sm:text-xl",
