@@ -1,6 +1,6 @@
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { ImageOffIcon } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, type Variants } from "motion/react";
 import { useState } from "react";
 
 import { Image } from "#/components/image/image";
@@ -11,10 +11,38 @@ import { cn } from "#/lib/utils";
 
 type Direction = 1 | -1;
 
-const variants = {
-  enter: (direction: Direction) => ({ x: direction > 0 ? 100 : -100, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (direction: Direction) => ({ x: direction > 0 ? -100 : 100, opacity: 0 }),
+const X_OFFSET = 300;
+
+const variants: Variants = {
+  enter: (direction: Direction) => ({
+    x: direction > 0 ? X_OFFSET : -X_OFFSET,
+    opacity: 0,
+    scale: 0.96,
+    transition: {
+      duration: 0.25,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.35,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+
+  exit: (direction: Direction) => ({
+    x: direction > 0 ? -X_OFFSET : X_OFFSET,
+    opacity: 0,
+    scale: 1.04,
+    transition: {
+      duration: 0.1,
+      ease: [0.4, 0, 1, 1],
+    },
+  }),
 };
 
 type Props = {
@@ -52,6 +80,7 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
               initial="enter"
               animate="center"
               exit="exit"
+              key={`snack-image-${index}`}
               transition={{ duration: 0.15, ease: "easeInOut" }}
               className="absolute inset-0"
             >

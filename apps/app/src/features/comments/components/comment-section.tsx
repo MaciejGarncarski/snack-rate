@@ -37,7 +37,7 @@ export function CommentSection({ snackItemId, ratingsCount }: Props) {
           <span className="text-muted-foreground">({ratingsCount ?? 0})</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="max-w-3xl w-full">
+      <CardContent className=" w-full">
         <ItemGroup>
           <UserComment />
           <ItemSeparator />

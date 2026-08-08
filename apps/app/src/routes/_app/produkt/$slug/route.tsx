@@ -7,7 +7,7 @@ import { SnackBarcode } from "#/components/snacks/snack-barcode";
 import SnackImageSlider from "#/components/snacks/snack-image-slider";
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { Badge } from "#/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "#/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "#/components/ui/card";
 import {
   Empty,
   EmptyDescription,
@@ -83,7 +83,7 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
             </div>
           </div>
 
-          <div className="pt-1 flex flex-col gap-6 lg:pt-2 flex-1">
+          <div className="pt-1 flex flex-col gap-6 flex-1">
             <div className="flex flex-col gap-4">
               <Skeleton className="h-10 w-3/4" />
               <div className="flex flex-col gap-2">
@@ -180,23 +180,28 @@ function RouteComponent() {
           <SnackImageSlider images={imageUrls} thumbnailUrls={thumbnailUrls} slug={slug} />
         </div>
 
-        <div className="pt-1 shrink flex flex-col gap-6 lg:pt-2 flex-1">
-          <div className="flex flex-col gap-4">
-            <h1 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
-              {data.name}
-            </h1>
-
-            <p
-              className={cn(
-                "max-w-xl text-pretty break-all leading-relaxed text-muted-foreground line-clamp-16",
-                isLongDescription && "sm:text-base",
-                isNormalDescription && "sm:text-lg",
-                isShortDescription && "sm:text-xl",
-              )}
-            >
-              {data.description || "Ten produkt nie ma jeszcze opisu."}
-            </p>
-          </div>
+        <div className="pt-1 grow shrink flex flex-col gap-6">
+          <Card className="grow">
+            <CardHeader>
+              <CardTitle>
+                <h1 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
+                  {data.name}
+                </h1>
+              </CardTitle>
+              <CardDescription>
+                <p
+                  className={cn(
+                    "max-w-xl text-pretty break-all leading-relaxed text-muted-foreground line-clamp-16",
+                    isLongDescription && "sm:text-base",
+                    isNormalDescription && "sm:text-lg",
+                    isShortDescription && "sm:text-xl",
+                  )}
+                >
+                  {data.description || "Ten produkt nie ma jeszcze opisu."}
+                </p>
+              </CardDescription>
+            </CardHeader>
+          </Card>
 
           <Card className="mt-auto [--card-spacing:--spacing(4)]">
             <CardHeader>
@@ -209,7 +214,10 @@ function RouteComponent() {
                     <ItemTitle>Rodzaj</ItemTitle>
                   </ItemContent>
                   <ItemActions>
-                    <Badge className="text-base rounded-full h-6 px-3 py-1 font-semibold">
+                    <Badge
+                      variant={"outline"}
+                      className="text-base bg-primary/20 border-primary/30 rounded-full h-7 px-3 py-1 font-semibold"
+                    >
                       {data.type.name}
                     </Badge>
                   </ItemActions>

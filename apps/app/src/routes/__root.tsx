@@ -3,6 +3,7 @@ import { hotkeysDevtoolsPlugin } from "@tanstack/react-hotkeys-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { MotionConfig } from "motion/react";
 
 import { Toaster } from "#/components/ui/sonner";
 import { ThemeProvider } from "#/components/ui/theme-provider";
@@ -76,7 +77,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <MotionConfig reducedMotion="user">{children}</MotionConfig>
+        </ThemeProvider>
         <Toaster />
         <TanStackDevtools
           config={{
