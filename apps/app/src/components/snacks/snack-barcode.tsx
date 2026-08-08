@@ -75,7 +75,7 @@ function BarcodeContent({ barcode, size, variant }: Props) {
       ) : (
         <div
           className={cn(
-            "flex h-full gap-2 w-full items-center text-center justify-center rounded-2xl p-2 text-muted-foreground",
+            "flex h-full gap-2 w-full items-center text-center justify-center rounded-md p-2 text-muted-foreground",
             {
               "h-19 w-37.5 text-sm": size === "sm",
               "h-30 w-51": size === "md",

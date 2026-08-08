@@ -15,10 +15,10 @@ import { Route } from "#/routes/_app/produkt/$slug/route";
 export function UserComment() {
   const { slug } = Route.useParams();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const { data } = useSuspenseQuery(getSnackBySlugQueryOptions(slug));
-  const { userRating } = useSuspenseQuery(snackRatingsQueryOptions(data.id)).data;
+  const { data: snack } = useSuspenseQuery(getSnackBySlugQueryOptions(slug));
+  const { userRating } = useSuspenseQuery(snackRatingsQueryOptions(snack.id)).data;
   const rateSnack = useCommentSnack();
-  const removeRating = useRemoveComment({ snackItemId: data.id, slug });
+  const removeRating = useRemoveComment({ snackItemId: snack.id, slug });
 
   if (isFormOpen) {
     return (
@@ -30,7 +30,7 @@ export function UserComment() {
           <UserCommentForm
             initialRating={userRating?.value ?? 0}
             initialBody={userRating?.body ?? null}
-            snackItemId={data.id}
+            snackItemId={snack.id}
             isPending={rateSnack.isPending}
             onCancel={() => setIsFormOpen(false)}
             onRated={() => setIsFormOpen(false)}
@@ -43,14 +43,12 @@ export function UserComment() {
   if (!userRating) {
     return (
       <Item variant="muted">
-        <ItemContent>
-          <div className="flex flex-row items-center gap-4">
-            <ItemTitle>Brak oceny.</ItemTitle>
-            <Button type="button" variant="default" size="sm" onClick={() => setIsFormOpen(true)}>
-              <StarIcon />
-              Oceń produkt
-            </Button>
-          </div>
+        <ItemContent className="flex flex-row items-center gap-4 min-h-14">
+          <ItemTitle>Ten produkt jeszcze nie posiada Twojej oceny.</ItemTitle>
+          <Button type="button" variant="default" size="sm" onClick={() => setIsFormOpen(true)}>
+            <StarIcon />
+            Oceń produkt
+          </Button>
         </ItemContent>
       </Item>
     );
@@ -78,7 +76,7 @@ export function UserComment() {
           userRating={userRating.value}
           userBody={userRating?.body ?? null}
           onEdit={() => setIsFormOpen(true)}
-          onRemove={() => removeRating.mutate({ snackItemId: data.id })}
+          onRemove={() => removeRating.mutate({ snackItemId: snack.id })}
         />
       </ItemContent>
     </Item>
