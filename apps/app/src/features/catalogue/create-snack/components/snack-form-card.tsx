@@ -12,7 +12,7 @@ export function SnackFormCard({ children, description, step, title }: Props) {
     <Card className="gap-0 py-0">
       <CardHeader className="gap-0 border-b bg-accent border-border/70 px-5 py-5 sm:px-7 sm:py-6">
         <div className="space-y-1">
-          <CardTitle className="tracking-tight bg-primary/20 ring ring-primary/30 w-fit px-3 py-0.5 rounded-full">
+          <CardTitle className="tracking-tight bg-primary/20 border border-primary/20 w-fit px-3 py-0 rounded-full">
             {step}. {title}
           </CardTitle>
           <CardDescription className="max-w-lg leading-relaxed">{description}</CardDescription>

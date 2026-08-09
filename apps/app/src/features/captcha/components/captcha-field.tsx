@@ -65,7 +65,7 @@ export function CaptchaField({
         />
 
         <div
-          className="relative aspect-200/64 w-26 md:w-32 shrink-0  overflow-hidden rounded-xl border bg-muted/40"
+          className="relative aspect-200/64 w-26 md:w-32 shrink-0 overflow-hidden rounded-lg border bg-gray-200"
           aria-live="polite"
         >
           <AnimatePresence mode="wait" initial={false}>

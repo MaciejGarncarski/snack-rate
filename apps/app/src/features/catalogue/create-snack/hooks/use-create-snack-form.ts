@@ -22,7 +22,6 @@ export const useCreateSnackForm = () => {
   const form = useForm({
     defaultValues,
     validators: {
-      onChange: createSnackFormSchema,
       onSubmit: createSnackFormSchema,
     },
     onSubmit: async ({ value, formApi }) => {

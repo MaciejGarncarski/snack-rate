@@ -1,4 +1,4 @@
-import { CheckIcon, ScanBarcodeIcon } from "lucide-react";
+import { ArrowDownIcon, CheckIcon, ScanBarcodeIcon } from "lucide-react";
 import { useState } from "react";
 
 import { BarcodeScannerDialog } from "#/components/barcode-scanner-dialog";
@@ -21,6 +21,7 @@ import { CaptchaField } from "#/features/captcha/components/captcha-field";
 import { ImagePicker } from "#/features/catalogue/create-snack/components/image-picker";
 import { SnackFormCard } from "#/features/catalogue/create-snack/components/snack-form-card";
 import { useCreateSnackForm } from "#/features/catalogue/create-snack/hooks/use-create-snack-form";
+import { extractFormError } from "#/lib/form-error-message";
 
 type SnackType = {
   name: string;
@@ -36,41 +37,19 @@ type Props = {
   types: SnackType[];
 };
 
-function getErrorMessage(errors: unknown[]): string {
-  return errors
-    .map((error) => {
-      if (typeof error === "string") {
-        return error;
-      }
-
-      if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error &&
-        typeof error.message === "string"
-      ) {
-        return error.message;
-      }
-
-      return String(error);
-    })
-    .join(", ");
-}
-
 export function CreateSnackForm({ types }: Props) {
   const form = useCreateSnackForm();
   const typesFormMapped = types.map((t): SnackTypeFormatted => ({ value: t.slug, label: t.name }));
   const [isBarcodeScannerOpen, setIsBarcodeScannerOpen] = useState(false);
 
+  const submitForm = (formEvent: React.FormEvent<HTMLFormElement>) => {
+    formEvent.preventDefault();
+    formEvent.stopPropagation();
+    form.handleSubmit();
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        form.handleSubmit();
-      }}
-      className="flex w-full flex-col gap-6 md:gap-12"
-    >
+    <form onSubmit={submitForm} className="flex w-full flex-col gap-4 md:gap-4">
       <SnackFormCard
         step="1"
         title="O produkcie"
@@ -82,7 +61,9 @@ export function CreateSnackForm({ types }: Props) {
 
             return (
               <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor={field.name}>Rodzaj</FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  Rodzaj<span className="not-sr-only text-primary font-bold">*</span>
+                </FieldLabel>
                 <Combobox
                   selectionMode="single"
                   isRequired
@@ -119,7 +100,7 @@ export function CreateSnackForm({ types }: Props) {
                     </ComboboxList>
                   </ComboboxContent>
                 </Combobox>
-                <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
+                <FieldError>{extractFormError(field.state.meta.errors)}</FieldError>
               </Field>
             );
           }}
@@ -131,7 +112,9 @@ export function CreateSnackForm({ types }: Props) {
 
             return (
               <Field data-invalid={isInvalid}>
-                <FieldLabel htmlFor={field.name}>Nazwa</FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  Nazwa<span className="not-sr-only text-primary font-bold">*</span>
+                </FieldLabel>
                 <Input
                   placeholder="np. Coca-Cola Zero Sugar"
                   value={field.state.value}
@@ -142,7 +125,7 @@ export function CreateSnackForm({ types }: Props) {
                   onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
                 />
-                <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
+                <FieldError>{extractFormError(field.state.meta.errors)}</FieldError>
               </Field>
             );
           }}
@@ -165,12 +148,16 @@ export function CreateSnackForm({ types }: Props) {
                   onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
                 />
-                <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
+                <FieldError>{extractFormError(field.state.meta.errors)}</FieldError>
               </Field>
             );
           }}
         </form.Field>
       </SnackFormCard>
+
+      <div className="flex items-center justify-center text-muted-foreground">
+        <ArrowDownIcon />
+      </div>
 
       <SnackFormCard
         step="2"
@@ -190,12 +177,16 @@ export function CreateSnackForm({ types }: Props) {
                 <FieldDescription>
                   Pierwsze zdjęcie będzie głównym zdjęciem produktu.
                 </FieldDescription>
-                <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
+                <FieldError>{extractFormError(field.state.meta.errors)}</FieldError>
               </Field>
             );
           }}
         </form.Field>
       </SnackFormCard>
+
+      <div className="flex items-center justify-center text-muted-foreground">
+        <ArrowDownIcon />
+      </div>
 
       <SnackFormCard
         step="3"
@@ -239,7 +230,7 @@ export function CreateSnackForm({ types }: Props) {
                     </Tooltip>
                   </TooltipTrigger>
                 </div>
-                <FieldError>{getErrorMessage(field.state.meta.errors)}</FieldError>
+                <FieldError>{extractFormError(field.state.meta.errors)}</FieldError>
               </Field>
             );
           }}

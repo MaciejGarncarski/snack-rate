@@ -35,7 +35,6 @@ export function UserCommentForm({
       captchaCode: "",
     },
     validators: {
-      onChange: rateSnackFormSchema,
       onSubmit: rateSnackFormSchema,
     },
     onSubmit: ({ value }) => {
