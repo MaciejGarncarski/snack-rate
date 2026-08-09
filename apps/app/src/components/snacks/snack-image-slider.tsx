@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Image } from "#/components/image/image";
 import { AspectRatio } from "#/components/ui/aspect-ratio";
 import { Card, CardContent } from "#/components/ui/card";
+import { ImageZoom } from "#/components/ui/zoom";
 import { MAXIMUM_IMAGES } from "#/const/image-const";
 import { cn } from "#/lib/utils";
 
@@ -82,17 +83,19 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
               exit="exit"
               key={`snack-image-${index}`}
               transition={{ duration: 0.15, ease: "easeInOut" }}
-              className="absolute inset-0"
+              className="absolute inset-0 h-full w-full p-0"
             >
-              <Image
-                width={382}
-                height={478}
-                src={images[index]}
-                alt={`Slajd ${index + 1}`}
-                containerClassName="h-full w-full"
-                className={`h-full w-full object-cover`}
-                blurBackground
-              />
+              <ImageZoom>
+                <Image
+                  width={382}
+                  height={478}
+                  src={images[index]}
+                  alt={`Slajd ${index + 1}`}
+                  containerClassName="h-full w-full"
+                  className={`h-full w-full object-cover`}
+                  blurBackground
+                />
+              </ImageZoom>
             </motion.div>
           </AnimatePresence>
         </AspectRatio>

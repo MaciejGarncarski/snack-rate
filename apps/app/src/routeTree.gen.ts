@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as HealthIndexRouteImport } from './routes/health/index'
@@ -21,6 +22,11 @@ import { Route as AppProduktSlugOgDotpngRouteImport } from './routes/_app/produk
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -66,6 +72,7 @@ const AppProduktSlugOgDotpngRoute = AppProduktSlugOgDotpngRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/health/': typeof HealthIndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
 }
 export interface FileRoutesByTo {
+  '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/': typeof AppIndexRoute
@@ -87,6 +95,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
+  '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/health/ready': typeof HealthReadyRoute
   '/_app/': typeof AppIndexRoute
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/api/$'
     | '/health/ready'
     | '/health/'
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/produkt/$slug/og.png'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/admin'
     | '/api/$'
     | '/health/ready'
     | '/'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_app'
+    | '/admin'
     | '/api/$'
     | '/health/ready'
     | '/_app/'
@@ -132,6 +144,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  AdminRouteRoute: typeof AdminRouteRoute
   ApiSplatRoute: typeof ApiSplatRoute
   HealthReadyRoute: typeof HealthReadyRoute
   HealthIndexRoute: typeof HealthIndexRoute
@@ -145,6 +158,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/': {
@@ -235,6 +255,7 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
+  AdminRouteRoute: AdminRouteRoute,
   ApiSplatRoute: ApiSplatRoute,
   HealthReadyRoute: HealthReadyRoute,
   HealthIndexRoute: HealthIndexRoute,

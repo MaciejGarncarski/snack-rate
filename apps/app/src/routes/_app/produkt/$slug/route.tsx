@@ -178,7 +178,7 @@ function RouteComponent() {
           <Card className="grow [--card-spacing:--spacing(4)]">
             <CardHeader>
               <CardTitle>
-                <h2 className="text-balance text-3xl font-extrabold tracking-tight">
+                <h2 className="text-balance text-2xl md:text-3xl font-extrabold tracking-tight">
                   {snack.name}
                 </h2>
               </CardTitle>
