@@ -4,7 +4,7 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
-import { ORPCInstrumentation } from "@orpc/otel";
+import { ORPCInstrumentation } from "@orpc/opentelemetry";
 
 import { serverEnv } from "#/lib/server.env";
 import { installUncaughtErrorHandlers } from "#/observability/errors";
@@ -62,9 +62,7 @@ export function initOpenTelemetry() {
       [ATTR_SERVICE_VERSION]: "0.1.0",
     }),
     instrumentations: [
-      new ORPCInstrumentation({
-        enabled: true,
-      }),
+      new ORPCInstrumentation(),
       getNodeAutoInstrumentations({
         "@opentelemetry/instrumentation-pg": {
           enabled: true,

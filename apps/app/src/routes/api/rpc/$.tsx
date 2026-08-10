@@ -23,7 +23,7 @@ const parserConfig: ParseFormDataOptions = {
 };
 
 const handler = new RPCHandler(router, {
-  adapterInterceptors: [
+  fetchInterceptors: [
     (options) => {
       return options.next({
         ...options,
@@ -37,7 +37,7 @@ const handler = new RPCHandler(router, {
       });
     },
   ],
-  rootInterceptors: [
+  routingInterceptors: [
     (options) => {
       // oxlint-disable-next-line typescript/no-explicit-any
       const { fetchRequest } = (options.context as any)[
@@ -52,7 +52,7 @@ const handler = new RPCHandler(router, {
         ...options,
         request: {
           ...options.request,
-          async body() {
+          async resolveBody() {
             const contentType = fetchRequest.headers.get("content-type");
 
             if (contentType?.startsWith("multipart/form-data")) {
@@ -65,7 +65,7 @@ const handler = new RPCHandler(router, {
               return formData;
             }
 
-            return options.request.body();
+            return options.request.resolveBody();
           },
         },
       });

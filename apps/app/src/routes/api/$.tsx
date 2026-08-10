@@ -1,15 +1,20 @@
 // oxlint-disable-next-line import/no-unassigned-import
 import "#/polyfill";
-import { SmartCoercionPlugin } from "@orpc/json-schema";
+import { SmartCoercionHandlerPlugin } from "@orpc/json-schema";
+import { OpenAPIGenerator } from "@orpc/openapi";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
-import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
+import { OpenAPIReferenceHandlerPlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";
-import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
+import { ZodToJsonSchemaConverter } from "@orpc/zod";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { logger } from "#/observability/logger/logger";
 import { getActiveTraceId } from "#/observability/tracing";
 import router from "#/orpc/router";
+
+const openAPIGenerator = new OpenAPIGenerator({
+  converters: [new ZodToJsonSchemaConverter()],
+});
 
 const handler = new OpenAPIHandler(router, {
   interceptors: [
@@ -18,33 +23,32 @@ const handler = new OpenAPIHandler(router, {
     }),
   ],
   plugins: [
-    new SmartCoercionPlugin({
-      schemaConverters: [new ZodToJsonSchemaConverter()],
+    new SmartCoercionHandlerPlugin({
+      converters: [new ZodToJsonSchemaConverter()],
     }),
-    new OpenAPIReferencePlugin({
-      schemaConverters: [new ZodToJsonSchemaConverter()],
-      specGenerateOptions: {
-        info: {
-          title: "Snack Rate API",
-          version: "0.0.1",
-        },
-        commonSchemas: {
-          UndefinedError: { error: "UndefinedError" },
-        },
-        security: [{ bearerAuth: [] }],
-        components: {
-          securitySchemes: {
-            bearerAuth: {
-              type: "http",
-              scheme: "bearer",
+    new OpenAPIReferenceHandlerPlugin({
+      spec: () =>
+        openAPIGenerator.generate(router, {
+          base: {
+            info: {
+              title: "Snack Rate API",
+              version: "0.0.1",
+            },
+            security: [{ bearerAuth: [] }],
+            components: {
+              securitySchemes: {
+                bearerAuth: {
+                  type: "http",
+                  scheme: "bearer",
+                },
+              },
             },
           },
-        },
-      },
-      docsProvider: "scalar",
+        }),
+      provider: "scalar",
       docsPath: "/docs",
       docsTitle: "Snack Rate API Reference",
-      docsConfig: {
+      providerConfig: {
         authentication: {
           securitySchemes: {
             bearerAuth: {
