@@ -1,7 +1,9 @@
 {
   "uid": "snack-rate-app-health",
   "title": "App Health",
-  "tags": ["app-health"],
+  "tags": [
+    "app-health"
+  ],
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,
@@ -36,7 +38,9 @@
       },
       "options": {
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "values": false,
           "fields": ""
         }
@@ -70,7 +74,9 @@
       },
       "options": {
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "values": false,
           "fields": ""
         }
@@ -104,7 +110,9 @@
       },
       "options": {
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "values": false,
           "fields": ""
         }
@@ -126,7 +134,7 @@
       "targets": [
         {
           "queryType": "traceql",
-          "query": "{ resource.service.name = \"tanstack-start-app\" } with (most_recent=true)",
+          "query": "{ resource.service.name = \"snack-rate-app\" } with (most_recent=true)",
           "limit": 20,
           "refId": "A"
         }
@@ -201,7 +209,9 @@
       "options": {
         "reduceOptions": {
           "values": false,
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": ""
         },
         "orientation": "auto",
@@ -240,7 +250,9 @@
       "options": {
         "reduceOptions": {
           "values": false,
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": ""
         },
         "orientation": "auto",
@@ -279,7 +291,9 @@
       "options": {
         "reduceOptions": {
           "values": false,
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": ""
         },
         "orientation": "auto",
@@ -357,7 +371,9 @@
       "options": {
         "reduceOptions": {
           "values": false,
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": ""
         },
         "orientation": "auto",
@@ -396,7 +412,9 @@
       "options": {
         "reduceOptions": {
           "values": false,
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": ""
         },
         "orientation": "auto",

@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import type { Pool } from "pg";
 
 import { getPool } from "#/infrastructure/db/pool";
+import { logger } from "#/observability/logger/logger";
 
 export function createDb(client: Pool) {
   return drizzle({
@@ -18,6 +19,13 @@ export type DbTransaction = Parameters<Parameters<Database["transaction"]>[0]>[0
 let mainDb: Database | undefined;
 
 export function getMainDb(): Database {
-  mainDb ??= createDb(getPool());
+  if (mainDb) {
+    return mainDb;
+  }
+
+  logger.info({ message: "Creating main database connection", context: { module: "db" } });
+
+  mainDb = createDb(getPool());
+
   return mainDb;
 }

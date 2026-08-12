@@ -13,6 +13,5 @@ export type SnackComment = {
   createdAt: Date;
   updatedAt: Date;
   isEdited: boolean;
-  repliesCount: number;
-  replies: SnackCommentReply[];
+  hasReplies: boolean;
 };

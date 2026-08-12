@@ -58,7 +58,7 @@ export function initOpenTelemetry() {
         )
       : undefined,
     resource: resourceFromAttributes({
-      [ATTR_SERVICE_NAME]: "tanstack-start-app",
+      [ATTR_SERVICE_NAME]: "snack-rate-app",
       [ATTR_SERVICE_VERSION]: "0.1.0",
     }),
     instrumentations: [

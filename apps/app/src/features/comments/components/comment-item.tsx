@@ -1,19 +1,24 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ThumbsUp } from "lucide-react";
 import { useState } from "react";
 
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { Button } from "#/components/ui/button";
 import { Item, ItemContent, ItemHeader, ItemTitle } from "#/components/ui/item";
-import { CommentReply } from "#/features/comments/components/comment-reply";
 import type { SnackComment } from "#/features/comments/contracts/comments";
 
 export function CommentItem({ comment }: { comment: SnackComment }) {
   const [isRepliesOpen, setIsRepliesOpen] = useState(false);
-
+  const [isReplying, setIsReplying] = useState(false);
   const instant = Temporal.Instant.from(comment.createdAt.toISOString());
 
   const toggleReplies = () => {
     setIsRepliesOpen((prevState) => !prevState);
+    // oxlint-disable-next-line no-console
+    console.log("toggleReplies", isRepliesOpen);
+  };
+
+  const openReplyForm = () => {
+    setIsReplying(true);
   };
 
   return (
@@ -34,19 +39,25 @@ export function CommentItem({ comment }: { comment: SnackComment }) {
           <div className="flex flex-col gap-4">
             <SnackRating rating={comment.rating} />
             <p className="text-muted-foreground">{comment.body ?? "Brak treści recenzji."}</p>
+            <div className="flex gap-4">
+              <Button size="xs">
+                <ThumbsUp /> 67
+              </Button>
+              <Button size="xs" variant="ghost" onClick={openReplyForm}>
+                Odpowiedz
+              </Button>
+            </div>
           </div>
         </ItemContent>
       </Item>
-      {comment.repliesCount > 0 && (
+      {isReplying && (
         <div className="ml-4 py-2">
-          <Button type="button" size="xs" variant="outline" onClick={toggleReplies}>
-            {comment.repliesCount} {comment.repliesCount === 1 ? "odpowiedź" : "odpowiedzi"}
-            <ChevronDown />
-          </Button>
+          {/* <CommentReplyForm /> */}
+          aaaaaaaaa
         </div>
       )}
 
-      {isRepliesOpen && (
+      {/* {isRepliesOpen && (
         <div className="flex flex-col gap-3">
           {comment.replies.map((reply) => (
             <CommentReply
@@ -56,6 +67,16 @@ export function CommentItem({ comment }: { comment: SnackComment }) {
               createdAt={reply.createdAt}
             />
           ))}
+        </div>
+      )} */}
+
+      {comment.hasReplies && (
+        <div className="ml-4 py-2">
+          <Button type="button" size="xs" variant="outline" onClick={toggleReplies}>
+            test
+            {/* {comment.repliesCount} {comment.repliesCount === 1 ? "odpowiedź" : "odpowiedzi"} */}
+            <ChevronDown />
+          </Button>
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 // oxlint-disable-next-line import/no-unassigned-import
 import "#/polyfill";
 import { RPCHandler } from "@orpc/server/fetch";
+import { CORSHandlerPlugin } from "@orpc/server/plugins";
 import { parseFormData, type ParseFormDataOptions } from "@remix-run/form-data-parser";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -22,7 +23,14 @@ const parserConfig: ParseFormDataOptions = {
   maxFileSize: MAX_FILE_SIZE,
 };
 
+const corsPlugin = new CORSHandlerPlugin({
+  allowHeaders: ["Content-Disposition", "Standard-Server"],
+  exposeHeaders: ["Content-Disposition", "Standard-Server"],
+});
+
 const handler = new RPCHandler(router, {
+  plugins: [corsPlugin],
+
   fetchInterceptors: [
     (options) => {
       return options.next({
