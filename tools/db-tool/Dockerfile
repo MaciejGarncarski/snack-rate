@@ -1,8 +1,8 @@
-FROM node:26.5.0-alpine AS base
+FROM node:26.7.0-alpine AS base
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g pnpm@11.20.0
+RUN npm install -g pnpm@11.21.0
 RUN pnpm config set store-dir /pnpm/store
 
 FROM base AS builder
@@ -13,7 +13,7 @@ COPY tools/db-tool ./tools/db-tool
 RUN pnpm install --frozen-lockfile --filter @snack-rate/db-tool
 RUN pnpm deploy --filter @snack-rate/db-tool --prod /app/deploy
 
-FROM node:26.5.0-alpine
+FROM node:26.7.0-alpine
 COPY --from=builder /app/deploy /app
 ENV PATH="/app/node_modules/.bin:$PATH"
 WORKDIR /app/node_modules/@snack-rate/db-schema
