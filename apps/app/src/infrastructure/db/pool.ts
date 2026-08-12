@@ -16,6 +16,7 @@ export function getPool(): Pool {
       user: url.username,
       password: decodeURIComponent(url.password),
       database: url.pathname.slice(1),
+      idleTimeoutMillis: 0,
     });
   }
   return _pool;
