@@ -2,7 +2,8 @@ FROM node:26.7.0-slim AS base
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g pnpm@11.20.0
+ARG PNPM_VERSION=12.0.0-rc.5
+RUN npm install -g pnpm@${PNPM_VERSION}
 RUN pnpm config set store-dir /pnpm/store
 
 FROM base AS fetch

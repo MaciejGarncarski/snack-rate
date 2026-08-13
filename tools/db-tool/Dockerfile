@@ -1,8 +1,9 @@
 FROM node:26.7.0-alpine AS base
+ARG PNPM_VERSION=12.0.0-rc.5
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g pnpm@11.20.0
+RUN npm install -g pnpm@${PNPM_VERSION}
 RUN pnpm config set store-dir /pnpm/store
 
 FROM base AS builder
