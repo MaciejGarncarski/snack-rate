@@ -7,7 +7,7 @@ import { cookies } from "#/lib/cookie.config";
 import { baseORPC } from "#/lib/orpc/base";
 
 export const sessionMiddleware = baseORPC.middleware(({ context, next }) => {
-  const userId = getCookie(context.request.headers, cookies.session.name);
+  const userId = getCookie(context.requestHeaders, cookies.session.name);
 
   return next({
     context: {
@@ -20,7 +20,7 @@ export const sessionMiddleware = baseORPC.middleware(({ context, next }) => {
 const guestIdSchema = z.uuidv7();
 
 export const guestMiddleware = baseORPC.middleware(({ context, next }) => {
-  const guestId = getCookie(context.request.headers, cookies.guestId.name);
+  const guestId = getCookie(context.requestHeaders, cookies.guestId.name);
   const parsedGuestId = guestIdSchema.safeParse(guestId);
 
   if (guestId && parsedGuestId.success) {

@@ -1,7 +1,7 @@
 import { os } from "@orpc/server";
 
 export type ORPCContext = {
-  request: Request;
+  requestHeaders: Headers;
   guestId: string | null;
   userId: string | null;
 };

@@ -70,9 +70,9 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
 
   pendingComponent: () => {
     return (
-      <main className="mx-auto w-full max-w-6xl pb-10 flex flex-col gap-10">
-        <div className="flex gap-8 flex-col lg:flex-row lg:gap-20">
-          <div className="mx-auto w-full max-w-sm lg:sticky lg:top-8">
+      <main className="mx-auto w-full pb-10 flex flex-col gap-10">
+        <div className="flex gap-8 flex-col lg:flex-row lg:gap-15">
+          <div className="mx-auto w-full max-w-md lg:sticky lg:top-8 shrink-0">
             <Skeleton className="aspect-4/5 w-full" />
             <div className="flex justify-center gap-4 mt-4">
               <Skeleton className="aspect-4/5 w-1/3 rounded-xl" />
@@ -81,7 +81,7 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
             </div>
           </div>
 
-          <div className="pt-1 flex flex-col gap-10 flex-1">
+          <div className="pt-1 grow shrink flex flex-col gap-10">
             <div className="flex flex-col gap-4">
               <Skeleton className="h-10 w-3/4" />
               <div className="flex flex-col gap-2">
