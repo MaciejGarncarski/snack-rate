@@ -40,6 +40,9 @@ const viteConfig = defineConfig({
     }),
     nitro({
       plugins: ["./server/plugins/opentelemetry.ts"],
+      rolldownConfig: {
+        external: ["pg", "drizzle-orm", "@aws-sdk/client-s3", "@aws-sdk/lib-storage"],
+      },
     }),
     viteReact(),
   ],
