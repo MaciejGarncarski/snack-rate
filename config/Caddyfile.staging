@@ -6,6 +6,8 @@
 }
 
 {$PUBLIC_BUCKET_DOMAIN} {
+	log
+
 	handle {
 		reverse_proxy {$PUBLIC_BUCKET_BACKEND} {
 			header_up Host {$PUBLIC_BUCKET_HOST}
@@ -20,6 +22,8 @@
 }
 
 {$STAGING_APP_DOMAIN} {
+	log
+
 	route {
 		handle /robots.txt {
 			respond <<ROBOTS

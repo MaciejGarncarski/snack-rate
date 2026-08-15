@@ -6,6 +6,8 @@
 }
 
 {$APP_DOMAIN} {
+	log
+
 	handle /grafana* {
 		uri strip_prefix /grafana
 		reverse_proxy grafana:3000
@@ -21,6 +23,8 @@
 }
 
 {$PUBLIC_BUCKET_DOMAIN} {
+	log
+
 	handle {
 		reverse_proxy {$PUBLIC_BUCKET_BACKEND} {
 			header_up Host {$PUBLIC_BUCKET_HOST}
