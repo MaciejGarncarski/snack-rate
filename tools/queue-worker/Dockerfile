@@ -3,13 +3,13 @@ ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ARG PNPM_VERSION=12.0.0-rc.5
-RUN npm install -g pnpm@${PNPM_VERSION}
+RUN npm install -g --allow-scripts=pnpm pnpm@${PNPM_VERSION}
 RUN pnpm config set store-dir /pnpm/store
 
 FROM base AS fetch
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm fetch --frozen-lockfile
+RUN pnpm fetch
 
 FROM base AS install
 WORKDIR /app
