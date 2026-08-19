@@ -34,6 +34,7 @@ interface ImageProps extends HtmlImgProps {
   lazy?: boolean;
   skeleton?: boolean;
   blurBackground?: boolean;
+  loadTimeoutMs?: number;
 }
 
 export function ImageInner({
@@ -46,6 +47,7 @@ export function ImageInner({
   lazy = false,
   blurBackground = false,
   skeleton = true,
+  loadTimeoutMs = 5000,
   width,
   height,
   ...imgProps
@@ -103,6 +105,20 @@ export function ImageInner({
     setStatus("loading");
   }, [src]);
 
+  useEffect(() => {
+    if (status !== "loading") {
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      if (!imgRef.current?.complete) {
+        setStatus("error");
+      }
+    }, loadTimeoutMs);
+
+    return () => clearTimeout(timeoutId);
+  }, [src, status, loadTimeoutMs]);
+
   const handleImageLoad = (loadEvent: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setStatus("loaded");
 
@@ -144,7 +160,6 @@ export function ImageInner({
       {isVisible && src ? (
         <>
           {blurBackground && status === "loaded" && <ImageBlur src={src} />}
-
           <motion.img
             ref={handleImgRef}
             src={src}

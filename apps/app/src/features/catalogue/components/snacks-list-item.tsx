@@ -37,7 +37,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
             src={images[0]?.url}
             alt={name}
             blurBackground
-            containerClassName="w-full aspect-4/5 bg-muted"
+            containerClassName="w-full aspect-4/5"
             className="h-full w-full object-cover"
           />
           <CardHeader>

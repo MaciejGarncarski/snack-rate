@@ -19,7 +19,7 @@ export const createSnackInputSchema = z.object({
   description: z.string().max(MAXIMUM_DESCRIPTION_LENGTH).optional(),
   barcode: optionalEanSchema,
   typeSlug: z.string(),
-  images: z.array(z.string()).min(1).max(MAXIMUM_IMAGES),
+  images: z.array(z.file()).min(1).max(MAXIMUM_IMAGES),
   captchaCode: z.string().length(5),
 });
 

@@ -3,6 +3,7 @@ import {
   type SnacksRepository,
 } from "#/features/catalogue/server/repositories/snacks.repository";
 import { createSnackUseCase } from "#/features/catalogue/server/use-cases/create-snack.use-case";
+import { Slug } from "#/features/shared/value-objects/slug.vo";
 import type { Database } from "#/infrastructure/db/db";
 import { createSnackType } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup.int";
@@ -27,16 +28,16 @@ describe("create snack", () => {
       name: "Test Snack",
       description: "A delicious test snack",
       typeSlug: type.slug,
-      images: [],
     };
 
     const snack = await createSnackUseCase(
       {
-        images: input.images,
         name: input.name,
         description: input.description,
         typeSlug: input.typeSlug,
       },
+      [],
+      Slug.create(input.name),
       repository,
       db,
     );
@@ -59,20 +60,22 @@ describe("create snack", () => {
   it("should create default and thumbnail images when uploading an image", async () => {
     const type = await createSnackType();
 
+    const name = "Snack With Image";
+
     const snack = await createSnackUseCase(
       {
-        images: [
-          {
-            key: "tmp-images/mock-image.png",
-            thumbKey: "tmp-images/mock-image-thumb.png",
-            filename: "test.png",
-            fileExt: "webp",
-          },
-        ],
-        name: "Snack With Image",
+        name,
         description: "Test",
         typeSlug: type.slug,
       },
+      [
+        {
+          key: "snack-with-image.png",
+          thumbKey: "snack-with-image-thumb.png",
+          index: 0,
+        },
+      ],
+      Slug.create(name),
       repository,
       db,
     );

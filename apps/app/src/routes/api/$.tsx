@@ -1,5 +1,3 @@
-// oxlint-disable-next-line import/no-unassigned-import
-import "#/polyfill";
 import { SmartCoercionHandlerPlugin } from "@orpc/json-schema";
 import { OpenAPIGenerator } from "@orpc/openapi";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";

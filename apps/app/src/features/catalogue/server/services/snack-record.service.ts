@@ -9,7 +9,6 @@ export type CreateSnackInput = {
   description?: string;
   barcode?: string;
   typeSlug: string;
-  images: { key: string; thumbKey: string; filename: string; fileExt: string }[];
 };
 
 export function createSnackRecord(

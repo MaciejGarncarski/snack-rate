@@ -1,36 +1,32 @@
-// oxlint-disable-next-line import/no-unassigned-import
-import "#/polyfill";
+import { TmpFileUploadHandlerPlugin } from "@orpc/node";
 import { RPCHandler } from "@orpc/server/fetch";
 import { CORSHandlerPlugin } from "@orpc/server/plugins";
-import { parseFormData, type ParseFormDataOptions } from "@remix-run/form-data-parser";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { MAX_FILE_SIZE, MAXIMUM_IMAGES } from "#/const/image-const";
+import { MAX_FILE_SIZE } from "#/const/image-const";
 import { logger } from "#/observability/logger/logger";
 import { getActiveSpan } from "#/observability/tracing";
 import { mapError } from "#/orpc/map-error";
 import router from "#/orpc/router";
-import { createFileUploadHandler } from "#/server/lib/automatic-file-upload-handler";
 
 const OVERRIDE_BODY_CONTEXT = Symbol("OVERRIDE_BODY_CONTEXT");
-
-type OverrideBodyContext = {
-  fetchRequest: Request;
-};
-
-const parserConfig: ParseFormDataOptions = {
-  maxFiles: MAXIMUM_IMAGES,
-  maxFileSize: MAX_FILE_SIZE,
-};
+const MAX_BODY_SIZE_EXCLUDING_FILE = 3 * 1024 * 1024;
 
 const corsPlugin = new CORSHandlerPlugin({
   allowHeaders: ["Content-Disposition", "Standard-Server"],
   exposeHeaders: ["Content-Disposition", "Standard-Server"],
 });
 
-const handler = new RPCHandler(router, {
-  plugins: [corsPlugin],
+const tmpFilePlugin = new TmpFileUploadHandlerPlugin({
+  maxBodySize: {
+    file: MAX_FILE_SIZE,
+    memory: MAX_BODY_SIZE_EXCLUDING_FILE,
+    stream: Number.POSITIVE_INFINITY,
+  },
+});
 
+const handler = new RPCHandler(router, {
+  plugins: [corsPlugin, tmpFilePlugin],
   fetchInterceptors: [
     (options) => {
       return options.next({
@@ -41,41 +37,6 @@ const handler = new RPCHandler(router, {
           // oxlint-disable-next-line typescript/no-explicit-any
           [OVERRIDE_BODY_CONTEXT as any]: {
             fetchRequest: options.request,
-          },
-        },
-      });
-    },
-  ],
-  routingInterceptors: [
-    (options) => {
-      // SAFETY: context is arbitrary; we only ever write OVERRIDE_BODY_CONTEXT ourselves in the fetch interceptor above.
-      // oxlint-disable-next-line typescript/no-explicit-any
-      const context = options.context as any;
-      // SAFETY: OVERRIDE_BODY_CONTEXT is only ever written as an OverrideBodyContext.
-      const { fetchRequest } = context[OVERRIDE_BODY_CONTEXT] as OverrideBodyContext;
-
-      if (!fetchRequest) {
-        return options.next(options);
-      }
-
-      return options.next({
-        ...options,
-        request: {
-          ...options.request,
-          async resolveBody() {
-            const contentType = fetchRequest.headers.get("content-type");
-
-            if (contentType?.startsWith("multipart/form-data")) {
-              const formData = await parseFormData(
-                fetchRequest,
-                parserConfig,
-                createFileUploadHandler(),
-              );
-
-              return formData;
-            }
-
-            return options.request.resolveBody();
           },
         },
       });

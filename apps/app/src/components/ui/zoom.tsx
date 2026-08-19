@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactElement } from "react";
 import Zoom, {
   Controlled,
   type ControlledProps,
@@ -7,6 +8,40 @@ import Zoom, {
 } from "react-medium-image-zoom";
 
 import { cn } from "#/lib/utils";
+
+const zoomContent = ({
+  img,
+  buttonUnzoom,
+  modalState,
+}: {
+  img: ReactElement | null;
+  buttonUnzoom: ReactElement<HTMLButtonElement>;
+  modalState: "LOADED" | "LOADING" | "UNLOADED" | "UNLOADING";
+}) => {
+  if (!img) {
+    return buttonUnzoom;
+  }
+
+  const { src, srcSet, sizes } = img.props as React.ImgHTMLAttributes<HTMLImageElement>;
+
+  return (
+    <>
+      <img
+        src={src}
+        srcSet={srcSet}
+        sizes={sizes}
+        alt=""
+        aria-hidden
+        className={cn(
+          "absolute inset-0 pointer-events-none size-full scale-[1.5] object-cover opacity-70 blur-3xl",
+          modalState === "UNLOADING" ? "animate-rmiz-blur-fade-out" : "animate-rmiz-blur-fade-in",
+        )}
+      />
+      {img}
+      {buttonUnzoom}
+    </>
+  );
+};
 
 const classDialog = cn(
   "[&::backdrop]:hidden",
@@ -26,7 +61,7 @@ export type ImageZoomProps = UncontrolledProps & {
 
 export const ImageZoom = ({ className, backdropClassName, ...props }: ImageZoomProps) => (
   <Wrapper className={className}>
-    <Zoom classDialog={cn(classDialog, backdropClassName)} {...props} />
+    <Zoom classDialog={cn(classDialog, backdropClassName)} ZoomContent={zoomContent} {...props} />
   </Wrapper>
 );
 
@@ -41,7 +76,11 @@ export const ImageZoomControlled = ({
   ...props
 }: ImageZoomControlledProps) => (
   <Wrapper className={className}>
-    <Controlled classDialog={cn(classDialog, backdropClassName)} {...props} />
+    <Controlled
+      classDialog={cn(classDialog, backdropClassName)}
+      ZoomContent={zoomContent}
+      {...props}
+    />
   </Wrapper>
 );
 
