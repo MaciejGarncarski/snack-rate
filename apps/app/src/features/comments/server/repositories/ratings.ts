@@ -74,6 +74,7 @@ export async function upsertRating(
     ...created,
     rating: created.rating,
     body: created.body,
+    // SAFETY: authorType comes from data.authorType which is already typed "user" | "guest".
     authorType: created.authorType as "user" | "guest",
   };
 }

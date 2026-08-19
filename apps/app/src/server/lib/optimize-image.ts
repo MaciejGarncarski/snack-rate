@@ -8,11 +8,7 @@ import {
   OPTIMIZED_QUALITY,
 } from "#/const/image-const";
 
-export function optimizeImage(input: Readable): {
-  stream: Readable;
-  ext: string;
-  contentType: string;
-} {
+export function optimizeImage(input: Readable) {
   const transformer = sharp({
     limitInputPixels: MAX_IMAGE_MEGAPIXELS * 1_000_000,
     sequentialRead: true,

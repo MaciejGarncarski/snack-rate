@@ -5,14 +5,14 @@ import { getTracer, startSpan } from "#/observability/tracing";
 
 const tracer = getTracer("uncaught-errors");
 
-function recordError(eventName: string, reason: unknown) {
+function recordError(eventName: string, cause: unknown) {
   startSpan(
     eventName,
     (span) => {
-      const message = String(reason);
+      const message = String(cause);
 
-      if (reason instanceof Error) {
-        span.recordException(reason);
+      if (cause instanceof Error) {
+        span.recordException(cause);
       } else {
         span.recordException({ message });
       }
@@ -23,9 +23,9 @@ function recordError(eventName: string, reason: unknown) {
   );
 }
 
-function handleFatal(eventName: string, message: string, reason: unknown) {
-  logger.error({ reason }, message);
-  recordError(eventName, reason);
+function handleFatal(eventName: string, message: string, cause: unknown) {
+  logger.error({ cause }, message);
+  recordError(eventName, cause);
   process.exit(1);
 }
 

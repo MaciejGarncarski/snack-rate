@@ -14,6 +14,7 @@ beforeAll(() => {
   repository = createCommentsRepository({ db });
 });
 
+// oxlint-disable-next-line eslint/max-lines-per-function -- one describe with many small rate-snack scenarios
 describe("rate snack", () => {
   it("should rate a snack as guest", async () => {
     const snack = await createSnack();

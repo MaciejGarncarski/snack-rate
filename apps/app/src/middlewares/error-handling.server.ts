@@ -8,6 +8,7 @@ export const errorHandlingMiddleware = createMiddleware({ type: "function" }).se
     try {
       return await next();
     } catch (error) {
+      // SAFETY: handlers throw Error instances; only their cause is read off the narrowed error.
       logger.error({ err: error, cause: (error as Error).cause }, "RPC handler error");
       throw mapError(error);
     }

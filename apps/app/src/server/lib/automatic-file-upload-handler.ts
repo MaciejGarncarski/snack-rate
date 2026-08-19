@@ -25,7 +25,9 @@ export function createFileUploadHandler() {
 
         const [forMain, forThumb] = stream.tee();
 
+        // SAFETY: stream.tee() returns branches typed as the same ReadableStream<Uint8Array> as the source.
         const optimized = optimizeImage(nodeStreamFromWeb(forMain as ReadableStream<Uint8Array>));
+        // SAFETY: stream.tee() returns branches typed as the same ReadableStream<Uint8Array> as the source.
         const thumbnail = createThumbnail(
           nodeStreamFromWeb(forThumb as ReadableStream<Uint8Array>),
         );

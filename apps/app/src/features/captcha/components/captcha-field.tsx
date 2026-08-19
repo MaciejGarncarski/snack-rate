@@ -16,6 +16,16 @@ type CaptchaFieldProps = {
   errors?: unknown[];
 };
 
+function isString(cause: unknown): cause is string {
+  return typeof cause === "string";
+}
+
+function isObjectWithStringMessage(cause: unknown): cause is { message: string } {
+  return (
+    typeof cause === "object" && cause !== null && "message" in cause && isString(cause.message)
+  );
+}
+
 export function CaptchaField({
   value,
   onChange,
@@ -177,16 +187,9 @@ export function CaptchaField({
         <FieldError>
           {errors
             .map((error) => {
-              if (typeof error === "string") return error;
+              if (isString(error)) return error;
 
-              if (
-                typeof error === "object" &&
-                error !== null &&
-                "message" in error &&
-                typeof error.message === "string"
-              ) {
-                return error.message;
-              }
+              if (isObjectWithStringMessage(error)) return error.message;
 
               return String(error);
             })

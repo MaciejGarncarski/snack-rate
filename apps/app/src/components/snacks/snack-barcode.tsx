@@ -10,11 +10,11 @@ type Props = {
   barcode: string | null;
 } & VariantProps<typeof barcodeContainerVariants>;
 
-const sizeMap: Record<"sm" | "md" | "lg", { width: number; height: number }> = {
+const sizeMap = {
   sm: { width: 1.2, height: 40 },
   md: { width: 1.7, height: 80 },
   lg: { width: 2.5, height: 120 },
-};
+} satisfies Record<"sm" | "md" | "lg", { width: number; height: number }>;
 
 const barcodeContainerVariants = tv({
   base: "w-fit",

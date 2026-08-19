@@ -12,7 +12,7 @@ describe("resolveIdentity", () => {
   });
 
   it("should throw when authorId is missing", () => {
-    expect(() => resolveIdentity(null as unknown as string, "guest")).toThrow(
+    expect(() => resolveIdentity(null, "guest")).toThrow(
       "Either authorId with authorType must be provided",
     );
   });
@@ -48,7 +48,7 @@ describe("whereAuthor", () => {
   });
 
   it("should throw when authorId is null", () => {
-    expect(() => whereAuthor("snack-1", null as unknown as string, "guest")).toThrow(
+    expect(() => whereAuthor("snack-1", null, "guest")).toThrow(
       "Either authorId with authorType must be provided",
     );
   });
@@ -61,7 +61,7 @@ describe("whereAuthorSql", () => {
   });
 
   it("should throw when authorId is null", () => {
-    expect(() => whereAuthorSql("snack-1", null as unknown as string, "guest")).toThrow(
+    expect(() => whereAuthorSql("snack-1", null, "guest")).toThrow(
       "Either authorId with authorType must be provided",
     );
   });

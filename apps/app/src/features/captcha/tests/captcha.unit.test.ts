@@ -23,9 +23,7 @@ describe("signCode / verifySignature", () => {
   it("rejects when signature is modified", () => {
     const code = "ABC23";
     const sig = signCode(code, SECRET, issuedAt);
-    const lastChar = sig.slice(-1);
-    const replacement = lastChar === "0" ? "1" : "0";
-    const tamperedSig = sig.slice(0, -1) + replacement;
+    const tamperedSig = "Z" + sig.slice(1);
     expect(verifySignature(code, tamperedSig, SECRET, issuedAt)).toBe(false);
   });
 

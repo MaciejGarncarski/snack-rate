@@ -7,8 +7,10 @@ const BG_BLOBS = ["#e2e8f0", "#f0e6f0", "#e6f0ee", "#f0ebe6", "#e6eaf0", "#f0e8f
 
 // Seeded random number generator (mulberry32)
 function createRng(seed: number) {
+  // oxlint-disable-next-line unicorn/prefer-math-trunc -- int32 coercion, not truncation
   let s = seed | 0;
   return () => {
+    // oxlint-disable-next-line unicorn/prefer-math-trunc -- int32 wrap, not truncation
     s = (s + 0x6d2b79f5) | 0;
     let t = Math.imul(s ^ (s >>> 15), 1 | s);
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
@@ -18,9 +20,9 @@ function createRng(seed: number) {
 
 function hashString(str: string): number {
   let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash + char) | 0;
+  for (const char of str) {
+    // oxlint-disable-next-line unicorn/prefer-math-trunc -- int32 wrap, not truncation
+    hash = ((hash << 5) - hash + (char.codePointAt(0) ?? 0)) | 0;
   }
   return hash;
 }

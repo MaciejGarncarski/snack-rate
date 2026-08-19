@@ -30,8 +30,9 @@ export function markSpanOk(span: Span) {
   span.setStatus({ code: SpanStatusCode.OK });
 }
 
-export function recordSpanError(span: Span, error: unknown) {
-  span.recordException(error as Error);
+export function recordSpanError(span: Span, cause: unknown) {
+  // SAFETY: recordException accepts any thrown value; Error is the common case and keeps name/message/stack.
+  span.recordException(cause as Error);
   span.setStatus({ code: SpanStatusCode.ERROR });
 }
 

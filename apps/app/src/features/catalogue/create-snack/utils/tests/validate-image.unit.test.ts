@@ -13,24 +13,26 @@ beforeAll(() => {
     naturalWidth = mockImageDimensions.width;
     naturalHeight = mockImageDimensions.height;
 
-    set src(_url: string) {
-      queueMicrotask(() => {
-        this.onload?.();
-      });
+    private onLoadHandler: (() => void) | null = null;
+
+    get src() {
+      return "";
     }
 
-    onload: (() => void) | null = null;
-    onerror: (() => void) | null = null;
+    set src(_url: string) {
+      queueMicrotask(() => this.onLoadHandler?.());
+    }
 
     addEventListener(event: string, handler: () => void) {
-      if (event === "load") this.onload = handler;
-      if (event === "error") this.onerror = handler;
+      if (event === "load") this.onLoadHandler = handler;
     }
 
     removeEventListener() {}
   }
 
-  globalThis.Image = MockImage as unknown as typeof Image;
+  const MockImageConstructor: unknown = MockImage;
+  // SAFETY: MockImage replicates the Image members checkImageResolution uses (src, onload/onerror, naturalWidth/Height, listeners); the constructor only runs inside these tests.
+  globalThis.Image = MockImageConstructor as typeof Image;
 });
 
 describe("validateImage", () => {

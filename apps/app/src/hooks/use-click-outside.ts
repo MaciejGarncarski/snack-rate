@@ -10,6 +10,7 @@ export function useClickOutside<T extends HTMLElement>(
     const listener = (event: AnyEvent) => {
       const el = ref.current;
 
+      // SAFETY: mousedown/touchstart event targets are always DOM Nodes.
       if (!el || el.contains(event.target as Node)) return;
 
       handler(event);

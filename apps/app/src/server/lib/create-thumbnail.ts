@@ -9,10 +9,7 @@ import {
   THUMBNAIL_WIDTH,
 } from "../../const/image-const.ts";
 
-export function createThumbnail(
-  input: Readable,
-  width = THUMBNAIL_WIDTH,
-): { stream: Readable; ext: string; contentType: string } {
+export function createThumbnail(input: Readable, width = THUMBNAIL_WIDTH) {
   const transformer = sharp({
     limitInputPixels: MAX_IMAGE_MEGAPIXELS * 1_000_000,
     sequentialRead: true,

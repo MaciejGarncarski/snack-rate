@@ -18,6 +18,7 @@ const createSnackInput = createSnackInputSchema.transform((data) => {
   return {
     ...data,
     images: data.images.map((image) => {
+      // SAFETY: image strings were validated as JSON by createSnackInputSchema.
       return JSON.parse(image) as {
         key: string;
         thumbKey: string;

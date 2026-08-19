@@ -1,21 +1,29 @@
 import { ORPCError } from "@orpc/client";
 
-type PgError = {
+type PgErrorCandidate = {
   code?: string;
   constraint?: string;
+  cause?: PgErrorCandidate;
+  original?: PgErrorCandidate;
 };
 
-export function mapError(err: unknown): never {
-  if (err instanceof ORPCError) {
-    throw err;
+function isKnownConstraint(constraint: string): constraint is keyof typeof UNIQUE_CONSTRAINT_MAP {
+  return constraint in UNIQUE_CONSTRAINT_MAP;
+}
+
+export function mapError(cause: unknown): never {
+  if (cause instanceof ORPCError) {
+    throw cause;
   }
 
-  const pgErr = extractPgError(err);
+  const pgErr = extractPgError(cause);
 
   if (pgErr?.code === "23505") {
-    const known = pgErr.constraint ? UNIQUE_CONSTRAINT_MAP[pgErr.constraint] : undefined;
+    const constraint = pgErr.constraint;
 
-    if (known) {
+    if (constraint !== undefined && isKnownConstraint(constraint)) {
+      const known: { message: string; field?: string } = UNIQUE_CONSTRAINT_MAP[constraint];
+
       throw new ORPCError("CONFLICT", {
         message: known.message,
         data: known.field ? { field: known.field } : undefined,
@@ -29,21 +37,18 @@ export function mapError(err: unknown): never {
 
   throw new ORPCError("INTERNAL_SERVER_ERROR", {
     message: "Nieznany błąd",
-    cause: err,
+    cause,
   });
 }
 
-function extractPgError(err: unknown): PgError | null {
-  if (!err || typeof err !== "object") return null;
-  const e = err as Record<string, unknown>;
-  const cause = (e.cause ?? e.original ?? e) as Record<string, unknown>;
-  return {
-    code: cause.code as string | undefined,
-    constraint: cause.constraint as string | undefined,
-  };
+function extractPgError(cause: unknown): PgErrorCandidate | null {
+  if (cause === null || cause === undefined) return null;
+  // SAFETY: caught errors are objects; property access on boxed primitives yields undefined, never throws.
+  const candidate = cause as PgErrorCandidate;
+  return candidate.cause ?? candidate.original ?? candidate;
 }
 
-const UNIQUE_CONSTRAINT_MAP: Record<string, { message: string; field?: string }> = {
+const UNIQUE_CONSTRAINT_MAP = {
   // users
   users_email_unique_idx: {
     message: "Ten adres e-mail jest już zajęty.",
@@ -95,4 +100,4 @@ const UNIQUE_CONSTRAINT_MAP: Record<string, { message: string; field?: string }>
   email_verifications_token_hash_unique: {
     message: "Wystąpił konflikt weryfikacji e-mail.",
   },
-};
+} satisfies Record<string, { message: string; field?: string }>;

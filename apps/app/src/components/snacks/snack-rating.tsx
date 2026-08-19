@@ -63,12 +63,12 @@ type SnackRatingProps = {
   size?: "xs" | "sm" | "md" | "lg";
 };
 
-const fontSizesMap: Record<"xs" | "sm" | "md" | "lg", { value: string; count: string }> = {
+const fontSizesMap = {
   xs: { value: "text-xs", count: "text-xs" },
   sm: { value: "text-sm", count: "text-sm" },
   md: { value: "text-base", count: "text-sm" },
   lg: { value: "text-2xl", count: "text-base" },
-};
+} satisfies Record<"xs" | "sm" | "md" | "lg", { value: string; count: string }>;
 
 export function SnackRating({ rating, ratingCount, withText, size = "md" }: SnackRatingProps) {
   const value = Math.max(0, Math.min(5, rating));

@@ -41,6 +41,7 @@ export function send<T = object>(
   options?: SendOptions,
 ): Promise<string | null> {
   if (!boss) throw new Error("queue not started, call startQueue() first");
+  // SAFETY: pg-boss serializes payloads to JSON; any plain object is a valid job payload.
   return boss.send(name, data as object, options);
 }
 
@@ -52,5 +53,6 @@ export function sendAfter<T = object>(
 ): Promise<string | null> {
   if (!boss) throw new Error("queue not started, call startQueue() first");
 
+  // SAFETY: pg-boss serializes payloads to JSON; any plain object is a valid job payload.
   return boss.sendAfter(name, data as object, options, delay);
 }

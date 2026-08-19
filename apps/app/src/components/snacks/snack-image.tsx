@@ -9,12 +9,12 @@ type Props = {
   size?: Size;
 };
 
-const sizeClasses: Record<Size, string> = {
+const sizeClasses = {
   sm: "w-16 rounded-sm",
   md: "w-32 rounded",
   lg: "w-48 rounded",
   xl: "w-64 rounded-lg",
-};
+} satisfies Record<Size, string>;
 
 export function SnackImage({ src, alt, size = "md" }: Props) {
   return (

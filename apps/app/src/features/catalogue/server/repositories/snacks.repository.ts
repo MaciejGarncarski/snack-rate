@@ -176,6 +176,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
 
       if (!foundSnack) return null;
 
+      // SAFETY: drizzle's findFirst with relations returns the full row shape that DbSnackItem describes.
       return toSnackItem(foundSnack as DbSnackItem, getFileUrl);
     },
 
@@ -205,6 +206,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
         limit,
       });
 
+      // SAFETY: drizzle's findMany with relations returns rows matching DbSnackItem's shape.
       return Promise.all(rows.map((row) => toSnackItem(row as DbSnackItem, getFileUrl)));
     },
 
@@ -229,6 +231,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
         },
       });
 
+      // SAFETY: drizzle's findMany with relations returns rows matching DbSnackItem's shape.
       return Promise.all(rows.map((row) => toSnackItem(row as DbSnackItem, getFileUrl)));
     },
 

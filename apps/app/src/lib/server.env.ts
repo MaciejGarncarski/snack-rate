@@ -28,19 +28,14 @@ const schema = z.object({
   CAPTCHA_SECRET: z.string().min(32),
 });
 
-let _data: z.infer<typeof schema> | undefined;
-
-function ensureParsed(): z.infer<typeof schema> {
-  if (!_data) {
-    const parsed = schema.safeParse(process.env);
-    if (!parsed.success) {
-      console.error("Invalid server environment variables:");
-      console.error(z.prettifyError(parsed.error));
-      process.exit(1);
-    }
-    _data = parsed.data;
+function parseEnv(): z.infer<typeof schema> {
+  const parsed = schema.safeParse(process.env);
+  if (!parsed.success) {
+    console.error("Invalid server environment variables:");
+    console.error(z.prettifyError(parsed.error));
+    process.exit(1);
   }
-  return _data;
+  return parsed.data;
 }
 
 type ServerEnv = z.infer<typeof schema> & {
@@ -49,12 +44,11 @@ type ServerEnv = z.infer<typeof schema> & {
   isTest: boolean;
 };
 
-export const serverEnv: ServerEnv = new Proxy({} as ServerEnv, {
-  get(_, prop) {
-    const data = ensureParsed();
-    if (prop === "isProd") return data.NODE_ENV === "production";
-    if (prop === "isDev") return data.NODE_ENV === "development";
-    if (prop === "isTest") return data.NODE_ENV === "test";
-    return Reflect.get(data, prop);
-  },
-});
+const data = parseEnv();
+
+export const serverEnv: ServerEnv = {
+  ...data,
+  isProd: data.NODE_ENV === "production",
+  isDev: data.NODE_ENV === "development",
+  isTest: data.NODE_ENV === "test",
+};

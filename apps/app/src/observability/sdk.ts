@@ -19,6 +19,7 @@ function resolveTraceExporterUrl(endpoint: string | undefined) {
   return url.toString();
 }
 
+// SAFETY: a module-level flag on globalThis prevents double SDK init across hot reloads.
 const sdkStartedGlobal = globalThis as { __OTEL_SDK_STARTED__?: boolean };
 
 export function initOpenTelemetry() {

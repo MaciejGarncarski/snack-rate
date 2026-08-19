@@ -37,6 +37,7 @@ type Props = {
   types: SnackType[];
 };
 
+// oxlint-disable-next-line eslint/max-lines-per-function -- cohesive multi-step form, splitting would scatter field wiring
 export function CreateSnackForm({ types }: Props) {
   const form = useCreateSnackForm();
   const typesFormMapped = types.map((t): SnackTypeFormatted => ({ value: t.slug, label: t.name }));

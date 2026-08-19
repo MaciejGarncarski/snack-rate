@@ -1,13 +1,13 @@
 import { ORPCError } from "@orpc/client";
 
 export function extractORPCError(
-  err: unknown,
+  cause: unknown,
 ): { code: string; message: string; data?: unknown } | null {
-  if (err instanceof ORPCError) {
+  if (cause instanceof ORPCError) {
     return {
-      code: err.code,
-      message: err.message,
-      data: err.data,
+      code: cause.code,
+      message: cause.message,
+      data: cause.data,
     };
   }
 

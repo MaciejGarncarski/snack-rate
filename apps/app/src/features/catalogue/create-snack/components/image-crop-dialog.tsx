@@ -39,9 +39,9 @@ export function ImageCropDialog({
   const [error, setError] = useState<string | null>(null);
   const { processImage } = useImageCrop();
 
-  const handleCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+  const handleCropComplete = useCallback((croppedArea: Area, croppedAreaPixelsNext: Area) => {
     setCroppedAreaPercent(croppedArea);
-    setCroppedAreaPixels(croppedAreaPixels);
+    setCroppedAreaPixels(croppedAreaPixelsNext);
   }, []);
 
   const handleCrop = async () => {
@@ -75,6 +75,7 @@ export function ImageCropDialog({
             crop={crop}
             zoom={zoom}
             aspect={4 / 5}
+            // oxlint-disable-next-line anti-slop/no-shape-in-symbol-names -- react-easy-crop API prop name
             cropShape="rect"
             showGrid
             minZoom={MIN_ZOOM}
@@ -96,7 +97,7 @@ export function ImageCropDialog({
               aria-label="Przybliżenie"
               value={zoom}
               onChange={(value) => {
-                if (typeof value === "number") {
+                if (!Array.isArray(value)) {
                   setZoom(value);
                 }
               }}

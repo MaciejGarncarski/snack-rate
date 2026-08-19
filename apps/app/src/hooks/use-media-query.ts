@@ -14,24 +14,29 @@ const BREAKPOINTS = {
 
 type Breakpoint = keyof typeof BREAKPOINTS;
 
-type BreakpointQuery = Breakpoint | `max-${Breakpoint}` | `${Breakpoint}:max-${Breakpoint}`;
+function isNumber(value: Breakpoint | number): value is number {
+  return typeof value === "number";
+}
+
+function isString(cause: unknown): cause is string {
+  return typeof cause === "string";
+}
 
 function resolveMin(value: Breakpoint | number): string {
-  const px = typeof value === "number" ? value : BREAKPOINTS[value];
+  const px = isNumber(value) ? value : BREAKPOINTS[value];
   return `(min-width: ${px}px)`;
 }
 
 function resolveMax(value: Breakpoint | number): string {
-  const px = typeof value === "number" ? value : BREAKPOINTS[value];
+  const px = isNumber(value) ? value : BREAKPOINTS[value];
   return `(max-width: ${px - 1}px)`;
 }
 
-// oxlint-disable-next-line typescript/ban-types
-function parseQuery(query: BreakpointQuery | MediaQueryInput | (string & {})): string {
-  if (typeof query !== "string") {
+function parseQuery(query: MediaQueryInput | string): string {
+  if (!isString(query)) {
     const parts: string[] = [];
-    if (query.min != null) parts.push(resolveMin(query.min));
-    if (query.max != null) parts.push(resolveMax(query.max));
+    if (query.min !== undefined) parts.push(resolveMin(query.min));
+    if (query.max !== undefined) parts.push(resolveMax(query.max));
     if (query.pointer === "coarse") parts.push("(pointer: coarse)");
     if (query.pointer === "fine") parts.push("(pointer: fine)");
     if (parts.length === 0) return "(min-width: 0px)";
@@ -44,8 +49,12 @@ function parseQuery(query: BreakpointQuery | MediaQueryInput | (string & {})): s
   for (const segment of query.split(":")) {
     if (segment.startsWith("max-")) {
       const bp = segment.slice(4);
-      if (bp in BREAKPOINTS) parts.push(resolveMax(bp as Breakpoint));
+      if (bp in BREAKPOINTS) {
+        // SAFETY: the `in BREAKPOINTS` check above guarantees membership.
+        parts.push(resolveMax(bp as Breakpoint));
+      }
     } else if (segment in BREAKPOINTS) {
+      // SAFETY: the `in BREAKPOINTS` check above guarantees membership.
       parts.push(resolveMin(segment as Breakpoint));
     }
   }
@@ -64,12 +73,12 @@ export type MediaQueryInput = {
   pointer?: "coarse" | "fine";
 };
 
-export function useMediaQuery(query: BreakpointQuery | MediaQueryInput | (string & {})): boolean {
+export function useMediaQuery(query: MediaQueryInput | string): boolean {
   const mediaQuery = parseQuery(query);
 
   const subscribe = useCallback(
     (callback: () => void) => {
-      if (typeof window === "undefined") return () => {};
+      if (!("window" in globalThis)) return () => {};
       const mql = window.matchMedia(mediaQuery);
       mql.addEventListener("change", callback);
       return () => mql.removeEventListener("change", callback);
@@ -78,7 +87,7 @@ export function useMediaQuery(query: BreakpointQuery | MediaQueryInput | (string
   );
 
   const getSnapshot = useCallback(() => {
-    if (typeof window === "undefined") return false;
+    if (!("window" in globalThis)) return false;
     return window.matchMedia(mediaQuery).matches;
   }, [mediaQuery]);
 

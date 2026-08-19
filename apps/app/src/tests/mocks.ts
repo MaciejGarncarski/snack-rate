@@ -1,6 +1,8 @@
 import { Readable } from "node:stream";
 import { vi } from "vitest";
 
+/* oxlint-disable anti-slop/no-module-mocking -- This module exists to provide the test suite's vitest doubles; migrating the suite off vi.mock to real dependency seams is out of scope. */
+
 const MINIMAL_PNG = new Uint8Array([
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
   0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x77, 0x53,
@@ -35,20 +37,31 @@ vi.mock("#/infrastructure/s3-client", () => ({
   movePublicFile: vi.fn<(oldKey: string, newKey: string) => Promise<void>>().mockResolvedValue(),
 }));
 
+type MockSharp = {
+  metadata: () => Promise<{ width: number; height: number; format: string }>;
+  rotate: () => MockSharp;
+  resize: () => MockSharp;
+  jpeg: () => MockSharp;
+  png: () => MockSharp;
+  webp: () => MockSharp;
+  toFormat: () => MockSharp;
+  toBuffer: () => Promise<Buffer>;
+};
+
 vi.mock("sharp", () => {
-  const sharpInstance = {
+  const sharpInstance: MockSharp = {
     metadata: vi
-      .fn<() => Promise<{ width: number; height: number; format: string }>>()
+      .fn<MockSharp["metadata"]>()
       .mockResolvedValue({ width: 1024, height: 768, format: "png" }),
-    rotate: vi.fn<() => unknown>().mockReturnThis(),
-    resize: vi.fn<() => unknown>().mockReturnThis(),
-    jpeg: vi.fn<() => unknown>().mockReturnThis(),
-    png: vi.fn<() => unknown>().mockReturnThis(),
-    webp: vi.fn<() => unknown>().mockReturnThis(),
-    toFormat: vi.fn<() => unknown>().mockReturnThis(),
-    toBuffer: vi.fn<() => Promise<Buffer>>().mockResolvedValue(Buffer.from("optimized-data")),
+    rotate: vi.fn<MockSharp["rotate"]>().mockReturnThis(),
+    resize: vi.fn<MockSharp["resize"]>().mockReturnThis(),
+    jpeg: vi.fn<MockSharp["jpeg"]>().mockReturnThis(),
+    png: vi.fn<MockSharp["png"]>().mockReturnThis(),
+    webp: vi.fn<MockSharp["webp"]>().mockReturnThis(),
+    toFormat: vi.fn<MockSharp["toFormat"]>().mockReturnThis(),
+    toBuffer: vi.fn<MockSharp["toBuffer"]>().mockResolvedValue(Buffer.from("optimized-data")),
   };
   return {
-    default: vi.fn<() => unknown>(() => sharpInstance),
+    default: vi.fn<() => MockSharp>(() => sharpInstance),
   };
 });

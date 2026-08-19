@@ -73,6 +73,7 @@ export async function getPublicFileStream(key: string) {
   }
 
   return {
+    // SAFETY: GetObjectCommand returns a streaming body (Readable) for stored objects, never a buffered payload.
     stream: Body as Readable,
     contentType: ContentType,
     contentLength: ContentLength,

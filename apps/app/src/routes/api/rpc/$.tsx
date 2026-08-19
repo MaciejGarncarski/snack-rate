@@ -37,6 +37,7 @@ const handler = new RPCHandler(router, {
         ...options,
         context: {
           ...options.context,
+          // SAFETY: the symbol-keyed value is an OverrideBodyContext, read back in the routing interceptor below.
           // oxlint-disable-next-line typescript/no-explicit-any
           [OVERRIDE_BODY_CONTEXT as any]: {
             fetchRequest: options.request,
@@ -47,10 +48,11 @@ const handler = new RPCHandler(router, {
   ],
   routingInterceptors: [
     (options) => {
+      // SAFETY: context is arbitrary; we only ever write OVERRIDE_BODY_CONTEXT ourselves in the fetch interceptor above.
       // oxlint-disable-next-line typescript/no-explicit-any
-      const { fetchRequest } = (options.context as any)[
-        OVERRIDE_BODY_CONTEXT
-      ] as OverrideBodyContext;
+      const context = options.context as any;
+      // SAFETY: OVERRIDE_BODY_CONTEXT is only ever written as an OverrideBodyContext.
+      const { fetchRequest } = context[OVERRIDE_BODY_CONTEXT] as OverrideBodyContext;
 
       if (!fetchRequest) {
         return options.next(options);
@@ -90,6 +92,7 @@ const handler = new RPCHandler(router, {
       try {
         return await next();
       } catch (error) {
+        // SAFETY: RPC handlers throw Error instances; only their cause is read off the narrowed error.
         logger.error({ err: error, cause: (error as Error).cause }, "RPC handler error");
         throw mapError(error);
       }

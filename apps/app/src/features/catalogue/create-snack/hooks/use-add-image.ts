@@ -59,6 +59,7 @@ export function useAddImage({ onAddToQueue, onValidationError, allFiles }: UseAd
     input.click();
 
     input.addEventListener("change", async (event) => {
+      // SAFETY: the change listener is only ever attached to the input element created above.
       const target = event.target as HTMLInputElement;
 
       if (!target.files) return;

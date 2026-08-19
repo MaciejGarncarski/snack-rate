@@ -1,3 +1,4 @@
+import type { Attributes } from "@opentelemetry/api";
 import { createMiddleware } from "@tanstack/react-start";
 
 import { httpRequestsCounter, httpStatusCodesCounter } from "#/observability/counters";
@@ -94,11 +95,14 @@ export const requestLoggerMiddleware = createMiddleware({ type: "request" }).ser
             },
           );
         } finally {
-          httpDurationHistogram.record(Date.now() - startTime, {
+          const attributes: Attributes = {
             "http.method": request.method,
             "http.route": httpRoute,
-            ...(statusCode === undefined ? {} : { "http.status_code": statusCode }),
-          });
+          };
+          if (statusCode !== undefined) {
+            attributes["http.status_code"] = statusCode;
+          }
+          httpDurationHistogram.record(Date.now() - startTime, attributes);
         }
       },
       { tracer: getTracer("app") },

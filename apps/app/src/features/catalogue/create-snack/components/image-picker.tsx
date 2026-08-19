@@ -24,13 +24,13 @@ type ValidationAlert = {
   error: ImageValidationError;
 };
 
-const errorMessageMap: Record<ValidationAlert["error"], string> = {
+const errorMessageMap = {
   "file-too-large": "Plik jest zbyt duży (maks. 10 MB).",
   "unsupported-file-type": "Nieobsługiwany typ pliku.",
   "already-added": "Ten plik został już dodany.",
   "resolution-too-low": "Zbyt niska rozdzielczość (min. 200x200 px).",
   "maximum-images-reached": "Osiągnięto maksimum obrazów.",
-};
+} satisfies Record<ValidationAlert["error"], string>;
 
 type Props = {
   value: File[];
