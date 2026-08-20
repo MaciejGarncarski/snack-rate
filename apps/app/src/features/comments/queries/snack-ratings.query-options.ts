@@ -1,13 +1,7 @@
-import { queryOptions } from "@tanstack/react-query";
+import { orpc } from "#/orpc/client";
 
-import { client } from "#/orpc/client";
-
-export const snackRatingsQueryOptions = (snackItemId: string) =>
-  queryOptions({
-    queryKey: ["snackRatings", snackItemId],
-    queryFn: () => {
-      return client.comments.getRatings({ snackItemId });
-    },
+export const snackRatingDataQueryOptions = (snackItemId: string) =>
+  orpc.comments.getRatings.queryOptions({
+    input: { snackItemId },
     staleTime: 30_000,
-    enabled: !!snackItemId,
   });

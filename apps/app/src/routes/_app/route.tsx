@@ -1,4 +1,3 @@
-import type { QueryClient } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import * as z from "zod";
 
@@ -14,7 +13,7 @@ const sharedParamsSchema = z.object({
 export const Route = createFileRoute("/_app")({
   component: RouteComponent,
   validateSearch: sharedParamsSchema,
-  loader: ({ context }: { context: { queryClient: QueryClient } }) => {
+  loader: ({ context }) => {
     context.queryClient.ensureQueryData(getSearchedItemsQueryOptions(""));
   },
   notFoundComponent: () => <div>Nie znaleziono 1</div>,

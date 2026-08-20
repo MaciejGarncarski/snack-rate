@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { snackCommentsQueryOptions } from "#/features/comments/queries/comments.query-options";
-import { snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
+import { snackRatingDataQueryOptions as snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
 import { orpc } from "#/orpc/client";
 
 export function useCommentSnack() {

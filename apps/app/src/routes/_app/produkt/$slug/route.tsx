@@ -26,8 +26,7 @@ import {
 import { Skeleton } from "#/components/ui/skeleton";
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query-options";
 import { CommentSection } from "#/features/comments/components/comment-section";
-import { snackCommentsQueryOptions } from "#/features/comments/queries/comments.query-options";
-import { snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
+import { snackRatingDataQueryOptions as snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
 import { formatCreatedAt } from "#/lib/date";
 import { cn } from "#/lib/utils";
 
@@ -48,8 +47,7 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
       throw notFound();
     }
 
-    context.queryClient.ensureQueryData(snackRatingsQueryOptions(snack.id));
-    context.queryClient.ensureInfiniteQueryData(snackCommentsQueryOptions(snack.id));
+    void context.queryClient.fetchQuery(snackRatingsQueryOptions(snack.id));
 
     return { snack };
   },

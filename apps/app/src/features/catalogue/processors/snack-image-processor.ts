@@ -21,7 +21,6 @@ export async function processUploadedImages(files: File[], slug: Slug): Promise<
         uploadQueue(async () => {
           const { stream } = await validateImageType(file.stream());
           const [forMain, forThumb] = stream.tee();
-
           const optimized = optimizeImage(nodeStreamFromWeb(forMain as ReadableStream<Uint8Array>));
 
           const thumbnail = createThumbnail(
@@ -31,6 +30,8 @@ export async function processUploadedImages(files: File[], slug: Slug): Promise<
           const key = StorageKey.create(slug, OPTIMIZED_FORMAT).getValue();
           const thumbKey = StorageKey.createThumb(slug, OPTIMIZED_FORMAT).getValue();
 
+          uploadedKeys.push(key, thumbKey);
+
           await Promise.all([
             uploadPublicFileStream(key, optimized.stream, {
               contentType: optimized.contentType,
@@ -39,8 +40,6 @@ export async function processUploadedImages(files: File[], slug: Slug): Promise<
               contentType: thumbnail.contentType,
             }),
           ]);
-
-          uploadedKeys.push(key, thumbKey);
 
           return { key, thumbKey, index };
         }),

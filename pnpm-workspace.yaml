@@ -20,6 +20,10 @@ catalog:
   pg-boss: "^12.27.0"
   pino: "^10.3.1"
   tsx: "^4.23.12"
+  "@types/node": "^26.2.0"
+  "@types/pg": "^8.23.1"
+  "@types/react": "^19.2.18"
+  "@types/react-dom": "^19.2.4"
 
 minimumReleaseAge: 1440
 blockExoticSubdeps: true
@@ -34,23 +38,3 @@ allowBuilds:
   protobufjs: false
   sharp: false
   ssh2: false
-minimumReleaseAgeExclude:
-  - "@storybook/addon-a11y@10.5.4"
-  - "@storybook/addon-docs@10.5.4"
-  - "@storybook/addon-onboarding@10.5.4"
-  - "@storybook/addon-vitest@10.5.4"
-  - "@storybook/builder-vite@10.5.4"
-  - "@storybook/csf-plugin@10.5.4"
-  - "@storybook/react-dom-shim@10.5.4"
-  - "@storybook/react-vite@10.5.4"
-  - "@storybook/react@10.5.4"
-  - "@storybook/tanstack-react@10.5.4"
-  - "@storybook/cli@10.5.4"
-  - "@storybook/addon-themes@10.5.4"
-  - storybook@10.5.4
-  - "@types/react-dom@19.2.4"
-  - "@types/react@19.2.18"
-  - playwright-core@1.62.1
-  - playwright@1.62.1
-  - '@tanstack/react-router@1.170.31'
-  - '@tanstack/router-core@1.171.26'

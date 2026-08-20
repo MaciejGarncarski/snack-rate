@@ -17,7 +17,6 @@ export function getPool(): Pool {
       password: decodeURIComponent(url.password),
       database: url.pathname.slice(1),
       idleTimeoutMillis: 0,
-      pipeline: true,
     });
   }
   return _pool;
