@@ -2,11 +2,11 @@ import { pluralizeRatings } from "#/lib/pluralizer";
 import { cn } from "#/lib/utils";
 
 export function getColorClass(rating: number): string {
-  if (rating <= 1) return "text-red-500";
-  if (rating <= 2) return "text-orange-500";
-  if (rating <= 3) return "text-yellow-500";
-  if (rating <= 3.5) return "text-lime-500";
-  if (rating <= 4.5) return "text-green-600";
+  if (rating <= 2) return "text-red-500";
+  if (rating <= 4) return "text-orange-500";
+  if (rating <= 6) return "text-yellow-500";
+  if (rating <= 7) return "text-lime-500";
+  if (rating <= 9) return "text-green-600";
   return "text-cyan-500";
 }
 
@@ -71,7 +71,8 @@ const fontSizesMap = {
 } satisfies Record<"xs" | "sm" | "md" | "lg", { value: string; count: string }>;
 
 export function SnackRating({ rating, ratingCount, withText, size = "md" }: SnackRatingProps) {
-  const value = Math.max(0, Math.min(5, rating));
+  const value = Math.max(0, Math.min(10, rating));
+  const starValue = value / 2;
   const color = getColorClass(value);
 
   const gapClass =
@@ -81,7 +82,7 @@ export function SnackRating({ rating, ratingCount, withText, size = "md" }: Snac
     <div className="flex items-center gap-3">
       <div className={cn("flex", gapClass)}>
         {Array.from({ length: 5 }, (_, i) => {
-          const fill = Math.max(0, Math.min(1, value - i));
+          const fill = Math.max(0, Math.min(1, starValue - i));
           return <Star key={i} fill={fill} size={size} color={color} />;
         })}
       </div>

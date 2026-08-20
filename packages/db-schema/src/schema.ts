@@ -73,7 +73,7 @@ export const snackItems = pgTable(
     slug: text("slug").notNull().unique(),
     description: text("description"),
     barcode: text("barcode"),
-    avgRating: decimal("avg_rating", { precision: 3, scale: 2 }).notNull().default("0"),
+    avgRating: decimal("avg_rating", { precision: 4, scale: 2 }).notNull().default("0"),
     status: text("status").notNull().default("pending"), // 'pending' | 'published' | 'rejected'
     createdAt: timestamp("created_at", { precision: 3 }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -113,7 +113,7 @@ export const snackComments = pgTable(
     parentCommentId: uuid("parent_comment_id").references((): AnyPgColumn => snackComments.id, {
       onDelete: "cascade",
     }),
-    rating: integer("rating"), // 1-5 stars; only top-level comments (reviews) may carry one
+    rating: integer("rating"), // 1-10; only top-level comments (reviews) may carry one
     body: text("body"),
     createdAt: timestamp("created_at", { precision: 3 }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -127,7 +127,7 @@ export const snackComments = pgTable(
     index("snack_comments_parent_comment_idx").on(t.parentCommentId),
     check(
       "snack_comments_rating_check",
-      sql`rating IS NULL OR (parent_comment_id IS NULL AND rating BETWEEN 1 AND 5)`,
+      sql`rating IS NULL OR (parent_comment_id IS NULL AND rating BETWEEN 1 AND 10)`,
     ),
     check("snack_comments_author_type_check", sql`author_type IN ('user', 'guest')`),
   ],

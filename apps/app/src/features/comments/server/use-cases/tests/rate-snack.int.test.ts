@@ -21,15 +21,15 @@ describe("rate snack", () => {
     const authorId = uuidv7();
 
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 4, authorId, authorType: "guest" },
+      { snackItemId: snack.id, rating: 8, authorId, authorType: "guest" },
       repository,
       db,
     );
 
-    expect(result.rating.value).toBe(4);
-    expect(result.avgRating).toBe(4);
+    expect(result.rating.value).toBe(8);
+    expect(result.avgRating).toBe(8);
     expect(result.ratingCount).toBe(1);
-    expect(result.distribution).toEqual({ "4": 1 });
+    expect(result.distribution).toEqual({ "8": 1 });
   });
 
   it("should update an existing rating on re-rate", async () => {
@@ -37,18 +37,18 @@ describe("rate snack", () => {
     const authorId = uuidv7();
 
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 2, authorId, authorType: "guest" },
+      { snackItemId: snack.id, rating: 4, authorId, authorType: "guest" },
       repository,
       db,
     );
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 5, authorId, authorType: "guest" },
+      { snackItemId: snack.id, rating: 10, authorId, authorType: "guest" },
       repository,
       db,
     );
 
-    expect(result.rating.value).toBe(5);
-    expect(result.avgRating).toBe(5);
+    expect(result.rating.value).toBe(10);
+    expect(result.avgRating).toBe(10);
     expect(result.ratingCount).toBe(1);
   });
 
@@ -56,33 +56,33 @@ describe("rate snack", () => {
     const snack = await createSnack();
 
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 1, authorId: uuidv7(), authorType: "guest" },
-      repository,
-      db,
-    );
-    await rateSnackUseCase(
       { snackItemId: snack.id, rating: 2, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 3, authorId: uuidv7(), authorType: "guest" },
-      repository,
-      db,
-    );
-    const result = await rateSnackUseCase(
       { snackItemId: snack.id, rating: 4, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
+    await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 6, authorId: uuidv7(), authorType: "guest" },
+      repository,
+      db,
+    );
+    const result = await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 8, authorId: uuidv7(), authorType: "guest" },
+      repository,
+      db,
+    );
 
-    expect(result.avgRating).toBe(2.5);
+    expect(result.avgRating).toBe(5);
     expect(result.ratingCount).toBe(4);
     expect(result.distribution).toEqual({
-      "1": 1,
       "2": 1,
-      "3": 1,
       "4": 1,
+      "6": 1,
+      "8": 1,
     });
   });
 
@@ -90,7 +90,7 @@ describe("rate snack", () => {
     const snack = await createSnack();
 
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 3, authorId: uuidv7(), authorType: "guest" },
+      { snackItemId: snack.id, rating: 6, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
@@ -98,7 +98,7 @@ describe("rate snack", () => {
     const dbSnack = await db.query.snackItems.findFirst({
       where: { slug: snack.slug },
     });
-    expect(Number(dbSnack?.avgRating)).toBe(3);
+    expect(Number(dbSnack?.avgRating)).toBe(6);
   });
 
   it("should require authorId and authorType at type level", () => {
@@ -114,7 +114,7 @@ describe("rate snack", () => {
     const result = await rateSnackUseCase(
       {
         snackItemId: snack.id,
-        rating: 5,
+        rating: 10,
         body: "  Super chrupki  ",
         authorId,
         authorType: "guest",
@@ -123,7 +123,7 @@ describe("rate snack", () => {
       db,
     );
 
-    expect(result.rating.value).toBe(5);
+    expect(result.rating.value).toBe(10);
     expect(result.rating.body).toBe("Super chrupki");
 
     const ratings = await repository.getRatingsForSnack({
@@ -132,7 +132,7 @@ describe("rate snack", () => {
       authorType: "guest",
     });
 
-    expect(ratings.userRating?.value).toBe(5);
+    expect(ratings.userRating?.value).toBe(10);
     expect(ratings.userRating?.body).toBe("Super chrupki");
   });
 
@@ -140,7 +140,7 @@ describe("rate snack", () => {
     const snack = await createSnack();
 
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 3, body: "   ", authorId: uuidv7(), authorType: "guest" },
+      { snackItemId: snack.id, rating: 6, body: "   ", authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
@@ -163,41 +163,41 @@ describe("rate snack", () => {
     expect(result.distribution).toEqual({ "1": 1 });
   });
 
-  it("should accept the maximum rating of 5", async () => {
+  it("should accept the maximum rating of 10", async () => {
     const snack = await createSnack();
 
     const result = await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 5, authorId: uuidv7(), authorType: "guest" },
+      { snackItemId: snack.id, rating: 10, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
 
-    expect(result.rating.value).toBe(5);
-    expect(result.avgRating).toBe(5);
+    expect(result.rating.value).toBe(10);
+    expect(result.avgRating).toBe(10);
     expect(result.ratingCount).toBe(1);
-    expect(result.distribution).toEqual({ "5": 1 });
+    expect(result.distribution).toEqual({ "10": 1 });
   });
 
   it("should round the average rating to two decimals", async () => {
     const snack = await createSnack();
 
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 1, authorId: uuidv7(), authorType: "guest" },
-      repository,
-      db,
-    );
-    await rateSnackUseCase(
       { snackItemId: snack.id, rating: 2, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
-    const result = await rateSnackUseCase(
+    await rateSnackUseCase(
       { snackItemId: snack.id, rating: 4, authorId: uuidv7(), authorType: "guest" },
       repository,
       db,
     );
+    const result = await rateSnackUseCase(
+      { snackItemId: snack.id, rating: 8, authorId: uuidv7(), authorType: "guest" },
+      repository,
+      db,
+    );
 
-    expect(result.avgRating).toBe(2.33);
+    expect(result.avgRating).toBe(4.67);
   });
 
   it("should soft-delete the previous rating when the same guest re-rates", async () => {
@@ -205,12 +205,12 @@ describe("rate snack", () => {
     const guestId = uuidv7();
 
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 2, authorId: guestId, authorType: "guest" },
+      { snackItemId: snack.id, rating: 4, authorId: guestId, authorType: "guest" },
       repository,
       db,
     );
     await rateSnackUseCase(
-      { snackItemId: snack.id, rating: 5, authorId: guestId, authorType: "guest" },
+      { snackItemId: snack.id, rating: 10, authorId: guestId, authorType: "guest" },
       repository,
       db,
     );
@@ -223,9 +223,9 @@ describe("rate snack", () => {
     const deleted = rows.filter((row) => row.deletedAt !== null);
 
     expect(active).toHaveLength(1);
-    expect(active[0].rating).toBe(5);
+    expect(active[0].rating).toBe(10);
     expect(deleted).toHaveLength(1);
-    expect(deleted[0].rating).toBe(2);
+    expect(deleted[0].rating).toBe(4);
   });
 
   it("should throw for a rating below the minimum", async () => {
@@ -237,7 +237,7 @@ describe("rate snack", () => {
         repository,
         db,
       ),
-    ).toThrow("Rating must be an integer between 1 and 5");
+    ).toThrow("Rating must be an integer between 1 and 10");
   });
 
   it("should throw for a rating above the maximum", async () => {
@@ -245,11 +245,11 @@ describe("rate snack", () => {
 
     expect(() =>
       rateSnackUseCase(
-        { snackItemId: snack.id, rating: 6, authorId: uuidv7(), authorType: "guest" },
+        { snackItemId: snack.id, rating: 11, authorId: uuidv7(), authorType: "guest" },
         repository,
         db,
       ),
-    ).toThrow("Rating must be an integer between 1 and 5");
+    ).toThrow("Rating must be an integer between 1 and 10");
   });
 
   it("should throw for a non-integer rating", async () => {
@@ -261,7 +261,7 @@ describe("rate snack", () => {
         repository,
         db,
       ),
-    ).toThrow("Rating must be an integer between 1 and 5");
+    ).toThrow("Rating must be an integer between 1 and 10");
   });
 
   it("should throw when authorId is an empty string", async () => {

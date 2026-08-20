@@ -48,16 +48,16 @@ describe("get snack ratings", () => {
     const snack = await createSnack();
     const alice = uuidv7();
 
-    await insertRating(snack.id, 4, { authorId: alice, authorType: "guest" });
-    await insertRating(snack.id, 2, { authorId: uuidv7(), authorType: "guest" });
-    await insertRating(snack.id, 3, { authorId: uuidv7(), authorType: "guest" });
+    await insertRating(snack.id, 8, { authorId: alice, authorType: "guest" });
+    await insertRating(snack.id, 4, { authorId: uuidv7(), authorType: "guest" });
+    await insertRating(snack.id, 6, { authorId: uuidv7(), authorType: "guest" });
 
     const result = await getSnackRatingsUseCase(
       { snackItemId: snack.id, authorId: alice, authorType: "guest" },
       repository,
     );
 
-    expect(result.avgRating).toBe(3);
+    expect(result.avgRating).toBe(6);
     expect(result.ratingCount).toBe(3);
   });
 
@@ -65,9 +65,9 @@ describe("get snack ratings", () => {
     const snack = await createSnack();
     const alice = uuidv7();
 
-    await insertRating(snack.id, 1, { authorId: alice, authorType: "guest" });
-    await insertRating(snack.id, 1, { authorId: uuidv7(), authorType: "guest" });
-    await insertRating(snack.id, 5, { authorId: uuidv7(), authorType: "guest" });
+    await insertRating(snack.id, 2, { authorId: alice, authorType: "guest" });
+    await insertRating(snack.id, 2, { authorId: uuidv7(), authorType: "guest" });
+    await insertRating(snack.id, 10, { authorId: uuidv7(), authorType: "guest" });
 
     const result = await getSnackRatingsUseCase(
       { snackItemId: snack.id, authorId: alice, authorType: "guest" },
@@ -75,8 +75,8 @@ describe("get snack ratings", () => {
     );
 
     expect(result.distribution).toEqual({
-      "1": 2,
-      "5": 1,
+      "2": 2,
+      "10": 1,
     });
   });
 
@@ -85,21 +85,21 @@ describe("get snack ratings", () => {
     const alice = uuidv7();
     const bob = uuidv7();
 
-    await insertRating(snack.id, 5, { authorId: alice, authorType: "guest" });
-    await insertRating(snack.id, 3, { authorId: bob, authorType: "guest" });
+    await insertRating(snack.id, 10, { authorId: alice, authorType: "guest" });
+    await insertRating(snack.id, 6, { authorId: bob, authorType: "guest" });
 
     const aliceResult = await getSnackRatingsUseCase(
       { snackItemId: snack.id, authorId: alice, authorType: "guest" },
       repository,
     );
-    expect(aliceResult.userRating?.value).toBe(5);
+    expect(aliceResult.userRating?.value).toBe(10);
     expect(aliceResult.userRating?.body).toBeNull();
 
     const bobResult = await getSnackRatingsUseCase(
       { snackItemId: snack.id, authorId: bob, authorType: "guest" },
       repository,
     );
-    expect(bobResult.userRating?.value).toBe(3);
+    expect(bobResult.userRating?.value).toBe(6);
     expect(bobResult.userRating?.body).toBeNull();
   });
 
@@ -111,7 +111,7 @@ describe("get snack ratings", () => {
       snackItemId: snack.id,
       authorId: alice,
       authorType: "guest",
-      rating: 4,
+      rating: 8,
       body: "Pyszny, ale drogi.",
     });
 
@@ -120,7 +120,7 @@ describe("get snack ratings", () => {
       repository,
     );
 
-    expect(result.userRating?.value).toBe(4);
+    expect(result.userRating?.value).toBe(8);
     expect(result.userRating?.body).toBe("Pyszny, ale drogi.");
   });
 
@@ -130,22 +130,22 @@ describe("get snack ratings", () => {
     const carol = uuidv7();
     const dave = uuidv7();
 
-    await insertRating(snack.id, 5, { authorId: bob, authorType: "guest" });
-    await insertRating(snack.id, 3, { authorId: carol, authorType: "guest" });
-    await insertRating(snack.id, 1, { authorId: dave, authorType: "guest" });
+    await insertRating(snack.id, 10, { authorId: bob, authorType: "guest" });
+    await insertRating(snack.id, 6, { authorId: carol, authorType: "guest" });
+    await insertRating(snack.id, 2, { authorId: dave, authorType: "guest" });
     await db
       .update(snackComments)
       .set({ deletedAt: new Date() })
-      .where(eq(snackComments.rating, 5));
+      .where(eq(snackComments.rating, 10));
 
     const result = await getSnackRatingsUseCase(
       { snackItemId: snack.id, authorId: carol, authorType: "guest" },
       repository,
     );
 
-    expect(result.avgRating).toBe(2);
+    expect(result.avgRating).toBe(4);
     expect(result.ratingCount).toBe(2);
-    expect(result.userRating?.value).toBe(3);
+    expect(result.userRating?.value).toBe(6);
   });
 
   it("should return null userRating when guest has not rated", async () => {
@@ -153,7 +153,7 @@ describe("get snack ratings", () => {
     const someone = uuidv7();
     const stranger = uuidv7();
 
-    await insertRating(snack.id, 4, { authorId: someone, authorType: "guest" });
+    await insertRating(snack.id, 8, { authorId: someone, authorType: "guest" });
 
     const result = await getSnackRatingsUseCase(
       { snackItemId: snack.id, authorId: stranger, authorType: "guest" },

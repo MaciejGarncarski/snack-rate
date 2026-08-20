@@ -4,14 +4,14 @@ export const MAXIMUM_COMMENT_BODY_LENGTH = 500;
 
 export const rateSnackSchema = z.object({
   snackItemId: z.uuid(),
-  rating: z.number().int().min(1).max(5),
+  rating: z.number().int().min(1).max(10),
   body: z.string().max(MAXIMUM_COMMENT_BODY_LENGTH).optional().nullable(),
   captchaCode: z.string().length(5),
 });
 
 export const rateSnackFormSchema = z
   .object({
-    rating: z.number().int().min(1).max(5).nullable(),
+    rating: z.number().int().min(1).max(10).nullable(),
     body: z.string().max(MAXIMUM_COMMENT_BODY_LENGTH, "Opinia jest za długa"),
     captchaCode: z.string().length(5, "Wpisz 5-znakowy kod z obrazka"),
   })

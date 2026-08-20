@@ -135,7 +135,7 @@ describe("list snack comments", () => {
         insertComment(snack.id, {
           authorId: uuidv7(),
           authorType: "guest",
-          rating: (index % 5) + 1,
+          rating: (index % 10) + 1,
           body: `Recenzja ${index}`,
           createdAt: new Date(2026, 0, 1 + index, 12, 0, 0),
         }),

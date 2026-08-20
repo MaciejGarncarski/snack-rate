@@ -72,13 +72,11 @@ export function UserCommentForm({
       <div className="flex flex-col gap-5 py-6">
         <form.Field name="rating">
           {(field) => (
-            <div className="flex flex-col items-center gap-4 py-1">
-              <SnackRatingPicker
-                currentRating={field.state.value}
-                onRate={field.handleChange}
-                disabled={isPending}
-              />
-            </div>
+            <SnackRatingPicker
+              currentRating={field.state.value}
+              onRate={field.handleChange}
+              disabled={isPending}
+            />
           )}
         </form.Field>
 

@@ -4,8 +4,8 @@ export class Rating {
   static create(value: number | string): Rating {
     const parsed = Number(value);
 
-    if (!Number.isInteger(parsed) || parsed < 1 || parsed > 5) {
-      throw new Error("Rating must be an integer between 1 and 5");
+    if (!Number.isInteger(parsed) || parsed < 1 || parsed > 10) {
+      throw new Error("Rating must be an integer between 1 and 10");
     }
 
     return new Rating(parsed);

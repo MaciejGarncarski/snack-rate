@@ -1,63 +1,7 @@
-import { StarIcon } from "lucide-react";
 import { useState } from "react";
 
-import { getColorClass } from "#/components/snacks/snack-rating";
-import { cn } from "#/lib/utils";
-
-const RATINGS = [
-  { value: 1, label: "Bardzo słaba" },
-  { value: 2, label: "Słaba" },
-  { value: 3, label: "Średnia" },
-  { value: 4, label: "Dobra" },
-  { value: 5, label: "Świetna" },
-];
-
-type StarButtonProps = {
-  starIndex: number;
-  filled: boolean;
-  color: string;
-  onRate: (value: number) => void;
-  onHover: (value: number) => void;
-  onLeave: () => void;
-  disabled: boolean;
-};
-
-function StarButton({
-  starIndex,
-  filled,
-  color,
-  onRate,
-  onHover,
-  onLeave,
-  disabled,
-}: StarButtonProps) {
-  return (
-    <button
-      type="button"
-      aria-label={filled ? `Twoja ocena: ${starIndex}/5` : `Oceń na ${starIndex}`}
-      className={cn(
-        "rounded-lg p-0.5 outline-none transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring/60 hover:scale-110 active:scale-90",
-        disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
-      )}
-      onMouseEnter={() => {
-        if (!disabled) onHover(starIndex);
-      }}
-      onMouseLeave={onLeave}
-      onClick={() => {
-        if (!disabled) onRate(starIndex);
-      }}
-      disabled={disabled}
-    >
-      <StarIcon
-        strokeWidth={1.5}
-        className={cn(
-          "size-7 transition-all duration-150 ease-out",
-          filled ? cn("fill-current", color) : "fill-transparent text-amber-400",
-        )}
-      />
-    </button>
-  );
-}
+import { Field } from "#/components/ui/field";
+import { Slider } from "#/components/ui/slider";
 
 type SnackRatingPickerProps = {
   currentRating: number | null;
@@ -65,57 +9,63 @@ type SnackRatingPickerProps = {
   disabled?: boolean;
 };
 
+const MIN_VALUE = 1;
+const MAX_VALUE = 10;
+
 export function SnackRatingPicker({ currentRating, onRate, disabled }: SnackRatingPickerProps) {
-  const [hoveredValue, setHoveredValue] = useState<number>(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [displayRating, setDisplayRating] = useState<number | null>(currentRating);
-
-  const isDisabled = disabled || isSubmitting;
-  const activeValue = hoveredValue || displayRating || 0;
-  const activeColor = activeValue ? getColorClass(activeValue) : null;
-  const activeLabel = RATINGS.find((rating) => rating.value === activeValue);
-
-  const handleRate = async (value: number) => {
-    if (isDisabled || value === displayRating) return;
-
-    setIsSubmitting(true);
-
-    try {
-      await onRate(value);
-      setDisplayRating(value);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const [draftValue, setDraftValue] = useState<number | null>(null);
+  const sliderValue = draftValue ?? (currentRating || 1);
 
   return (
-    <div className="flex w-full flex-col items-center gap-2">
-      <div className="flex items-center gap-1">
-        {RATINGS.map(({ value }) => (
-          <StarButton
-            key={value}
-            starIndex={value}
-            filled={value <= activeValue}
-            color={activeColor ?? "text-amber-400"}
-            onRate={handleRate}
-            onHover={setHoveredValue}
-            onLeave={() => setHoveredValue(0)}
-            disabled={isDisabled}
-          />
-        ))}
-      </div>
+    <Field className="bg-input/50 w-full rounded-3xl py-4 md:py-12 px-4">
+      <div className="flex max-w-sm flex-col gap-2 self-center w-full">
+        <div className="flex flex-col gap-2 items-center justify-center pb-4">
+          <h3 className="text-lg font-semibold">Jak oceniasz?</h3>
+          <p className="text-5xl">
+            <span className="text-6xl text-primary tabular-nums font-bold">{sliderValue}</span> /10
+          </p>
+        </div>
 
-      <div className="flex h-5 w-full items-center justify-center" aria-live="polite">
-        {activeLabel ? (
-          <span className={cn("text-sm leading-none font-semibold tabular-nums", activeColor)}>
-            {activeValue}/5 · {activeLabel.label}
-          </span>
-        ) : (
-          <span className="text-sm leading-none text-muted-foreground">
-            Kliknij gwiazdki, aby wybrać ocenę.
-          </span>
-        )}
+        <div className="flex flex-row items-center gap-4">
+          <p className="hidden md:block">{MIN_VALUE}</p>
+          <Slider
+            minValue={MIN_VALUE}
+            maxValue={MAX_VALUE}
+            step={1}
+            value={sliderValue}
+            onChange={(value) => setDraftValue(value)}
+            onChangeEnd={(value) => {
+              if (value !== currentRating) onRate(value);
+              setDraftValue(null);
+            }}
+            isDisabled={disabled}
+            aria-label="Ocena"
+          />
+          <p className="hidden md:block">{MAX_VALUE}</p>
+        </div>
+
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-row gap-1 relative -top-1 justify-between w-full px-2 md:px-7">
+            {Array.from({ length: MAX_VALUE }).map((_, index) => {
+              return <span key={index} className={`inline-block w-px h-2 rounded bg-primary/70`} />;
+            })}
+          </div>
+          <div className="grid grid-cols-[6rem_1fr_6rem] md:px-4 w-full text-xs text-muted-foreground">
+            <p className="text-center w-fit flex flex-col gap-1 justify-center items-left">
+              <span>{MIN_VALUE}</span>
+              <span>Słabe</span>
+            </p>
+            <p className="text-center flex flex-col gap-1 justify-center items-center">
+              <span>{Math.floor((MIN_VALUE + MAX_VALUE) / 2)}</span>
+              <span>Średnie</span>
+            </p>
+            <p className="text-center ml-auto flex w-fit flex-col gap-1 justify-center items-right">
+              <span>{MAX_VALUE}</span>
+              <span>Rewelacyjne</span>
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </Field>
   );
 }

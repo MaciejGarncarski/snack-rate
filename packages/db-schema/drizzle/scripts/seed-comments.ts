@@ -25,17 +25,17 @@ export function getAdditionalRatings(
   const [anna, alfred, celina, dawid, ewa] = users;
 
   return [
-    { snackItemId: items.monsterOriginal.id, authorId: ewa.id, authorType: "user", value: 2 },
-    { snackItemId: items.monsterUltra.id, authorId: alfred.id, authorType: "user", value: 3 },
-    { snackItemId: items.monsterMango.id, authorId: anna.id, authorType: "user", value: 3 },
-    { snackItemId: items.laysClassic.id, authorId: celina.id, authorType: "user", value: 5 },
-    { snackItemId: items.laysKetchup.id, authorId: dawid.id, authorType: "user", value: 3 },
-    { snackItemId: items.pringlesOriginal.id, authorId: celina.id, authorType: "user", value: 2 },
-    { snackItemId: items.pringlesSerKebab.id, authorId: alfred.id, authorType: "user", value: 5 },
-    { snackItemId: items.tyrrellsSeaSalt.id, authorId: dawid.id, authorType: "user", value: 4 },
-    { snackItemId: items.tyrrellsSweet.id, authorId: alfred.id, authorType: "user", value: 5 },
-    { snackItemId: items.wedelPtasie.id, authorId: dawid.id, authorType: "user", value: 4 },
-    { snackItemId: items.wedelGorzka.id, authorId: celina.id, authorType: "user", value: 5 },
+    { snackItemId: items.monsterOriginal.id, authorId: ewa.id, authorType: "user", value: 4 },
+    { snackItemId: items.monsterUltra.id, authorId: alfred.id, authorType: "user", value: 6 },
+    { snackItemId: items.monsterMango.id, authorId: anna.id, authorType: "user", value: 6 },
+    { snackItemId: items.laysClassic.id, authorId: celina.id, authorType: "user", value: 10 },
+    { snackItemId: items.laysKetchup.id, authorId: dawid.id, authorType: "user", value: 6 },
+    { snackItemId: items.pringlesOriginal.id, authorId: celina.id, authorType: "user", value: 4 },
+    { snackItemId: items.pringlesSerKebab.id, authorId: alfred.id, authorType: "user", value: 10 },
+    { snackItemId: items.tyrrellsSeaSalt.id, authorId: dawid.id, authorType: "user", value: 8 },
+    { snackItemId: items.tyrrellsSweet.id, authorId: alfred.id, authorType: "user", value: 10 },
+    { snackItemId: items.wedelPtasie.id, authorId: dawid.id, authorType: "user", value: 8 },
+    { snackItemId: items.wedelGorzka.id, authorId: celina.id, authorType: "user", value: 10 },
   ];
 }
 

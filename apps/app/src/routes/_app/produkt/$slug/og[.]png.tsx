@@ -119,18 +119,19 @@ function Star({ fill, size = 24, color }: { fill: number; size?: number; color: 
 }
 
 export function SnackRating({ rating, withText }: { rating: number; withText?: boolean }) {
-  const value = Math.max(0, Math.min(5, rating));
+  const value = Math.max(0, Math.min(10, rating));
+  const starValue = value / 2;
 
   const color =
-    value <= 1
+    value <= 2
       ? "#ef4444"
-      : value <= 2
+      : value <= 4
         ? "#f97316"
-        : value <= 3
+        : value <= 6
           ? "#eab308"
-          : value <= 3.5
+          : value <= 7
             ? "#84cc16"
-            : value <= 4.5
+            : value <= 9
               ? "#16a34a"
               : "#06b6d4";
 
@@ -160,7 +161,7 @@ export function SnackRating({ rating, withText }: { rating: number; withText?: b
         }}
       >
         {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} fill={Math.max(0, Math.min(1, value - i))} color={color} size={48} />
+          <Star key={i} fill={Math.max(0, Math.min(1, starValue - i))} color={color} size={48} />
         ))}
       </div>
     </div>

@@ -14,7 +14,7 @@ const meta = preview.meta({
     currentRating: {
       control: "number",
       min: 0,
-      max: 5,
+      max: 10,
       step: 1,
     },
     disabled: {
@@ -29,25 +29,25 @@ export const Default = meta.story({});
 
 export const WithRating = meta.story({
   args: {
-    currentRating: 3,
+    currentRating: 6,
   },
 });
 
 export const OneStar = meta.story({
   args: {
-    currentRating: 1,
+    currentRating: 2,
   },
 });
 
 export const FullRating = meta.story({
   args: {
-    currentRating: 5,
+    currentRating: 10,
   },
 });
 
 export const Disabled = meta.story({
   args: {
-    currentRating: 4,
+    currentRating: 8,
     disabled: true,
   },
 });

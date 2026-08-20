@@ -6,7 +6,7 @@ const meta = preview.meta({
   title: "Components/SnackRating",
   component: SnackRating,
   args: {
-    rating: 4.3,
+    rating: 8.6,
     withText: true,
     size: "md",
   },
@@ -14,7 +14,7 @@ const meta = preview.meta({
     rating: {
       control: "number",
       min: 0,
-      max: 5,
+      max: 10,
       step: 0.1,
     },
     withText: {
@@ -31,7 +31,7 @@ export default meta;
 
 export const Default = meta.story({
   args: {
-    rating: 4.3,
+    rating: 8.6,
     withText: true,
     size: "md",
   },
@@ -45,31 +45,31 @@ export const Empty = meta.story({
 
 export const OneStar = meta.story({
   args: {
-    rating: 1,
+    rating: 2,
   },
 });
 
 export const HalfRating = meta.story({
   args: {
-    rating: 2.5,
+    rating: 5,
   },
 });
 
 export const ThreeStars = meta.story({
   args: {
-    rating: 3,
+    rating: 6,
   },
 });
 
 export const FourStars = meta.story({
   args: {
-    rating: 4,
+    rating: 8,
   },
 });
 
 export const Full = meta.story({
   args: {
-    rating: 5,
+    rating: 10,
   },
 });
 
