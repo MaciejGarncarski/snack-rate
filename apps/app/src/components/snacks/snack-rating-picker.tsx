@@ -1,5 +1,5 @@
 import { StarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { getColorClass } from "#/components/snacks/snack-rating";
 import { cn } from "#/lib/utils";
@@ -69,10 +69,6 @@ export function SnackRatingPicker({ currentRating, onRate, disabled }: SnackRati
   const [hoveredValue, setHoveredValue] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [displayRating, setDisplayRating] = useState<number | null>(currentRating);
-
-  useEffect(() => {
-    setDisplayRating(currentRating);
-  }, [currentRating]);
 
   const isDisabled = disabled || isSubmitting;
   const activeValue = hoveredValue || displayRating || 0;

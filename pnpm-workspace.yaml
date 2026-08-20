@@ -8,8 +8,8 @@ syncInjectedDepsAfterScripts:
 injectWorkspacePackages: true
 
 catalog:
-  "@aws-sdk/client-s3": "^3.1066.0"
-  "@aws-sdk/lib-storage": "^3.1066.0"
+  "@aws-sdk/client-s3": "^3.1113.0"
+  "@aws-sdk/lib-storage": "^3.1113.0"
   dotenv: "^17.3.1"
   drizzle-kit: "1.0.0-rc.5-ab785fc"
   drizzle-orm: "1.0.0-rc.5-ab785fc"
@@ -17,9 +17,9 @@ catalog:
   nanoid: "5.1.15"
   p-retry: "^8.0.0"
   pg: "^8.23.0"
-  pg-boss: "^12.26.0"
+  pg-boss: "^12.27.0"
   pino: "^10.3.1"
-  tsx: "^4.22.4"
+  tsx: "^4.23.12"
 
 minimumReleaseAge: 1440
 blockExoticSubdeps: true
@@ -52,3 +52,5 @@ minimumReleaseAgeExclude:
   - "@types/react@19.2.18"
   - playwright-core@1.62.1
   - playwright@1.62.1
+  - '@tanstack/react-router@1.170.31'
+  - '@tanstack/router-core@1.171.26'
