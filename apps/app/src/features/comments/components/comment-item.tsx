@@ -1,6 +1,7 @@
 import { ChevronDown, ThumbsUp } from "lucide-react";
 import { useState } from "react";
 
+import { SnackRating } from "#/components/snacks/snack-rating";
 import { Button } from "#/components/ui/button";
 import { Item, ItemContent, ItemHeader, ItemTitle } from "#/components/ui/item";
 import type { SnackComment } from "#/features/comments/contracts/comments";
@@ -36,10 +37,7 @@ export function CommentItem({ comment }: { comment: SnackComment }) {
         </ItemHeader>
         <ItemContent>
           <div className="flex flex-col gap-4">
-            {/* <SnackRating rating={comment.rating} /> */}
-            <p>
-              Ocena: <span className="font-bold">{comment.rating}</span>/10
-            </p>
+            <SnackRating rating={comment.rating} withText />
             <p className="text-muted-foreground">{comment.body ?? "Brak treści recenzji."}</p>
             <div className="flex gap-4">
               <Button size="xs">
