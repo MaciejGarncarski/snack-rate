@@ -49,12 +49,13 @@
     "prod:restart": "pnpm run prod:down && pnpm run prod:up"
   },
   "devDependencies": {
-    "@oxlint/plugins": "^1.79.0",
-    "@tanstack/eslint-plugin-query": "^5.102.1",
+    "@oxlint/plugins": "^1.80.0",
+    "@tanstack/eslint-plugin-query": "^5.102.3",
     "@tanstack/eslint-plugin-router": "^1.162.0",
     "lefthook": "^2.1.10",
     "oxfmt": "^0.60.0",
-    "oxlint": "^1.79.0"
+    "oxlint": "^1.80.0",
+    "uuidv7": "catalog:"
   },
   "packageManager": "pnpm@11.20.0"
 }

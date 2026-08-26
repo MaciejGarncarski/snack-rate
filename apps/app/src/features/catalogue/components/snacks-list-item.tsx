@@ -30,7 +30,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
 
   return (
     <li className="mx-auto w-full max-w-sm">
-      <Link to="/produkt/$slug" params={{ slug }} className="rounded-4xl">
+      <Link to="/produkt/$slug" params={{ slug }} className="rounded-4xl" viewTransition>
         <Card className="pt-0">
           <Image
             lazy={lazy}
@@ -39,6 +39,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
             blurBackground
             containerClassName="w-full aspect-4/5"
             className="h-full w-full object-cover"
+            style={{ viewTransitionName: `snack-image-${slug}` }}
           />
           <CardHeader>
             <CardAction>
