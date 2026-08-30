@@ -9,6 +9,8 @@ RUN pnpm config set store-dir /pnpm/store
 FROM base AS fetch
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/db-schema/package.json ./packages/db-schema/
+COPY tools/queue-worker/package.json ./tools/queue-worker/
 RUN pnpm fetch
 
 FROM base AS install
@@ -17,7 +19,7 @@ COPY --from=fetch /pnpm/store /pnpm/store
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY packages/db-schema ./packages/db-schema
 COPY tools/queue-worker ./tools/queue-worker
-RUN pnpm install --offline --frozen-lockfile --filter @snack-rate/queue-worker...
+RUN pnpm install --frozen-lockfile --filter @snack-rate/queue-worker...
 RUN pnpm deploy --filter @snack-rate/queue-worker /app/deploy
 
 FROM node:26.7.0-slim
