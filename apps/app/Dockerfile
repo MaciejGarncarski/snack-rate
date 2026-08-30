@@ -11,6 +11,8 @@ RUN pnpm config set store-dir /pnpm/store
 FROM base AS fetch
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/db-schema/package.json ./packages/db-schema/
+COPY apps/app/package.json ./apps/app/
 RUN pnpm fetch
 
 FROM base AS build
