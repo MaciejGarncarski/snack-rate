@@ -31,6 +31,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
   return (
     <li className="mx-auto w-full max-w-sm md:mx-0 md:max-w-none">
       <Link
+        style={{ viewTransitionName: `snack-image-${slug}` }}
         to="/produkt/$slug"
         params={{ slug }}
         className="block h-full rounded-4xl"
@@ -44,7 +45,6 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
             blurBackground
             containerClassName="w-full aspect-4/5 shrink-0 md:w-[42%] lg:w-[38%]"
             className="h-full w-full object-cover rounded-t-4xl md:rounded-tr-none md:rounded-l-4xl"
-            style={{ viewTransitionName: `snack-image-${slug}` }}
           />
           <div className="flex min-w-0 flex-1 flex-col justify-between gap-(--card-spacing) py-(--card-spacing)">
             <CardHeader className="gap-2">
@@ -57,7 +57,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
                 {name}
               </CardTitle>
               <CardDescription className="line-clamp-3 text-pretty">
-                {truncatedDescription ?? "Brak opisu"}
+                {truncatedDescription ?? "Ten produkt nie ma jeszcze opisu."}
               </CardDescription>
             </CardHeader>
             <CardFooter className="mt-auto">

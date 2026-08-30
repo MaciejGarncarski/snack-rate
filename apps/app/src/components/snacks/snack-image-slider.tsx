@@ -52,7 +52,7 @@ type Props = {
   slug: string;
 };
 
-export default function SnackImageSlider({ images, thumbnailUrls, slug }: Props) {
+export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<Direction>(1);
 
@@ -93,7 +93,6 @@ export default function SnackImageSlider({ images, thumbnailUrls, slug }: Props)
                   alt={`Slajd ${index + 1}`}
                   containerClassName="h-full w-full"
                   className={`h-full w-full object-cover`}
-                  style={{ viewTransitionName: `snack-image-${slug}` }}
                   blurBackground
                 />
               </ImageZoom>
