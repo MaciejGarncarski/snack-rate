@@ -21,7 +21,7 @@ COPY --from=fetch /pnpm/store /pnpm/store
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/app ./apps/app
 COPY packages/db-schema ./packages/db-schema
-RUN pnpm install --offline --frozen-lockfile --filter @snack-rate/app...
+RUN pnpm install --frozen-lockfile --filter @snack-rate/app...
 RUN pnpm --filter @snack-rate/app build
 
 FROM node:26.7.0-slim
