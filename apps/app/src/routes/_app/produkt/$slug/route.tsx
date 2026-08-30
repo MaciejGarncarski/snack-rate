@@ -168,10 +168,7 @@ function RouteComponent() {
   return (
     <main className="mx-auto w-full pb-10 flex flex-col gap-10">
       <div className="flex gap-8 flex-col lg:flex-row lg:gap-15">
-        <div
-          className="mx-auto w-full max-w-md lg:sticky lg:top-8 shrink-0"
-          style={{ viewTransitionName: `snack-image-${slug}` }}
-        >
+        <div className="mx-auto w-full max-w-md lg:sticky lg:top-8 shrink-0">
           <SnackImageSlider images={imageUrls} thumbnailUrls={thumbnailUrls} slug={slug} />
         </div>
 

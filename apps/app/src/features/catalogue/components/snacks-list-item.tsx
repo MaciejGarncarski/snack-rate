@@ -38,7 +38,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
             alt={name}
             blurBackground
             containerClassName="w-full aspect-4/5"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover rounded-t-xl"
             style={{ viewTransitionName: `snack-image-${slug}` }}
           />
           <CardHeader>
