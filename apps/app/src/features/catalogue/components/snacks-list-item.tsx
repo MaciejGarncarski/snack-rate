@@ -29,30 +29,41 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
   const truncatedDescription = isLongDescription ? description.slice(0, 100) + "..." : description;
 
   return (
-    <li className="mx-auto w-full max-w-sm">
-      <Link to="/produkt/$slug" params={{ slug }} className="rounded-4xl" viewTransition>
-        <Card className="pt-0">
+    <li className="mx-auto w-full max-w-sm md:mx-0 md:max-w-none">
+      <Link
+        to="/produkt/$slug"
+        params={{ slug }}
+        className="block h-full rounded-4xl"
+        viewTransition
+      >
+        <Card className="flex h-full flex-col overflow-hidden pt-0 transition-shadow hover:shadow-lg md:flex-row md:gap-0 md:py-0">
           <Image
             lazy={lazy}
             src={images[0]?.url}
             alt={name}
             blurBackground
-            containerClassName="w-full aspect-4/5"
-            className="h-full w-full object-cover rounded-t-xl"
+            containerClassName="w-full aspect-4/5 shrink-0 md:w-[42%] lg:w-[38%]"
+            className="h-full w-full object-cover rounded-t-4xl md:rounded-tr-none md:rounded-l-4xl"
             style={{ viewTransitionName: `snack-image-${slug}` }}
           />
-          <CardHeader>
-            <CardAction>
-              <Badge variant="default" className="mb-2">
-                {type}
-              </Badge>
-            </CardAction>
-            <CardTitle>{name}</CardTitle>
-            <CardDescription>{truncatedDescription ?? "Brak opisu"}</CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <SnackRating rating={rating} withText />
-          </CardFooter>
+          <div className="flex min-w-0 flex-1 flex-col justify-between gap-(--card-spacing) py-(--card-spacing)">
+            <CardHeader className="gap-2">
+              <CardAction>
+                <Badge variant="default" className="mb-1">
+                  {type}
+                </Badge>
+              </CardAction>
+              <CardTitle className="pr-6 text-balance leading-tight md:text-[17px]">
+                {name}
+              </CardTitle>
+              <CardDescription className="line-clamp-3 text-pretty">
+                {truncatedDescription ?? "Brak opisu"}
+              </CardDescription>
+            </CardHeader>
+            <CardFooter className="mt-auto">
+              <SnackRating rating={rating} withText />
+            </CardFooter>
+          </div>
         </Card>
       </Link>
     </li>
