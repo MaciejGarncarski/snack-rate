@@ -1,6 +1,6 @@
 ARG APP_PORT=3000
 
-FROM node:26.7.0-slim AS base
+FROM node:26.8.1-slim AS base
 ARG PNPM_VERSION=12.1.0
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
@@ -24,7 +24,7 @@ COPY packages/db-schema ./packages/db-schema
 RUN pnpm install --frozen-lockfile --filter @snack-rate/app...
 RUN pnpm --filter @snack-rate/app build
 
-FROM node:26.7.0-slim
+FROM node:26.8.1-slim
 ARG APP_PORT=3000
 WORKDIR /app
 COPY --from=build /app/apps/app/.output ./

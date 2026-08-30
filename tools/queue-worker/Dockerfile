@@ -1,4 +1,4 @@
-FROM node:26.7.0-slim AS base
+FROM node:26.8.1-slim AS base
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -22,7 +22,7 @@ COPY tools/queue-worker ./tools/queue-worker
 RUN pnpm install --frozen-lockfile --filter @snack-rate/queue-worker...
 RUN pnpm deploy --filter @snack-rate/queue-worker /app/deploy
 
-FROM node:26.7.0-slim
+FROM node:26.8.1-slim
 WORKDIR /app
 COPY --from=install /app/deploy .
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
