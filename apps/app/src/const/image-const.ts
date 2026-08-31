@@ -1,6 +1,6 @@
 export const MAXIMUM_IMAGES = 3;
 
-export const PRODUCTS_PER_SCROLL = 8;
+export const PRODUCTS_PER_SCROLL = 2;
 
 export const ALLOWED_MIME_TYPES = new Set([
   "image/jpeg",

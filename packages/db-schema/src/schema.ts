@@ -74,6 +74,7 @@ export const snackItems = pgTable(
     description: text("description"),
     barcode: text("barcode"),
     avgRating: decimal("avg_rating", { precision: 4, scale: 2 }).notNull().default("0"),
+    ratingCount: integer("rating_count").notNull().default(0),
     status: text("status").notNull().default("pending"), // 'pending' | 'published' | 'rejected'
     createdAt: timestamp("created_at", { precision: 3 }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),

@@ -1,5 +1,6 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { CandyIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useInView } from "react-intersection-observer";
 
 import {
@@ -13,12 +14,12 @@ import { SnacksListItem } from "#/features/catalogue/components/snacks-list-item
 import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query-options";
 
 export function SnacksList({ category }: { category?: string | null }) {
-  const { data, hasNextPage, fetchNextPage } = useSuspenseInfiniteQuery(
+  const { data, hasNextPage, fetchNextPage, isFetching } = useSuspenseInfiniteQuery(
     listSnacksQueryOptions({ typeSlug: category ?? undefined }),
   );
 
   const { ref } = useInView({
-    rootMargin: "400px",
+    rootMargin: "200px",
     threshold: 0,
     onChange: (inView) => {
       if (inView && hasNextPage) {
@@ -31,7 +32,12 @@ export function SnacksList({ category }: { category?: string | null }) {
 
   if (isEmpty) {
     return (
-      <div className="flex w-full items-center justify-center ">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="flex w-full items-center justify-center"
+      >
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant="icon">
@@ -41,29 +47,34 @@ export function SnacksList({ category }: { category?: string | null }) {
             <EmptyDescription>Brak przekąsek w tej kategorii.</EmptyDescription>
           </EmptyHeader>
         </Empty>
-      </div>
+      </motion.div>
     );
   }
 
   return (
     <div>
-      <ul className="mx-auto flex flex-col gap-14 md:grid md:grid-cols-2">
-        {data.pages
-          .flatMap((page) => page.items)
-          .map((snack, idx) => (
-            <SnacksListItem
-              lazy={idx > 1}
-              key={snack.slug}
-              name={snack.name}
-              description={snack.description}
-              slug={snack.slug}
-              rating={snack.avgRating}
-              type={snack.type.name}
-              images={snack.images}
-            />
-          ))}
-      </ul>
-      <div ref={ref} />
+      <AnimatePresence mode="popLayout">
+        <ul className="mx-auto flex flex-col gap-14 md:grid md:grid-cols-2">
+          {data.pages
+            .flatMap((page) => page.items)
+            .map((snack, idx) => (
+              <SnacksListItem
+                lazy={idx > 1}
+                key={snack.slug}
+                name={snack.name}
+                description={snack.description}
+                slug={snack.slug}
+                rating={snack.rating.avg}
+                ratingCount={snack.rating.count}
+                type={snack.type.name}
+                images={snack.images}
+              />
+            ))}
+        </ul>
+      </AnimatePresence>
+      <div className="h-4 mt-40 w-full">
+        {hasNextPage && !isFetching && <div ref={ref} className="h-4 w-full"></div>}
+      </div>
     </div>
   );
 }

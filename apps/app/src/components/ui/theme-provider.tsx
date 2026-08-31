@@ -1,11 +1,10 @@
 import { ScriptOnce } from "@tanstack/react-router";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 type Theme = "dark" | "light" | "system";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
-  defaultTheme?: Theme;
   storageKey?: string;
 };
 
@@ -15,32 +14,21 @@ type ThemeProviderState = {
   setTheme: (theme: Theme) => void;
 };
 
-function getThemeScript(storageKey: string, defaultTheme: Theme) {
+function getThemeScript(storageKey: string) {
   const key = JSON.stringify(storageKey);
-  const fallback = JSON.stringify(defaultTheme);
 
-  return `(function(){try{var t=localStorage.getItem(${key});if(t!=='light'&&t!=='dark'&&t!=='system'){t=${fallback}}var d=matchMedia('(prefers-color-scheme: dark)').matches;var r=t==='system'?(d?'dark':'light'):t;var e=document.documentElement;e.classList.add('disable-transition');e.classList.add(r);e.style.colorScheme=r;requestAnimationFrame(function(){requestAnimationFrame(function(){e.classList.remove('disable-transition')})})}catch(e){}})();`;
+  return `(function(){try{var t=localStorage.getItem(${key});var d=matchMedia('(prefers-color-scheme: dark)').matches;var r=t==='dark'||t==='light'?t:(d?'dark':'light');var e=document.documentElement;e.classList.add('disable-transition');e.classList.add(r);e.style.colorScheme=r;requestAnimationFrame(function(){requestAnimationFrame(function(){e.classList.remove('disable-transition')})})}catch(e){}})();`;
 }
 
-function resolveTheme(theme: Theme): "light" | "dark" {
-  if (theme === "system") {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
-  return theme;
+function resolveTheme(osPrefersDark: boolean, override: "dark" | "light" | null): "light" | "dark" {
+  if (override) return override;
+  return osPrefersDark ? "dark" : "light";
 }
 
-const ThemeProviderContext = createContext<ThemeProviderState>({
-  theme: "system",
-  resolvedTheme: "light",
-  setTheme: () => {},
-});
-
-function applyTheme(theme: Theme) {
+function applyTheme(resolved: "light" | "dark") {
   const root = document.documentElement;
   root.classList.add("disable-transition");
   root.classList.remove("light", "dark");
-
-  const resolved = resolveTheme(theme);
   root.classList.add(resolved);
   root.style.colorScheme = resolved;
   requestAnimationFrame(() => {
@@ -50,28 +38,28 @@ function applyTheme(theme: Theme) {
   });
 }
 
-export function ThemeProvider({
-  children,
-  defaultTheme = "system",
-  storageKey = "theme",
-}: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(defaultTheme);
+const ThemeProviderContext = createContext<ThemeProviderState>({
+  theme: "system",
+  resolvedTheme: "light",
+  setTheme: () => {},
+});
+
+export function ThemeProvider({ children, storageKey = "theme" }: ThemeProviderProps) {
+  const [override, setOverride] = useState<"dark" | "light" | null>(null);
   const [mounted, setMounted] = useState(false);
   const [osPrefersDark, setOsPrefersDark] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(storageKey);
-    setThemeState(
-      stored === "light" || stored === "dark" || stored === "system" ? stored : defaultTheme,
-    );
+    setOverride(stored === "light" || stored === "dark" ? stored : null);
     setOsPrefersDark(window.matchMedia("(prefers-color-scheme: dark)").matches);
     setMounted(true);
-  }, [defaultTheme, storageKey]);
+  }, [storageKey]);
 
   useEffect(() => {
     if (!mounted) return;
-    applyTheme(theme);
-  }, [theme, mounted]);
+    applyTheme(resolveTheme(osPrefersDark, override));
+  }, [override, mounted, osPrefersDark]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -79,23 +67,36 @@ export function ThemeProvider({
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const onChange = () => {
       setOsPrefersDark(media.matches);
-      if (theme === "system") applyTheme("system");
     };
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
-  }, [theme, mounted]);
+  }, [mounted]);
 
-  const setTheme = (next: Theme) => {
-    localStorage.setItem(storageKey, next);
-    setThemeState(next);
-  };
+  const setTheme = useCallback(
+    (next: Theme) => {
+      if (next === "system") {
+        localStorage.removeItem(storageKey);
+        setOverride(null);
+      } else {
+        const osDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if ((next === "dark") === osDark) {
+          localStorage.removeItem(storageKey);
+          setOverride(null);
+        } else {
+          localStorage.setItem(storageKey, next);
+          setOverride(next);
+        }
+      }
+    },
+    [storageKey],
+  );
 
-  const resolvedTheme: "light" | "dark" =
-    theme === "system" ? (osPrefersDark ? "dark" : "light") : theme;
+  const theme: Theme = override ?? "system";
+  const resolvedTheme = resolveTheme(osPrefersDark, override);
 
   return (
     <ThemeProviderContext value={{ theme, resolvedTheme, setTheme }}>
-      <ScriptOnce>{getThemeScript(storageKey, defaultTheme)}</ScriptOnce>
+      <ScriptOnce>{getThemeScript(storageKey)}</ScriptOnce>
       {children}
     </ThemeProviderContext>
   );

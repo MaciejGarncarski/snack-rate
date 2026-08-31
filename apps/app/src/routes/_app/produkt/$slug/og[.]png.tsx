@@ -56,7 +56,7 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
               }}
             >
               <p style={{ fontSize: 72, fontWeight: 700, color: "#111827" }}>{title}</p>
-              <SnackRating rating={snack.avgRating} />
+              <SnackRating rating={snack.rating.avg} />
             </div>
           </div>,
           {

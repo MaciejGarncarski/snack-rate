@@ -33,7 +33,7 @@ const zoomContent = ({
         alt=""
         aria-hidden
         className={cn(
-          "absolute inset-0 pointer-events-none size-full object-center object-cover opacity-50 blur-xl",
+          "absolute inset-0 pointer-events-none size-full object-center object-cover opacity-60 blur-3xl",
           modalState === "UNLOADING" ? "animate-rmiz-blur-fade-out" : "animate-rmiz-blur-fade-in",
         )}
       />

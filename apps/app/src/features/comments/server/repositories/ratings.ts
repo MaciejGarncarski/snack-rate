@@ -108,6 +108,7 @@ export async function recalculateAvgRating(
   const result = await client
     .select({
       avg: sql<string>`COALESCE(AVG(${snackComments.rating})::numeric, 0)`,
+      count: sql<number>`COUNT(*)`,
     })
     .from(snackComments)
     .where(
@@ -118,11 +119,12 @@ export async function recalculateAvgRating(
       ),
     );
 
-  const avgValue = Math.round(Number(result[0]?.avg ?? 0) * 100) / 100;
+  const count = Number(result[0]?.count ?? 0);
+  const avgValue = count > 0 ? Math.round(Number(result[0]?.avg ?? 0) * 100) / 100 : 0;
 
   await client
     .update(snackItems)
-    .set({ avgRating: String(avgValue) })
+    .set({ avgRating: String(avgValue), ratingCount: count })
     .where(eq(snackItems.id, snackItemId));
 }
 

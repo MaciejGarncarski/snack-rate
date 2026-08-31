@@ -53,7 +53,7 @@ export function SearchBoxResults({ onLinkClick, listRef, selectedIndex, items }:
                 />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">{item.name}</p>
-                  <SnackRating rating={item.avgRating} size="xs" />
+                  <SnackRating rating={item.rating.avg} size="xs" />
                 </div>
               </Link>
             </li>

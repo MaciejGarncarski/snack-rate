@@ -10,6 +10,8 @@ import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
+const toThumbKey = (key: string) => key.replace(/(\.[^.]+)$/u, "-thumb$1");
+
 // oxlint-disable-next-line max-lines-per-function
 async function seedDatabase() {
   console.log("Seeding database...");
@@ -218,177 +220,97 @@ async function seedDatabase() {
   // Snack item images
   // ---------------------------------------------------------------------------
 
-  const monsterImageUrl = "https://i.erli.pl/yb6ksh.1d22ba.xl.webp";
-  const monsterImageKey = "monster-energy-drink.webp";
-  const monsterThumbKey = "monster-energy-drink-thumb.webp";
+  const snackImageUrls: { id: string; imageUrl: string; key: string }[] = [
+    {
+      id: monsterOriginal.id,
+      imageUrl: "https://i.erli.pl/xyabj5.a966f9.xl.webp",
+      key: "monster-energy-original.webp",
+    },
+    {
+      id: monsterUltra.id,
+      imageUrl: "https://i.erli.pl/16hn4no.1a5d1e.xl.webp",
+      key: "monster-energy-ultra-white.webp",
+    },
+    {
+      id: monsterMango.id,
+      imageUrl: "https://sklep.spolemkielce.pl/wp-content/uploads/2024/07/120647.png",
+      key: "monster-energy-mango-loco.png",
+    },
+    {
+      id: laysClassic.id,
+      imageUrl: "https://i.erli.pl/14ocwyk.a9bac3.xl.webp",
+      key: "lays-klasyczne.webp",
+    },
+    {
+      id: laysKetchup.id,
+      imageUrl: "https://i.erli.pl/14ocwyk.a9bac3.xl.webp",
+      key: "lays-ketchup.webp",
+    },
+    {
+      id: pringlesOriginal.id,
+      imageUrl:
+        "https://images.openfoodfacts.org/images/products/505/399/013/8722/front_en.233.400.jpg",
+      key: "pringles-original.jpg",
+    },
+    {
+      id: pringlesSerKebab.id,
+      imageUrl: "https://i.erli.pl/14r3h1a.2f14fc.xl.webp",
+      key: "pringles-ser-kebab.webp",
+    },
+    {
+      id: tyrrellsSeaSalt.id,
+      imageUrl:
+        "https://www.tyrrellscrisps.co.uk/wp-content/uploads/2017/07/Tyrrells-UK-Lightly-Sea-Salted-Sustainability-150g-min-grocer-award.png",
+      key: "tyrrells-sol-morska.png",
+    },
+    {
+      id: tyrrellsSweet.id,
+      imageUrl:
+        "https://images.openfoodfacts.org/images/products/506/004/264/0775/front_fr.29.400.jpg",
+      key: "tyrrells-slodka-papryka.jpg",
+    },
+    {
+      id: wedelPtasie.id,
+      imageUrl:
+        "https://media.wedel.pl/2020/04/6c7c4bec9b091e3f5459ac38bb4629fc1b44f6f9-1024x1024.png",
+      key: "wedel-ptasie-mleczko.png",
+    },
+    {
+      id: wedelGorzka.id,
+      imageUrl:
+        "https://images.openfoodfacts.org/images/products/590/010/202/3745/front_pl.4.400.jpg",
+      key: "wedel-gorzka-czekolada.jpg",
+    },
+  ];
 
-  const chipsImageUrl = "https://upload.wikimedia.org/wikipedia/commons/d/df/Salt-and-Vinegar.JPG";
-  const chipsImageKey = "chips.jpg";
-  const chipsThumbKey = "chips-thumb.jpg";
-
-  const [monsterImageResponse, chipsImageResponse] = await Promise.all([
-    fetch(monsterImageUrl),
-    fetch(chipsImageUrl),
-  ]);
-
-  if (!monsterImageResponse.ok || !chipsImageResponse.ok) {
-    throw new Error(`Failed to fetch image`);
-  }
-
-  const monsterBuffer = Buffer.from(await monsterImageResponse.arrayBuffer());
-  const chipsBuffer = Buffer.from(await chipsImageResponse.arrayBuffer());
-
-  const [monsterNormalImg, chipsNormalImg, monsterThumbBuffer, chipsThumbBuffer] =
-    await Promise.all([
-      createThumbnailFromBuffer(monsterBuffer, 800),
-      createThumbnailFromBuffer(chipsBuffer, 800),
-      createThumbnailFromBuffer(monsterBuffer),
-      createThumbnailFromBuffer(chipsBuffer),
-    ]);
+  const imageBuffers = await Promise.all(
+    snackImageUrls.map(async ({ id, imageUrl, key }) => {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image for ${key}: ${response.status}`);
+      }
+      const buffer = Buffer.from(await response.arrayBuffer());
+      return { id, key, buffer };
+    }),
+  );
 
   await deleteAllObjectsFromBucket(process.env.S3_BUCKET_PUBLIC!);
 
-  await Promise.all([
-    uploadFileToGarage(monsterImageKey, monsterNormalImg.buffer),
-    uploadFileToGarage(chipsImageKey, chipsNormalImg.buffer),
-    uploadFileToGarage(chipsThumbKey, chipsThumbBuffer.buffer),
-    uploadFileToGarage(monsterThumbKey, monsterThumbBuffer.buffer),
-  ]);
+  await Promise.all(
+    imageBuffers.flatMap(({ key, buffer }) => [
+      createThumbnailFromBuffer(buffer, 800).then((img) => uploadFileToGarage(key, img.buffer)),
+      createThumbnailFromBuffer(buffer).then((thumb) =>
+        uploadFileToGarage(toThumbKey(key), thumb.buffer),
+      ),
+    ]),
+  );
 
-  await db.insert(schema.snackItemImages).values([
-    {
-      snackItemId: monsterOriginal.id,
-      storageKey: monsterImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: monsterOriginal.id,
-      storageKey: monsterThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: monsterUltra.id,
-      storageKey: monsterImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: monsterUltra.id,
-      storageKey: monsterThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: monsterMango.id,
-      storageKey: monsterImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: monsterMango.id,
-      storageKey: monsterThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: laysClassic.id,
-      storageKey: chipsImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: laysClassic.id,
-      storageKey: chipsThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: laysKetchup.id,
-      storageKey: chipsImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: laysKetchup.id,
-      storageKey: chipsThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: pringlesOriginal.id,
-      storageKey: chipsImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: pringlesOriginal.id,
-      storageKey: chipsThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: pringlesSerKebab.id,
-      storageKey: chipsImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: pringlesSerKebab.id,
-      storageKey: chipsThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: tyrrellsSeaSalt.id,
-      storageKey: chipsImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: tyrrellsSeaSalt.id,
-      storageKey: chipsThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: tyrrellsSweet.id,
-      storageKey: chipsImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: tyrrellsSweet.id,
-      storageKey: chipsThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: wedelPtasie.id,
-      storageKey: monsterImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: wedelPtasie.id,
-      storageKey: monsterThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: wedelGorzka.id,
-      storageKey: monsterImageKey,
-      type: "default",
-      sortOrder: 0,
-    },
-    {
-      snackItemId: wedelGorzka.id,
-      storageKey: monsterThumbKey,
-      type: "thumbnail",
-      sortOrder: 0,
-    },
-  ]);
+  await db.insert(schema.snackItemImages).values(
+    imageBuffers.flatMap(({ id, key }) => [
+      { snackItemId: id, storageKey: key, type: "default" as const, sortOrder: 0 },
+      { snackItemId: id, storageKey: toThumbKey(key), type: "thumbnail" as const, sortOrder: 0 },
+    ]),
+  );
 
   console.log("  ✓ snack item images");
 

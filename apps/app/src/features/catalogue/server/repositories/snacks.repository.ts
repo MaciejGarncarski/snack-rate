@@ -16,7 +16,10 @@ export type SnackItem = {
   slug: string;
   status: SnackStatus;
   barcode: string | null;
-  avgRating: number;
+  rating: {
+    avg: number;
+    count: number;
+  };
   typeId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -50,6 +53,7 @@ type DbSnackItem = {
   status: string;
   barcode: string | null;
   avgRating: string;
+  ratingCount: number;
   typeId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -95,7 +99,10 @@ async function toSnackItem(
     description: row.description,
     slug: row.slug,
     barcode: row.barcode,
-    avgRating: Number(row.avgRating),
+    rating: {
+      avg: Number(row.avgRating),
+      count: row.ratingCount,
+    },
     typeId: row.typeId,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,

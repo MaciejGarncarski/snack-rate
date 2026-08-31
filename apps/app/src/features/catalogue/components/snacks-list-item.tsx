@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { motion } from "motion/react";
 
 import { Image } from "#/components/image/image";
 import { SnackRating } from "#/components/snacks/snack-rating";
@@ -17,6 +18,7 @@ type Props = {
   description: string | null;
   slug: string;
   rating: number;
+  ratingCount: number;
   type: string;
   lazy?: boolean;
   images: {
@@ -35,8 +37,21 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
   const imageThumbnail = images.filter((image) => image.type === "thumbnail")[0];
 
   return (
-    <li className="mx-auto w-full max-w-sm md:mx-0 md:max-w-none">
-      <Link to="/produkt/$slug" params={{ slug }} className="block h-full rounded-4xl">
+    <motion.li
+      layout
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.96 }}
+      transition={{ duration: 0.2 }}
+      className="mx-auto w-full max-w-sm md:mx-0 md:max-w-none"
+    >
+      <Link
+        to="/produkt/$slug"
+        params={{ slug }}
+        viewTransition
+        className="block h-full rounded-4xl"
+        style={{ viewTransitionName: `snack-card-${slug}` }}
+      >
         <Card className="flex h-full flex-col overflow-hidden pt-0 transition-shadow hover:shadow-lg md:flex-row md:gap-0 md:py-0">
           <Image
             lazy={lazy}
@@ -50,7 +65,10 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
           <div className="flex min-w-0 flex-1 flex-col justify-between gap-(--card-spacing) py-(--card-spacing)">
             <CardHeader className="gap-2">
               <CardAction>
-                <Badge variant="default" className="mb-1">
+                <Badge
+                  variant={"outline"}
+                  className="text-sm bg-primary/20 border-primary/30 rounded-full h-6 px-2 py-1 font-semibold"
+                >
                   {type}
                 </Badge>
               </CardAction>
@@ -67,6 +85,6 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
           </div>
         </Card>
       </Link>
-    </li>
+    </motion.li>
   );
 }

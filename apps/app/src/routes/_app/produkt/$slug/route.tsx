@@ -244,8 +244,8 @@ function RouteComponent() {
                   </ItemContent>
                   <ItemActions>
                     <SnackRating
-                      rating={ratings?.avgRating ?? snack.avgRating}
-                      ratingCount={ratings?.ratingCount}
+                      rating={ratings?.avgRating ?? snack.rating.avg}
+                      ratingCount={ratings?.ratingCount ?? snack.rating.count}
                       withText
                       size="md"
                     />
