@@ -4,10 +4,11 @@ import * as z from "zod";
 import { AppLayout } from "#/components/layout/app-layout";
 import { getSearchedItemsQueryOptions } from "#/features/catalogue/search-snacks/queries/get-searched-items.query-options";
 
-const sharedParamsSchema = z.object({
+const sharedParamsSchema = z.looseObject({
   page: z.number().optional(),
   filter: z.string().optional(),
   sort: z.enum(["newest", "oldest", "highestRated", "lowestRated"]).optional(),
+  category: z.string().optional(),
 });
 
 export const Route = createFileRoute("/_app")({

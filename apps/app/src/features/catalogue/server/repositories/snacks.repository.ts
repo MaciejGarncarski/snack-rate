@@ -176,15 +176,27 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
 
       if (!foundSnack) return null;
 
-      // SAFETY: drizzle's findFirst with relations returns the full row shape that DbSnackItem describes.
       return toSnackItem(foundSnack as DbSnackItem, getFileUrl);
     },
 
-    list: async (limit: number, cursor?: DecodedCursor | null): Promise<SnackItem[]> => {
+    list: async (
+      limit: number,
+      cursor?: DecodedCursor | null,
+      typeSlug?: string | null,
+    ): Promise<SnackItem[]> => {
       const whereConditions: TableFilter<typeof snackItems> = {
         status: "published",
         deletedAt: { isNull: true },
       };
+
+      if (typeSlug) {
+        const snackType = await db.query.snackTypes.findFirst({
+          where: { slug: typeSlug },
+          columns: { id: true },
+        });
+        if (!snackType) return [];
+        whereConditions.typeId = { eq: snackType.id };
+      }
 
       if (cursor) {
         whereConditions.OR = [

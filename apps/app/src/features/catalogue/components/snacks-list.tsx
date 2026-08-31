@@ -4,8 +4,10 @@ import { useInView } from "react-intersection-observer";
 import { SnacksListItem } from "#/features/catalogue/components/snacks-list-item";
 import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query-options";
 
-export function SnacksList() {
-  const { data, hasNextPage, fetchNextPage } = useSuspenseInfiniteQuery(listSnacksQueryOptions());
+export function SnacksList({ category }: { category?: string | null }) {
+  const { data, hasNextPage, fetchNextPage } = useSuspenseInfiniteQuery(
+    listSnacksQueryOptions({ typeSlug: category ?? undefined }),
+  );
 
   const { ref } = useInView({
     rootMargin: "400px",

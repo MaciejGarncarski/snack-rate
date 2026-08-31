@@ -1,6 +1,8 @@
 pre-commit:
   parallel: true
   commands:
+    typecheck:
+      run: pnpm --filter @snack-rate/app typecheck
     format:
       run: pnpm --filter @snack-rate/app fmt
       stage_fixed: true

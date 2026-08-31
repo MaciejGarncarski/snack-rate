@@ -10,6 +10,7 @@ export const snackSlugSchema = z.object({
 export const listSnacksSchema = z.object({
   limit: z.number().min(1),
   cursor: z.string().optional(),
+  typeSlug: z.string().optional(),
 });
 
 export const MAXIMUM_DESCRIPTION_LENGTH = 500;

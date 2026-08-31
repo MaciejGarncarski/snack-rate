@@ -6,12 +6,12 @@ import { listSnacksSchema } from "#/schemas/catalogue";
 import type { SnacksRepository } from "../repositories/snacks.repository";
 
 export async function listSnacksUseCase(
-  { limit, cursor }: z.infer<typeof listSnacksSchema>,
+  { limit, cursor, typeSlug }: z.infer<typeof listSnacksSchema>,
   repository: SnacksRepository,
 ) {
   const decodedCursor = cursor ? decodeCursor(cursor) : null;
 
-  const pageItems = await repository.list(limit + 1, decodedCursor);
+  const pageItems = await repository.list(limit + 1, decodedCursor, typeSlug ?? null);
 
   return slicePage(pageItems, limit);
 }
