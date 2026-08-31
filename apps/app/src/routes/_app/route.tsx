@@ -14,7 +14,10 @@ export const Route = createFileRoute("/_app")({
   component: RouteComponent,
   validateSearch: sharedParamsSchema,
   loader: ({ context }) => {
-    context.queryClient.ensureQueryData(getSearchedItemsQueryOptions(""));
+    void context.queryClient.query({
+      ...getSearchedItemsQueryOptions(""),
+      staleTime: "static",
+    });
   },
   notFoundComponent: () => <div>Nie znaleziono 1</div>,
 });

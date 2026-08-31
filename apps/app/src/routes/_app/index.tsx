@@ -8,7 +8,10 @@ import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks
 export const Route = createFileRoute("/_app/")({
   component: RouteComponent,
   loader: ({ context }: { context: { queryClient: QueryClient } }) => {
-    context.queryClient.ensureInfiniteQueryData(listSnacksQueryOptions());
+    void context.queryClient.infiniteQuery({
+      ...listSnacksQueryOptions(),
+      staleTime: "static",
+    });
   },
   pendingComponent: () => <SnacksListSkeleton />,
 });

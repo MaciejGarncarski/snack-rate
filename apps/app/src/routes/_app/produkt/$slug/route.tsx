@@ -39,15 +39,16 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
     params: { slug: string };
     context: { queryClient: QueryClient };
   }) => {
-    const snack = await context.queryClient.ensureQueryData(
-      getSnackBySlugQueryOptions(params.slug),
-    );
+    const snack = await context.queryClient.query({
+      ...getSnackBySlugQueryOptions(params.slug),
+      staleTime: "static",
+    });
 
     if (!snack) {
       throw notFound();
     }
 
-    void context.queryClient.fetchQuery(snackRatingsQueryOptions(snack.id));
+    void context.queryClient.query(snackRatingsQueryOptions(snack.id));
 
     return { snack };
   },
@@ -69,24 +70,28 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
   pendingComponent: () => {
     return (
       <main className="mx-auto w-full pb-10 flex flex-col gap-10">
-        <div className="flex gap-8 flex-col lg:flex-row lg:gap-15">
+        <div className="flex w-full gap-8 flex-col lg:flex-row lg:gap-15">
           <div className="mx-auto w-full max-w-md lg:sticky lg:top-8 shrink-0">
-            <Skeleton className="aspect-4/5 w-full rounded-3xl" />
-            <div className="mt-4 grid grid-cols-3 gap-4">
-              <Skeleton className="aspect-4/5 w-full rounded-lg" />
-              <Skeleton className="aspect-4/5 w-full rounded-lg" />
-              <Skeleton className="aspect-4/5 w-full rounded-lg" />
-            </div>
+            <Card size="sm" className="w-full">
+              <CardContent>
+                <Skeleton className="aspect-4/5 w-full rounded-3xl" />
+                <div className="mt-4 grid w-full grid-cols-3 gap-4">
+                  <Skeleton className="aspect-4/5 w-full rounded-lg" />
+                  <Skeleton className="aspect-4/5 w-full rounded-lg" />
+                  <Skeleton className="aspect-4/5 w-full rounded-lg" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          <div className="pt-1 grow shrink flex flex-col gap-10">
-            <Card className="grow [--card-spacing:--spacing(4)]">
+          <div className="pt-1 flex w-full grow shrink flex-col gap-10">
+            <Card className="w-full grow [--card-spacing:--spacing(4)]">
               <CardHeader>
                 <Skeleton className="h-8 w-3/4 md:h-9" />
               </CardHeader>
-              <CardContent className="h-full">
+              <CardContent className="h-full w-full">
                 <div className="flex w-full items-center rounded-2xl border border-transparent bg-muted/50 px-4 py-3.5">
-                  <div className="flex flex-1 flex-col gap-2">
+                  <div className="flex w-full flex-1 flex-col gap-2">
                     <Skeleton className="h-5 w-full" />
                     <Skeleton className="h-5 w-full" />
                     <Skeleton className="h-5 w-2/3" />
@@ -95,24 +100,24 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
               </CardContent>
             </Card>
 
-            <Card className="mt-auto [--card-spacing:--spacing(4)]">
-              <CardHeader>
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <Card className="mt-auto w-full [--card-spacing:--spacing(4)]">
+              <CardHeader className="w-full">
+                <div className="flex w-full flex-col md:flex-row items-start md:items-center justify-between gap-4">
                   <Skeleton className="h-5 w-40" />
                   <Skeleton className="h-4 w-24" />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="w-full">
                 <div className="flex w-full flex-col gap-4">
-                  <div className="flex items-center justify-between rounded-2xl bg-muted/50 px-4 py-3.5">
+                  <div className="flex w-full items-center justify-between rounded-2xl bg-muted/50 px-4 py-3.5">
                     <Skeleton className="h-4 w-16" />
                     <Skeleton className="h-6 w-20 rounded-full" />
                   </div>
-                  <div className="flex items-center justify-between rounded-2xl bg-muted/50 px-4 py-3.5">
+                  <div className="flex w-full items-center justify-between rounded-2xl bg-muted/50 px-4 py-3.5">
                     <Skeleton className="h-4 w-24" />
                     <Skeleton className="h-5 w-24" />
                   </div>
-                  <div className="flex items-center justify-between rounded-2xl bg-muted/50 px-4 py-3.5">
+                  <div className="flex w-full items-center justify-between rounded-2xl bg-muted/50 px-4 py-3.5">
                     <div className="flex flex-col gap-1">
                       <Skeleton className="h-4 w-24" />
                       <Skeleton className="h-3 w-40" />
@@ -240,6 +245,7 @@ function RouteComponent() {
                   <ItemActions>
                     <SnackRating
                       rating={ratings?.avgRating ?? snack.avgRating}
+                      ratingCount={ratings?.ratingCount}
                       withText
                       size="md"
                     />

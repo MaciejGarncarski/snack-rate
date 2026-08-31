@@ -1,3 +1,5 @@
+import { Star as StarIcon } from "lucide-react";
+
 import { pluralizeRatings } from "#/lib/pluralizer";
 import { cn } from "#/lib/utils";
 
@@ -19,39 +21,35 @@ const Star = ({
   size?: "xs" | "sm" | "md" | "lg";
   color?: string;
 }) => {
-  const sizeClass =
-    size === "xs" ? "w-3 h-3" : size === "sm" ? "w-4 h-4" : size === "lg" ? "w-8 h-8" : "w-6 h-6";
+  const sizeClass = {
+    xs: "w-3 h-3",
+    sm: "w-4 h-4",
+    md: "w-5 h-5",
+    lg: "w-7 h-7",
+  }[size];
+
+  const percentage = Math.min(100, Math.max(0, fill * 100));
 
   return (
-    <div className={cn("relative", sizeClass)}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
+    <div className={cn("relative shrink-0", sizeClass)}>
+      <StarIcon
         className={cn(
-          "absolute top-0 left-0 dark:text-input dark:fill-input text-input/40 fill-primary/20",
+          "absolute inset-0",
           sizeClass,
+          "text-muted-foreground/20 fill-muted-foreground/20",
         )}
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
-      </svg>
+        strokeWidth={1.75}
+        fill="transparent"
+      />
 
-      <div
-        className="absolute top-0 left-0 h-full overflow-hidden"
-        style={{ width: `${fill * 100}%` }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className={cn(color, sizeClass)}
+      {percentage > 0 && (
+        <div
+          className="absolute inset-y-0 left-0 overflow-hidden"
+          style={{ width: `${percentage}%` }}
         >
-          <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
-        </svg>
-      </div>
+          <StarIcon className={cn(sizeClass, color)} fill="currentColor" strokeWidth={1.75} />
+        </div>
+      )}
     </div>
   );
 };
@@ -66,7 +64,7 @@ type SnackRatingProps = {
 const fontSizesMap = {
   xs: { value: "text-xs", count: "text-xs" },
   sm: { value: "text-sm", count: "text-sm" },
-  md: { value: "text-base", count: "text-sm" },
+  md: { value: "text-base", count: "text-base" },
   lg: { value: "text-2xl", count: "text-base" },
 } satisfies Record<"xs" | "sm" | "md" | "lg", { value: string; count: string }>;
 
@@ -94,8 +92,13 @@ export function SnackRating({ rating, ratingCount, withText, size = "md" }: Snac
       )}
 
       {ratingCount !== undefined && (
-        <span className={cn("text-xs text-muted-foreground", fontSizesMap[size].count)}>
-          ({ratingCount} {pluralizeRatings(ratingCount)})
+        <span
+          className={cn(
+            "tabular-nums relative top-px text-muted-foreground",
+            fontSizesMap[size].count,
+          )}
+        >
+          - {ratingCount} {pluralizeRatings(ratingCount)}
         </span>
       )}
     </div>

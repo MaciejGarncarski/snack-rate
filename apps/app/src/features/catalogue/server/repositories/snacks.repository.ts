@@ -231,7 +231,6 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
         },
       });
 
-      // SAFETY: drizzle's findMany with relations returns rows matching DbSnackItem's shape.
       return Promise.all(rows.map((row) => toSnackItem(row as DbSnackItem, getFileUrl)));
     },
 

@@ -33,7 +33,7 @@ const zoomContent = ({
         alt=""
         aria-hidden
         className={cn(
-          "absolute inset-0 pointer-events-none size-full scale-[1.5] object-cover opacity-70 blur-3xl",
+          "absolute inset-0 pointer-events-none size-full object-center object-cover opacity-50 blur-xl",
           modalState === "UNLOADING" ? "animate-rmiz-blur-fade-out" : "animate-rmiz-blur-fade-in",
         )}
       />
@@ -50,7 +50,7 @@ const classDialog = cn(
   '[&_[data-rmiz-modal-overlay="hidden"]]:bg-transparent',
   '[&_[data-rmiz-modal-overlay="visible"]]:bg-background/80 [&_[data-rmiz-modal-overlay="visible"]]:backdrop-blur-md',
   "[&_[data-rmiz-modal-content]]:relative [&_[data-rmiz-modal-content]]:size-full",
-  "[&_[data-rmiz-modal-img]]:absolute [&_[data-rmiz-modal-img]]:origin-top-left [&_[data-rmiz-modal-img]]:cursor-zoom-out [&_[data-rmiz-modal-img]]:transition-transform",
+  "[&_[data-rmiz-modal-img]]:absolute [&_[data-rmiz-modal-img]]:rounded-2xl [&_[data-rmiz-modal-img]]:origin-top-left [&_[data-rmiz-modal-img]]:cursor-zoom-out [&_[data-rmiz-modal-img]]:transition-transform",
   "motion-reduce:[&_[data-rmiz-modal-img]]:transition-none motion-reduce:[&_[data-rmiz-modal-overlay]]:transition-none",
 );
 
