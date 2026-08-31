@@ -13,15 +13,15 @@ export function CategoryFilter({ activeSlug }: Props) {
   const { data: types } = useSuspenseQuery(listTypesQueryOptions());
 
   return (
-    <div className="flex w-full gap-2 overflow-x-auto pb-2 scrollbar-thin">
+    <div className="flex w-full gap-2 overflow-x-auto py-2 px-1 scrollbar-thin">
       <Link
         to="/"
-        search={(prev: Record<string, unknown>) => {
+        search={(prev) => {
           const next = { ...prev };
           delete next.category;
           return next;
         }}
-        className="shrink-0"
+        className="shrink-0 rounded-full"
       >
         <Badge
           variant={!activeSlug ? "default" : "secondary"}
@@ -34,8 +34,8 @@ export function CategoryFilter({ activeSlug }: Props) {
         <Link
           key={type.slug}
           to="/"
-          search={(prev: Record<string, unknown>) => ({ ...prev, category: type.slug })}
-          className="shrink-0"
+          search={(prev) => ({ ...prev, category: type.slug })}
+          className="shrink-0 rounded-full"
         >
           <Badge
             variant={activeSlug === type.slug ? "default" : "secondary"}

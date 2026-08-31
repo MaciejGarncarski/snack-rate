@@ -2,7 +2,6 @@ import { useSelector } from "@tanstack/react-store";
 import { ImageOffIcon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useRef, useState, type ImgHTMLAttributes } from "react";
-import { useInView } from "react-intersection-observer";
 
 import { ImageBlur } from "#/components/image/image-blur";
 import { cn } from "#/lib/utils";
@@ -35,6 +34,7 @@ interface ImageProps extends HtmlImgProps {
   skeleton?: boolean;
   blurBackground?: boolean;
   loadTimeoutMs?: number;
+  placeholderSrc?: string;
 }
 
 export function ImageInner({
@@ -48,13 +48,13 @@ export function ImageInner({
   blurBackground = false,
   skeleton = true,
   loadTimeoutMs = 5000,
+  placeholderSrc,
   width,
   height,
   ...imgProps
 }: ImageProps) {
   const isGloballyLoaded = useSelector(imageLoadStore, (state) => (src ? state.has(src) : false));
   const imgRef = useRef<HTMLImageElement>(null);
-  const [isVisible, setIsVisible] = useState(!lazy);
   const [status, setStatus] = useState<Status>(() => (isGloballyLoaded ? "loaded" : "loading"));
 
   const handleImgRef = useCallback(
@@ -71,17 +71,6 @@ export function ImageInner({
     },
     [src],
   );
-
-  const { ref } = useInView({
-    rootMargin: "30px",
-    threshold: 0,
-    skip: !lazy,
-    onChange: (inView) => {
-      if (inView) {
-        setIsVisible(true);
-      }
-    },
-  });
 
   useEffect(() => {
     const img = imgRef.current;
@@ -117,7 +106,7 @@ export function ImageInner({
     }, loadTimeoutMs);
 
     return () => clearTimeout(timeoutId);
-  }, [src, status, loadTimeoutMs]);
+  }, [status, loadTimeoutMs]);
 
   const handleImageLoad = (loadEvent: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setStatus("loaded");
@@ -134,12 +123,26 @@ export function ImageInner({
   return (
     <div
       className={cn("relative overflow-hidden", containerClassName)}
-      ref={ref}
       style={{
         aspectRatio,
       }}
     >
-      {skeleton && (
+      {placeholderSrc && status !== "error" && status === "loading" && (
+        <img
+          src={placeholderSrc}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover blur-xl scale-110"
+          loading="eager"
+          decoding="async"
+          fetchPriority="low"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = "none";
+          }}
+        />
+      )}
+
+      {skeleton && !placeholderSrc && (
         <AnimatePresence>
           {status === "loading" && (
             <motion.div
@@ -157,23 +160,19 @@ export function ImageInner({
 
       {status === "error" && errorComponent}
 
-      {isVisible && src ? (
+      {src ? (
         <>
           {blurBackground && status === "loaded" && <ImageBlur src={src} />}
-          <motion.img
+          <img
             ref={handleImgRef}
             src={src}
             alt={alt}
             width={width}
             height={height}
+            loading={lazy ? "lazy" : "eager"}
+            decoding="async"
+            fetchPriority={lazy ? "low" : "high"}
             className={cn("relative z-10 block", className)}
-            initial={false}
-            animate={{
-              opacity: status === "loaded" ? 1 : 0,
-            }}
-            transition={{
-              duration: 0.2,
-            }}
             onLoad={handleImageLoad}
             onError={(event) => {
               setStatus("error");

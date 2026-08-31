@@ -20,7 +20,11 @@ type Props = {
   type: string;
   lazy?: boolean;
   images: {
+    id: string;
     url: string;
+    storageKey: string;
+    sortOrder: number;
+    type: "thumbnail" | "default";
   }[];
 };
 
@@ -28,17 +32,20 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
   const isLongDescription = description && description.length > 100;
   const truncatedDescription = isLongDescription ? description.slice(0, 100) + "..." : description;
 
+  const imageThumbnail = images.filter((image) => image.type === "thumbnail")[0];
+
   return (
     <li className="mx-auto w-full max-w-sm md:mx-0 md:max-w-none">
       <Link to="/produkt/$slug" params={{ slug }} className="block h-full rounded-4xl">
         <Card className="flex h-full flex-col overflow-hidden pt-0 transition-shadow hover:shadow-lg md:flex-row md:gap-0 md:py-0">
           <Image
             lazy={lazy}
+            placeholderSrc={imageThumbnail?.url}
             src={images[0]?.url}
             alt={name}
             blurBackground
-            containerClassName="w-full aspect-4/5 shrink-0 md:w-[42%] lg:w-[38%]"
-            className="h-full w-full object-cover rounded-t-4xl md:rounded-tr-none md:rounded-l-4xl"
+            containerClassName="w-full aspect-4/5 shrink-0 md:w-[42%] lg:w-[38%] md:rounded-r-sm"
+            className="h-full w-full object-cover rounded-t-4xl md:rounded-tr-none md:p-1 md:rounded-l-4xl md:rounded-r-xl"
           />
           <div className="flex min-w-0 flex-1 flex-col justify-between gap-(--card-spacing) py-(--card-spacing)">
             <CardHeader className="gap-2">

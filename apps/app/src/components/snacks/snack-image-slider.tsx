@@ -90,6 +90,7 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
                   width={382}
                   height={478}
                   src={images[index]}
+                  placeholderSrc={thumbnailUrls[index]}
                   alt={`Slajd ${index + 1}`}
                   containerClassName="h-full w-full"
                   className={`h-full w-full object-cover`}
