@@ -30,13 +30,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
 
   return (
     <li className="mx-auto w-full max-w-sm md:mx-0 md:max-w-none">
-      <Link
-        style={{ viewTransitionName: `snack-image-${slug}` }}
-        to="/produkt/$slug"
-        params={{ slug }}
-        className="block h-full rounded-4xl"
-        viewTransition
-      >
+      <Link to="/produkt/$slug" params={{ slug }} className="block h-full rounded-4xl">
         <Card className="flex h-full flex-col overflow-hidden pt-0 transition-shadow hover:shadow-lg md:flex-row md:gap-0 md:py-0">
           <Image
             lazy={lazy}

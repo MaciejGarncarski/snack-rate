@@ -71,39 +71,48 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
       <main className="mx-auto w-full pb-10 flex flex-col gap-10">
         <div className="flex gap-8 flex-col lg:flex-row lg:gap-15">
           <div className="mx-auto w-full max-w-md lg:sticky lg:top-8 shrink-0">
-            <Skeleton className="aspect-4/5 w-full" />
-            <div className="flex justify-center gap-4 mt-4">
-              <Skeleton className="aspect-4/5 w-1/3 rounded-xl" />
-              <Skeleton className="aspect-4/5 w-1/3 rounded-xl" />
-              <Skeleton className="aspect-4/5 w-1/3 rounded-xl" />
+            <Skeleton className="aspect-4/5 w-full rounded-3xl" />
+            <div className="mt-4 grid grid-cols-3 gap-4">
+              <Skeleton className="aspect-4/5 w-full rounded-lg" />
+              <Skeleton className="aspect-4/5 w-full rounded-lg" />
+              <Skeleton className="aspect-4/5 w-full rounded-lg" />
             </div>
           </div>
 
           <div className="pt-1 grow shrink flex flex-col gap-10">
-            <div className="flex flex-col gap-4">
-              <Skeleton className="h-10 w-3/4" />
-              <div className="flex flex-col gap-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-2/3" />
-              </div>
-            </div>
+            <Card className="grow [--card-spacing:--spacing(4)]">
+              <CardHeader>
+                <Skeleton className="h-8 w-3/4 md:h-9" />
+              </CardHeader>
+              <CardContent className="h-full">
+                <div className="flex w-full items-center rounded-2xl border border-transparent bg-muted/50 px-4 py-3.5">
+                  <div className="flex flex-1 flex-col gap-2">
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-5 w-2/3" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
             <Card className="mt-auto [--card-spacing:--spacing(4)]">
               <CardHeader>
-                <Skeleton className="h-5 w-40" />
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                  <Skeleton className="h-5 w-40" />
+                  <Skeleton className="h-4 w-24" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-4 w-20" />
-                    <Skeleton className="h-6 w-16 rounded-full" />
+                <div className="flex w-full flex-col gap-4">
+                  <div className="flex items-center justify-between rounded-2xl bg-muted/50 px-4 py-3.5">
+                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-6 w-20 rounded-full" />
                   </div>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-4 w-28" />
+                  <div className="flex items-center justify-between rounded-2xl bg-muted/50 px-4 py-3.5">
+                    <Skeleton className="h-4 w-24" />
                     <Skeleton className="h-5 w-24" />
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between rounded-2xl bg-muted/50 px-4 py-3.5">
                     <div className="flex flex-col gap-1">
                       <Skeleton className="h-4 w-24" />
                       <Skeleton className="h-3 w-40" />
@@ -168,10 +177,7 @@ function RouteComponent() {
   return (
     <main className="mx-auto w-full pb-10 flex flex-col gap-10">
       <div className="flex gap-8 flex-col lg:flex-row lg:gap-15">
-        <div
-          className="mx-auto w-full max-w-md lg:sticky lg:top-8 shrink-0"
-          style={{ viewTransitionName: `snack-image-${slug}` }}
-        >
+        <div className="mx-auto w-full max-w-md lg:sticky lg:top-8 shrink-0">
           <SnackImageSlider images={imageUrls} thumbnailUrls={thumbnailUrls} slug={slug} />
         </div>
 
