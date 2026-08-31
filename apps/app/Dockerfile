@@ -13,16 +13,15 @@ WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/db-schema/package.json ./packages/db-schema/
 COPY apps/app/package.json ./apps/app/
-RUN pnpm fetch
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm fetch
 
 FROM base AS build
 WORKDIR /app
-COPY --from=fetch /pnpm/store /pnpm/store
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/app ./apps/app
 COPY packages/db-schema ./packages/db-schema
-RUN pnpm install --frozen-lockfile --filter @snack-rate/app...
-RUN pnpm --filter @snack-rate/app build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter @snack-rate/app...
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --filter @snack-rate/app build
 
 FROM node:26.8.1-slim
 ARG APP_PORT=3000

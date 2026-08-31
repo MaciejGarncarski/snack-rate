@@ -11,7 +11,7 @@ WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY packages/db-schema ./packages/db-schema
 COPY tools/db-tool ./tools/db-tool
-RUN pnpm install --frozen-lockfile --filter @snack-rate/db-tool
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter @snack-rate/db-tool
 RUN pnpm deploy --filter @snack-rate/db-tool --prod /app/deploy
 
 FROM node:26.8.1-alpine

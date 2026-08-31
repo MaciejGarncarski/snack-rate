@@ -11,16 +11,15 @@ WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/db-schema/package.json ./packages/db-schema/
 COPY tools/queue-worker/package.json ./tools/queue-worker/
-RUN pnpm fetch
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm fetch
 
 FROM base AS install
 WORKDIR /app
-COPY --from=fetch /pnpm/store /pnpm/store
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY packages/db-schema ./packages/db-schema
 COPY tools/queue-worker ./tools/queue-worker
-RUN pnpm install --frozen-lockfile --filter @snack-rate/queue-worker...
-RUN pnpm deploy --filter @snack-rate/queue-worker /app/deploy
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter @snack-rate/queue-worker...
+RUN pnpm deploy --filter @snack-rate/queue-worker --prod /app/deploy
 
 FROM node:26.8.1-slim
 WORKDIR /app
