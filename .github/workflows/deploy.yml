@@ -61,7 +61,7 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keygen -y -f ~/.ssh/deploy_key
 
-      - name: Run deploy script
+      - name: Run script
         run: |
           SHA="${{ steps.sha.outputs.sha }}"
           IMAGE_TAG="sha-${SHA:0:7}"
