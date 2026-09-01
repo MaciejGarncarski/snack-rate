@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "#/components/ui/card";
 import { Skeleton } from "#/components/ui/skeleton";
-import { PRODUCTS_PER_SCROLL } from "#/const/image-const";
+import { PRODUCTS_PER_SCROLL } from "#/features/catalogue/queries/list-snacks.query-options";
 
 export function SnacksListItemSkeleton() {
   return (

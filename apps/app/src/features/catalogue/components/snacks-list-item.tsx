@@ -58,23 +58,23 @@ export function SnacksListItem({
         to="/produkt/$slug"
         params={{ slug }}
         viewTransition
-        className="block h-full rounded-3xl sm:rounded-4xl relative overflow-hidden p-0.5"
+        className="block h-full rounded-3xl sm:rounded-4xl relative overflow-hidden p-1"
         style={{ viewTransitionName: `snack-card-${slug}` }}
       >
         <img
-          className="absolute inset-0 h-full w-full object-cover scale-150 blur-2xl saturate-150 opacity-30"
+          className="absolute inset-0 h-full w-full object-cover scale-150 blur-2xl saturate-200 dark:saturate-150 opacity-20"
           src={images[0]?.url}
           alt=""
           aria-hidden="true"
         />
-        <Card className="flex h-full flex-row items-stretch relative overflow-hidden p-0 rounded-3xl sm:rounded-4xl gap-2 sm:gap-1 transition-shadow hover:shadow-lg">
+        <Card className="ring-0 flex h-full flex-row items-stretch relative overflow-hidden p-0 rounded-3xl sm:rounded-4xl gap-2 sm:gap-1 transition-shadow hover:shadow-lg">
           <Image
             lazy={lazy}
             placeholderSrc={imageThumbnail?.url}
             src={images[0]?.url}
             alt={name}
             blurBackground
-            containerClassName="z-10 w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1 sm:p-1.5"
+            containerClassName="z-10 w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1"
             className="h-full w-full object-cover rounded-xl sm:rounded-xl"
           />
 

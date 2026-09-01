@@ -1,6 +1,7 @@
-import { PRODUCTS_PER_SCROLL } from "#/const/image-const";
 import { orpc } from "#/orpc/client";
 import type { SortBy } from "#/schemas/catalogue";
+
+export const PRODUCTS_PER_SCROLL = 8;
 
 export const listSnacksQueryOptions = (opts?: { typeSlug?: string | null; sortBy?: SortBy }) => {
   const typeSlug = opts?.typeSlug ?? undefined;
