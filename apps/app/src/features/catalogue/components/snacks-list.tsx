@@ -61,7 +61,7 @@ export function SnacksList({
   return (
     <div>
       <AnimatePresence mode="popLayout">
-        <ul className="mx-auto flex flex-col gap-14 md:grid md:grid-cols-2">
+        <ul className="mx-auto flex flex-col gap-8 sm:gap-10 lg:gap-12 md:grid lg:grid-cols-2">
           {data.pages
             .flatMap((page) => page.items)
             .map((snack, idx) => (

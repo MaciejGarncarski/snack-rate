@@ -52,13 +52,13 @@ export function SnacksListItem({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.2 }}
-      className="mx-auto w-full max-w-sm md:mx-0 md:max-w-none"
+      className="w-full"
     >
       <Link
         to="/produkt/$slug"
         params={{ slug }}
         viewTransition
-        className="block h-full rounded-4xl relative overflow-hidden p-0.5"
+        className="block h-full rounded-3xl sm:rounded-4xl relative overflow-hidden p-0.5"
         style={{ viewTransitionName: `snack-card-${slug}` }}
       >
         <img
@@ -67,36 +67,41 @@ export function SnacksListItem({
           alt=""
           aria-hidden="true"
         />
-        <Card className="flex h-full flex-col relative overflow-hidden p-0 transition-shadow hover:shadow-lg md:flex-row md:gap-1">
+        <Card className="flex h-full flex-row items-stretch relative overflow-hidden p-0 rounded-3xl sm:rounded-4xl gap-2 sm:gap-1 transition-shadow hover:shadow-lg">
           <Image
             lazy={lazy}
             placeholderSrc={imageThumbnail?.url}
             src={images[0]?.url}
             alt={name}
             blurBackground
-            containerClassName="z-10 md:w-40 aspect-4/5 rounded-2xl md:p-1.5 md:rounded-r-md"
-            className="h-full w-full object-cover md:rounded-xl"
+            containerClassName="z-10 w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1 sm:p-1.5"
+            className="h-full w-full object-cover rounded-xl sm:rounded-xl"
           />
 
-          <div className="flex min-w-0 flex-1 flex-col justify-between gap-(--card-spacing) py-(--card-spacing) px-3 relative z-10">
-            <CardHeader className="gap-2">
+          <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 sm:gap-(--card-spacing) py-2.5 sm:py-(--card-spacing) pr-3 sm:px-3 relative z-10">
+            <CardHeader className="gap-1.5 sm:gap-2 p-0">
               <CardAction>
                 <Badge
                   variant={"outline"}
-                  className="text-sm bg-primary/20 border-primary/30 rounded-full h-6 px-2 py-1 font-semibold"
+                  className="bg-primary/20 border-primary/30 rounded-full font-semibold text-xs sm:text-sm h-5 sm:h-6 px-2 sm:px-2 py-0 sm:py-1"
                 >
                   {type}
                 </Badge>
               </CardAction>
-              <CardTitle className="pr-6 text-balance leading-tight md:text-[17px]">
+              <CardTitle className="pr-8 sm:pr-6 text-[15px] sm:text-[17px] leading-tight line-clamp-2 text-balance">
                 {name}
               </CardTitle>
-              <CardDescription className="line-clamp-3 text-pretty">
+              <CardDescription className="line-clamp-2 sm:line-clamp-3 text-xs sm:text-sm leading-snug sm:leading-normal text-pretty">
                 {truncatedDescription ?? "Ten produkt nie ma jeszcze opisu."}
               </CardDescription>
             </CardHeader>
-            <CardFooter className="mt-auto">
-              <SnackRating rating={rating} withText ratingCount={ratingCount} />
+            <CardFooter className="mt-auto p-0">
+              <div className="sm:hidden">
+                <SnackRating rating={rating} withText ratingCount={ratingCount} size="sm" />
+              </div>
+              <div className="hidden sm:block">
+                <SnackRating rating={rating} withText ratingCount={ratingCount} size="md" />
+              </div>
             </CardFooter>
           </div>
         </Card>

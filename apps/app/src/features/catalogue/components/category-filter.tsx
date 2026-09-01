@@ -76,7 +76,7 @@ export function CategoryFilter({ activeSlug }: Props) {
         >
           <Badge
             variant={(activeSlug ?? "") === type.slug ? "default" : "secondary"}
-            className="rounded-full px-4 py-1.5 text-sm"
+            className="rounded-full px-4 py-3.5 text-sm"
           >
             {type.name}
           </Badge>
@@ -94,7 +94,7 @@ export function CategoryFilterSkeleton() {
   }
 
   return (
-    <div className="flex gap-2 overflow-hidden">
+    <div className="flex gap-2 overflow-hidden p-1">
       {Array.from({ length: 6 }).map((_, i) => (
         <Skeleton key={i} className="h-8 w-24 shrink-0 rounded-full" />
       ))}
