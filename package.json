@@ -28,6 +28,8 @@
     "db:migrate-and-seed-prod": "docker compose -p snack-rate-prod -f compose.yml -f compose.prod.yml --env-file .env.production run --rm db-tool",
     "db:migrate-and-seed-staging": "docker compose -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging run --rm db-tool",
     "db:reset": "node --env-file=.env.development packages/db-schema/drizzle/scripts/reset.ts",
+    "db:backfill-rating-count": "node --env-file=.env.development -- packages/db-schema/drizzle/scripts/backfill-rating-count.ts",
+    "db:backfill-rating-count-prod": "node --env-file=.env.production -- packages/db-schema/drizzle/scripts/backfill-rating-count.ts",
     "db:studio": "pnpm --filter @snack-rate/db-schema exec drizzle-kit studio",
     "backup:run": "docker compose -p snack-rate-prod -f compose.yml -f compose.prod.yml --env-file .env.production run --rm backup",
     "backup:run-staging": "docker compose -p snack-rate-staging -f compose.yml -f compose.staging.yml --env-file .env.staging run --rm backup",
