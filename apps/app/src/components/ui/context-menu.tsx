@@ -8,15 +8,12 @@ import {
   Menu as MenuPrimitive,
   MenuSection as MenuSectionPrimitive,
   MenuTrigger as MenuTriggerPrimitive,
-  PopoverContext,
   Popover as PopoverPrimitive,
   Separator as SeparatorPrimitive,
   SubmenuTrigger as SubmenuTriggerPrimitive,
   type MenuItemProps as MenuItemPrimitiveProps,
   type MenuSectionProps as MenuSectionPrimitiveProps,
-  type MenuTriggerProps,
 } from "react-aria-components";
-import { createPortal } from "react-dom";
 
 import { cn } from "#/lib/utils.ts";
 
@@ -41,7 +38,7 @@ function ContextMenu({
       offset={offset}
       crossOffset={crossOffset}
       className={cn(
-        "z-50 w-(--trigger-width) min-w-48 origin-(--trigger-anchor-point) overflow-x-hidden overflow-y-auto rounded-3xl bg-popover p-1.5 text-popover-foreground shadow-lg ring-1 ring-foreground/5 duration-100 outline-none data-entering:animate-in data-entering:fade-in-0 data-entering:zoom-in-95 data-exiting:animate-out data-exiting:overflow-hidden data-exiting:fade-out-0 data-exiting:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 **:data-[slot$=-item]:data-focused:bg-foreground/10 dark:ring-foreground/10",
+        "z-50 w-(--trigger-width) min-w-48 origin-(--trigger-anchor-point) overflow-x-hidden overflow-y-auto rounded-3xl p-1.5 text-popover-foreground shadow-lg ring-1 ring-foreground/5 duration-100 outline-none data-entering:animate-in data-entering:fade-in-0 data-entering:zoom-in-95 data-exiting:animate-out data-exiting:overflow-hidden data-exiting:fade-out-0 data-exiting:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 **:data-[slot$=-item]:data-focused:bg-foreground/10 dark:ring-foreground/10 animate-none! relative bg-popover/70 before:pointer-events-none before:absolute before:inset-0 before:-z-1 before:rounded-[inherit] before:backdrop-blur-2xl before:backdrop-saturate-150 **:data-[slot$=-item]:focus:bg-foreground/10 **:data-[slot$=-item]:data-highlighted:bg-foreground/10 **:data-[slot$=-separator]:bg-foreground/5 **:data-[slot$=-trigger]:focus:bg-foreground/10 **:data-[slot$=-trigger]:aria-expanded:bg-foreground/10! **:data-[variant=destructive]:focus:bg-foreground/10! **:data-[variant=destructive]:text-accent-foreground! **:data-[variant=destructive]:**:text-accent-foreground!",
         className,
       )}
     >
@@ -56,77 +53,9 @@ function ContextMenu({
 }
 
 function ContextMenuTrigger({
-  children,
-  className,
-  onOpenChange,
   ...props
-}: Omit<MenuTriggerProps, "trigger" | "isOpen" | "defaultOpen"> & {
-  className?: string;
-}) {
-  const [position, setPosition] = React.useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-  const positionRef = React.useRef<HTMLDivElement>(null);
-
-  return (
-    <MenuTriggerPrimitive
-      data-slot="context-menu"
-      {...props}
-      isOpen={!!position}
-      onOpenChange={(isOpen) => {
-        if (!isOpen) {
-          setPosition(null);
-          onOpenChange?.(false);
-        }
-      }}
-    >
-      {position &&
-        createPortal(
-          // Position the popover at the pointer.
-          <div
-            data-slot="context-menu-anchor"
-            ref={positionRef}
-            style={{
-              position: "fixed",
-              top: position.y,
-              left: position.x,
-            }}
-          />,
-          document.body,
-        )}
-      <div
-        data-slot="context-menu-trigger"
-        className={cn("contents select-none", className)}
-        onContextMenu={(e) => {
-          e.preventDefault();
-          const wasOpen = position !== null;
-          setPosition({
-            y: e.clientY,
-            x: e.clientX,
-          });
-          if (!wasOpen) {
-            onOpenChange?.(true);
-          }
-        }}
-      >
-        <PopoverContext.Consumer>
-          {(ctx) => (
-            <PopoverContext.Provider
-              value={{
-                ...ctx,
-                ...position,
-                triggerRef: positionRef,
-                style: undefined,
-              }}
-            >
-              {children}
-            </PopoverContext.Provider>
-          )}
-        </PopoverContext.Consumer>
-      </div>
-    </MenuTriggerPrimitive>
-  );
+}: Omit<React.ComponentProps<typeof MenuTriggerPrimitive>, "trigger">) {
+  return <MenuTriggerPrimitive data-slot="context-menu" trigger="contextMenu" {...props} />;
 }
 
 function ContextMenuGroup({
@@ -255,7 +184,7 @@ function ContextMenuSubContent({
     <ContextMenu
       data-slot="context-menu-sub-content"
       className={cn(
-        "w-auto min-w-32 rounded-3xl bg-popover p-1.5 text-popover-foreground shadow-lg ring-1 ring-foreground/5 duration-100 dark:ring-foreground/10",
+        "w-auto min-w-32 rounded-3xl p-1.5 text-popover-foreground shadow-lg ring-1 ring-foreground/5 duration-100 dark:ring-foreground/10 animate-none! relative bg-popover/70 before:pointer-events-none before:absolute before:inset-0 before:-z-1 before:rounded-[inherit] before:backdrop-blur-2xl before:backdrop-saturate-150 **:data-[slot$=-item]:focus:bg-foreground/10 **:data-[slot$=-item]:data-highlighted:bg-foreground/10 **:data-[slot$=-separator]:bg-foreground/5 **:data-[slot$=-trigger]:focus:bg-foreground/10 **:data-[slot$=-trigger]:aria-expanded:bg-foreground/10! **:data-[variant=destructive]:focus:bg-foreground/10! **:data-[variant=destructive]:text-accent-foreground! **:data-[variant=destructive]:**:text-accent-foreground!",
         className,
       )}
       placement={placement}
