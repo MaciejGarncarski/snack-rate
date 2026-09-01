@@ -1,6 +1,12 @@
 name: Deploy
 
 on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: "Commit SHA to deploy (optional; defaults to the selected ref head). No built image -> deploy will fail on pull."
+        required: false
+        type: string
   workflow_run:
     workflows: ["Build & Push"]
     branches: [development]
@@ -14,12 +20,25 @@ jobs:
   deploy:
     name: Deploy (development -> prod)
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - name: Resolve SHA to deploy
+        id: sha
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            SHA="${{ inputs.sha }}"
+            if [ -z "$SHA" ]; then
+              SHA="${{ github.sha }}"
+            fi
+          else
+            SHA="${{ github.event.workflow_run.head_sha }}"
+          fi
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ steps.sha.outputs.sha }}
 
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
@@ -44,9 +63,9 @@ jobs:
 
       - name: Run deploy script
         run: |
-          SHA="${{ github.event.workflow_run.head_sha }}"
+          SHA="${{ steps.sha.outputs.sha }}"
           IMAGE_TAG="sha-${SHA:0:7}"
-          echo "==> Deploying image tag: $IMAGE_TAG from BUILD SHA: $SHA"
+          echo "==> Deploying image tag: $IMAGE_TAG from SHA: $SHA"
           ssh -i ~/.ssh/deploy_key \
             -o StrictHostKeyChecking=yes \
             -o UserKnownHostsFile=~/.ssh/known_hosts \
