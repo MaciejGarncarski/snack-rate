@@ -24,16 +24,27 @@ jobs:
     steps:
       - name: Resolve SHA to deploy
         id: sha
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            SHA="${{ inputs.sha }}"
-            if [ -z "$SHA" ]; then
-              SHA="${{ github.sha }}"
-            fi
-          else
-            SHA="${{ github.event.workflow_run.head_sha }}"
-          fi
-          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let input;
+            if (context.eventName === "workflow_dispatch") {
+              input = (core.getInput("sha") || "").trim();
+              if (!input) input = context.sha;
+            } else {
+              input = context.payload.workflow_run.head_sha;
+            }
+            let sha = input;
+            if (!/^[0-9a-f]{40}$/.test(input)) {
+              const { data: commit } = await github.rest.repos.getCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: input,
+              });
+              sha = commit.sha;
+            }
+            core.setOutput("sha", sha);
+            core.setOutput("tag", `sha-${sha.slice(0, 7)}`);
 
       - name: Checkout
         uses: actions/checkout@v6
@@ -63,9 +74,8 @@ jobs:
 
       - name: Run deploy script
         run: |
-          SHA="${{ steps.sha.outputs.sha }}"
-          IMAGE_TAG="sha-${SHA:0:7}"
-          echo "==> Deploying image tag: $IMAGE_TAG from SHA: $SHA"
+          IMAGE_TAG="${{ steps.sha.outputs.tag }}"
+          echo "==> Deploying image tag: $IMAGE_TAG (full SHA: ${{ steps.sha.outputs.sha }})"
           ssh -i ~/.ssh/deploy_key \
             -o StrictHostKeyChecking=yes \
             -o UserKnownHostsFile=~/.ssh/known_hosts \
