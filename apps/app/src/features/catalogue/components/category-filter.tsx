@@ -1,9 +1,17 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 import { Badge } from "#/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "#/components/ui/select";
 import { Skeleton } from "#/components/ui/skeleton";
 import { listTypesQueryOptions } from "#/features/catalogue/queries/list-types.query-options";
+import { useIsMobile } from "#/hooks/use-mobile";
 
 type Props = {
   activeSlug?: string | null;
@@ -11,35 +19,64 @@ type Props = {
 
 export function CategoryFilter({ activeSlug }: Props) {
   const { data: types } = useSuspenseQuery(listTypesQueryOptions());
+  const navigate = useNavigate({ from: "/" });
+  const isMobile = useIsMobile();
+
+  const allTypes = [{ name: "Wszystkie", slug: "" }, ...types];
+
+  if (isMobile) {
+    return (
+      <Select
+        value={activeSlug ?? ""}
+        onChange={(key) => {
+          const slug = String(key);
+          if (!slug) {
+            navigate({
+              search: (prev) => {
+                const next = { ...prev };
+                delete next.category;
+                return next;
+              },
+            });
+          } else {
+            navigate({ search: (prev) => ({ ...prev, category: slug }) });
+          }
+        }}
+      >
+        <SelectTrigger className="w-auto min-w-32">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {allTypes.map((type) => (
+            <SelectItem key={type.slug} id={type.slug}>
+              {type.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    );
+  }
 
   return (
-    <div className="flex w-full gap-2 overflow-x-auto py-2 px-1 scrollbar-thin">
-      <Link
-        to="/"
-        search={(prev) => {
-          const next = { ...prev };
-          delete next.category;
-          return next;
-        }}
-        className="shrink-0 rounded-full"
-      >
-        <Badge
-          variant={!activeSlug ? "default" : "secondary"}
-          className="rounded-full px-4 py-4 text-sm font-medium"
-        >
-          Wszystkie
-        </Badge>
-      </Link>
-      {types.map((type) => (
+    <div className="flex gap-2 overflow-x-auto py-1 scrollbar-thin">
+      {allTypes.map((type) => (
         <Link
           key={type.slug}
           to="/"
-          search={(prev) => ({ ...prev, category: type.slug })}
+          preload="intent"
+          search={(prev) => {
+            if (!type.slug) {
+              const next = { ...prev };
+              delete next.category;
+              return next;
+            }
+            return { ...prev, category: type.slug };
+          }}
           className="shrink-0 rounded-full"
         >
           <Badge
-            variant={activeSlug === type.slug ? "default" : "secondary"}
-            className="rounded-full px-4 py-4 text-sm font-medium"
+            variant={(activeSlug ?? "") === type.slug ? "default" : "secondary"}
+            className="rounded-full px-4 py-1.5 text-sm"
           >
             {type.name}
           </Badge>
@@ -50,10 +87,16 @@ export function CategoryFilter({ activeSlug }: Props) {
 }
 
 export function CategoryFilterSkeleton() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <Skeleton className="h-9 w-32 rounded-3xl" />;
+  }
+
   return (
-    <div className="flex w-full gap-2 overflow-hidden pb-2">
+    <div className="flex gap-2 overflow-hidden">
       {Array.from({ length: 6 }).map((_, i) => (
-        <Skeleton key={i} className="h-9 w-24 shrink-0 rounded-full" />
+        <Skeleton key={i} className="h-8 w-24 shrink-0 rounded-full" />
       ))}
     </div>
   );

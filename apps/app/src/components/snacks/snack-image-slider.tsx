@@ -52,7 +52,7 @@ type Props = {
   slug: string;
 };
 
-export default function SnackImageSlider({ images, thumbnailUrls, slug }: Props) {
+export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<Direction>(1);
 
@@ -70,7 +70,7 @@ export default function SnackImageSlider({ images, thumbnailUrls, slug }: Props)
   return (
     <Card size="sm" className="w-full">
       <CardContent>
-        <div style={{ viewTransitionName: `snack-image-${slug}` }}>
+        <div>
           <AspectRatio
             ratio={4 / 5}
             className="w-full overflow-hidden rounded-3xl border bg-muted border-border/70 shadow-md"

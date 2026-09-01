@@ -30,7 +30,16 @@ type Props = {
   }[];
 };
 
-export function SnacksListItem({ name, description, slug, rating, type, lazy, images }: Props) {
+export function SnacksListItem({
+  name,
+  description,
+  slug,
+  rating,
+  type,
+  lazy,
+  images,
+  ratingCount,
+}: Props) {
   const isLongDescription = description && description.length > 100;
   const truncatedDescription = isLongDescription ? description.slice(0, 100) + "..." : description;
 
@@ -49,20 +58,27 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
         to="/produkt/$slug"
         params={{ slug }}
         viewTransition
-        className="block h-full rounded-4xl"
+        className="block h-full rounded-4xl relative overflow-hidden p-0.5"
         style={{ viewTransitionName: `snack-card-${slug}` }}
       >
-        <Card className="flex h-full flex-col overflow-hidden pt-0 transition-shadow hover:shadow-lg md:flex-row md:gap-0 md:py-0">
+        <img
+          className="absolute inset-0 h-full w-full object-cover scale-150 blur-2xl saturate-150 opacity-30"
+          src={images[0]?.url}
+          alt=""
+          aria-hidden="true"
+        />
+        <Card className="flex h-full flex-col relative overflow-hidden p-0 transition-shadow hover:shadow-lg md:flex-row md:gap-1">
           <Image
             lazy={lazy}
             placeholderSrc={imageThumbnail?.url}
             src={images[0]?.url}
             alt={name}
             blurBackground
-            containerClassName="w-full aspect-4/5 shrink-0 md:w-[42%] lg:w-[38%] md:rounded-r-sm"
-            className="h-full w-full object-cover rounded-t-4xl md:rounded-tr-none md:p-1 md:rounded-l-4xl md:rounded-r-xl"
+            containerClassName="z-10 md:w-40 aspect-4/5 rounded-2xl md:p-1.5 md:rounded-r-md"
+            className="h-full w-full object-cover md:rounded-xl"
           />
-          <div className="flex min-w-0 flex-1 flex-col justify-between gap-(--card-spacing) py-(--card-spacing)">
+
+          <div className="flex min-w-0 flex-1 flex-col justify-between gap-(--card-spacing) py-(--card-spacing) px-3 relative z-10">
             <CardHeader className="gap-2">
               <CardAction>
                 <Badge
@@ -80,7 +96,7 @@ export function SnacksListItem({ name, description, slug, rating, type, lazy, im
               </CardDescription>
             </CardHeader>
             <CardFooter className="mt-auto">
-              <SnackRating rating={rating} withText />
+              <SnackRating rating={rating} withText ratingCount={ratingCount} />
             </CardFooter>
           </div>
         </Card>

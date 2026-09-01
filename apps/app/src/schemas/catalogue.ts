@@ -7,10 +7,21 @@ export const snackSlugSchema = z.object({
   slug: z.string(),
 });
 
+export const sortByEnum = z.enum([
+  "newest",
+  "oldest",
+  "most_reviewed",
+  "most_liked",
+  "most_disliked",
+]);
+
+export type SortBy = z.infer<typeof sortByEnum>;
+
 export const listSnacksSchema = z.object({
   limit: z.number().min(1),
   cursor: z.string().optional(),
   typeSlug: z.string().optional(),
+  sortBy: sortByEnum.optional(),
 });
 
 export const MAXIMUM_DESCRIPTION_LENGTH = 500;

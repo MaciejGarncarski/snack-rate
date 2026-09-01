@@ -20,7 +20,7 @@ export function SnacksListItemSkeleton() {
               <Skeleton className="mb-1 h-6 w-20 rounded-full" />
             </CardAction>
             <CardTitle className="w-full">
-              <Skeleton className="h-5 w-3/4 md:h-[17px]" />
+              <Skeleton className="h-5 w-3/4 md:h-4.25" />
             </CardTitle>
             <CardDescription className="w-full space-y-2">
               <Skeleton className="h-4 w-full" />

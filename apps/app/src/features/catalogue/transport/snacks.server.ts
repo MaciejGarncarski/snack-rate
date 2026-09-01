@@ -11,9 +11,9 @@ import { baseProcedure } from "#/lib/orpc/procedure";
 import { createSnackInputSchema, listSnacksSchema } from "#/schemas/catalogue";
 
 export const listSnacksProcedure = baseProcedure.input(listSnacksSchema).handler(({ input }) => {
-  const { limit, cursor, typeSlug } = input;
+  const { limit, cursor, typeSlug, sortBy } = input;
 
-  return listSnacksUseCase({ limit, cursor, typeSlug }, snacksRepository);
+  return listSnacksUseCase({ limit, cursor, typeSlug, sortBy }, snacksRepository);
 });
 
 export const createSnackProcedure = baseProcedure

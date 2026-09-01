@@ -12,10 +12,17 @@ import {
 } from "#/components/ui/empty";
 import { SnacksListItem } from "#/features/catalogue/components/snacks-list-item";
 import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query-options";
+import type { SortBy } from "#/schemas/catalogue";
 
-export function SnacksList({ category }: { category?: string | null }) {
+export function SnacksList({
+  category,
+  sortBy,
+}: {
+  category?: string | null;
+  sortBy?: SortBy | null;
+}) {
   const { data, hasNextPage, fetchNextPage, isFetching } = useSuspenseInfiniteQuery(
-    listSnacksQueryOptions({ typeSlug: category ?? undefined }),
+    listSnacksQueryOptions({ typeSlug: category ?? undefined, sortBy: sortBy ?? undefined }),
   );
 
   const { ref } = useInView({
