@@ -1,5 +1,5 @@
 import type { QueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute } from "@tanstack/react-router";
 import * as z from "zod";
 
 import {
@@ -58,7 +58,9 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between gap-4">
-        <CategoryFilter activeSlug={category ?? null} />
+        <ClientOnly fallback={<CategoryFilterSkeleton />}>
+          <CategoryFilter activeSlug={category ?? null} />
+        </ClientOnly>
         <SortFilter activeSortBy={sortBy ?? null} />
       </div>
       <SnacksList category={category ?? null} sortBy={sortBy ?? null} />

@@ -62,7 +62,7 @@ export function SnacksListItem({
         style={{ viewTransitionName: `snack-card-${slug}` }}
       >
         <img
-          className="absolute inset-0 h-full w-full scale-150 object-cover blur-2xl saturate-200 opacity-0 transition-opacity duration-500 ease-out group-hover:animate-border-glow dark:saturate-150 animate-border-glow paused group-hover:opacity-25 group-hover:running"
+          className="absolute inset-0 h-full w-full scale-150 object-cover blur-2xl saturate-200 opacity-10 transition-opacity duration-500 ease-out group-hover:animate-border-glow dark:saturate-150 animate-border-glow paused group-hover:opacity-25 group-hover:running"
           src={images[0]?.url}
           alt=""
           aria-hidden="true"
