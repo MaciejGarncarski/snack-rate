@@ -142,6 +142,7 @@
   --animate-skeleton: skeleton 2s -1s infinite linear;
   --animate-rmiz-blur-fade-in: rmiz-blur-fade-in 0.7s ease-out 0s both;
   --animate-rmiz-blur-fade-out: rmiz-blur-fade-out 0.15s ease-in both;
+  --animate-border-glow: border-glow 8s linear infinite both;
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -166,6 +167,15 @@
     }
     to {
       opacity: 0;
+    }
+  }
+  @keyframes border-glow {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
     }
   }
   --radius-sm: calc(var(--radius) * 0.6);

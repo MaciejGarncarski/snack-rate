@@ -36,7 +36,6 @@ export function SnacksListItemSkeleton() {
     </li>
   );
 }
-
 export function SnacksListSkeleton() {
   return (
     <ul className="mx-auto flex w-full flex-col gap-14 md:grid md:grid-cols-2">
