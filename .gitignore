@@ -12,6 +12,7 @@ __unconfig*
 todos.json
 log-files
 coverage
+.vitest
 .env.development
 .env.staging
 .env.production
