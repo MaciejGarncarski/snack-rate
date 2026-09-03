@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query-options";
 import { snackCommentsQueryOptions } from "#/features/comments/queries/comments.query-options";
-import { snackRatingDataQueryOptions as snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
+import { snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
 import { orpc } from "#/orpc/client";
 
 export function useRemoveComment({ snackItemId, slug }: { snackItemId: string; slug: string }) {

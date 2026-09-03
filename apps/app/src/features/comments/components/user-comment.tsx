@@ -7,7 +7,7 @@ import { Item, ItemContent, ItemHeader, ItemTitle } from "#/components/ui/item";
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query-options";
 import { UserCommentForm } from "#/features/comments/components/user-comment-form";
 import { UserCommentItem } from "#/features/comments/components/user-comment-item";
-import { snackRatingDataQueryOptions as snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
+import { snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
 import { useCommentSnack } from "#/features/comments/queries/use-comment-snack";
 import { useRemoveComment } from "#/features/comments/queries/use-remove-comment";
 import { Route } from "#/routes/_app/produkt/$slug/route";

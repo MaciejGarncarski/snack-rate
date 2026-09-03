@@ -23,7 +23,6 @@ export function getRouter() {
     defaultNotFoundComponent: () => <DefaultNotFound />,
     defaultErrorComponent: DefaultErrorComponent,
     defaultPendingComponent: () => <div>Wczytywanie...</div>,
-    defaultPendingMinMs: 200,
   });
 
   setupRouterSsrQueryIntegration({
