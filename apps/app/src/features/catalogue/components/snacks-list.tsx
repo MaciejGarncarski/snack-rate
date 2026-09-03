@@ -1,5 +1,5 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
-import { CandyIcon } from "lucide-react";
+import { CandyIcon, InfoIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useInView } from "react-intersection-observer";
 
@@ -79,9 +79,22 @@ export function SnacksList({
             ))}
         </ul>
       </AnimatePresence>
-      <div className="h-4 mt-40 w-full">
-        {hasNextPage && !isFetching && <div ref={ref} className="h-4 w-full"></div>}
-      </div>
+      {!hasNextPage && (
+        <Empty className="mt-40">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <InfoIcon />
+            </EmptyMedia>
+            <EmptyTitle>To koniec listy!</EmptyTitle>
+            <EmptyDescription>Nie ma wiecej przekąsek do wyświetlenia.</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      )}
+      {hasNextPage && (
+        <div className="h-4 mt-40 w-full">
+          {!isFetching && <div ref={ref} className="h-4 w-full"></div>}
+        </div>
+      )}
     </div>
   );
 }

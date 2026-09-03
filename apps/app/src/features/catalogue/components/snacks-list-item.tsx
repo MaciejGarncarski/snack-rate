@@ -74,7 +74,7 @@ export function SnacksListItem({
             src={images[0]?.url}
             alt={name}
             blurBackground
-            containerClassName="z-10 w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1.5"
+            containerClassName="z-10 w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1 md:p-1.5"
             className="h-full w-full object-cover rounded-xl sm:rounded-xl"
           />
 
