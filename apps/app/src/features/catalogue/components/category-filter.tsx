@@ -107,17 +107,14 @@ export function CategoryFilter({ activeSlug }: Props) {
 }
 
 export function CategoryFilterSkeleton() {
-  const isMobile = useIsMobile();
-
-  if (isMobile) {
-    return <Skeleton className="h-8 w-32 rounded-3xl" />;
-  }
-
   return (
-    <div className="flex gap-2 overflow-hidden p-1">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <Skeleton key={i} className="h-7.5 w-22 shrink-0 rounded-full" />
-      ))}
-    </div>
+    <>
+      <div className="hidden md:flex gap-2 overflow-hidden p-1">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-7.5 w-22 shrink-0 rounded-full" />
+        ))}
+      </div>
+      <Skeleton className="h-8 w-32 rounded-3xl block md:hidden" />
+    </>
   );
 }
