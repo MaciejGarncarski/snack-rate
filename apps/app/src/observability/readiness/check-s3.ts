@@ -14,7 +14,7 @@ export async function checkS3(
 ): Promise<S3CheckResult> {
   try {
     await exponentialBackoff(() => checkS3Once(s3, bucket, timeoutMs), {
-      factor: 2,
+      factor: 3,
       retries: retries ?? 8,
       minTimeout: 100,
       maxTimeout: 1000,
@@ -34,7 +34,7 @@ export async function checkS3(
   }
 }
 
-export async function checkS3Once(s3: S3Client, bucket: string, timeoutMs: number) {
+async function checkS3Once(s3: S3Client, bucket: string, timeoutMs: number) {
   const timeout = new Promise((_, reject) => {
     setTimeout(() => reject(new Error("timeout")), timeoutMs);
   });

@@ -1,12 +1,11 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { Pool } from "pg";
 
-import { exponentialBackoff } from "#/lib/exponential-backoff";
 import { serverEnv } from "#/lib/server.env";
 import { readinessFailureCounter } from "#/observability/counters";
 import { logger } from "#/observability/logger/logger";
-import { checkDatabaseOnce } from "#/observability/readiness/check-db";
-import { checkS3Once } from "#/observability/readiness/check-s3";
+import { checkDb } from "#/observability/readiness/check-db";
+import { checkS3 } from "#/observability/readiness/check-s3";
 
 export async function runPreStartChecks() {
   if (serverEnv.isTest) return;
@@ -30,24 +29,14 @@ export async function runPreStartChecks() {
   });
 
   try {
-    await Promise.all([
-      exponentialBackoff(() => checkDatabaseOnce(pool, timeoutMs), {
-        factor: 2,
-        retries: 4,
-        minTimeout: 100,
-        maxTimeout: 2000,
-        logger,
-        fnName: "checkDatabaseOnce",
-      }),
-      exponentialBackoff(() => checkS3Once(s3, serverEnv.S3_BUCKET_PUBLIC, timeoutMs), {
-        factor: 2,
-        retries: 4,
-        minTimeout: 100,
-        maxTimeout: 2000,
-        logger,
-        fnName: "checkS3Once",
-      }),
+    const [dbResult, s3Result] = await Promise.all([
+      checkDb(pool, timeoutMs, 4),
+      checkS3(s3, serverEnv.S3_BUCKET_PUBLIC, timeoutMs, 4),
     ]);
+
+    if (!dbResult.ok || !s3Result.ok) {
+      throw new Error("Pre-start readiness check failed");
+    }
 
     logger.info({
       status: "Pre-start checks succeeded",

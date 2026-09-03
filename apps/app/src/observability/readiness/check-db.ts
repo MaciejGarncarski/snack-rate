@@ -9,7 +9,7 @@ type DbCheckResult = { ok: true } | { ok: false; error: string };
 export async function checkDb(pool: Pool, timeoutMs: number, retries = 2): Promise<DbCheckResult> {
   try {
     await exponentialBackoff(() => checkDatabaseOnce(pool, timeoutMs), {
-      factor: 2,
+      factor: 3,
       retries: retries ?? 8,
       minTimeout: 100,
       maxTimeout: 1000,
@@ -29,7 +29,7 @@ export async function checkDb(pool: Pool, timeoutMs: number, retries = 2): Promi
   }
 }
 
-export async function checkDatabaseOnce(pool: Pool, timeoutMs: number) {
+async function checkDatabaseOnce(pool: Pool, timeoutMs: number) {
   const timeout = new Promise((_, reject) => {
     setTimeout(() => reject(new Error("timeout")), timeoutMs);
   });
