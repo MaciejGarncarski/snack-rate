@@ -2,7 +2,7 @@ FROM node:26.8.1-slim AS base
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ARG PNPM_VERSION=12.1.0
+ARG PNPM_VERSION=12.3.1
 RUN npm install -g --allow-scripts=pnpm pnpm@${PNPM_VERSION}
 RUN pnpm config set store-dir /pnpm/store
 
