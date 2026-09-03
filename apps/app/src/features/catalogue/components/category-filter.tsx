@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 
 import { Badge } from "#/components/ui/badge";
 import {
@@ -18,6 +18,7 @@ type Props = {
 };
 
 export function CategoryFilter({ activeSlug }: Props) {
+  const router = useRouter();
   const { data: types } = useSuspenseQuery(listTypesQueryOptions());
   const navigate = useNavigate({ from: "/" });
   const isMobile = useIsMobile();
@@ -38,9 +39,11 @@ export function CategoryFilter({ activeSlug }: Props) {
                 return next;
               },
             });
-          } else {
-            navigate({ search: (prev) => ({ ...prev, category: slug }) });
+
+            return;
           }
+
+          navigate({ search: (prev) => ({ ...prev, category: slug }) });
         }}
       >
         <SelectTrigger className="w-auto min-w-32">
@@ -48,7 +51,24 @@ export function CategoryFilter({ activeSlug }: Props) {
         </SelectTrigger>
         <SelectContent>
           {allTypes.map((type) => (
-            <SelectItem key={type.slug} id={type.slug}>
+            <SelectItem
+              key={type.slug}
+              id={type.slug}
+              onMouseEnter={() => {
+                router.preloadRoute({
+                  to: "/",
+                  search: (prev) => {
+                    if (!type.slug) {
+                      const next = { ...prev };
+                      delete next.category;
+                      return next;
+                    }
+
+                    return { ...prev, category: type.slug };
+                  },
+                });
+              }}
+            >
               {type.name}
             </SelectItem>
           ))}

@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import {
   ArrowDownAZIcon,
   ArrowUpAZIcon,
@@ -35,6 +35,7 @@ type Props = {
 
 export function SortFilter({ activeSortBy }: Props) {
   const navigate = useNavigate({ from: "/" });
+  const router = useRouter();
   const currentValue = activeSortBy ?? "newest";
 
   return (
@@ -63,7 +64,24 @@ export function SortFilter({ activeSortBy }: Props) {
         {SORT_OPTIONS.map((option) => {
           const Icon = option.icon;
           return (
-            <SelectItem key={option.value} id={option.value}>
+            <SelectItem
+              key={option.value}
+              id={option.value}
+              onMouseEnter={() => {
+                router.preloadRoute({
+                  to: "/",
+                  search: (prev) => {
+                    if (option.value === "newest") {
+                      const next = { ...prev };
+                      delete next.sortBy;
+                      return next;
+                    }
+
+                    return { ...prev, sortBy: option.value };
+                  },
+                });
+              }}
+            >
               <span className="flex items-center gap-2">
                 <Icon className="size-3.5" />
                 {option.label}
