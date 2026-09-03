@@ -58,23 +58,23 @@ export function SnacksListItem({
         to="/produkt/$slug"
         params={{ slug }}
         viewTransition
-        className="block h-full rounded-3xl sm:rounded-4xl relative overflow-hidden p-1 group"
+        className="block h-full rounded-3xl sm:rounded-4xl relative overflow-hidden p-0.75 group"
         style={{ viewTransitionName: `snack-card-${slug}` }}
       >
         <img
-          className="absolute inset-0 h-full w-full scale-150 object-cover blur-2xl saturate-200 opacity-10 transition-opacity duration-500 ease-out group-hover:animate-border-glow dark:saturate-150 animate-border-glow paused group-hover:opacity-25 group-hover:running"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-200 inset-0 h-full w-full object-cover blur-[6px] saturate-150 opacity-5 transition-opacity duration-500 ease-out group-focus:animate-border-glow group-focus:running dark:opacity-10 dark:group-focus:opacity-30 dark:group-hover:opacity-30 group-focus:opacity-15 group-hover:animate-border-glow animate-border-glow paused group-hover:opacity-15 group-hover:running"
           src={images[0]?.url}
           alt=""
           aria-hidden="true"
         />
-        <Card className=" flex h-full flex-row items-stretch relative overflow-hidden p-0 rounded-3xl sm:rounded-4xl gap-2 sm:gap-1 transition-shadow hover:shadow-lg">
+        <Card className="flex h-full flex-row items-stretch relative overflow-hidden p-0 rounded-3xl sm:rounded-4xl gap-2 sm:gap-1 transition-all duration-500 ease-out group-hover:shadow-lg group-hover:bg-card/95 backdrop-blur-3xl">
           <Image
             lazy={lazy}
             placeholderSrc={imageThumbnail?.url}
             src={images[0]?.url}
             alt={name}
             blurBackground
-            containerClassName="z-10 w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1 md:p-1.5"
+            containerClassName="z-10 w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1"
             className="h-full w-full object-cover rounded-xl sm:rounded-xl"
           />
 
