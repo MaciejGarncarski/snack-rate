@@ -44,13 +44,11 @@ export const Route = createFileRoute("/_app/produkt/$slug")({
       staleTime: "static",
     });
 
-    if (!snack) {
-      throw notFound();
+    if (snack) {
+      return { snack };
     }
 
-    void context.queryClient.query(snackRatingsQueryOptions(snack.id));
-
-    return { snack };
+    throw notFound();
   },
 
   notFoundComponent: () => {
