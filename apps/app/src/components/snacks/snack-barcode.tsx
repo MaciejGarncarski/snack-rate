@@ -107,7 +107,6 @@ function SnackBarcodeSkeleton({ size = "md", variant = "default" }: Omit<Props, 
         )}
       >
         <Loader2Icon className="size-4 text-muted-foreground animate-spin animation-duration-[2s]" />
-        Sprawdzam
       </div>
     </div>
   );

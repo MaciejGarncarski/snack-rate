@@ -6,7 +6,7 @@ export function SnacksListItemSkeleton() {
   return (
     <li className="flex w-full justify-center">
       <Card className="flex h-full w-full flex-row items-stretch gap-2 rounded-3xl p-0 sm:gap-1 sm:rounded-4xl overflow-hidden">
-        <div className="z-10 shrink-0 aspect-4/5 rounded-xl overflow-hidden w-28 sm:w-32 lg:w-40">
+        <div className="shrink-0 aspect-4/5 rounded-xl overflow-hidden w-28 sm:w-32 lg:w-40">
           <Skeleton className="h-full w-full rounded-xl" />
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 py-2.5 pr-3 sm:gap-(--card-spacing) sm:py-(--card-spacing) sm:px-3">

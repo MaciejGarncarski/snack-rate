@@ -57,9 +57,7 @@ export function SnacksListItem({
       <Link
         to="/produkt/$slug"
         params={{ slug }}
-        viewTransition
         className="block h-full rounded-3xl sm:rounded-4xl relative overflow-hidden p-0.75 group"
-        style={{ viewTransitionName: `snack-card-${slug}` }}
       >
         <img
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-200 inset-0 h-full w-full object-cover blur-[6px] saturate-150 opacity-5 transition-opacity duration-500 ease-out group-focus:animate-border-glow group-focus:running dark:opacity-10 dark:group-focus:opacity-30 dark:group-hover:opacity-30 group-focus:opacity-15 group-hover:animate-border-glow animate-border-glow paused group-hover:opacity-15 group-hover:running"
@@ -74,7 +72,7 @@ export function SnacksListItem({
             src={images[0]?.url}
             alt={name}
             blurBackground
-            containerClassName="z-10 w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1"
+            containerClassName="w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1"
             className="h-full w-full object-cover rounded-xl sm:rounded-xl"
           />
 
