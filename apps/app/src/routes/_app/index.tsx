@@ -1,7 +1,10 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { ClientOnly, createFileRoute } from "@tanstack/react-router";
+import { useSelector } from "@tanstack/react-store";
+import { LayoutGrid, LayoutList } from "lucide-react";
 import * as z from "zod";
 
+import { ToggleGroup, ToggleGroupItem } from "#/components/ui/toggle-group";
 import {
   CategoryFilter,
   CategoryFilterSkeleton,
@@ -12,6 +15,7 @@ import { SortFilter, SortFilterSkeleton } from "#/features/catalogue/components/
 import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query-options";
 import { listTypesQueryOptions } from "#/features/catalogue/queries/list-types.query-options";
 import { sortByEnum } from "#/schemas/catalogue";
+import { layoutStore, setLayout, useSyncLayout } from "#/stores/layout-store";
 
 const searchSchema = z.looseObject({
   category: z.string().optional(),
@@ -54,6 +58,8 @@ export const Route = createFileRoute("/_app/")({
 
 function RouteComponent() {
   const { category, sortBy } = Route.useSearch();
+  useSyncLayout();
+  const layout = useSelector(layoutStore, (s) => s);
 
   return (
     <div className="flex flex-col gap-6">
@@ -61,9 +67,33 @@ function RouteComponent() {
         <ClientOnly fallback={<CategoryFilterSkeleton />}>
           <CategoryFilter activeSlug={category ?? null} />
         </ClientOnly>
-        <SortFilter activeSortBy={sortBy ?? null} />
+        <div className="flex items-center gap-2">
+          <ToggleGroup
+            selectionMode="single"
+            selectedKeys={new Set([layout])}
+            onSelectionChange={(keys) => {
+              const value = [...keys][0];
+
+              if (value === "1col" || value === "2col") {
+                setLayout(value);
+              }
+            }}
+            variant="outline"
+            size="sm"
+            className="hidden md:inline-flex"
+          >
+            <ToggleGroupItem id="1col" aria-label="List view">
+              <LayoutList />
+            </ToggleGroupItem>
+
+            <ToggleGroupItem id="2col" aria-label="Grid view">
+              <LayoutGrid />
+            </ToggleGroupItem>
+          </ToggleGroup>
+          <SortFilter activeSortBy={sortBy ?? null} />
+        </div>
       </div>
-      <SnacksList category={category ?? null} sortBy={sortBy ?? null} />
+      <SnacksList category={category ?? null} sortBy={sortBy ?? null} layout={layout} />
     </div>
   );
 }

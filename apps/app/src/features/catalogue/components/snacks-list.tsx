@@ -12,14 +12,17 @@ import {
 } from "#/components/ui/empty";
 import { SnacksListItem } from "#/features/catalogue/components/snacks-list-item";
 import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query-options";
+import { cn } from "#/lib/utils";
 import type { SortBy } from "#/schemas/catalogue";
 
 export function SnacksList({
   category,
   sortBy,
+  layout = "2col",
 }: {
   category?: string | null;
   sortBy?: SortBy | null;
+  layout?: "1col" | "2col";
 }) {
   const { data, hasNextPage, fetchNextPage, isFetching } = useSuspenseInfiniteQuery(
     listSnacksQueryOptions({ typeSlug: category ?? undefined, sortBy: sortBy ?? undefined }),
@@ -61,7 +64,13 @@ export function SnacksList({
   return (
     <div>
       <AnimatePresence mode="popLayout">
-        <ul className="mx-auto flex flex-col gap-8 sm:gap-10 lg:gap-12 md:grid lg:grid-cols-2">
+        <ul
+          className={cn(
+            "mx-auto flex flex-col gap-8 sm:gap-10 lg:gap-12",
+            layout === "2col" && "md:grid md:grid-cols-2",
+            layout === "1col" && "md:max-w-3xl",
+          )}
+        >
           {data.pages
             .flatMap((page) => page.items)
             .map((snack, idx) => (

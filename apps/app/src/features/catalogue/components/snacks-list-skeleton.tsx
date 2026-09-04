@@ -1,6 +1,7 @@
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "#/components/ui/card";
 import { Skeleton } from "#/components/ui/skeleton";
 import { PRODUCTS_PER_SCROLL } from "#/features/catalogue/queries/list-snacks.query-options";
+import { cn } from "#/lib/utils";
 
 export function SnacksListItemSkeleton() {
   return (
@@ -29,9 +30,14 @@ export function SnacksListItemSkeleton() {
     </li>
   );
 }
-export function SnacksListSkeleton() {
+export function SnacksListSkeleton({ layout = "2col" }: { layout?: "1col" | "2col" }) {
   return (
-    <ul className="mx-auto flex w-full flex-col gap-8 sm:gap-10 lg:gap-12 md:grid md:grid-cols-2">
+    <ul
+      className={cn(
+        "mx-auto flex w-full flex-col gap-8 sm:gap-10 lg:gap-12",
+        layout === "2col" && "md:grid md:grid-cols-2",
+      )}
+    >
       {Array.from({ length: PRODUCTS_PER_SCROLL }).map((_, index) => (
         <SnacksListItemSkeleton key={index} />
       ))}
