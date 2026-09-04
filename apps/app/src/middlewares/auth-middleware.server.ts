@@ -1,7 +1,7 @@
 import { getCookie } from "@orpc/server/helpers";
 import { setCookie } from "@tanstack/react-start/server";
 import { uuidv7 } from "uuidv7";
-import z from "zod";
+import * as z from "zod";
 
 import { cookies } from "#/lib/cookie.config";
 import { baseORPC } from "#/lib/orpc/base";

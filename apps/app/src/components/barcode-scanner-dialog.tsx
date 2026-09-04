@@ -113,7 +113,7 @@ export function BarcodeScannerDialog({ open, onOpenChange, onScan }: BarcodeScan
       cancelled = true;
       stopScanner();
     };
-  }, [open, onScan, onOpenChange, onScanSuccess]);
+  }, [open, onScanSuccess]);
 
   return (
     <Dialog isOpen={open} onOpenChange={onOpenChange} className="max-w-sm">

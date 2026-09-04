@@ -45,8 +45,9 @@ describe("list snacks with category filter", () => {
     expect(page1.items).toHaveLength(2);
     expect(page1.nextCursor).not.toBeNull();
 
+    // assertion on nextCursor because its checked before
     const page2 = await listSnacksUseCase(
-      { limit: 2, cursor: page1.nextCursor ?? undefined, typeSlug: "napoje" },
+      { limit: 2, cursor: page1.nextCursor as string, typeSlug: "napoje" },
       repository,
     );
     expect(page2.items).toHaveLength(1);

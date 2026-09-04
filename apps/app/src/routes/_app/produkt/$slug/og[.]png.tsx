@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import ImageResponse from "takumi-js/response";
+import { ImageResponse } from "takumi-js/response";
 
 import { client } from "#/orpc/client";
 import stylesheet from "#/styles/app.css?inline";

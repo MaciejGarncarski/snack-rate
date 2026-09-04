@@ -1,3 +1,4 @@
+// oxlint-disable-next-line import/no-unassigned-import
 import "zod/compile";
 import handler from "@tanstack/react-start/server-entry";
 import { FastResponse } from "srvx";
