@@ -4,6 +4,7 @@ import { createMiddleware } from "@tanstack/react-start";
 import { httpRequestsCounter, httpStatusCodesCounter } from "#/observability/counters";
 import { httpDurationHistogram } from "#/observability/http-duration";
 import { logger } from "#/observability/logger/logger";
+import { redactValue } from "#/observability/request-context";
 import { getTracer, markSpanOk, recordSpanError, startActiveSpan } from "#/observability/tracing";
 
 const SERVER_FN_PREFIX = "/_serverFn/";
@@ -25,6 +26,19 @@ function normalizeHttpRoute(pathname: string): string {
   }
 }
 
+function truncateUrl(value: string): string {
+  return value.length > MAX_URL_LENGTH ? `${value.slice(0, MAX_URL_LENGTH)}...` : value;
+}
+
+function getQueryParams(url: URL): Record<string, unknown> | undefined {
+  if (url.searchParams.size === 0) return undefined;
+  const params: Record<string, unknown> = {};
+  for (const [key, value] of url.searchParams) {
+    params[key] = redactValue(value);
+  }
+  return params;
+}
+
 export const requestLoggerMiddleware = createMiddleware({ type: "request" }).server(
   ({ request, next }) => {
     const url = new URL(request.url);
@@ -36,11 +50,8 @@ export const requestLoggerMiddleware = createMiddleware({ type: "request" }).ser
     httpRequestsCounter.add(1);
     const startTime = Date.now();
     const httpRoute = normalizeHttpRoute(url.pathname);
-
-    const logUrl =
-      request.url.length > MAX_URL_LENGTH
-        ? request.url.slice(0, MAX_URL_LENGTH) + "..."
-        : request.url;
+    const logUrl = truncateUrl(request.url);
+    const query = getQueryParams(url);
 
     return startActiveSpan(
       `${request.method} ${url.pathname}`,
@@ -65,7 +76,9 @@ export const requestLoggerMiddleware = createMiddleware({ type: "request" }).ser
             {
               method: request.method,
               url: logUrl,
+              route: httpRoute,
               status,
+              query,
             },
             "Request completed",
           );
@@ -77,7 +90,9 @@ export const requestLoggerMiddleware = createMiddleware({ type: "request" }).ser
           logger.error(
             {
               method: request.method,
-              url: request.url,
+              url: logUrl,
+              route: httpRoute,
+              query,
               error: err,
             },
             "Request failed",
