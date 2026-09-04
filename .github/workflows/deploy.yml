@@ -65,6 +65,12 @@ jobs:
         run: |
           SHA="${{ steps.sha.outputs.sha }}"
           IMAGE_TAG="sha-${SHA:0:7}"
+          echo "==> Pulling git repo (for compose file and deploy script)"
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile=~/.ssh/known_hosts \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            "cd ${{ vars.DEPLOY_REPO_DIR }} && git pull"
           echo "==> Deploying image tag: $IMAGE_TAG (from SHA: $SHA)"
           ssh -i ~/.ssh/deploy_key \
             -o StrictHostKeyChecking=yes \
