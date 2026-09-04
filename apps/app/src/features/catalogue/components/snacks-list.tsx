@@ -89,15 +89,22 @@ export function SnacksList({
         </ul>
       </AnimatePresence>
       {!hasNextPage && (
-        <Empty className="mt-40">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <InfoIcon />
-            </EmptyMedia>
-            <EmptyTitle>To koniec listy!</EmptyTitle>
-            <EmptyDescription>Nie ma wiecej przekąsek do wyświetlenia.</EmptyDescription>
-          </EmptyHeader>
-        </Empty>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mt-20 flex w-full items-center justify-center"
+        >
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <InfoIcon />
+              </EmptyMedia>
+              <EmptyTitle>To koniec listy!</EmptyTitle>
+              <EmptyDescription>Nie ma wiecej przekąsek do wyświetlenia.</EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        </motion.div>
       )}
       {hasNextPage && (
         <div className="h-4 mt-40 w-full">
