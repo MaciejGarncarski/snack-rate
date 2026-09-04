@@ -74,7 +74,7 @@ export function SnacksListItem({
             alt={name}
             blurBackground
             containerClassName="w-28 sm:w-32 lg:w-40 shrink-0 aspect-[4/5] rounded-xl overflow-hidden p-1"
-            className="h-full w-full object-cover rounded-xl sm:rounded-xl"
+            className="h-full w-full object-cover rounded-xl sm:rounded-3xl"
           />
 
           <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 sm:gap-(--card-spacing) py-2.5 sm:py-(--card-spacing) pr-3 sm:px-3 relative z-10">
