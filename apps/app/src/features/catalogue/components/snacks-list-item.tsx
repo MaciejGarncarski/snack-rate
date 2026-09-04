@@ -50,6 +50,7 @@ export function SnacksListItem({
       layout
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
+      whileTap={{ scale: 0.96 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.2 }}
       className="w-full"
@@ -60,12 +61,12 @@ export function SnacksListItem({
         className="block h-full rounded-3xl sm:rounded-4xl relative overflow-hidden p-0.75 group"
       >
         <img
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-200 inset-0 h-full w-full object-cover blur-[6px] saturate-150 opacity-5 transition-opacity duration-500 ease-out group-focus:animate-border-glow group-focus:running dark:opacity-10 dark:group-focus:opacity-30 dark:group-hover:opacity-30 group-focus:opacity-15 group-hover:animate-border-glow animate-border-glow paused group-hover:opacity-15 group-hover:running"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 pointer-events-none select-none -translate-y-1/2 scale-200 inset-0 h-full w-full object-cover blur-[6px] saturate-150 opacity-5 transition-opacity duration-500 ease-out group-focus:animate-border-glow contrast-500 group-focus:running dark:opacity-10 dark:group-focus:opacity-25 dark:group-hover:opacity-25 group-focus:opacity-15 group-hover:animate-border-glow animate-border-glow paused group-hover:opacity-15 group-hover:running"
           src={images[0]?.url}
           alt=""
           aria-hidden="true"
         />
-        <Card className="flex h-full flex-row items-stretch relative overflow-hidden p-0 rounded-3xl sm:rounded-4xl gap-2 sm:gap-1 transition-all duration-500 ease-out group-hover:shadow-lg group-hover:bg-card/95 backdrop-blur-3xl">
+        <Card className="flex h-full flex-row items-stretch relative overflow-hidden p-0 rounded-3xl sm:rounded-4xl gap-2 sm:gap-1 transition-all duration-500 ease-out group-hover:shadow-lg group-hover:bg-card/85 backdrop-blur-3xl">
           <Image
             lazy={lazy}
             placeholderSrc={imageThumbnail?.url}
