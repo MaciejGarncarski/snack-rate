@@ -18,7 +18,7 @@ const SIZE_CLASSES: Record<NonNullable<Props["borderSize"]>, string> = {
 
 export function GlowingImgBorder({ imgSrc, children, borderSize }: Props) {
   const { ref, inView } = useInView({
-    rootMargin: "200px",
+    rootMargin: "100px",
     threshold: 0,
   });
 

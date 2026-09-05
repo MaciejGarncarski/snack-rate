@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "#/components/ui/card";
+import { useIsMobile } from "#/hooks/use-mobile";
 
 type Props = {
   name: string;
@@ -44,11 +45,13 @@ export function SnacksListItem({
   const isLongDescription = description && description.length > 100;
   const truncatedDescription = isLongDescription ? description.slice(0, 100) + "..." : description;
 
+  const isMobile = useIsMobile();
+
   const imageThumbnail = images.filter((image) => image.type === "thumbnail")[0];
 
   return (
     <motion.li
-      layout="position"
+      layout={isMobile ? false : "position"}
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       whileTap={{ scale: 0.96 }}

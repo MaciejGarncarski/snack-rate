@@ -28,6 +28,7 @@ export function CategoryFilter({ activeSlug }: Props) {
   if (isMobile) {
     return (
       <Select
+        aria-label="Filtr kategorii"
         value={activeSlug ?? ""}
         onChange={(key) => {
           const slug = String(key);

@@ -40,6 +40,7 @@ export function SortFilter({ activeSortBy }: Props) {
 
   return (
     <Select
+      aria-label="Sortowanie"
       value={currentValue}
       onChange={(key) => {
         if (key) {
@@ -67,6 +68,7 @@ export function SortFilter({ activeSortBy }: Props) {
             <SelectItem
               key={option.value}
               id={option.value}
+              aria-label={option.label}
               onMouseEnter={() => {
                 router.preloadRoute({
                   to: "/",
@@ -82,7 +84,7 @@ export function SortFilter({ activeSortBy }: Props) {
                 });
               }}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2" aria-label="true">
                 <Icon className="size-3.5" />
                 {option.label}
               </span>
