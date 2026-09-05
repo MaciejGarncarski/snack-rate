@@ -41,7 +41,7 @@ const viteConfig = defineConfig({
     nitro({
       plugins: ["./server/plugins/opentelemetry.ts"],
     }),
-    viteReact(),
+    viteReact({ compiler: true }),
   ],
 });
 
