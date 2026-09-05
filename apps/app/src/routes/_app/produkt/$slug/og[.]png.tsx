@@ -42,27 +42,6 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
               fontFamily: "Nunito Sans, system-ui, sans-serif",
             }}
           >
-            {/* Header */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.875rem",
-                padding: "3rem 4rem 0",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 19,
-                  fontWeight: 800,
-                  letterSpacing: 4,
-                  color: "#7DD3FC",
-                }}
-              >
-                SNACK RATE
-              </span>
-            </div>
-
             {/* Main content */}
             <div
               style={{
@@ -70,8 +49,8 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
                 flexDirection: "row",
                 alignItems: "center",
                 flex: 1,
-                gap: "3.5rem",
-                padding: "1rem 4rem 4rem",
+                gap: "3rem",
+                padding: "1rem 3rem",
               }}
             >
               {/* Image */}
@@ -95,7 +74,7 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
                       height: "100%",
                       objectFit: "cover",
                       transform: "scale(1.25)",
-                      filter: "blur(64px) saturate(1.4) brightness(1.3)",
+                      filter: "blur(48px) saturate(1.4) brightness(1.3)",
                       opacity: 0.6,
                     }}
                   />
@@ -144,11 +123,10 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
                 <p
                   style={{
                     margin: 0,
-                    fontSize: 54,
+                    fontSize: 48,
                     fontWeight: 800,
                     lineHeight: 1.1,
                     color: "#F8FAFC",
-                    width: 560,
                   }}
                 >
                   {truncate(title, 40)}
@@ -184,7 +162,6 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  flexShrink: 0,
                   width: 190,
                   height: 190,
                   borderRadius: "50%",
@@ -195,7 +172,7 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
               >
                 <span
                   style={{
-                    fontSize: 62,
+                    fontSize: 54,
                     fontWeight: 800,
                     fontVariantNumeric: "tabular-nums",
                     lineHeight: 1,
