@@ -76,6 +76,30 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
             >
               {/* Image */}
               <div style={{ position: "relative", flexShrink: 0, display: "flex" }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: 300,
+                    height: 375,
+                    borderRadius: "1.75rem",
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    src="snack-image"
+                    alt=""
+                    aria-hidden="true"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      transform: "scale(1.25)",
+                      filter: "blur(64px) saturate(1.4) brightness(1.3)",
+                      opacity: 0.6,
+                    }}
+                  />
+                </div>
                 <img
                   src="snack-image"
                   alt=""
@@ -84,7 +108,7 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
                     height: 375,
                     objectFit: "cover",
                     borderRadius: "1.75rem",
-                    border: "3px solid rgba(148,163,184,0.3)",
+                    border: "2px solid rgba(148,163,184,0.1)",
                     boxShadow: "0 40px 80px -20px rgba(0,0,0,0.7)",
                   }}
                 />
