@@ -5,6 +5,7 @@ import { LayoutGrid, LayoutList } from "lucide-react";
 import * as z from "zod";
 
 import { ToggleGroup, ToggleGroupItem } from "#/components/ui/toggle-group";
+import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
 import {
   CategoryFilter,
   CategoryFilterSkeleton,
@@ -82,13 +83,19 @@ function RouteComponent() {
             size="sm"
             className="hidden md:inline-flex"
           >
-            <ToggleGroupItem id="1col" aria-label="List view">
-              <LayoutList />
-            </ToggleGroupItem>
+            <TooltipTrigger>
+              <ToggleGroupItem id="1col" aria-label="List view">
+                <LayoutList />
+              </ToggleGroupItem>
+              <Tooltip>Widok listy</Tooltip>
+            </TooltipTrigger>
 
-            <ToggleGroupItem id="2col" aria-label="Grid view">
-              <LayoutGrid />
-            </ToggleGroupItem>
+            <TooltipTrigger>
+              <ToggleGroupItem id="2col" aria-label="Grid view">
+                <LayoutGrid />
+              </ToggleGroupItem>
+              <Tooltip>Widok siatki</Tooltip>
+            </TooltipTrigger>
           </ToggleGroup>
           <SortFilter activeSortBy={sortBy ?? null} />
         </div>
