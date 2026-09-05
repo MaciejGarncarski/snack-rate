@@ -108,8 +108,10 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
               type="button"
               onClick={() => goTo(i)}
               className={cn(
-                "min-h-none shadow relative w-full h-full overflow-hidden rounded-lg md:rounded-xl ring-2 p-0 transition-colors",
-                i === index ? "ring-primary" : "ring-transparent opacity-80 hover:opacity-100",
+                "min-h-none shadow relative w-full h-full overflow-hidden rounded-lg md:rounded-xl ring-2 p-0 transition-[box-shadow,opacity] outline-none",
+                i === index
+                  ? "ring-primary"
+                  : "ring-transparent opacity-80 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-ring focus-visible:ring-offset-2",
               )}
             >
               <Image
