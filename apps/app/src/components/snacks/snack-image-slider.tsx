@@ -1,12 +1,12 @@
 import { useHotkey } from "@tanstack/react-hotkeys";
-import { ImageOffIcon } from "lucide-react";
+import { ExpandIcon, ImageOffIcon } from "lucide-react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { useState } from "react";
 
 import { Image } from "#/components/image/image";
+import { SnackImageLightbox } from "#/components/snacks/snack-image-lightbox";
 import { AspectRatio } from "#/components/ui/aspect-ratio";
 import { Card, CardContent } from "#/components/ui/card";
-import { ImageZoom } from "#/components/ui/zoom";
 import { MAXIMUM_IMAGES } from "#/const/image-const";
 import { cn } from "#/lib/utils";
 
@@ -55,88 +55,121 @@ type Props = {
 export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<Direction>(1);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const goTo = (newIndex: number) => {
-    if (newIndex === index) return;
+    if (images.length === 0 || newIndex === index) return;
     setDirection(newIndex > index ? 1 : -1);
     setIndex(newIndex);
   };
 
-  useHotkey("ArrowLeft", () => goTo((index - 1 + images.length) % images.length));
-  useHotkey("ArrowRight", () => goTo((index + 1) % images.length));
+  const goNext = () => goTo((index + 1) % images.length);
+  const goPrev = () => goTo((index - 1 + images.length) % images.length);
+
+  useHotkey("ArrowLeft", goPrev, { enabled: !lightboxOpen && images.length > 0 });
+  useHotkey("ArrowRight", goNext, { enabled: !lightboxOpen && images.length > 0 });
 
   const emptySpaces = Math.max(MAXIMUM_IMAGES - images.length, 0);
 
   return (
-    <Card size="sm" className="w-full">
-      <CardContent className="z-10">
-        <AspectRatio
-          ratio={4 / 5}
-          className="w-full overflow-hidden rounded-3xl border bg-muted border-border/70 shadow-md"
-        >
-          <AnimatePresence initial={false} custom={direction} mode="popLayout">
-            <motion.div
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              key={`snack-image-${index}`}
-              transition={{ duration: 0.15, ease: "easeInOut" }}
-              className="absolute inset-0 h-full w-full p-0"
-            >
-              <ImageZoom>
-                <Image
-                  width={382}
-                  height={478}
-                  src={images[index]}
-                  placeholderSrc={thumbnailUrls[index]}
-                  alt={`Slajd ${index + 1}`}
-                  containerClassName="h-full w-full"
-                  className={`h-full w-full object-cover`}
-                  blurBackground
-                />
-              </ImageZoom>
-            </motion.div>
-          </AnimatePresence>
-        </AspectRatio>
-
-        <div className="mt-4 grid grid-cols-3 gap-4">
-          {thumbnailUrls.map((src, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => goTo(i)}
-              className={cn(
-                "min-h-none shadow relative w-full h-full overflow-hidden rounded-lg md:rounded-xl ring-2 p-0 transition-[box-shadow,opacity] outline-none",
-                i === index
-                  ? "ring-primary"
-                  : "ring-transparent opacity-80 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-ring focus-visible:ring-offset-2",
-              )}
-            >
-              <Image
-                src={src}
-                blurBackground
-                width={80}
-                height={100}
-                alt={`Miniatura ${i + 1}`}
-                containerClassName="h-full w-full"
-                className="h-full w-full object-cover"
-              />
-            </button>
-          ))}
-          {emptySpaces > 0 &&
-            Array.from({ length: emptySpaces }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-4/5 shadow flex-col w-full rounded-lg md:rounded-xl text-card-foreground flex items-center justify-center border text-xs gap-2 border-border/70 bg-muted"
+    <>
+      <Card size="sm" className="w-full">
+        <CardContent className="z-10">
+          <AspectRatio
+            ratio={4 / 5}
+            className="w-full overflow-hidden rounded-3xl border bg-muted border-border/70 shadow-md"
+          >
+            {images.length > 0 ? (
+              <button
+                type="button"
+                onClick={() => setLightboxOpen(true)}
+                aria-label={`Otwórz podgląd pełnoekranowy, zdjęcie ${index + 1} z ${images.length}`}
+                className="group absolute inset-0 h-full w-full cursor-zoom-in p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
-                <ImageOffIcon className="opacity-30 size-6" />
-                <span className="sr-only">Brak podglądu</span>
+                <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                  <motion.div
+                    custom={direction}
+                    variants={variants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    key={`snack-image-${index}`}
+                    transition={{ duration: 0.15, ease: "easeInOut" }}
+                    className="absolute inset-0 h-full w-full p-0"
+                  >
+                    <Image
+                      width={382}
+                      height={478}
+                      src={images[index]}
+                      placeholderSrc={thumbnailUrls[index]}
+                      alt={`Slajd ${index + 1}`}
+                      containerClassName="h-full w-full"
+                      className={`h-full w-full object-cover`}
+                      blurBackground
+                    />
+                  </motion.div>
+                </AnimatePresence>
+                <span className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-background/80 px-2.5 py-1.5 text-xs font-medium text-foreground opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                  <ExpandIcon className="size-3.5" />
+                  Pełny ekran
+                </span>
+              </button>
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
+                <ImageOffIcon className="size-8 opacity-30" />
+                <span className="text-sm">Brak zdjęć</span>
               </div>
+            )}
+          </AspectRatio>
+
+          <div className="mt-4 grid grid-cols-3 gap-4">
+            {thumbnailUrls.map((src, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => goTo(i)}
+                aria-label={`Pokaż slajd ${i + 1}`}
+                aria-current={i === index}
+                className={cn(
+                  "min-h-none shadow relative w-full h-full overflow-hidden rounded-lg md:rounded-xl ring-2 p-0 transition-[box-shadow,opacity] outline-none",
+                  i === index
+                    ? "ring-primary"
+                    : "ring-transparent opacity-80 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-ring focus-visible:ring-offset-2",
+                )}
+              >
+                <Image
+                  src={src}
+                  blurBackground
+                  width={80}
+                  height={100}
+                  alt={`Miniatura ${i + 1}`}
+                  containerClassName="h-full w-full"
+                  className="h-full w-full object-cover"
+                />
+              </button>
             ))}
-        </div>
-      </CardContent>
-    </Card>
+            {emptySpaces > 0 &&
+              Array.from({ length: emptySpaces }).map((_, i) => (
+                <div
+                  key={i}
+                  className="aspect-4/5 shadow flex-col w-full rounded-lg md:rounded-xl text-card-foreground flex items-center justify-center border text-xs gap-2 border-border/70 bg-muted"
+                >
+                  <ImageOffIcon className="opacity-30 size-6" />
+                  <span className="sr-only">Brak podglądu</span>
+                </div>
+              ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <SnackImageLightbox
+        images={images}
+        thumbnailUrls={thumbnailUrls}
+        index={index}
+        open={lightboxOpen}
+        onIndexChange={goTo}
+        onOpenChange={setLightboxOpen}
+      />
+    </>
   );
 }
