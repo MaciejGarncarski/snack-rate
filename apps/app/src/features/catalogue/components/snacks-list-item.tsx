@@ -15,6 +15,11 @@ import {
 } from "#/components/ui/card";
 import { useIsMobile } from "#/hooks/use-mobile";
 
+const itemVariants = {
+  hidden: { opacity: 0, scale: 0.98 },
+  show: { opacity: 1, scale: 1 },
+};
+
 type Props = {
   name: string;
   description: string | null;
@@ -53,10 +58,8 @@ export function SnacksListItem({
   return (
     <motion.li
       layout={isMobile ? false : "position"}
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileTap={{ scale: 0.98 }}
-      exit={{ opacity: 0, scale: 0.98 }}
+      variants={itemVariants}
+      exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.2 }}
       className="w-full"
     >

@@ -64,7 +64,13 @@ export function SnacksList({
   return (
     <div>
       <AnimatePresence mode="popLayout">
-        <ul
+        <motion.ul
+          initial="hidden"
+          animate="show"
+          variants={{
+            hidden: {},
+            show: { transition: { staggerChildren: 0.08 } },
+          }}
           className={cn(
             "mx-auto flex flex-col gap-8 sm:gap-10 lg:gap-12",
             layout === "2col" && "md:grid md:grid-cols-2",
@@ -86,7 +92,7 @@ export function SnacksList({
                 images={snack.images}
               />
             ))}
-        </ul>
+        </motion.ul>
       </AnimatePresence>
       {!hasNextPage && (
         <motion.div
