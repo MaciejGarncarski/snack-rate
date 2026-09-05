@@ -56,3 +56,15 @@ minimumReleaseAgeExclude:
   - nitro@3.0.260903-beta
   - srvx@1.0.3
   - unstorage@2.0.0-alpha.10
+  - '@takumi-rs/core-darwin-arm64@2.13.6'
+  - '@takumi-rs/core-darwin-x64@2.13.6'
+  - '@takumi-rs/core-linux-arm64-gnu@2.13.6'
+  - '@takumi-rs/core-linux-arm64-musl@2.13.6'
+  - '@takumi-rs/core-linux-x64-gnu@2.13.6'
+  - '@takumi-rs/core-linux-x64-musl@2.13.6'
+  - '@takumi-rs/core-win32-arm64-msvc@2.13.6'
+  - '@takumi-rs/core-win32-x64-msvc@2.13.6'
+  - '@takumi-rs/core@2.13.6'
+  - '@takumi-rs/helpers@2.13.6'
+  - '@takumi-rs/wasm@2.13.6'
+  - takumi-js@2.13.6

@@ -12,3 +12,17 @@ export const pluralizeRatings = createPluralizer({
   many: "ocen",
   other: "ocen",
 });
+
+export const pluralizeRatingsGenitive = createPluralizer({
+  one: "oceny",
+  few: "ocen",
+  many: "ocen",
+  other: "ocen",
+});
+
+export const pluralizeReviews = createPluralizer({
+  one: "recenzja",
+  few: "recenzje",
+  many: "recenzji",
+  other: "recenzji",
+});

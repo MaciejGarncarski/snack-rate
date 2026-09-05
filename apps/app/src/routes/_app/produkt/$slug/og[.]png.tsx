@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { googleFonts } from "takumi-js/helpers";
 import { ImageResponse } from "takumi-js/response";
 
+import { pluralizeRatingsGenitive } from "#/lib/pluralizer";
 import { client } from "#/orpc/client";
 import stylesheet from "#/styles/app.css?inline";
 
@@ -19,6 +21,11 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
 
         const primaryImage = snack.images[0]?.url || "";
         const title = snack.name;
+        const rating = snack.rating.avg;
+        const ratingCount = snack.rating.count;
+        const color = ratingColor(rating);
+
+        const fonts = await googleFonts([{ name: "Nunito Sans", weight: "200..1000" }]);
 
         return new ImageResponse(
           <div
@@ -26,41 +33,170 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
               width: "100%",
               height: "100%",
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "start",
-              alignItems: "center",
-              gap: "6rem",
-              padding: "64px",
-              backgroundImage: "linear-gradient(to bottom right, #eff6ff, #dbeafe)",
+              flexDirection: "column",
+              color: "#F8FAFC",
+              backgroundColor: "#0A0E17",
+              backgroundImage:
+                "radial-gradient(circle at 85% 0%, rgba(59,130,246,0.22), transparent 45%), radial-gradient(circle at -5% 100%, rgba(56,189,248,0.12), transparent 40%)",
+              overflow: "hidden",
+              fontFamily: "Nunito Sans, system-ui, sans-serif",
             }}
           >
-            <div>
-              <img
-                src="snack-image"
-                style={{
-                  borderRadius: "1.5rem",
-                  border: "2px solid gray",
-                  width: "20rem",
-                  aspectRatio: "4/5",
-                }}
-                alt=""
-              />
-            </div>
+            {/* Header */}
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-                height: "24rem",
-                justifyContent: "start",
+                alignItems: "center",
+                gap: "0.875rem",
+                padding: "3rem 4rem 0",
               }}
             >
-              <p style={{ fontSize: 72, fontWeight: 700, color: "#111827" }}>{title}</p>
-              <SnackRating rating={snack.rating.avg} />
+              <span
+                style={{
+                  fontSize: 19,
+                  fontWeight: 800,
+                  letterSpacing: 4,
+                  color: "#7DD3FC",
+                }}
+              >
+                SNACK RATE
+              </span>
+            </div>
+
+            {/* Main content */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                flex: 1,
+                gap: "3.5rem",
+                padding: "1rem 4rem 4rem",
+              }}
+            >
+              {/* Image */}
+              <div style={{ position: "relative", flexShrink: 0, display: "flex" }}>
+                <img
+                  src="snack-image"
+                  alt=""
+                  style={{
+                    width: 300,
+                    height: 375,
+                    objectFit: "cover",
+                    borderRadius: "1.75rem",
+                    border: "3px solid rgba(148,163,184,0.3)",
+                    boxShadow: "0 40px 80px -20px rgba(0,0,0,0.7)",
+                  }}
+                />
+              </div>
+
+              {/* Text column */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1.25rem",
+                  flex: 1,
+                  minWidth: 0,
+                }}
+              >
+                {snack.type?.name && (
+                  <span
+                    style={{
+                      alignSelf: "flex-start",
+                      fontSize: 18,
+                      fontWeight: 700,
+                      color: "#93C5FD",
+                      background: "rgba(147,197,253,0.1)",
+                      border: "1px solid rgba(147,197,253,0.35)",
+                      borderRadius: 999,
+                      padding: "0.35rem 1.1rem",
+                    }}
+                  >
+                    {snack.type.name}
+                  </span>
+                )}
+
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 54,
+                    fontWeight: 800,
+                    lineHeight: 1.1,
+                    color: "#F8FAFC",
+                    width: 560,
+                  }}
+                >
+                  {truncate(title, 40)}
+                </p>
+
+                <p style={{ margin: 0, fontSize: 22, fontWeight: 600, color: "#64748B" }}>
+                  {ratingCount === 0
+                    ? "Brak ocen - bądź pierwszy"
+                    : `na podstawie ${ratingCount} ${pluralizeRatingsGenitive(ratingCount)}`}
+                </p>
+
+                <div
+                  style={{
+                    width: 380,
+                    maxWidth: "100%",
+                    height: 2,
+                    borderRadius: 2,
+                    marginTop: "0.25rem",
+                    background:
+                      "linear-gradient(90deg, rgba(147,197,253,0.4), rgba(147,197,253,0.05))",
+                  }}
+                />
+
+                <p style={{ margin: 0, fontSize: 22, fontWeight: 600, color: "#475569" }}>
+                  Sprawdź oceny i podziel się swoją opinią
+                </p>
+              </div>
+
+              {/* Score badge */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  width: 190,
+                  height: 190,
+                  borderRadius: "50%",
+                  background: "rgba(8,13,23,0.9)",
+                  border: `3px solid ${color}`,
+                  boxShadow: `0 0 0 8px rgba(8,13,23,0.6), 0 24px 60px -16px ${hexToRgba(color, 0.55)}`,
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 62,
+                    fontWeight: 800,
+                    fontVariantNumeric: "tabular-nums",
+                    lineHeight: 1,
+                    color,
+                  }}
+                >
+                  {rating.toFixed(1)}
+                </span>
+                <span
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 700,
+                    color: "#64748B",
+                    marginTop: "0.35rem",
+                    letterSpacing: 1,
+                  }}
+                >
+                  / 10
+                </span>
+              </div>
             </div>
           </div>,
           {
             stylesheets: [stylesheet],
+            fonts,
             images: [
               {
                 src: "snack-image",
@@ -76,94 +212,25 @@ export const Route = createFileRoute("/_app/produkt/$slug/og.png")({
   },
 });
 
-const STAR_PATH =
-  "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z";
-
-function Star({ fill, size = 24, color }: { fill: number; size?: number; color: string }) {
-  return (
-    <div
-      style={{
-        position: "relative",
-        width: size,
-        height: size,
-      }}
-    >
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-        }}
-      >
-        <path d={STAR_PATH} fill="#d4d4d8" stroke="#d4d4d8" strokeWidth="2" />
-      </svg>
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: `${fill * 100}%`,
-          height: size,
-          overflow: "hidden",
-        }}
-      >
-        <svg width={size} height={size} viewBox="0 0 24 24">
-          <path d={STAR_PATH} fill={color} stroke={color} strokeWidth="2" />
-        </svg>
-      </div>
-    </div>
-  );
+function ratingColor(value: number): string {
+  if (value <= 2) return "#ef4444";
+  if (value <= 4) return "#f97316";
+  if (value <= 6) return "#eab308";
+  if (value <= 7) return "#84cc16";
+  if (value <= 9) return "#16a34a";
+  return "#06b6d4";
 }
 
-export function SnackRating({ rating, withText }: { rating: number; withText?: boolean }) {
-  const value = Math.max(0, Math.min(10, rating));
-  const starValue = value / 2;
+function hexToRgba(hex: string, alpha: number): string {
+  const parsed = hex.replace("#", "");
+  const bigint = parseInt(parsed, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
-  const color =
-    value <= 2
-      ? "#ef4444"
-      : value <= 4
-        ? "#f97316"
-        : value <= 6
-          ? "#eab308"
-          : value <= 7
-            ? "#84cc16"
-            : value <= 9
-              ? "#16a34a"
-              : "#06b6d4";
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-      }}
-    >
-      {withText && (
-        <span
-          style={{
-            fontSize: 52,
-            fontWeight: 700,
-          }}
-        >
-          {value.toFixed(1)}
-        </span>
-      )}
-
-      <div
-        style={{
-          display: "flex",
-          gap: 6,
-        }}
-      >
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} fill={Math.max(0, Math.min(1, starValue - i))} color={color} size={48} />
-        ))}
-      </div>
-    </div>
-  );
+function truncate(text: string, max: number): string {
+  if (text.length <= max) return text;
+  return text.slice(0, max).trimEnd() + "…";
 }
