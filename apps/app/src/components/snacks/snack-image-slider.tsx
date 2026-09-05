@@ -69,39 +69,37 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
 
   return (
     <Card size="sm" className="w-full">
-      <CardContent>
-        <div>
-          <AspectRatio
-            ratio={4 / 5}
-            className="w-full overflow-hidden rounded-3xl border bg-muted border-border/70 shadow-md"
-          >
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
-              <motion.div
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                key={`snack-image-${index}`}
-                transition={{ duration: 0.15, ease: "easeInOut" }}
-                className="absolute inset-0 h-full w-full p-0"
-              >
-                <ImageZoom>
-                  <Image
-                    width={382}
-                    height={478}
-                    src={images[index]}
-                    placeholderSrc={thumbnailUrls[index]}
-                    alt={`Slajd ${index + 1}`}
-                    containerClassName="h-full w-full"
-                    className={`h-full w-full object-cover`}
-                    blurBackground
-                  />
-                </ImageZoom>
-              </motion.div>
-            </AnimatePresence>
-          </AspectRatio>
-        </div>
+      <CardContent className="z-10">
+        <AspectRatio
+          ratio={4 / 5}
+          className="w-full overflow-hidden rounded-3xl border bg-muted border-border/70 shadow-md"
+        >
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <motion.div
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              key={`snack-image-${index}`}
+              transition={{ duration: 0.15, ease: "easeInOut" }}
+              className="absolute inset-0 h-full w-full p-0"
+            >
+              <ImageZoom>
+                <Image
+                  width={382}
+                  height={478}
+                  src={images[index]}
+                  placeholderSrc={thumbnailUrls[index]}
+                  alt={`Slajd ${index + 1}`}
+                  containerClassName="h-full w-full"
+                  className={`h-full w-full object-cover`}
+                  blurBackground
+                />
+              </ImageZoom>
+            </motion.div>
+          </AnimatePresence>
+        </AspectRatio>
 
         <div className="mt-4 grid grid-cols-3 gap-4">
           {thumbnailUrls.map((src, i) => (

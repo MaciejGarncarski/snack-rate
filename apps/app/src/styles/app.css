@@ -169,6 +169,7 @@
       opacity: 0;
     }
   }
+
   @keyframes border-glow {
     from {
       transform: rotate(0deg);
@@ -180,6 +181,7 @@
       scale: 1.2;
     }
   }
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);

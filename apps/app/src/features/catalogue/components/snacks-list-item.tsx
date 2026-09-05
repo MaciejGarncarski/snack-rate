@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
 import { Image } from "#/components/image/image";
+import { GlowingImgBorder } from "#/components/layout/glowing-img-border";
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { Badge } from "#/components/ui/badge";
 import {
@@ -60,12 +61,7 @@ export function SnacksListItem({
         params={{ slug }}
         className="block h-full rounded-3xl sm:rounded-4xl relative overflow-hidden p-0.75 group"
       >
-        <img
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 pointer-events-none select-none -translate-y-1/2 scale-200 inset-0 h-full w-full object-cover blur-[6px] saturate-150 opacity-5 transition-opacity duration-500 ease-out group-focus:animate-border-glow contrast-500 group-focus:running dark:opacity-10 dark:group-focus:opacity-25 dark:group-hover:opacity-25 group-focus:opacity-15 group-hover:animate-border-glow animate-border-glow paused group-hover:opacity-15 group-hover:running"
-          src={images[0]?.url}
-          alt=""
-          aria-hidden="true"
-        />
+        <GlowingImgBorder imgSrc={images[0]?.url} />
         <Card className="flex h-full flex-row items-stretch relative overflow-hidden p-0 rounded-3xl sm:rounded-4xl gap-2 sm:gap-1 transition-all duration-500 ease-out group-hover:shadow-lg group-hover:bg-card/85 backdrop-blur-3xl">
           <Image
             lazy={lazy}
