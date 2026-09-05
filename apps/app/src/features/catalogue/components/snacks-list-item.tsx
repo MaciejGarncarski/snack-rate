@@ -59,6 +59,8 @@ export function SnacksListItem({
     <motion.li
       layout={isMobile ? false : "position"}
       variants={itemVariants}
+      initial="hidden"
+      animate="show"
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.2 }}
       className="w-full"

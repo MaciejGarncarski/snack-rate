@@ -264,7 +264,9 @@ function RouteComponent() {
                 <Item variant={"muted"}>
                   <ItemContent>
                     <ItemTitle>Kod kreskowy</ItemTitle>
-                    <ItemDescription>Pomaga w wyszukiwaniu produktu.</ItemDescription>
+                    <ItemDescription className="hidden md:block">
+                      Pomaga w wyszukiwaniu produktu.
+                    </ItemDescription>
                   </ItemContent>
                   <ItemActions>
                     <SnackBarcode barcode={snack.barcode} size="sm" variant="default" />

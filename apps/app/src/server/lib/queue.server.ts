@@ -1,3 +1,4 @@
+import ms from "ms";
 import { PgBoss, type SendOptions } from "pg-boss";
 
 import { serverEnv } from "#/lib/server.env";
@@ -31,7 +32,7 @@ export async function startQueue() {
 
 export async function stopQueue() {
   if (!boss) return;
-  await boss.stop({ graceful: true, timeout: 30000 });
+  await boss.stop({ graceful: true, timeout: ms("30s") });
   boss = null;
 }
 

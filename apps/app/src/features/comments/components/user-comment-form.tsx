@@ -4,8 +4,6 @@ import { SnackRatingPicker } from "#/components/snacks/snack-rating-picker";
 import { Button } from "#/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "#/components/ui/field";
 import { Textarea } from "#/components/ui/textarea";
-import { CaptchaField } from "#/features/captcha/components/captcha-field";
-import { regenerateCaptcha } from "#/features/captcha/store";
 import { useCommentSnack } from "#/features/comments/queries/use-comment-snack";
 import { MAXIMUM_COMMENT_BODY_LENGTH, rateSnackFormSchema } from "#/schemas/comments";
 
@@ -32,7 +30,6 @@ export function UserCommentForm({
     defaultValues: {
       rating: initialRating,
       body: initialBody ?? "",
-      captchaCode: "",
     },
     validators: {
       onSubmit: rateSnackFormSchema,
@@ -46,13 +43,8 @@ export function UserCommentForm({
           snackItemId,
           rating: value.rating,
           body: trimmedBody.length > 0 ? trimmedBody : null,
-          captchaCode: value.captchaCode,
         },
         {
-          onError: () => {
-            form.resetField("captchaCode");
-            regenerateCaptcha();
-          },
           onSuccess: () => {
             onRated?.();
           },
@@ -63,13 +55,18 @@ export function UserCommentForm({
 
   return (
     <form
+      className="flex w-full max-w-2xl mx-auto flex-col gap-5"
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
         form.handleSubmit();
       }}
     >
-      <div className="flex flex-col gap-5 py-6">
+      <h3 className="flex items-center gap-2 text-xl font-bold text-foreground">
+        Dodawanie nowej oceny
+      </h3>
+
+      <div className="flex w-full flex-col gap-5">
         <form.Field name="rating">
           {(field) => (
             <SnackRatingPicker
@@ -89,6 +86,7 @@ export function UserCommentForm({
                 placeholder="Co sądzisz o smaku, chrupkości, cenie…?"
                 value={field.state.value}
                 maxLength={MAXIMUM_COMMENT_BODY_LENGTH}
+                className="resize-y wrap-anywhere whitespace-pre-wrap w-full"
                 disabled={isPending}
                 onChange={(e) => field.handleChange(e.target.value)}
               />
@@ -98,26 +96,9 @@ export function UserCommentForm({
             </Field>
           )}
         </form.Field>
-
-        <form.Field name="captchaCode">
-          {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
-            return (
-              <CaptchaField
-                value={field.state.value}
-                onChange={field.handleChange}
-                name={field.name}
-                onBlur={field.handleBlur}
-                isInvalid={isInvalid}
-                errors={field.state.meta.errors}
-              />
-            );
-          }}
-        </form.Field>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2">
+      <div className="flex w-full items-center gap-2 pt-1">
         {onCancel && (
           <Button type="button" variant="ghost" size="sm" isDisabled={isPending} onPress={onCancel}>
             Anuluj

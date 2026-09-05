@@ -1,4 +1,5 @@
 import { TmpFileUploadHandlerPlugin } from "@orpc/node";
+import { RateLimitHandlerPlugin } from "@orpc/ratelimit";
 import { RPCHandler } from "@orpc/server/fetch";
 import { CORSHandlerPlugin } from "@orpc/server/plugins";
 import { createFileRoute } from "@tanstack/react-router";
@@ -25,15 +26,17 @@ const tmpFilePlugin = new TmpFileUploadHandlerPlugin({
   },
 });
 
+const rateLimitPlugin = new RateLimitHandlerPlugin();
+
 const handler = new RPCHandler(router, {
-  plugins: [corsPlugin, tmpFilePlugin],
+  plugins: [corsPlugin, tmpFilePlugin, rateLimitPlugin],
   fetchInterceptors: [
     (options) => {
       return options.next({
         ...options,
         context: {
           ...options.context,
-          // SAFETY: the symbol-keyed value is an OverrideBodyContext, read back in the routing interceptor below.
+
           // oxlint-disable-next-line typescript/no-explicit-any
           [OVERRIDE_BODY_CONTEXT as any]: {
             fetchRequest: options.request,

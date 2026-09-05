@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 
 import { Button } from "#/components/ui/button";
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
-import { Input } from "#/components/ui/input";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "#/components/ui/input-otp";
 import { useCaptcha } from "#/features/captcha/hooks/use-captcha";
 
 type CaptchaFieldProps = {
@@ -41,12 +41,9 @@ export function CaptchaField({
     if (prevSvgRef.current !== svg && svg !== null) {
       onChange("");
     }
+
     prevSvgRef.current = svg;
   }, [svg, onChange]);
-
-  const handleRefresh = () => {
-    regenerate();
-  };
 
   const view = useMemo(() => {
     if (isPending) return "loading";
@@ -59,23 +56,9 @@ export function CaptchaField({
     <Field data-invalid={isInvalid}>
       <FieldLabel htmlFor={name}>Kod z obrazka</FieldLabel>
 
-      <div className="flex flex-row items-center gap-2 md:gap-4">
-        <Input
-          id={name}
-          name={name}
-          value={value}
-          placeholder="Wpisz kod z obrazka"
-          className="flex-1 min-w-0"
-          aria-invalid={isInvalid}
-          autoComplete="off"
-          autoCapitalize="off"
-          spellCheck={false}
-          onChange={(e) => onChange(e.target.value)}
-          onBlur={onBlur}
-        />
-
+      <div className="flex flex-col flex-wrap items-center gap-2 rounded-2xl md:gap-4 bg-input/50 px-2 py-4">
         <div
-          className="relative aspect-200/64 w-26 md:w-32 shrink-0 overflow-hidden rounded-lg border bg-gray-200"
+          className="relative aspect-200/64 w-26 shrink-0 overflow-hidden rounded-lg border bg-gray-200 md:w-50"
           aria-live="polite"
         >
           <AnimatePresence mode="wait" initial={false}>
@@ -90,9 +73,7 @@ export function CaptchaField({
               >
                 <motion.div
                   className="h-full w-full bg-muted-foreground/10"
-                  animate={{
-                    opacity: [0.4, 1, 0.4],
-                  }}
+                  animate={{ opacity: [0.4, 1, 0.4] }}
                   transition={{
                     duration: 0.5,
                     repeat: Infinity,
@@ -115,7 +96,7 @@ export function CaptchaField({
 
                 <button
                   type="button"
-                  onClick={handleRefresh}
+                  onClick={regenerate}
                   className="text-xs font-medium text-primary underline-offset-2 hover:underline"
                 >
                   Spróbuj ponownie
@@ -152,35 +133,56 @@ export function CaptchaField({
           </AnimatePresence>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          isDisabled={isPending}
-          onPress={handleRefresh}
-          aria-label="Odśwież kod"
-          className="shrink-0"
-        >
-          <motion.div
-            animate={{
-              rotate: isPending ? 360 : 0,
-            }}
-            transition={{
-              rotate: isPending
-                ? {
-                    duration: 0.5,
-                    ease: "linear",
-                    repeat: Infinity,
-                  }
-                : {
-                    duration: 0.2,
-                    ease: "easeOut",
-                  },
-            }}
+        <div className="flex flex-row items-center gap-2">
+          <InputOTP
+            id={name}
+            name={name}
+            maxLength={5}
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            aria-invalid={isInvalid}
+            autoComplete="off"
           >
-            <RefreshCw className="size-4" />
-          </motion.div>
-        </Button>
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+            </InputOTPGroup>
+          </InputOTP>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            isDisabled={isPending}
+            onPress={regenerate}
+            aria-label="Odśwież kod"
+            className="shrink-0"
+          >
+            <motion.div
+              animate={{
+                rotate: isPending ? 360 : 0,
+              }}
+              transition={{
+                rotate: isPending
+                  ? {
+                      duration: 0.5,
+                      ease: "linear",
+                      repeat: Infinity,
+                    }
+                  : {
+                      duration: 0.2,
+                      ease: "easeOut",
+                    },
+              }}
+            >
+              <RefreshCw className="size-4" />
+            </motion.div>
+          </Button>
+        </div>
       </div>
 
       {errors && errors.length > 0 && (
@@ -188,7 +190,6 @@ export function CaptchaField({
           {errors
             .map((error) => {
               if (isString(error)) return error;
-
               if (isObjectWithStringMessage(error)) return error.message;
 
               return String(error);

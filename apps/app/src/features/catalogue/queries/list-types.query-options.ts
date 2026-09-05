@@ -1,6 +1,8 @@
+import ms from "ms";
+
 import { orpc } from "#/orpc/client";
 
 export const listTypesQueryOptions = () =>
   orpc.snacks.listTypes.queryOptions({
-    staleTime: 5 * 60 * 1000,
+    staleTime: ms("5m"),
   });

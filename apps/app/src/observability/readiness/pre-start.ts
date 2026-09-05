@@ -1,4 +1,5 @@
 import { S3Client } from "@aws-sdk/client-s3";
+import ms from "ms";
 import { Pool } from "pg";
 
 import { serverEnv } from "#/lib/server.env";
@@ -10,7 +11,7 @@ import { checkS3 } from "#/observability/readiness/check-s3";
 export async function runPreStartChecks() {
   if (serverEnv.isTest) return;
 
-  const timeoutMs = 1500;
+  const timeoutMs = ms("1.5s");
 
   const pool = new Pool({
     connectionString: serverEnv.DATABASE_URL,

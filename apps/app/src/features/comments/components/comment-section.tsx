@@ -1,7 +1,15 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { StarIcon } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 
 import { Card, CardContent, CardHeader, CardTitle } from "#/components/ui/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "#/components/ui/empty";
 import { ItemGroup, ItemSeparator } from "#/components/ui/item";
 import { CommentItem } from "#/features/comments/components/comment-item";
 import { UserComment } from "#/features/comments/components/user-comment";
@@ -42,9 +50,15 @@ export function CommentSection({ snackItemId, ratingsCount }: Props) {
           <UserComment />
           <ItemSeparator />
           {comments.length === 0 ? (
-            <p className="py-2 text-sm text-muted-foreground">
-              Ten produkt nie ma jeszcze recenzji. Bądź pierwszą osobą, która go oceni!
-            </p>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <StarIcon />
+                </EmptyMedia>
+                <EmptyTitle>Bądź pierwszy</EmptyTitle>
+                <EmptyDescription>Twoja opinia pomoże innym!</EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           ) : (
             comments.map((comment) => <CommentItem key={comment.id} comment={comment} />)
           )}

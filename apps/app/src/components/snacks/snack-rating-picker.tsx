@@ -1,7 +1,5 @@
-import { useState } from "react";
-
 import { Field } from "#/components/ui/field";
-import { Slider } from "#/components/ui/slider";
+import { cn } from "#/lib/utils";
 
 type SnackRatingPickerProps = {
   currentRating: number | null;
@@ -12,58 +10,84 @@ type SnackRatingPickerProps = {
 const MIN_VALUE = 1;
 const MAX_VALUE = 10;
 
+const RATING_LABELS: Record<number, string> = {
+  1: "Okropna",
+  2: "Bardzo słaba",
+  3: "Słaba",
+  4: "Niezbyt dobra",
+  5: "Przeciętna",
+  6: "Niezła",
+  7: "Dobra",
+  8: "Bardzo dobra",
+  9: "Świetna",
+  10: "Rewelacyjna",
+};
+
+const TIER_CLASSES = {
+  text: {
+    low: "text-destructive",
+    mid: "text-warning",
+    high: "text-success",
+  },
+  chip: {
+    low: "bg-destructive/15 border-destructive/40 text-destructive",
+    mid: "bg-warning/15 border-warning/40 text-warning",
+    high: "bg-success/15 border-success/40 text-success",
+  },
+} as const;
+
+function getTier(rating: number): "low" | "mid" | "high" {
+  if (rating <= 3) return "low";
+  if (rating <= 6) return "mid";
+  return "high";
+}
+
 export function SnackRatingPicker({ currentRating, onRate, disabled }: SnackRatingPickerProps) {
-  const [draftValue, setDraftValue] = useState<number | null>(null);
-  const sliderValue = draftValue ?? (currentRating || 1);
+  const tier = currentRating === null ? null : getTier(currentRating);
+  const readoutColor = tier !== null ? TIER_CLASSES.text[tier] : "text-muted-foreground";
+  const displayValue = currentRating !== null ? String(currentRating) : "-";
+  const label = currentRating !== null ? RATING_LABELS[currentRating] : "Wybierz ocenę";
 
   return (
-    <Field className="bg-input/50 w-full rounded-3xl py-4 md:py-12 px-4">
-      <div className="flex max-w-sm flex-col gap-2 self-center w-full">
-        <div className="flex flex-col gap-2 items-center justify-center pb-4">
-          <h3 className="text-lg font-semibold">Jak oceniasz?</h3>
-          <p className="text-5xl">
-            <span className="text-6xl text-primary tabular-nums font-bold">{sliderValue}</span> /10
+    <Field className="bg-input/50 rounded-2xl px-4 py-5">
+      <div className="flex w-full flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <p
+            className={cn(
+              "text-xl font-semibold leading-none tabular-nums transition-colors",
+              readoutColor,
+            )}
+          >
+            {displayValue}
+            <span className="text-sm font-normal text-muted-foreground"> /{MAX_VALUE}</span>
           </p>
+          <p className="min-h-4 text-sm text-muted-foreground">{label}</p>
         </div>
 
-        <div className="flex flex-row items-center gap-4">
-          <p className="hidden md:block">{MIN_VALUE}</p>
-          <Slider
-            minValue={MIN_VALUE}
-            maxValue={MAX_VALUE}
-            step={1}
-            value={sliderValue}
-            onChange={(value) => setDraftValue(value)}
-            onChangeEnd={(value) => {
-              if (value !== currentRating) onRate(value);
-              setDraftValue(null);
-            }}
-            isDisabled={disabled}
-            aria-label="Ocena"
-          />
-          <p className="hidden md:block">{MAX_VALUE}</p>
-        </div>
+        <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
+          {Array.from({ length: MAX_VALUE }, (_, index) => {
+            const value = index + MIN_VALUE;
+            const isSelected = currentRating === value;
+            const valueTier = getTier(value);
 
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex flex-row gap-1 relative -top-1 justify-between w-full px-2 md:px-7">
-            {Array.from({ length: MAX_VALUE }).map((_, index) => {
-              return <span key={index} className={`inline-block w-px h-2 rounded bg-primary/70`} />;
-            })}
-          </div>
-          <div className="grid grid-cols-[6rem_1fr_6rem] md:px-4 w-full text-xs text-muted-foreground">
-            <p className="text-center w-fit flex flex-col gap-1 justify-center items-left">
-              <span>{MIN_VALUE}</span>
-              <span>Słabe</span>
-            </p>
-            <p className="text-center flex flex-col gap-1 justify-center items-center">
-              <span>{Math.floor((MIN_VALUE + MAX_VALUE) / 2)}</span>
-              <span>Średnie</span>
-            </p>
-            <p className="text-center ml-auto flex w-fit flex-col gap-1 justify-center items-right">
-              <span>{MAX_VALUE}</span>
-              <span>Rewelacyjne</span>
-            </p>
-          </div>
+            return (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={isSelected}
+                disabled={disabled}
+                onClick={() => onRate(value)}
+                className={cn(
+                  "flex h-9 items-center justify-center rounded-xl border text-sm font-semibold tabular-nums transition-all outline-none focus-visible:ring-3 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50",
+                  isSelected
+                    ? TIER_CLASSES.chip[valueTier]
+                    : "border-input bg-background text-muted-foreground hover:border-ring hover:text-foreground",
+                )}
+              >
+                {value}
+              </button>
+            );
+          })}
         </div>
       </div>
     </Field>

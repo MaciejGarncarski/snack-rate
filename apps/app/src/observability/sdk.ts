@@ -5,6 +5,7 @@ import { resourceFromAttributes } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ORPCInstrumentation } from "@orpc/opentelemetry";
+import ms from "ms";
 
 import { serverEnv } from "#/lib/server.env";
 import { installUncaughtErrorHandlers } from "#/observability/errors";
@@ -38,7 +39,7 @@ export function initOpenTelemetry() {
       enableTracing && traceExporterUrl
         ? new OTLPTraceExporter({
             url: traceExporterUrl,
-            timeoutMillis: 10000,
+            timeoutMillis: ms("10s"),
             concurrencyLimit: 10,
           })
         : undefined,

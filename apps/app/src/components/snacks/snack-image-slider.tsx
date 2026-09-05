@@ -108,7 +108,7 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
               type="button"
               onClick={() => goTo(i)}
               className={cn(
-                "min-h-none shadow relative w-full h-full overflow-hidden rounded-lg ring-2 p-0 transition-colors",
+                "min-h-none shadow relative w-full h-full overflow-hidden rounded-lg md:rounded-xl ring-2 p-0 transition-colors",
                 i === index ? "ring-primary" : "ring-transparent opacity-80 hover:opacity-100",
               )}
             >
@@ -127,7 +127,7 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
             Array.from({ length: emptySpaces }).map((_, i) => (
               <div
                 key={i}
-                className="aspect-4/5 shadow flex-col w-full rounded-lg text-card-foreground flex items-center justify-center border text-xs gap-2 border-border/70 bg-muted"
+                className="aspect-4/5 shadow flex-col w-full rounded-lg md:rounded-xl text-card-foreground flex items-center justify-center border text-xs gap-2 border-border/70 bg-muted"
               >
                 <ImageOffIcon className="opacity-30 size-6" />
                 <span className="sr-only">Brak podglądu</span>
