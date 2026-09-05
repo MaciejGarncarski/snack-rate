@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
 import { Image } from "#/components/image/image";
@@ -42,6 +42,7 @@ export function SnacksListItem({
   images,
   ratingCount,
 }: Props) {
+  const navigate = useNavigate({ from: "/" });
   const isLongDescription = description && description.length > 100;
   const truncatedDescription = isLongDescription ? description.slice(0, 100) + "..." : description;
 
@@ -62,6 +63,9 @@ export function SnacksListItem({
       <Link
         to="/produkt/$slug"
         params={{ slug }}
+        onMouseDown={() => {
+          navigate({ from: "/", to: "/produkt/$slug", params: { slug } });
+        }}
         className="block h-full rounded-3xl sm:rounded-4xl relative overflow-hidden p-0.75 group"
       >
         <GlowingImgBorder imgSrc={images[0]?.url} />
