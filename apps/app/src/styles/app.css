@@ -142,7 +142,7 @@
   --animate-skeleton: skeleton 2s -1s infinite linear;
   --animate-rmiz-blur-fade-in: rmiz-blur-fade-in 0.7s ease-out 0s both;
   --animate-rmiz-blur-fade-out: rmiz-blur-fade-out 0.15s ease-in both;
-  --animate-border-glow: border-glow 5s linear infinite alternate;
+  --animate-border-glow: border-glow 15s linear infinite alternate;
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -177,7 +177,7 @@
     }
 
     to {
-      transform: rotate(360deg);
+      transform: rotate(720deg);
       scale: 1.2;
     }
   }

@@ -9,11 +9,12 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Dialog as DialogPrimitive, Modal as ModalPrimitive } from "react-aria-components";
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
+import { TransformComponent, TransformWrapper, useTransformComponent } from "react-zoom-pan-pinch";
 
 import { Image } from "#/components/image/image";
 import { Button } from "#/components/ui/button";
 import { DialogOverlay, DialogTitle } from "#/components/ui/dialog";
+import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
 import { cn } from "#/lib/utils";
 
 type Props = {
@@ -24,6 +25,12 @@ type Props = {
   onIndexChange: (index: number) => void;
   onOpenChange: (open: boolean) => void;
 };
+
+function ZoomPercentLabel() {
+  const scale = useTransformComponent((context) => context.state.scale);
+
+  return <span className="tabular-nums">{`${Math.round(scale * 100)}%`}</span>;
+}
 
 export function SnackImageLightbox({
   images,
@@ -55,7 +62,7 @@ export function SnackImageLightbox({
       onOpenChange={(value) => {
         if (!value) onOpenChange(false);
       }}
-      className="bg-black/90 supports-backdrop-filter:backdrop-blur-md z-999"
+      className="bg-black/90 supports-backdrop-filter:backdrop-blur-lg z-999"
     >
       <ModalPrimitive
         data-slot="snack-image-lightbox"
@@ -66,25 +73,26 @@ export function SnackImageLightbox({
           className="flex h-full w-full flex-col outline-none"
         >
           <DialogTitle className="sr-only">Podgląd zdjęć produktu</DialogTitle>
-
           {/* Top bar */}
           <div className="relative z-10 flex items-center justify-between gap-2 px-4 pt-4 text-white sm:px-6">
             <p className="text-sm font-medium tabular-nums opacity-80" aria-live="polite">
               {index + 1} / {count}
             </p>
-            <Button
-              variant="ghost"
-              size="icon"
-              onPress={() => onOpenChange(false)}
-              aria-label="Zamknij podgląd"
-              className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
-            >
-              <XIcon />
-            </Button>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="icon"
+                onPress={() => onOpenChange(false)}
+                aria-label="Zamknij podgląd"
+                className="size-11 rounded-full bg-red-500/20 text-red-100 hover:bg-red-500/30 hover:text-white [&_svg:not([class*='size-'])]:size-5"
+              >
+                <XIcon />
+              </Button>
+              <Tooltip placement="bottom">Zamknij podgląd</Tooltip>
+            </TooltipTrigger>
           </div>
-
           {/* Stage */}
-          <div className="relative flex min-h-0 flex-1 items-center justify-center px-12 sm:px-20">
+          <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 sm:px-20">
             <TransformWrapper
               key={`zoom-${index}`}
               initialScale={1}
@@ -125,7 +133,7 @@ export function SnackImageLightbox({
                             draggable={false}
                             loading="eager"
                             decoding="async"
-                            className="max-h-[62dvh] w-auto max-w-full cursor-zoom-in rounded-2xl object-contain shadow-2xl select-none sm:max-h-[68dvh]"
+                            className="bg-neutral-800 max-h-[62dvh] w-auto max-w-full cursor-zoom-in rounded-2xl object-contain border border-white/5 shadow-2xl select-none sm:max-h-[68dvh]"
                           />
                         </TransformComponent>
                       </motion.div>
@@ -134,60 +142,102 @@ export function SnackImageLightbox({
 
                   {/* Zoom controls */}
                   <div className="flex items-center gap-2 py-3">
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      onPress={() => void zoomOut(0.4)}
-                      aria-label="Pomniejsz"
-                      className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
-                    >
-                      <ZoomOutIcon />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onPress={() => void resetTransform()}
-                      aria-label="Resetuj powiększenie"
-                      className="bg-white/10 text-xs font-medium text-white hover:bg-white/20 hover:text-white"
-                    >
-                      <ExpandIcon />
-                      <span>1:1</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      onPress={() => void zoomIn(0.4)}
-                      aria-label="Powiększ"
-                      className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
-                    >
-                      <ZoomInIcon />
-                    </Button>
+                    {count > 1 && (
+                      <TooltipTrigger>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onPress={goPrev}
+                          aria-label="Poprzednie zdjęcie"
+                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:hidden"
+                        >
+                          <ChevronLeftIcon />
+                        </Button>
+                        <Tooltip>Poprzednie zdjęcie</Tooltip>
+                      </TooltipTrigger>
+                    )}
+                    <TooltipTrigger>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onPress={() => void zoomOut(0.4)}
+                        aria-label="Pomniejsz"
+                        className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
+                      >
+                        <ZoomOutIcon className="size-3 sm:size-5" />
+                      </Button>
+                      <Tooltip>Pomniejsz</Tooltip>
+                    </TooltipTrigger>
+                    <TooltipTrigger>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onPress={() => void resetTransform()}
+                        aria-label="Resetuj powiększenie"
+                        className="min-w-16 bg-white/10 text-xs font-medium text-white hover:bg-white/20 hover:text-white sm:h-10 gap-2 sm:px-4"
+                      >
+                        <ExpandIcon className="size-4 sm:size-5" />
+                        <ZoomPercentLabel />
+                      </Button>
+                      <Tooltip>Resetuj powiększenie</Tooltip>
+                    </TooltipTrigger>
+                    <TooltipTrigger>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onPress={() => void zoomIn(0.4)}
+                        aria-label="Powiększ"
+                        className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
+                      >
+                        <ZoomInIcon className="size-3 sm:size-5" />
+                      </Button>
+                      <Tooltip>Powiększ</Tooltip>
+                    </TooltipTrigger>
+                    {count > 1 && (
+                      <TooltipTrigger>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onPress={goNext}
+                          aria-label="Następne zdjęcie"
+                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:hidden"
+                        >
+                          <ChevronRightIcon />
+                        </Button>
+                        <Tooltip>Następne zdjęcie</Tooltip>
+                      </TooltipTrigger>
+                    )}
                   </div>
                 </div>
               )}
             </TransformWrapper>
-
             {/* Prev / next */}
             {count > 1 && (
               <>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onPress={goPrev}
-                  aria-label="Poprzednie zdjęcie"
-                  className="absolute top-1/2 left-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:left-4"
-                >
-                  <ChevronLeftIcon />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onPress={goNext}
-                  aria-label="Następne zdjęcie"
-                  className="absolute top-1/2 right-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:right-4"
-                >
-                  <ChevronRightIcon />
-                </Button>
+                <TooltipTrigger>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onPress={goPrev}
+                    aria-label="Poprzednie zdjęcie"
+                    className="absolute top-1/2 left-2 z-10 hidden -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:left-4 sm:inline-flex sm:size-12"
+                  >
+                    <ChevronLeftIcon className="size-4 sm:size-6" />
+                  </Button>
+                  <Tooltip>Poprzednie zdjęcie</Tooltip>
+                </TooltipTrigger>
+                <TooltipTrigger>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onPress={goNext}
+                    aria-label="Następne zdjęcie"
+                    className="absolute top-1/2 right-2 z-10 hidden -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:right-4 sm:inline-flex sm:size-12"
+                  >
+                    <ChevronRightIcon className="size-4 sm:size-6" />
+                  </Button>
+                  <Tooltip>Następne zdjęcie</Tooltip>
+                </TooltipTrigger>
               </>
             )}
           </div>
@@ -203,9 +253,9 @@ export function SnackImageLightbox({
                   aria-label={`Pokaż zdjęcie ${i + 1}`}
                   aria-current={i === index}
                   className={cn(
-                    "h-16 w-13 shrink-0 overflow-hidden rounded-lg ring-2 transition-[box-shadow,opacity] outline-none",
+                    "h-16 w-13 shrink-0 overflow-hidden rounded-md ring-2 transition-[box-shadow,opacity] outline-none",
                     i === index
-                      ? "ring-white"
+                      ? "ring-primary"
                       : "opacity-60 ring-transparent hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-white/70",
                   )}
                 >
