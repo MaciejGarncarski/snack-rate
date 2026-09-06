@@ -4,13 +4,11 @@ import { logger } from "#/observability/logger/logger";
 import { sanitizeRequestData } from "#/observability/request-context";
 import { mapError } from "#/orpc/map-error";
 
-const INPUT_PATHS = new Set(["snacks.search"]);
-
 const WRITE_PATHS = new Set(["snacks.create", "comments.rate", "comments.removeRating"]);
 
 function shouldLogInput(path: string[]): boolean {
   const joined = path.join(".");
-  return WRITE_PATHS.has(joined) || INPUT_PATHS.has(joined);
+  return WRITE_PATHS.has(joined);
 }
 
 const errorHandlingMiddleware = baseORPC.middleware(async ({ next, path }, input) => {
