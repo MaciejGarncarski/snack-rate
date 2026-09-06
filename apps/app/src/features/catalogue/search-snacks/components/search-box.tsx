@@ -14,12 +14,14 @@ export function NavbarSearchBox() {
     useSearchBoxInput();
 
   const { data, isLoading } = useQuery(getSearchedItemsQueryOptions(debouncedQuery));
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const suggestionListContainerRef = useRef<HTMLUListElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const isDebouncing = debouncedQuery !== inputValue;
 
   const { selectedIndex, setSelectedIndex, handleKeyDown } = useSearchBoxNavigation({
     setSuggestionsOpen,
+    containerRef,
     suggestionListContainerRef,
     inputRef,
     dataLength: data?.length ?? 0,
@@ -38,7 +40,7 @@ export function NavbarSearchBox() {
   };
 
   return (
-    <div className="relative w-full">
+    <div ref={containerRef} className="relative w-full">
       <div className="max-w-50 md:max-w-72">
         <SearchBoxInput
           inputValue={inputValue}

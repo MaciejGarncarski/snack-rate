@@ -5,6 +5,7 @@ import { useClickOutside } from "#/hooks/use-click-outside";
 
 type UseSearchBoxNavigationProps = {
   setSuggestionsOpen: (open: boolean) => void;
+  containerRef: RefObject<HTMLDivElement | null>;
   suggestionListContainerRef: RefObject<HTMLUListElement | null>;
   dataLength: number;
   inputRef: RefObject<HTMLInputElement | null>;
@@ -12,13 +13,14 @@ type UseSearchBoxNavigationProps = {
 
 export function useSearchBoxNavigation({
   setSuggestionsOpen,
+  containerRef,
   suggestionListContainerRef,
   dataLength,
   inputRef,
 }: UseSearchBoxNavigationProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  useClickOutside(suggestionListContainerRef, () => {
+  useClickOutside(containerRef, () => {
     setSuggestionsOpen(false);
     setSelectedIndex(0);
   });

@@ -90,30 +90,30 @@ export function SnackImageLightbox({
           </div>
           {/* Stage */}
           <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 sm:px-20">
-            <TransformWrapper
-              key={`zoom-${index}`}
-              initialScale={1}
-              minScale={1}
-              maxScale={5}
-              centerOnInit
-              centerZoomedOut
-              limitToBounds={true}
-              wheel={{ step: 0.005 }}
-              doubleClick={{ mode: "toggle" }}
-              panning={{ velocityDisabled: false }}
-            >
-              {({ zoomIn, zoomOut, resetTransform }) => (
-                <div className="flex h-full w-full flex-col items-center justify-center ">
-                  <div className="flex min-h-0 w-full flex-1 items-center justify-center rounded-2xl overflow-hidden">
-                    <AnimatePresence initial={false} mode="popLayout">
-                      <motion.div
-                        key={`lightbox-image-${index}`}
-                        initial={{ opacity: 0, scale: 0.97 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.02 }}
-                        transition={{ duration: 0.18, ease: "easeOut" }}
-                        className="h-full w-full"
-                      >
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.div
+                key={`lightbox-image-${index}`}
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+                className="h-full w-full"
+              >
+                <TransformWrapper
+                  key={`zoom-${index}`}
+                  initialScale={1}
+                  minScale={1}
+                  maxScale={5}
+                  centerOnInit
+                  centerZoomedOut
+                  limitToBounds={true}
+                  wheel={{ step: 0.005 }}
+                  doubleClick={{ mode: "toggle" }}
+                  panning={{ velocityDisabled: false }}
+                >
+                  {({ zoomIn, zoomOut, resetTransform }) => (
+                    <div className="flex h-full w-full flex-col items-center justify-center ">
+                      <div className="flex min-h-0 w-full flex-1 items-center justify-center rounded-2xl overflow-hidden">
                         <TransformComponent
                           wrapperStyle={{ width: "100%", height: "100%" }}
                           contentStyle={{
@@ -133,81 +133,81 @@ export function SnackImageLightbox({
                             className="bg-neutral-800 max-h-[62dvh] w-auto max-w-full cursor-zoom-in rounded-2xl object-contain border border-white/5 shadow-2xl select-none sm:max-h-[68dvh]"
                           />
                         </TransformComponent>
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
+                      </div>
 
-                  {/* Zoom controls */}
-                  <div className="flex items-center gap-2 py-3">
-                    {count > 1 && isMobile && (
-                      <TooltipTrigger>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onPress={goPrev}
-                          aria-label="Poprzednie zdjęcie"
-                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
-                        >
-                          <ChevronLeftIcon />
-                        </Button>
-                        <Tooltip>Poprzednie zdjęcie</Tooltip>
-                      </TooltipTrigger>
-                    )}
-                    <TooltipTrigger>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onPress={() => void zoomOut(0.4)}
-                        aria-label="Pomniejsz"
-                        className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
-                      >
-                        <ZoomOutIcon className="size-3 sm:size-5" />
-                      </Button>
-                      <Tooltip>Pomniejsz</Tooltip>
-                    </TooltipTrigger>
-                    <TooltipTrigger>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onPress={() => void resetTransform()}
-                        aria-label="Resetuj powiększenie"
-                        className="min-w-16 bg-white/10 text-xs font-medium text-white hover:bg-white/20 hover:text-white sm:h-10 gap-2 sm:px-4"
-                      >
-                        <ExpandIcon className="size-4 sm:size-5" />
-                        <ZoomPercentLabel />
-                      </Button>
-                      <Tooltip>Resetuj powiększenie</Tooltip>
-                    </TooltipTrigger>
-                    <TooltipTrigger>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onPress={() => void zoomIn(0.4)}
-                        aria-label="Powiększ"
-                        className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
-                      >
-                        <ZoomInIcon className="size-3 sm:size-5" />
-                      </Button>
-                      <Tooltip>Powiększ</Tooltip>
-                    </TooltipTrigger>
-                    {count > 1 && isMobile && (
-                      <TooltipTrigger>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onPress={goNext}
-                          aria-label="Następne zdjęcie"
-                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
-                        >
-                          <ChevronRightIcon />
-                        </Button>
-                        <Tooltip>Następne zdjęcie</Tooltip>
-                      </TooltipTrigger>
-                    )}
-                  </div>
-                </div>
-              )}
-            </TransformWrapper>
+                      {/* Zoom controls */}
+                      <div className="flex items-center gap-2 py-3">
+                        {count > 1 && isMobile && (
+                          <TooltipTrigger>
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onPress={goPrev}
+                              aria-label="Poprzednie zdjęcie"
+                              className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                            >
+                              <ChevronLeftIcon />
+                            </Button>
+                            <Tooltip>Poprzednie zdjęcie</Tooltip>
+                          </TooltipTrigger>
+                        )}
+                        <TooltipTrigger>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onPress={() => void zoomOut(0.4)}
+                            aria-label="Pomniejsz"
+                            className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
+                          >
+                            <ZoomOutIcon className="size-3 sm:size-5" />
+                          </Button>
+                          <Tooltip>Pomniejsz</Tooltip>
+                        </TooltipTrigger>
+                        <TooltipTrigger>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onPress={() => void resetTransform()}
+                            aria-label="Resetuj powiększenie"
+                            className="min-w-16 bg-white/10 text-xs font-medium text-white hover:bg-white/20 hover:text-white sm:h-10 gap-2 sm:px-4"
+                          >
+                            <ExpandIcon className="size-4 sm:size-5" />
+                            <ZoomPercentLabel />
+                          </Button>
+                          <Tooltip>Resetuj powiększenie</Tooltip>
+                        </TooltipTrigger>
+                        <TooltipTrigger>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onPress={() => void zoomIn(0.4)}
+                            aria-label="Powiększ"
+                            className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
+                          >
+                            <ZoomInIcon className="size-3 sm:size-5" />
+                          </Button>
+                          <Tooltip>Powiększ</Tooltip>
+                        </TooltipTrigger>
+                        {count > 1 && isMobile && (
+                          <TooltipTrigger>
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onPress={goNext}
+                              aria-label="Następne zdjęcie"
+                              className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                            >
+                              <ChevronRightIcon />
+                            </Button>
+                            <Tooltip>Następne zdjęcie</Tooltip>
+                          </TooltipTrigger>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </TransformWrapper>
+              </motion.div>
+            </AnimatePresence>
             {/* Prev / next */}
             {count > 1 && !isMobile && (
               <>
