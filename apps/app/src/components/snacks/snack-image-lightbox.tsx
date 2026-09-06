@@ -1,4 +1,3 @@
-import { useHotkey } from "@tanstack/react-hotkeys";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -15,6 +14,7 @@ import { Image } from "#/components/image/image";
 import { Button } from "#/components/ui/button";
 import { DialogOverlay, DialogTitle } from "#/components/ui/dialog";
 import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
+import { useIsMobile } from "#/hooks/use-mobile";
 import { cn } from "#/lib/utils";
 
 type Props = {
@@ -41,6 +41,7 @@ export function SnackImageLightbox({
   onOpenChange,
 }: Props) {
   const count = images.length;
+  const isMobile = useIsMobile();
 
   const goTo = (newIndex: number) => {
     if (count === 0) return;
@@ -49,10 +50,6 @@ export function SnackImageLightbox({
 
   const goNext = () => goTo(index + 1);
   const goPrev = () => goTo(index - 1);
-
-  useHotkey("ArrowLeft", goPrev, { enabled: open });
-  useHotkey("ArrowRight", goNext, { enabled: open });
-  useHotkey("Escape", () => onOpenChange(false), { enabled: open });
 
   if (count === 0) return null;
 
@@ -142,14 +139,14 @@ export function SnackImageLightbox({
 
                   {/* Zoom controls */}
                   <div className="flex items-center gap-2 py-3">
-                    {count > 1 && (
+                    {count > 1 && isMobile && (
                       <TooltipTrigger>
                         <Button
                           variant="ghost"
                           size="icon-sm"
                           onPress={goPrev}
                           aria-label="Poprzednie zdjęcie"
-                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:hidden"
+                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
                         >
                           <ChevronLeftIcon />
                         </Button>
@@ -193,14 +190,14 @@ export function SnackImageLightbox({
                       </Button>
                       <Tooltip>Powiększ</Tooltip>
                     </TooltipTrigger>
-                    {count > 1 && (
+                    {count > 1 && isMobile && (
                       <TooltipTrigger>
                         <Button
                           variant="ghost"
                           size="icon-sm"
                           onPress={goNext}
                           aria-label="Następne zdjęcie"
-                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:hidden"
+                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
                         >
                           <ChevronRightIcon />
                         </Button>
@@ -212,7 +209,7 @@ export function SnackImageLightbox({
               )}
             </TransformWrapper>
             {/* Prev / next */}
-            {count > 1 && (
+            {count > 1 && !isMobile && (
               <>
                 <TooltipTrigger>
                   <Button
@@ -220,7 +217,7 @@ export function SnackImageLightbox({
                     size="icon"
                     onPress={goPrev}
                     aria-label="Poprzednie zdjęcie"
-                    className="absolute top-1/2 left-2 z-10 hidden -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:left-4 sm:inline-flex sm:size-12"
+                    className="absolute top-1/2 left-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:left-4 sm:size-12"
                   >
                     <ChevronLeftIcon className="size-4 sm:size-6" />
                   </Button>
@@ -232,7 +229,7 @@ export function SnackImageLightbox({
                     size="icon"
                     onPress={goNext}
                     aria-label="Następne zdjęcie"
-                    className="absolute top-1/2 right-2 z-10 hidden -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:right-4 sm:inline-flex sm:size-12"
+                    className="absolute top-1/2 right-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:right-4 sm:size-12"
                   >
                     <ChevronRightIcon className="size-4 sm:size-6" />
                   </Button>

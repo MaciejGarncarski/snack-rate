@@ -8,6 +8,7 @@ import { SnackImageLightbox } from "#/components/snacks/snack-image-lightbox";
 import { AspectRatio } from "#/components/ui/aspect-ratio";
 import { Card, CardContent } from "#/components/ui/card";
 import { MAXIMUM_IMAGES } from "#/const/image-const";
+import { useIsMobile } from "#/hooks/use-mobile";
 import { cn } from "#/lib/utils";
 
 type Direction = 1 | -1;
@@ -46,6 +47,31 @@ const variants: Variants = {
   }),
 };
 
+// Cheap opacity-only crossfade for mobile GPUs: no x-offset or scale,
+// so large image layers composite without repaints.
+const mobileVariants: Variants = {
+  enter: {
+    opacity: 0,
+    transition: {
+      duration: 0.12,
+    },
+  },
+
+  center: {
+    opacity: 1,
+    transition: {
+      duration: 0.18,
+    },
+  },
+
+  exit: {
+    opacity: 0,
+    transition: {
+      duration: 0.1,
+    },
+  },
+};
+
 type Props = {
   images: string[];
   thumbnailUrls: string[];
@@ -56,6 +82,7 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<Direction>(1);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const goTo = (newIndex: number) => {
     if (images.length === 0 || newIndex === index) return;
@@ -66,8 +93,16 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
   const goNext = () => goTo((index + 1) % images.length);
   const goPrev = () => goTo((index - 1 + images.length) % images.length);
 
-  useHotkey("ArrowLeft", goPrev, { enabled: !lightboxOpen && images.length > 0 });
-  useHotkey("ArrowRight", goNext, { enabled: !lightboxOpen && images.length > 0 });
+  // Single owner of these hotkeys: arrows drive both the inline preview and
+  // the lightbox through the shared index state. Escape overlaps with the
+  // header search box, which is harmless (closing suggestions while
+  // dismissing a fullscreen viewer is the expected behavior).
+  useHotkey("ArrowLeft", goPrev, { enabled: images.length > 0 });
+  useHotkey("ArrowRight", goNext, { enabled: images.length > 0 });
+  useHotkey("Escape", () => setLightboxOpen(false), {
+    enabled: lightboxOpen,
+    conflictBehavior: "allow",
+  });
 
   const emptySpaces = Math.max(MAXIMUM_IMAGES - images.length, 0);
 
@@ -89,12 +124,11 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
                 <AnimatePresence initial={false} custom={direction} mode="popLayout">
                   <motion.div
                     custom={direction}
-                    variants={variants}
+                    variants={isMobile ? mobileVariants : variants}
                     initial="enter"
                     animate="center"
                     exit="exit"
                     key={`snack-image-${index}`}
-                    transition={{ duration: 0.15, ease: "easeInOut" }}
                     className="absolute inset-0 h-full w-full p-0"
                   >
                     <Image
