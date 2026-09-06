@@ -1,4 +1,5 @@
 import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE, MAXIMUM_IMAGES } from "#/const/image-const";
+import { convertToWebp } from "#/features/catalogue/create-snack/utils/convert-to-webp";
 
 export type ImageValidationError =
   | "file-too-large"
@@ -35,18 +36,44 @@ export async function validateImage(file: File, allFiles: File[]): Promise<Image
     return "maximum-images-reached";
   }
 
-  if (file.size > MAX_FILE_SIZE) {
-    return "file-too-large";
+  if (file.type.startsWith("image/") && ALLOWED_MIME_TYPES.has(file.type)) {
+    if (file.size > MAX_FILE_SIZE) {
+      const downscaled = await tryConvert(file);
+      if (!downscaled) {
+        return "file-too-large";
+      }
+      return await checkResolution(downscaled);
+    }
+
+    return await checkResolution(file);
   }
 
   if (!file.type.startsWith("image/")) {
     return "unsupported-file-type";
   }
 
-  if (!ALLOWED_MIME_TYPES.has(file.type)) {
+  const converted = await tryConvert(file);
+
+  if (!converted) {
     return "unsupported-file-type";
   }
 
+  if (converted.size > MAX_FILE_SIZE) {
+    return "file-too-large";
+  }
+
+  return await checkResolution(converted);
+}
+
+async function tryConvert(file: File): Promise<File | null> {
+  try {
+    return await convertToWebp(file);
+  } catch {
+    return null;
+  }
+}
+
+async function checkResolution(file: File): Promise<ImageValidationResult> {
   try {
     const isResolutionValid = await checkImageResolution(file);
 

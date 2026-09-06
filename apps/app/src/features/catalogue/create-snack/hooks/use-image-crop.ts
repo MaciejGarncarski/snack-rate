@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import type { Area } from "react-easy-crop";
 
-import { MAX_IMAGE_DIMENSION_OUTPUT } from "#/const/image-const";
+import { MAX_IMAGE_DIMENSION_OUTPUT, OPTIMIZED_QUALITY } from "#/const/image-const";
 import { cropImageBitmap } from "#/features/catalogue/create-snack/utils/canvas-utils";
 
 export function useImageCrop() {
@@ -23,8 +23,14 @@ export function useImageCrop() {
         MAX_IMAGE_DIMENSION_OUTPUT / Math.max(pixelCrop.width, pixelCrop.height),
       );
 
-      const createdBlob = await cropImageBitmap(bitmap, pixelCrop, scale, "image/png");
-      return new File([createdBlob], fileName, { type: "image/png", lastModified: Date.now() });
+      const createdBlob = await cropImageBitmap(
+        bitmap,
+        pixelCrop,
+        scale,
+        "image/webp",
+        OPTIMIZED_QUALITY / 100,
+      );
+      return new File([createdBlob], fileName, { type: "image/webp", lastModified: Date.now() });
     },
     [],
   );

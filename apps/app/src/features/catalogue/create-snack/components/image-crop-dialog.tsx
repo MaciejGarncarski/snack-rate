@@ -49,7 +49,7 @@ export function ImageCropDialog({
     setIsCropping(true);
     setError(null);
     try {
-      const croppedFile = await processImage(imageSrc, croppedAreaPercent, "cropped.png");
+      const croppedFile = await processImage(imageSrc, croppedAreaPercent, "cropped.webp");
       onCropComplete(croppedFile);
       onOpenChange(false);
     } catch (err) {
