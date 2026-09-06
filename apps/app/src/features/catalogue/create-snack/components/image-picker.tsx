@@ -28,7 +28,7 @@ const errorMessageMap = {
   "file-too-large": "Plik jest zbyt duży (maks. 10 MB).",
   "unsupported-file-type": "Nieobsługiwany typ pliku.",
   "already-added": "Ten plik został już dodany.",
-  "resolution-too-low": "Zbyt niska rozdzielczość (min. 200x200 px).",
+  "resolution-too-low": "Zbyt niska rozdzielczość (min. 200×200 px).",
   "maximum-images-reached": "Osiągnięto maksimum obrazów.",
 } satisfies Record<ValidationAlert["error"], string>;
 
@@ -94,89 +94,116 @@ export function ImagePicker({ onChange }: Props) {
   const emptySpaces = MAXIMUM_IMAGES - images.length;
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <div className="relative">
-        <ImageDropzone
-          handleAddToQueue={handleAddToQueue}
-          images={images}
-          onValidationError={handleValidationError}
-          selectedImage={foundSelectedImage}
-          onUploadClick={uploadOnClick}
-        />
+    <div className="flex w-full flex-col gap-4">
+      <div className="mx-auto w-full max-w-85">
+        <div className="relative">
+          <div className="absolute -top-2 left-1/2 h-5 w-16 -translate-x-1/2 -rotate-2 bg-primary/15 shadow-sm ring-1 ring-primary/10 backdrop-blur-sm" />
+        </div>
 
-        <AnimatePresence>
-          {foundSelectedImage && (
-            <motion.div
-              key="badges"
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute bottom-2 left-2 flex items-center justify-center gap-2"
-            >
-              <MainImageBadges isPrimaryImage={selectedIndex === 0} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="rounded-2xl bg-card p-2.5 pb-0 shadow-lg ring-1 ring-border rotate-[0.6deg]">
+          <div className="relative aspect-4/5 overflow-hidden rounded-xl bg-muted">
+            <ImageDropzone
+              handleAddToQueue={handleAddToQueue}
+              images={images}
+              onValidationError={handleValidationError}
+              selectedImage={foundSelectedImage}
+              onUploadClick={uploadOnClick}
+            />
+          </div>
 
-        <AnimatePresence>
-          {foundSelectedImage && (
-            <motion.div
-              key="toolbar"
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute top-2 right-2 flex items-center justify-center gap-4"
-            >
-              <MainImageToolbar handleRecrop={handleRecrop} handleDelete={handleDelete} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <div className="flex min-h-13 items-center justify-between gap-2 px-1 py-3">
+            <div className="min-w-0 flex-1">
+              {foundSelectedImage ? (
+                <MainImageBadges isPrimaryImage={selectedIndex === 0} />
+              ) : (
+                <span className="text-xs tracking-wide text-muted-foreground">Brak zdjęcia</span>
+              )}
+            </div>
+
+            <AnimatePresence>
+              {foundSelectedImage && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <MainImageToolbar handleRecrop={handleRecrop} handleDelete={handleDelete} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-2 h-2 w-[85%] rounded-full bg-foreground/5 blur-[6px]" />
       </div>
 
-      {alerts.map((alert) => (
-        <Alert variant="destructive" key={alert.id} className="bg-input/50">
-          <AlertCircleIcon />
-          <AlertTitle>Nie dodano obrazu</AlertTitle>
-          <AlertDescription>{alert.message}</AlertDescription>
-          <AlertAction>
-            <Button size="icon-xs" variant="ghost" onClick={() => dismissAlert(alert.id)}>
-              <X className="size-4" />
-            </Button>
-          </AlertAction>
-        </Alert>
-      ))}
+      {alerts.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {alerts.map((alert) => (
+            <Alert
+              variant="destructive"
+              key={alert.id}
+              className="rounded-2xl border-destructive/20 bg-destructive/5 py-3"
+            >
+              <AlertCircleIcon className="size-4" />
+              <AlertTitle className="text-xs font-medium">Nie dodano obrazu</AlertTitle>
+              <AlertDescription className="text-xs">{alert.message}</AlertDescription>
+              <AlertAction>
+                <Button
+                  size="icon-xs"
+                  variant="ghost"
+                  onClick={() => dismissAlert(alert.id)}
+                  className="rounded-full"
+                >
+                  <X className="size-3.5" />
+                </Button>
+              </AlertAction>
+            </Alert>
+          ))}
+        </div>
+      )}
 
-      <div className="flex flex-col gap-2">
+      <div className="rounded-2xl border border-border/60 bg-muted/20 p-3 sm:p-4">
         <LayoutGroup>
-          <div className="grid grid-cols-3 gap-4 overflow-hidden py-0.5 px-0.5">
+          <div className="flex justify-center gap-2 sm:gap-3">
             <AnimatePresence mode="popLayout">
-              {images.map((image, index) => {
-                return (
-                  <ImageSlot
-                    key={image.id}
-                    isSelected={index === selectedIndex}
-                    onClick={() => setSelectedIndex(index)}
-                    onMoveLeft={index > 0 ? () => handleMove(index, "left") : undefined}
-                    onMoveRight={
-                      index < images.length - 1 ? () => handleMove(index, "right") : undefined
-                    }
-                    imageSrc={image.croppedFileUrl}
-                  />
-                );
-              })}
+              {images.map((image, index) => (
+                <ImageSlot
+                  key={image.id}
+                  isSelected={index === selectedIndex}
+                  onClick={() => setSelectedIndex(index)}
+                  onMoveLeft={index > 0 ? () => handleMove(index, "left") : undefined}
+                  onMoveRight={
+                    index < images.length - 1 ? () => handleMove(index, "right") : undefined
+                  }
+                  imageSrc={image.croppedFileUrl}
+                  index={index}
+                />
+              ))}
             </AnimatePresence>
-            {Array.from({ length: emptySpaces }).map((_, index) => {
-              return <ImageSlot key={`empty-${index}`} onClick={uploadOnClick} />;
-            })}
+            {Array.from({ length: emptySpaces }).map((_, idx) => (
+              <ImageSlot
+                key={`empty-${idx}`}
+                onClick={uploadOnClick}
+                index={(images.length + idx) as number}
+              />
+            ))}
           </div>
         </LayoutGroup>
+
+        <p className="mt-3 text-center text-xs font-medium tracking-wide text-muted-foreground">
+          {images.length === 0
+            ? "Dodaj do 3 zdjęć · pierwsze to okładka"
+            : `${images.length} / ${MAXIMUM_IMAGES} · ${selectedIndex === 0 ? "okładka" : `zdjęcie ${selectedIndex + 1}`}`}
+        </p>
       </div>
 
       <ImageCropDialog
         open={isCropDialogOpen}
         onCropComplete={handleCropComplete}
         onOpenChange={(open) => {
-          if (!open) {
-            handleCropCancel();
-          }
+          if (!open) handleCropCancel();
         }}
         imageSrc={queueItemUrl}
       />

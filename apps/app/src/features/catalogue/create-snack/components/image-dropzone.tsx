@@ -1,4 +1,4 @@
-import { ImageOffIcon, ImageUpIcon } from "lucide-react";
+import { CameraIcon, ImageUpIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 
@@ -46,18 +46,14 @@ export const ImageDropzone = ({
     e.preventDefault();
     e.stopPropagation();
     dragCounter.current++;
-    if (dragCounter.current === 1) {
-      setIsDragOver(true);
-    }
+    if (dragCounter.current === 1) setIsDragOver(true);
   }, []);
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     dragCounter.current--;
-    if (dragCounter.current === 0) {
-      setIsDragOver(false);
-    }
+    if (dragCounter.current === 0) setIsDragOver(false);
   }, []);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -71,59 +67,68 @@ export const ImageDropzone = ({
       e.stopPropagation();
       dragCounter.current = 0;
       setIsDragOver(false);
-
       const files = Array.from(e.dataTransfer.files);
-
       processDroppedFiles(files);
     },
     [processDroppedFiles],
   );
 
   return (
-    <motion.div
-      className="relative flex aspect-4/5 h-auto w-full items-center justify-center rounded-2xl ring-ring ring-offset-2 ring-offset-background focus-within:ring-2"
+    <div
+      className="relative flex aspect-4/5 size-full items-center justify-center"
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <div className="relative size-full overflow-hidden rounded-2xl border border-accent">
-        {selectedImage ? (
-          <div
-            className="size-full relative select-none bg-gradient-transparency"
-            key={selectedImage.id}
-          >
-            <img
-              src={selectedImage.croppedFileUrl}
-              alt="Wybrany obraz"
-              draggable={false}
-              className="size-full object-cover select-none"
-            />
+      {selectedImage ? (
+        <div className="size-full select-none" key={selectedImage.id}>
+          <img
+            src={selectedImage.croppedFileUrl}
+            alt="Wybrany obraz"
+            draggable={false}
+            className="size-full object-cover select-none"
+          />
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={onUploadClick}
+          className="group flex size-full flex-col items-center justify-center gap-3 bg-zinc-50 text-zinc-500 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700/60"
+        >
+          <div className="flex size-14 items-center justify-center rounded-full border border-dashed border-zinc-300 bg-white shadow-sm transition-colors group-hover:border-zinc-400 dark:border-zinc-600 dark:bg-zinc-900">
+            <CameraIcon className="size-6 text-zinc-400 group-hover:text-zinc-600 dark:text-zinc-500" />
           </div>
-        ) : (
-          <button
-            key="no-image"
-            onClick={onUploadClick}
-            className="absolute left-0 flex select-none h-full w-full flex-col items-center justify-center gap-4 rounded-lg bg-input/50 text-muted-foreground outline-none"
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              Dodaj zdjęcie
+            </span>
+            <span className="text-xs text-zinc-400 dark:text-zinc-500">
+              kliknij lub przeciągnij plik
+            </span>
+          </div>
+          <span className="mt-1 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
+            Wybierz plik
+          </span>
+        </button>
+      )}
+
+      <AnimatePresence>
+        {isDragOver && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-white/85 backdrop-blur-sm dark:bg-zinc-900/85"
           >
-            <ImageOffIcon />
-            <p>Brak obrazu</p>
-          </button>
+            <div className="flex size-14 items-center justify-center rounded-full bg-zinc-900 text-white dark:bg-white dark:text-zinc-900">
+              <ImageUpIcon className="size-6" />
+            </div>
+            <p className="text-sm font-medium text-zinc-900 dark:text-white">Upuść obraz tutaj</p>
+            <p className="text-xs text-zinc-500">JPG, PNG, WebP · maks. 10 MB</p>
+          </motion.div>
         )}
-        <AnimatePresence>
-          {isDragOver && (
-            <motion.div
-              initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-              animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-lg border border-accent bg-background/80"
-            >
-              <ImageUpIcon className="size-12 text-foreground" />
-              <p className="text-sm font-medium text-foreground">Upuść obraz tutaj</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
+      </AnimatePresence>
+    </div>
   );
 };
