@@ -3,7 +3,6 @@ export const buildCreateSnackPayload = (formData: FormData) => {
   const description = formData.get("description");
   const barcode = formData.get("barcode");
   const typeSlug = formData.get("typeSlug");
-  const captchaCode = formData.get("captchaCode");
 
   const images: File[] = [];
 
@@ -18,7 +17,6 @@ export const buildCreateSnackPayload = (formData: FormData) => {
     description: description ? String(description) : undefined,
     barcode: barcode ? String(barcode) : undefined,
     typeSlug: typeSlug?.toString() || "",
-    captchaCode: captchaCode ? String(captchaCode) : "",
     images,
   };
 };

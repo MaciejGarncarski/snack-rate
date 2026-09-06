@@ -17,7 +17,6 @@ import { Field, FieldDescription, FieldError, FieldLabel } from "#/components/ui
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
 import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
-import { CaptchaField } from "#/features/captcha/components/captcha-field";
 import { ImagePicker } from "#/features/catalogue/create-snack/components/image-picker";
 import { SnackFormCard } from "#/features/catalogue/create-snack/components/snack-form-card";
 import { useCreateSnackForm } from "#/features/catalogue/create-snack/hooks/use-create-snack-form";
@@ -248,23 +247,6 @@ export function CreateSnackForm({ types }: Props) {
             ) : null;
           }}
         </form.Subscribe>
-
-        <form.Field name="captchaCode">
-          {(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-
-            return (
-              <CaptchaField
-                value={field.state.value}
-                onChange={field.handleChange}
-                name={field.name}
-                onBlur={field.handleBlur}
-                isInvalid={isInvalid}
-                errors={field.state.meta.errors}
-              />
-            );
-          }}
-        </form.Field>
       </SnackFormCard>
 
       <form.Subscribe

@@ -1,7 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import * as z from "zod";
 
-import { regenerateCaptcha } from "#/features/captcha/store";
 import { useCreateSnack } from "#/features/catalogue/create-snack/hooks/use-create-snack";
 import { createSnackFormSchema } from "#/schemas/catalogue";
 
@@ -13,7 +12,6 @@ const defaultValues: FormValues = {
   barcode: "",
   typeSlug: "",
   images: [],
-  captchaCode: "",
 };
 
 export const useCreateSnackForm = () => {
@@ -43,13 +41,11 @@ export const useCreateSnackForm = () => {
         formData.append("images", image);
       }
 
-      formData.append("captchaCode", value.captchaCode);
-
       try {
         await createSnack(formData);
         formApi.reset();
       } catch {
-        regenerateCaptcha();
+        // keep form state on error; submission will surface validation/server errors
       }
     },
   });

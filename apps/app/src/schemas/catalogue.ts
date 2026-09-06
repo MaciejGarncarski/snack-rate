@@ -32,7 +32,6 @@ export const createSnackInputSchema = z.object({
   barcode: optionalEanSchema,
   typeSlug: z.string(),
   images: z.array(z.file()).min(1).max(MAXIMUM_IMAGES),
-  captchaCode: z.string().length(5),
 });
 
 export const createSnackFormSchema = z.object({
@@ -44,5 +43,4 @@ export const createSnackFormSchema = z.object({
     .array(z.instanceof(File))
     .min(1, "Wymagana jest przynajmniej jedna grafika")
     .max(MAXIMUM_IMAGES, "Maksymalnie 3 grafiki"),
-  captchaCode: z.string().length(5, "Wpisz 5-znakowy kod z obrazka"),
 });

@@ -1,4 +1,3 @@
-import { getCaptchaProcedure } from "#/features/captcha/transport/get-captcha.server";
 import { getSearchedItemsProcedure } from "#/features/catalogue/search-snacks/transport/get-searched-items";
 import { getSnackBySlugProcedure } from "#/features/catalogue/transport/get-snack-by-slug.server";
 import {
@@ -26,8 +25,5 @@ export default {
     rate: rateSnackProcedure,
     getRatings: getRatingsForSnackProcedure,
     removeRating: removeRatingProcedure,
-  },
-  captcha: {
-    get: getCaptchaProcedure,
   },
 };

@@ -24,8 +24,6 @@ const schema = z.object({
   S3_REGION: z.string().min(1),
   S3_SECRET_KEY: z.string().min(1),
   S3_BUCKET_PUBLIC: z.string().min(1),
-
-  CAPTCHA_SECRET: z.string().min(32),
 });
 
 let _data: z.infer<typeof schema> | undefined;
