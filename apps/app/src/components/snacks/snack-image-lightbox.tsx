@@ -70,33 +70,27 @@ export function SnackImageLightbox({
           className="flex h-full w-full flex-col outline-none"
         >
           <DialogTitle className="sr-only">Podgląd zdjęć produktu</DialogTitle>
-          {/* Top bar */}
           <div className="relative z-10 flex items-center justify-between gap-2 px-4 pt-4 text-white sm:px-6">
             <p className="text-sm font-medium tabular-nums opacity-80" aria-live="polite">
               {index + 1} / {count}
             </p>
-            <TooltipTrigger>
-              <Button
-                variant="ghost"
-                size="icon"
-                onPress={() => onOpenChange(false)}
-                aria-label="Zamknij podgląd"
-                className="size-11 rounded-full bg-red-500/20 text-red-100 hover:bg-red-500/30 hover:text-white [&_svg:not([class*='size-'])]:size-5"
-              >
-                <XIcon />
-              </Button>
-              <Tooltip placement="bottom">Zamknij podgląd</Tooltip>
-            </TooltipTrigger>
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => onOpenChange(false)}
+              aria-label="Zamknij podgląd"
+              className="size-11 rounded-full bg-red-500/20 text-red-100 hover:bg-red-500/30 hover:text-white [&_svg:not([class*='size-'])]:size-5"
+            >
+              <XIcon />
+            </Button>
           </div>
-          {/* Stage */}
           <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 sm:px-20">
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div
                 key={`lightbox-image-${index}`}
-                initial={{ opacity: 0, scale: 0.97 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.02 }}
-                transition={{ duration: 0.18, ease: "easeOut" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 className="h-full w-full"
               >
                 <TransformWrapper
@@ -113,7 +107,7 @@ export function SnackImageLightbox({
                 >
                   {({ zoomIn, zoomOut, resetTransform }) => (
                     <div className="flex h-full w-full flex-col items-center justify-center ">
-                      <div className="flex min-h-0 w-full flex-1 items-center justify-center rounded-2xl overflow-hidden">
+                      <div className="flex min-h-0 w-full flex-1 items-center justify-center rounded-4xl overflow-hidden">
                         <TransformComponent
                           wrapperStyle={{ width: "100%", height: "100%" }}
                           contentStyle={{
@@ -130,15 +124,14 @@ export function SnackImageLightbox({
                             draggable={false}
                             loading="eager"
                             decoding="async"
-                            className="bg-neutral-800 max-h-[62dvh] w-auto max-w-full cursor-zoom-in rounded-2xl object-contain border border-white/5 shadow-2xl select-none sm:max-h-[68dvh]"
+                            className="bg-neutral-800 max-h-[62dvh] w-auto max-w-full cursor-zoom-in rounded-4xl object-contain border border-white/5 shadow-2xl select-none sm:max-h-[68dvh]"
                           />
                         </TransformComponent>
                       </div>
 
-                      {/* Zoom controls */}
                       <div className="flex items-center gap-2 py-3">
                         {count > 1 && isMobile && (
-                          <TooltipTrigger>
+                          <TooltipTrigger delay={400}>
                             <Button
                               variant="ghost"
                               size="icon-sm"
@@ -151,7 +144,7 @@ export function SnackImageLightbox({
                             <Tooltip>Poprzednie zdjęcie</Tooltip>
                           </TooltipTrigger>
                         )}
-                        <TooltipTrigger>
+                        <TooltipTrigger delay={400}>
                           <Button
                             variant="ghost"
                             size="icon-sm"
@@ -163,7 +156,7 @@ export function SnackImageLightbox({
                           </Button>
                           <Tooltip>Pomniejsz</Tooltip>
                         </TooltipTrigger>
-                        <TooltipTrigger>
+                        <TooltipTrigger delay={400}>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -176,7 +169,7 @@ export function SnackImageLightbox({
                           </Button>
                           <Tooltip>Resetuj powiększenie</Tooltip>
                         </TooltipTrigger>
-                        <TooltipTrigger>
+                        <TooltipTrigger delay={400}>
                           <Button
                             variant="ghost"
                             size="icon-sm"
@@ -189,7 +182,7 @@ export function SnackImageLightbox({
                           <Tooltip>Powiększ</Tooltip>
                         </TooltipTrigger>
                         {count > 1 && isMobile && (
-                          <TooltipTrigger>
+                          <TooltipTrigger delay={400}>
                             <Button
                               variant="ghost"
                               size="icon-sm"
@@ -208,10 +201,10 @@ export function SnackImageLightbox({
                 </TransformWrapper>
               </motion.div>
             </AnimatePresence>
-            {/* Prev / next */}
+
             {count > 1 && !isMobile && (
               <>
-                <TooltipTrigger>
+                <TooltipTrigger delay={400}>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -223,7 +216,7 @@ export function SnackImageLightbox({
                   </Button>
                   <Tooltip>Poprzednie zdjęcie</Tooltip>
                 </TooltipTrigger>
-                <TooltipTrigger>
+                <TooltipTrigger delay={400}>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -239,7 +232,6 @@ export function SnackImageLightbox({
             )}
           </div>
 
-          {/* Thumbnails */}
           {count > 1 && (
             <div className="relative z-10 flex justify-center gap-2 overflow-x-auto px-4 pt-3 pb-5">
               {thumbnailUrls.map((src, i) => (

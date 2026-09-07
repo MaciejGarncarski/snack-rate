@@ -47,8 +47,24 @@ const variants: Variants = {
   }),
 };
 
-// Cheap opacity-only crossfade for mobile GPUs: no x-offset or scale,
-// so large image layers composite without repaints.
+const noAnimationVariants: Variants = {
+  enter: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+  exit: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+};
+
 const mobileVariants: Variants = {
   enter: {
     opacity: 0,
@@ -93,10 +109,6 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
   const goNext = () => goTo((index + 1) % images.length);
   const goPrev = () => goTo((index - 1 + images.length) % images.length);
 
-  // Single owner of these hotkeys: arrows drive both the inline preview and
-  // the lightbox through the shared index state. Escape overlaps with the
-  // header search box, which is harmless (closing suggestions while
-  // dismissing a fullscreen viewer is the expected behavior).
   useHotkey("ArrowLeft", goPrev, { enabled: images.length > 0 });
   useHotkey("ArrowRight", goNext, { enabled: images.length > 0 });
   useHotkey("Escape", () => setLightboxOpen(false), {
@@ -105,6 +117,8 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
   });
 
   const emptySpaces = Math.max(MAXIMUM_IMAGES - images.length, 0);
+
+  const imageVariants = lightboxOpen ? noAnimationVariants : isMobile ? mobileVariants : variants;
 
   return (
     <>
@@ -124,7 +138,7 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
                 <AnimatePresence initial={false} custom={direction} mode="popLayout">
                   <motion.div
                     custom={direction}
-                    variants={isMobile ? mobileVariants : variants}
+                    variants={imageVariants}
                     initial="enter"
                     animate="center"
                     exit="exit"
@@ -138,12 +152,12 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
                       placeholderSrc={thumbnailUrls[index]}
                       alt={`Slajd ${index + 1}`}
                       containerClassName="h-full w-full"
-                      className={`h-full w-full object-cover`}
+                      className="h-full w-full object-cover"
                       blurBackground
                     />
                   </motion.div>
                 </AnimatePresence>
-                <span className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full bg-background/80 px-2.5 py-1.5 text-xs font-medium text-foreground opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                <span className="absolute z-20 right-3 bottom-3 flex items-center gap-1.5 rounded-full border border-border/50 bg-background/80 px-2.5 py-1.5 text-xs font-medium text-foreground opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                   <ExpandIcon className="size-3.5" />
                   Pełny ekran
                 </span>
