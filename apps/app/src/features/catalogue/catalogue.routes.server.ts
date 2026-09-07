@@ -1,11 +1,12 @@
 import { processUploadedImages } from "#/features/catalogue/processors/snack-image-processor";
 import { snacksRepository } from "#/features/catalogue/server/repositories/snacks.repository.instance";
 import { createSnackUseCase } from "#/features/catalogue/server/use-cases/create-snack.use-case";
+import { getSnackBySlugUseCase } from "#/features/catalogue/server/use-cases/get-snack-by-slug.use-case";
 import { listSnacksUseCase } from "#/features/catalogue/server/use-cases/list-snacks.use-case";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 import { getMainDb } from "#/infrastructure/db/db";
 import { baseProcedure } from "#/lib/orpc/procedure";
-import { createSnackInputSchema, listSnacksSchema } from "#/schemas/catalogue";
+import { createSnackInputSchema, listSnacksSchema, snackSlugSchema } from "#/schemas/catalogue";
 
 export const listSnacksProcedure = baseProcedure.input(listSnacksSchema).handler(({ input }) => {
   const { limit, cursor, typeSlug, sortBy } = input;
@@ -24,4 +25,8 @@ export const createSnackProcedure = baseProcedure
 
 export const listTypesProcedure = baseProcedure.handler(() => {
   return snacksRepository.listTypes();
+});
+
+export const getSnackBySlugProcedure = baseProcedure.input(snackSlugSchema).handler(({ input }) => {
+  return getSnackBySlugUseCase(input.slug, snacksRepository);
 });

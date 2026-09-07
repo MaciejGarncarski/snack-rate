@@ -5,9 +5,11 @@ import ms from "ms";
 import { commentsRepository } from "#/features/comments/server/repositories/comments.repository.instance";
 import { rateSnackUseCase } from "#/features/comments/server/use-cases/comment-snack.use-case";
 import { getSnackRatingsUseCase } from "#/features/comments/server/use-cases/get-snack-comments.use-case";
+import { listSnackCommentsUseCase } from "#/features/comments/server/use-cases/list-snack-comments.use-case";
 import { removeRatingUseCase } from "#/features/comments/server/use-cases/remove-comment.use-case";
 import { getMainDb } from "#/infrastructure/db/db";
 import { baseProcedure } from "#/lib/orpc/procedure";
+import { listCommentsSchema } from "#/schemas/comments";
 import { rateSnackSchema, removeRatingSchema, snackRatingsSchema } from "#/schemas/comments";
 
 const RATE_LIMIT = 30;
@@ -29,6 +31,19 @@ function resolveAuthor(context: AuthorContext) {
 function authorKey(context: AuthorContext): string {
   return resolveAuthor(context).authorId;
 }
+
+export const listCommentsProcedure = baseProcedure
+  .input(listCommentsSchema)
+  .handler(({ input }) => {
+    return listSnackCommentsUseCase(
+      {
+        snackItemId: input.snackItemId,
+        limit: input.limit,
+        cursor: input.cursor,
+      },
+      commentsRepository,
+    );
+  });
 
 export const rateSnackProcedure = baseProcedure
   .input(rateSnackSchema)

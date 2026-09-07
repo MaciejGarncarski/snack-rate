@@ -4,20 +4,20 @@ import {
   listAdminCommentsProcedure,
   logoutAdminProcedure,
   verifyAdminPasswordProcedure,
-} from "#/features/admin/transport/admin.server";
-import { getSearchedItemsProcedure } from "#/features/catalogue/search-snacks/transport/get-searched-items";
-import { getSnackBySlugProcedure } from "#/features/catalogue/transport/get-snack-by-slug.server";
+} from "#/features/admin/admin.routes.server";
 import {
   createSnackProcedure,
+  getSnackBySlugProcedure,
   listSnacksProcedure,
   listTypesProcedure,
-} from "#/features/catalogue/transport/snacks.server";
-import { listCommentsProcedure } from "#/features/comments/transport/comments.server";
+} from "#/features/catalogue/catalogue.routes.server";
+import { getSearchedItemsProcedure } from "#/features/catalogue/search-snacks/search-snacks.routes.server";
 import {
   getRatingsForSnackProcedure,
+  listCommentsProcedure,
   rateSnackProcedure,
   removeRatingProcedure,
-} from "#/features/comments/transport/rate-snack.server";
+} from "#/features/comments/comments.routes.server";
 
 export default {
   snacks: {
