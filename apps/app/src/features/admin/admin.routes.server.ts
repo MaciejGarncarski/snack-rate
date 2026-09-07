@@ -6,7 +6,7 @@ import * as z from "zod";
 import { adminRepository } from "#/features/admin/server/admin.repository.instance";
 import { getMainDb } from "#/infrastructure/db/db";
 import { cookies } from "#/lib/cookie.config";
-import { baseProcedure } from "#/lib/orpc/procedure";
+import { baseProcedure } from "#/lib/orpc";
 import { serverEnv } from "#/lib/server.env";
 
 function getExpectedPassword(): string {

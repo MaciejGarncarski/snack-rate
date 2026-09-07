@@ -10,7 +10,7 @@ import { Input } from "#/components/ui/input";
 import {
   adminAuthQueryOptions,
   adminCommentsQueryOptions,
-} from "#/features/admin/queries/admin.query-options";
+} from "#/features/admin/admin.query-options";
 import { orpc } from "#/orpc/client";
 
 export const Route = createFileRoute("/admin")({

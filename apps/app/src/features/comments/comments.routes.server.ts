@@ -8,7 +8,7 @@ import { getSnackRatingsUseCase } from "#/features/comments/server/use-cases/get
 import { listSnackCommentsUseCase } from "#/features/comments/server/use-cases/list-snack-comments.use-case";
 import { removeRatingUseCase } from "#/features/comments/server/use-cases/remove-comment.use-case";
 import { getMainDb } from "#/infrastructure/db/db";
-import { baseProcedure } from "#/lib/orpc/procedure";
+import { baseProcedure } from "#/lib/orpc";
 import { listCommentsSchema } from "#/schemas/comments";
 import { rateSnackSchema, removeRatingSchema, snackRatingsSchema } from "#/schemas/comments";
 
