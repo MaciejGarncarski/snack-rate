@@ -24,6 +24,8 @@ const schema = z.object({
   S3_REGION: z.string().min(1),
   S3_SECRET_KEY: z.string().min(1),
   S3_BUCKET_PUBLIC: z.string().min(1),
+
+  ADMIN_PASSWORD: z.string().min(1).default("admin123"),
 });
 
 let _data: z.infer<typeof schema> | undefined;

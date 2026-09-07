@@ -1,3 +1,10 @@
+import {
+  checkAdminAuthProcedure,
+  deleteAdminCommentProcedure,
+  listAdminCommentsProcedure,
+  logoutAdminProcedure,
+  verifyAdminPasswordProcedure,
+} from "#/features/admin/transport/admin.server";
 import { getSearchedItemsProcedure } from "#/features/catalogue/search-snacks/transport/get-searched-items";
 import { getSnackBySlugProcedure } from "#/features/catalogue/transport/get-snack-by-slug.server";
 import {
@@ -25,5 +32,12 @@ export default {
     rate: rateSnackProcedure,
     getRatings: getRatingsForSnackProcedure,
     removeRating: removeRatingProcedure,
+  },
+  admin: {
+    verifyPassword: verifyAdminPasswordProcedure,
+    checkAuth: checkAdminAuthProcedure,
+    logout: logoutAdminProcedure,
+    listComments: listAdminCommentsProcedure,
+    deleteComment: deleteAdminCommentProcedure,
   },
 };
