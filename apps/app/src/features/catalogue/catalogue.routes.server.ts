@@ -5,7 +5,7 @@ import { getSnackBySlugUseCase } from "#/features/catalogue/server/use-cases/get
 import { listSnacksUseCase } from "#/features/catalogue/server/use-cases/list-snacks.use-case";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 import { getMainDb } from "#/infrastructure/db/db";
-import { baseProcedure } from "#/lib/orpc";
+import { baseProcedure } from "#/lib/orpc/procedure";
 import { createSnackInputSchema, listSnacksSchema, snackSlugSchema } from "#/schemas/catalogue";
 
 export const listSnacksProcedure = baseProcedure.input(listSnacksSchema).handler(({ input }) => {

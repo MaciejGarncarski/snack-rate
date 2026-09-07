@@ -1,17 +1,8 @@
-import { os } from "@orpc/server";
-
+import { baseORPC } from "#/lib/orpc/base";
 import { guestMiddleware, sessionMiddleware } from "#/middlewares/auth-middleware.server";
 import { logger } from "#/observability/logger/logger";
 import { sanitizeRequestData } from "#/observability/request-context";
 import { mapError } from "#/orpc/map-error";
-
-export type ORPCContext = {
-  requestHeaders: Headers;
-  guestId: string | null;
-  userId: string | null;
-};
-
-export const baseORPC = os.$context<ORPCContext>();
 
 const WRITE_PATHS = new Set(["snacks.create", "comments.rate", "comments.removeRating"]);
 

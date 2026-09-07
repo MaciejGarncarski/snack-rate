@@ -4,7 +4,7 @@ import { uuidv7 } from "uuidv7";
 import * as z from "zod";
 
 import { cookies } from "#/lib/cookie.config";
-import { baseORPC } from "#/lib/orpc";
+import { baseORPC } from "#/lib/orpc/base";
 
 export const sessionMiddleware = baseORPC.middleware(({ context, next }) => {
   const userId = getCookie(context.requestHeaders, cookies.session.name);
