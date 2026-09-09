@@ -5,6 +5,8 @@ const schema = z.object({
   APP_PORT: z.coerce.number().int().min(1).max(65535).default(3000),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
 
+  TURNSTILE_SECRET_KEY: z.string().min(1),
+
   // Database
   POSTGRES_USER: z.string().min(1),
   POSTGRES_PASSWORD: z.string().min(1),

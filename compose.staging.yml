@@ -26,7 +26,8 @@ services:
   app:
     image: ghcr.io/maciejgarncarski/snack-rate:${IMAGE_TAG:-staging}
     restart: unless-stopped
-
+    environment:
+      - VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
     env_file:
       - .env.staging
 

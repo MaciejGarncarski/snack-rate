@@ -4,6 +4,7 @@ import { eq, and, or, lt, gt, asc, desc, isNull, type SQL } from "drizzle-orm";
 
 import { Status, type SnackStatus } from "#/features/shared/value-objects/status.vo";
 import type { Database, DbTransaction } from "#/infrastructure/db/db";
+import { startActiveSpan } from "#/observability/tracing";
 import type { SortBy } from "#/schemas/catalogue";
 
 type SnackItemRow = InferSelectModel<typeof snackItems>;
@@ -171,13 +172,24 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
       return created;
     },
 
-    getBySlug: async (slug: string): Promise<SnackItem | null> => {
-      const found = await db.query.snackItems.findFirst({
-        where: { slug, status: "published" },
-        with: { type: true, images: true },
-      });
+    getBySlug: (slug: string): Promise<SnackItem | null> => {
+      return startActiveSpan(
+        "db.snacks.getBySlug",
+        async (span) => {
+          span.setAttribute("snack.slug", slug);
 
-      return found ? toSnackItem(found, getFileUrl) : null;
+          const found = await db.query.snackItems.findFirst({
+            where: { slug, status: "published" },
+            with: { type: true, images: true },
+          });
+
+          span.setAttribute("snack.found", !!found);
+          if (found) span.setAttribute("snack.id", found.id);
+
+          return found ? toSnackItem(found, getFileUrl) : null;
+        },
+        { attributes: { "snack.slug": slug } },
+      );
     },
 
     list: (

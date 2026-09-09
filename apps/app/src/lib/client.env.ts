@@ -2,7 +2,7 @@
 import { z } from "zod";
 
 const schema = z.object({
-  VITE_EXAMPLE_ENV_VAR: z.string().min(1),
+  VITE_TURNSTILE_SITE_KEY: z.string().min(5),
 });
 
 const parsed = schema.safeParse(import.meta.env);

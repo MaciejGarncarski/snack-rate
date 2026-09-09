@@ -143,6 +143,7 @@
   --animate-rmiz-blur-fade-in: rmiz-blur-fade-in 0.7s ease-out 0s both;
   --animate-rmiz-blur-fade-out: rmiz-blur-fade-out 0.15s ease-in both;
   --animate-border-glow: border-glow 15s linear infinite alternate;
+  --animate-error-shake: error-shake 0.35s ease-in-out;
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -179,6 +180,21 @@
     to {
       transform: rotate(720deg);
       scale: 1.2;
+    }
+  }
+
+  @keyframes error-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20%,
+    60% {
+      transform: translateX(-3px);
+    }
+    40%,
+    80% {
+      transform: translateX(3px);
     }
   }
 
@@ -223,5 +239,9 @@
   .bg-gradient-transparency-small {
     background-image: repeating-conic-gradient(var(--input) 0% 25%, var(--secondary) 0% 50%);
     background-size: 15px 15px;
+  }
+
+  .mutation-error {
+    @apply animate-error-shake;
   }
 }

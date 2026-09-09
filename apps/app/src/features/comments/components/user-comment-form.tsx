@@ -1,10 +1,13 @@
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useForm } from "@tanstack/react-form";
+import { useState } from "react";
 
 import { SnackRatingPicker } from "#/components/snacks/snack-rating-picker";
 import { Button } from "#/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "#/components/ui/field";
 import { Textarea } from "#/components/ui/textarea";
 import { useCommentSnack } from "#/features/comments/queries/use-comment-snack";
+import { clientEnv } from "#/lib/client.env";
 import { MAXIMUM_COMMENT_BODY_LENGTH, rateSnackFormSchema } from "#/schemas/comments";
 
 type Props = {
@@ -25,6 +28,7 @@ export function UserCommentForm({
   onRated,
 }: Props) {
   const rateSnack = useCommentSnack();
+  const [token, setToken] = useState<string>();
 
   const form = useForm({
     defaultValues: {
@@ -38,13 +42,18 @@ export function UserCommentForm({
       if (value.rating === null) return;
 
       const trimmedBody = value.body.trim();
+
       rateSnack.mutate(
         {
           snackItemId,
           rating: value.rating,
+          token: token,
           body: trimmedBody.length > 0 ? trimmedBody : null,
         },
         {
+          onSettled: () => {
+            setToken(undefined);
+          },
           onSuccess: () => {
             onRated?.();
           },
@@ -65,7 +74,6 @@ export function UserCommentForm({
       <h3 className="flex items-center gap-2 text-xl font-bold text-foreground">
         Dodawanie nowej oceny
       </h3>
-
       <div className="flex w-full flex-col gap-5">
         <form.Field name="rating">
           {(field) => (
@@ -97,10 +105,22 @@ export function UserCommentForm({
           )}
         </form.Field>
       </div>
+      <Turnstile
+        siteKey={clientEnv.VITE_TURNSTILE_SITE_KEY}
+        onSuccess={setToken}
+        onError={() => setToken(undefined)}
+        onExpire={() => setToken(undefined)}
+      />
 
       <div className="flex w-full items-center gap-2 pt-1">
         {onCancel && (
-          <Button type="button" variant="ghost" size="sm" isDisabled={isPending} onPress={onCancel}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            isDisabled={isPending}
+            onPress={onCancel}
+          >
             Anuluj
           </Button>
         )}
@@ -115,7 +135,7 @@ export function UserCommentForm({
           {({ canSubmit, isSubmitting, rating }) => (
             <Button
               type="submit"
-              isDisabled={!canSubmit || rating === null || isSubmitting || isPending}
+              isDisabled={!canSubmit || rating === null || isSubmitting || isPending || !token}
             >
               {isPending ? "Zapisywanie…" : "Zapisz ocenę"}
             </Button>

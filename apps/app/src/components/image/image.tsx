@@ -127,19 +127,27 @@ export function ImageInner({
         aspectRatio,
       }}
     >
-      {placeholderSrc && status !== "error" && status === "loading" && (
-        <img
-          src={placeholderSrc}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover blur-xs scale-110"
-          loading="eager"
-          decoding="async"
-          fetchPriority="low"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).style.display = "none";
-          }}
-        />
+      {placeholderSrc && (
+        <AnimatePresence>
+          {status === "loading" && (
+            <motion.img
+              src={placeholderSrc}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover blur-xs"
+              loading="eager"
+              decoding="async"
+              fetchPriority="low"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).style.display = "none";
+              }}
+            />
+          )}
+        </AnimatePresence>
       )}
 
       {skeleton && !placeholderSrc && (
@@ -172,7 +180,11 @@ export function ImageInner({
             loading={lazy ? "lazy" : "eager"}
             decoding="async"
             fetchPriority={lazy ? "low" : "high"}
-            className={cn("relative z-10 block", className)}
+            className={cn(
+              "relative z-10 block transition-opacity duration-300",
+              status === "loaded" ? "opacity-100" : "opacity-0",
+              className,
+            )}
             onLoad={handleImageLoad}
             onError={(event) => {
               setStatus("error");

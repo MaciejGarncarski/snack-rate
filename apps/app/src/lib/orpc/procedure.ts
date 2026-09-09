@@ -4,7 +4,13 @@ import { logger } from "#/observability/logger/logger";
 import { sanitizeRequestData } from "#/observability/request-context";
 import { mapError } from "#/orpc/map-error";
 
-const WRITE_PATHS = new Set(["snacks.create", "comments.rate", "comments.removeRating"]);
+const WRITE_PATHS = new Set([
+  "snacks.create",
+  "comments.rate",
+  "comments.removeRating",
+  "comments.react",
+  "comments.removeReaction",
+]);
 
 function shouldLogInput(path: string[]): boolean {
   const joined = path.join(".");

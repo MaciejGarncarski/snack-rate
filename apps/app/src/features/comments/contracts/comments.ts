@@ -1,3 +1,5 @@
+import type { ReactionType } from "#/features/comments/consts/reaction-type.const";
+
 export type SnackCommentReply = {
   id: string;
   authorName: string;
@@ -14,4 +16,6 @@ export type SnackComment = {
   updatedAt: Date;
   isEdited: boolean;
   hasReplies: boolean;
+  reactions: Record<ReactionType, number>;
+  userReaction: ReactionType | null;
 };

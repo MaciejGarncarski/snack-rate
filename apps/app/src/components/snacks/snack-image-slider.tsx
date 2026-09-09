@@ -157,7 +157,7 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
                     />
                   </motion.div>
                 </AnimatePresence>
-                <span className="absolute z-20 right-3 bottom-3 flex items-center gap-1.5 rounded-full border border-border/50 bg-background/80 px-2.5 py-1.5 text-xs font-medium text-foreground opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                <span className="absolute z-20 right-3 bottom-3 flex items-center gap-1.5 rounded-full text-white bg-black/45 px-2.5 py-1.5 text-xs font-medium opacity-0 backdrop-blur-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                   <ExpandIcon className="size-3.5" />
                   Pełny ekran
                 </span>

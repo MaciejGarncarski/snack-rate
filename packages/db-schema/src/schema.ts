@@ -177,7 +177,7 @@ export const commentReactions = pgTable(
     commentId: uuid("comment_id")
       .notNull()
       .references(() => snackComments.id),
-    type: text("type").notNull(), // 'like' | 'fire' | 'meh'
+    type: text("type").notNull(), // 'like' | 'dislike' | 'heart' | 'laugh' | 'angry' | 'sad'
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (t) => [

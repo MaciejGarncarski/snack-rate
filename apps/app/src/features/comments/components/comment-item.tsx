@@ -1,12 +1,19 @@
-import { ChevronDown, ThumbsUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 import { SnackRating } from "#/components/snacks/snack-rating";
 import { Button } from "#/components/ui/button";
 import { Item, ItemContent, ItemHeader, ItemTitle } from "#/components/ui/item";
+import { CommentReactions } from "#/features/comments/components/comment-reactions";
 import type { SnackComment } from "#/features/comments/contracts/comments";
 
-export function CommentItem({ comment }: { comment: SnackComment }) {
+export function CommentItem({
+  comment,
+  snackItemId,
+}: {
+  comment: SnackComment;
+  snackItemId: string;
+}) {
   const [isRepliesOpen, setIsRepliesOpen] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const instant = Temporal.Instant.from(comment.createdAt.toISOString());
@@ -39,13 +46,13 @@ export function CommentItem({ comment }: { comment: SnackComment }) {
           <div className="flex flex-col gap-4">
             <SnackRating rating={comment.rating} withText />
             <p className="text-muted-foreground">{comment.body ?? "Brak treści recenzji."}</p>
-            <div className="flex gap-4">
-              <Button size="xs">
-                <ThumbsUp /> 67
-              </Button>
-              <Button size="xs" variant="ghost" onClick={openReplyForm}>
-                Odpowiedz
-              </Button>
+            <div className="flex flex-row gap-2">
+              <CommentReactions comment={comment} snackItemId={snackItemId} />
+              <div className="flex gap-2">
+                <Button size="xs" variant="outline" onClick={openReplyForm}>
+                  Odpowiedz
+                </Button>
+              </div>
             </div>
           </div>
         </ItemContent>
@@ -71,11 +78,11 @@ export function CommentItem({ comment }: { comment: SnackComment }) {
       )} */}
 
       {comment.hasReplies && (
-        <div className="ml-4 py-2">
+        <div className="ml-2 py-2">
           <Button type="button" size="xs" variant="outline" onClick={toggleReplies}>
-            test
-            {/* {comment.repliesCount} {comment.repliesCount === 1 ? "odpowiedź" : "odpowiedzi"} */}
             <ChevronDown />
+            Załaduj odpowiedzi
+            {/* {comment.repliesCount} {comment.repliesCount === 1 ? "odpowiedź" : "odpowiedzi"} */}
           </Button>
         </div>
       )}

@@ -16,8 +16,8 @@ import {
 import { useIsMobile } from "#/hooks/use-mobile";
 
 const itemVariants = {
-  hidden: { opacity: 0, scale: 0.98 },
-  show: { opacity: 1, scale: 1 },
+  hidden: { opacity: 0 },
+  show: { opacity: 1 },
 };
 
 type Props = {
@@ -61,7 +61,7 @@ export function SnacksListItem({
       variants={itemVariants}
       initial="hidden"
       animate="show"
-      exit={{ opacity: 0, scale: 0.9 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
       className="w-full"
     >

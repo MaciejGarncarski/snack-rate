@@ -16,7 +16,7 @@ function resolveAuthorName(username: string | null): string {
 export async function queryCommentsForSnack(
   client: Database | DbTransaction,
   data: { snackItemId: string; limit: number; cursor: DecodedCursor | null },
-): Promise<SnackComment[]> {
+): Promise<Omit<SnackComment, "reactions" | "userReaction">[]> {
   const conditions = [
     eq(snackComments.snackItemId, data.snackItemId),
     isNull(snackComments.parentCommentId),

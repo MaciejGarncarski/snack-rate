@@ -16,7 +16,9 @@ import {
   getRatingsForSnackProcedure,
   listCommentsProcedure,
   rateSnackProcedure,
+  reactToCommentProcedure,
   removeRatingProcedure,
+  removeReactionProcedure,
 } from "#/features/comments/comments.routes.server";
 
 export default {
@@ -32,6 +34,8 @@ export default {
     rate: rateSnackProcedure,
     getRatings: getRatingsForSnackProcedure,
     removeRating: removeRatingProcedure,
+    react: reactToCommentProcedure,
+    removeReaction: removeReactionProcedure,
   },
   admin: {
     verifyPassword: verifyAdminPasswordProcedure,

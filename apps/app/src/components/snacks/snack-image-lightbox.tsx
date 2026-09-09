@@ -13,7 +13,6 @@ import { TransformComponent, TransformWrapper, useTransformComponent } from "rea
 import { Image } from "#/components/image/image";
 import { Button } from "#/components/ui/button";
 import { DialogOverlay, DialogTitle } from "#/components/ui/dialog";
-import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
 import { useIsMobile } from "#/hooks/use-mobile";
 import { cn } from "#/lib/utils";
 
@@ -56,9 +55,7 @@ export function SnackImageLightbox({
   return (
     <DialogOverlay
       isOpen={open}
-      onOpenChange={(value) => {
-        if (!value) onOpenChange(false);
-      }}
+      onOpenChange={onOpenChange}
       className="bg-black/90 supports-backdrop-filter:backdrop-blur-lg z-999"
     >
       <ModalPrimitive
@@ -131,69 +128,54 @@ export function SnackImageLightbox({
 
                       <div className="flex items-center gap-2 py-3">
                         {count > 1 && isMobile && (
-                          <TooltipTrigger delay={400}>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onPress={goPrev}
-                              aria-label="Poprzednie zdjęcie"
-                              className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
-                            >
-                              <ChevronLeftIcon />
-                            </Button>
-                            <Tooltip>Poprzednie zdjęcie</Tooltip>
-                          </TooltipTrigger>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onPress={goPrev}
+                            aria-label="Poprzednie zdjęcie"
+                            className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                          >
+                            <ChevronLeftIcon />
+                          </Button>
                         )}
-                        <TooltipTrigger delay={400}>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onPress={() => void zoomOut(0.4)}
-                            aria-label="Pomniejsz"
-                            className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
-                          >
-                            <ZoomOutIcon className="size-3 sm:size-5" />
-                          </Button>
-                          <Tooltip>Pomniejsz</Tooltip>
-                        </TooltipTrigger>
-                        <TooltipTrigger delay={400}>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onPress={() => void resetTransform()}
-                            aria-label="Resetuj powiększenie"
-                            className="min-w-16 bg-white/10 text-xs font-medium text-white hover:bg-white/20 hover:text-white sm:h-10 gap-2 sm:px-4"
-                          >
-                            <ExpandIcon className="size-4 sm:size-5" />
-                            <ZoomPercentLabel />
-                          </Button>
-                          <Tooltip>Resetuj powiększenie</Tooltip>
-                        </TooltipTrigger>
-                        <TooltipTrigger delay={400}>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onPress={() => void zoomIn(0.4)}
-                            aria-label="Powiększ"
-                            className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
-                          >
-                            <ZoomInIcon className="size-3 sm:size-5" />
-                          </Button>
-                          <Tooltip>Powiększ</Tooltip>
-                        </TooltipTrigger>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onPress={() => void zoomOut(0.4)}
+                          aria-label="Pomniejsz"
+                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
+                        >
+                          <ZoomOutIcon className="size-3 sm:size-5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onPress={() => void resetTransform()}
+                          aria-label="Resetuj powiększenie"
+                          className="min-w-16 bg-white/10 text-xs font-medium text-white hover:bg-white/20 hover:text-white sm:h-10 gap-2 sm:px-4"
+                        >
+                          <ExpandIcon className="size-4 sm:size-5" />
+                          <ZoomPercentLabel />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onPress={() => void zoomIn(0.4)}
+                          aria-label="Powiększ"
+                          className="bg-white/10 text-white hover:bg-white/20 hover:text-white sm:size-10"
+                        >
+                          <ZoomInIcon className="size-3 sm:size-5" />
+                        </Button>
                         {count > 1 && isMobile && (
-                          <TooltipTrigger delay={400}>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onPress={goNext}
-                              aria-label="Następne zdjęcie"
-                              className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
-                            >
-                              <ChevronRightIcon />
-                            </Button>
-                            <Tooltip>Następne zdjęcie</Tooltip>
-                          </TooltipTrigger>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onPress={goNext}
+                            aria-label="Następne zdjęcie"
+                            className="bg-white/10 text-white hover:bg-white/20 hover:text-white"
+                          >
+                            <ChevronRightIcon />
+                          </Button>
                         )}
                       </div>
                     </div>
@@ -204,30 +186,24 @@ export function SnackImageLightbox({
 
             {count > 1 && !isMobile && (
               <>
-                <TooltipTrigger delay={400}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onPress={goPrev}
-                    aria-label="Poprzednie zdjęcie"
-                    className="absolute top-1/2 left-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:left-4 sm:size-12"
-                  >
-                    <ChevronLeftIcon className="size-4 sm:size-6" />
-                  </Button>
-                  <Tooltip>Poprzednie zdjęcie</Tooltip>
-                </TooltipTrigger>
-                <TooltipTrigger delay={400}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onPress={goNext}
-                    aria-label="Następne zdjęcie"
-                    className="absolute top-1/2 right-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:right-4 sm:size-12"
-                  >
-                    <ChevronRightIcon className="size-4 sm:size-6" />
-                  </Button>
-                  <Tooltip>Następne zdjęcie</Tooltip>
-                </TooltipTrigger>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onPress={goPrev}
+                  aria-label="Poprzednie zdjęcie"
+                  className="absolute top-1/2 left-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:left-4 sm:size-12"
+                >
+                  <ChevronLeftIcon className="size-4 sm:size-6" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onPress={goNext}
+                  aria-label="Następne zdjęcie"
+                  className="absolute top-1/2 right-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:right-4 sm:size-12"
+                >
+                  <ChevronRightIcon className="size-4 sm:size-6" />
+                </Button>
               </>
             )}
           </div>

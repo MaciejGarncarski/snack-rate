@@ -33,7 +33,7 @@ A saved/favourited SnackItem for a user.
 _Avoid_: Favourite, save
 
 **CommentReaction**:
-An emoji-like reaction on a Comment: "like", "fire", or "meh". One reaction per user per comment.
+An emoji-like reaction on a Comment: "like", "dislike", "heart", "laugh", "angry", or "sad". One reaction per user per comment; toggling the same type removes it, choosing a different type replaces it.
 _Avoid_: Reaction, emoji
 
 **CommentReport**:

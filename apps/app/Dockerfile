@@ -8,6 +8,9 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN npm install -g --allow-scripts=pnpm pnpm@${PNPM_VERSION}
 RUN pnpm config set store-dir /pnpm/store
 
+ARG VITE_TURNSTILE_SITE_KEY
+ENV VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
+
 FROM base AS fetch
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./

@@ -6,6 +6,7 @@ type ListSnackCommentsInput = {
   snackItemId: string;
   limit: number;
   cursor?: string | null;
+  userId?: string | null;
 };
 
 export async function listSnackCommentsUseCase(
@@ -18,6 +19,7 @@ export async function listSnackCommentsUseCase(
     snackItemId: input.snackItemId,
     limit: input.limit + 1,
     cursor: decodedCursor,
+    userId: input.userId ?? null,
   });
 
   return slicePage(pageItems, input.limit);

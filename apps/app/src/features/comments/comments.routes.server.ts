@@ -1,3 +1,4 @@
+import { ORPCError } from "@orpc/client";
 import { ratelimit } from "@orpc/ratelimit";
 import { MemoryRateLimiter } from "@orpc/ratelimit/memory";
 import ms from "ms";
@@ -6,11 +7,22 @@ import { commentsRepository } from "#/features/comments/server/repositories/comm
 import { rateSnackUseCase } from "#/features/comments/server/use-cases/comment-snack.use-case";
 import { getSnackRatingsUseCase } from "#/features/comments/server/use-cases/get-snack-comments.use-case";
 import { listSnackCommentsUseCase } from "#/features/comments/server/use-cases/list-snack-comments.use-case";
+import {
+  reactToCommentUseCase,
+  removeReactionUseCase,
+} from "#/features/comments/server/use-cases/react-to-comment.use-case";
 import { removeRatingUseCase } from "#/features/comments/server/use-cases/remove-comment.use-case";
 import { getMainDb } from "#/infrastructure/db/db";
+import { verifyTurnstileToken } from "#/infrastructure/turnstile";
 import { baseProcedure } from "#/lib/orpc/procedure";
 import { listCommentsSchema } from "#/schemas/comments";
-import { rateSnackSchema, removeRatingSchema, snackRatingsSchema } from "#/schemas/comments";
+import {
+  rateSnackSchema,
+  reactToCommentSchema,
+  removeRatingSchema,
+  removeReactionSchema,
+  snackRatingsSchema,
+} from "#/schemas/comments";
 
 const RATE_LIMIT = 30;
 const RATE_LIMIT_WINDOW_MS = ms("1h");
@@ -34,12 +46,13 @@ function authorKey(context: AuthorContext): string {
 
 export const listCommentsProcedure = baseProcedure
   .input(listCommentsSchema)
-  .handler(({ input }) => {
+  .handler(({ input, context }) => {
     return listSnackCommentsUseCase(
       {
         snackItemId: input.snackItemId,
         limit: input.limit,
         cursor: input.cursor,
+        userId: context.userId,
       },
       commentsRepository,
     );
@@ -53,7 +66,22 @@ export const rateSnackProcedure = baseProcedure
       key: ({ context }) => `comments.rate:${authorKey(context)}`,
     }),
   )
-  .handler(({ input, context }) => {
+  .handler(async ({ input, context }) => {
+    const remoteIp =
+      context.requestHeaders.get("x-forwarded-for") ?? context.requestHeaders.get("x-real-ip");
+
+    const isVerified = await verifyTurnstileToken({
+      token: input.token ?? "",
+      remoteIp: remoteIp ?? undefined,
+    });
+
+    if (!isVerified) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Nie udało się zweryfikować użytkownika",
+        cause: "Turnstile token verification failed",
+      });
+    }
+
     return rateSnackUseCase(
       {
         snackItemId: input.snackItemId,
@@ -94,5 +122,48 @@ export const removeRatingProcedure = baseProcedure
       },
       commentsRepository,
       getMainDb(),
+    );
+  });
+
+const reactionRateLimiter = new MemoryRateLimiter({
+  maxRequests: 60,
+  window: ms("1h"),
+});
+
+export const reactToCommentProcedure = baseProcedure
+  .input(reactToCommentSchema)
+  .use(
+    ratelimit({
+      limiter: () => reactionRateLimiter,
+      key: ({ context }) => `comments.react:${context.userId ?? context.guestId ?? "anon"}`,
+    }),
+  )
+  .handler(({ input, context }) => {
+    return reactToCommentUseCase(
+      {
+        commentId: input.commentId,
+        type: input.type,
+        userId: context.userId,
+      },
+      commentsRepository,
+    );
+  });
+
+export const removeReactionProcedure = baseProcedure
+  .input(removeReactionSchema)
+  .use(
+    ratelimit({
+      limiter: () => reactionRateLimiter,
+      key: ({ context }) =>
+        `comments.removeReaction:${context.userId ?? context.guestId ?? "anon"}`,
+    }),
+  )
+  .handler(({ input, context }) => {
+    return removeReactionUseCase(
+      {
+        commentId: input.commentId,
+        userId: context.userId,
+      },
+      commentsRepository,
     );
   });

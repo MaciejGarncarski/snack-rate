@@ -60,7 +60,9 @@ export function CommentSection({ snackItemId, ratingsCount }: Props) {
               </EmptyHeader>
             </Empty>
           ) : (
-            comments.map((comment) => <CommentItem key={comment.id} comment={comment} />)
+            comments.map((comment) => (
+              <CommentItem key={comment.id} comment={comment} snackItemId={snackItemId} />
+            ))
           )}
         </ItemGroup>
         <div ref={ref} />
