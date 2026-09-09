@@ -19,6 +19,8 @@ COPY apps/app/package.json ./apps/app/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm fetch
 
 FROM base AS build
+ARG VITE_TURNSTILE_SITE_KEY
+ENV VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/app ./apps/app

@@ -33,13 +33,11 @@ services:
 
   app:
     image: ghcr.io/maciejgarncarski/snack-rate:${IMAGE_TAG:-staging}
-    # build:
-    #   context: .
-    #   dockerfile: apps/app/Dockerfile
-    #   args:
-    #     VITE_TURNSTILE_SITE_KEY: ${VITE_TURNSTILE_SITE_KEY}
-    environment:
-      - VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
+    build:
+      context: .
+      dockerfile: apps/app/Dockerfile
+      args:
+        VITE_TURNSTILE_SITE_KEY: ${VITE_TURNSTILE_SITE_KEY}
 
     restart: unless-stopped
     env_file:
