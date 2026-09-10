@@ -8,8 +8,8 @@ describe("isLowResolution", () => {
   });
 
   it("returns true when the shorter side is below the warning threshold", () => {
-    expect(isLowResolution(700, 875)).toBe(true);
-    expect(isLowResolution(1200, 500)).toBe(true);
+    expect(isLowResolution(444, 444)).toBe(true);
+    expect(isLowResolution(1200, 499)).toBe(true);
   });
 
   it("returns false for invalid dimensions instead of warning", () => {
