@@ -134,8 +134,6 @@ export function ImagePicker({ onChange }: Props) {
             </AnimatePresence>
           </div>
         </div>
-
-        <div className="mx-auto mt-2 h-2 w-[85%] rounded-full bg-foreground/5 blur-[6px]" />
       </div>
 
       {alerts.length > 0 && (

@@ -74,7 +74,7 @@ export function SnacksList({
           className={cn(
             "mx-auto flex flex-col gap-8 sm:gap-10 lg:gap-12",
             layout === "2col" && "md:grid md:grid-cols-2",
-            layout === "1col" && "md:max-w-3xl",
+            layout === "1col" && "md:max-w-208",
           )}
         >
           {data.pages
@@ -82,6 +82,7 @@ export function SnacksList({
             .map((snack, idx) => (
               <SnacksListItem
                 lazy={idx > 1}
+                layout={layout}
                 key={snack.slug}
                 name={snack.name}
                 description={snack.description}

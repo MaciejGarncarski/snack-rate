@@ -1,8 +1,10 @@
+import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 import { toast } from "sonner";
 
+import { TurnstileWidget } from "#/components/turnstile-widget";
 import { Badge } from "#/components/ui/badge";
 import { Button } from "#/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "#/components/ui/card";
@@ -22,26 +24,37 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const [inputPassword, setInputPassword] = useState("");
   const [authError, setAuthError] = useState<string | null>(null);
+  const [token, setToken] = useState<string | undefined>();
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
 
   const authQuery = useQuery(adminAuthQueryOptions);
   const isAuthenticated = authQuery.data?.ok === true;
   const isAuthPending = authQuery.isPending;
   const isAuthError = authQuery.isError;
 
+  const handleVerifySuccess = () => {
+    setAuthError(null);
+    setInputPassword("");
+    setToken(undefined);
+    turnstileRef.current?.reset();
+    toast.success("Zalogowano do panelu admina");
+    void queryClient.invalidateQueries({ queryKey: orpc.admin.checkAuth.key() });
+    void queryClient.invalidateQueries({ queryKey: orpc.admin.listComments.key() });
+  };
+
+  const handleVerifyError = (error: unknown) => {
+    const message = error instanceof Error ? error.message : "Nieprawidłowe hasło";
+    setAuthError(message);
+    setToken(undefined);
+    turnstileRef.current?.reset();
+    toast.error(message);
+  };
+
   const verifyMutation = useMutation(
+    // oxlint-disable-next-line react/refs
     orpc.admin.verifyPassword.mutationOptions({
-      onSuccess: () => {
-        setAuthError(null);
-        setInputPassword("");
-        toast.success("Zalogowano do panelu admina");
-        void queryClient.invalidateQueries({ queryKey: orpc.admin.checkAuth.key() });
-        void queryClient.invalidateQueries({ queryKey: orpc.admin.listComments.key() });
-      },
-      onError: (error) => {
-        const message = error instanceof Error ? error.message : "Nieprawidłowe hasło";
-        setAuthError(message);
-        toast.error(message);
-      },
+      onSuccess: handleVerifySuccess,
+      onError: handleVerifyError,
     }),
   );
 
@@ -59,13 +72,17 @@ function RouteComponent() {
     }),
   );
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputPassword.trim()) {
       setAuthError("Podaj hasło");
       return;
     }
-    verifyMutation.mutate({ password: inputPassword });
+    if (!token) {
+      setAuthError("Potwierdź, że nie jesteś robotem");
+      return;
+    }
+    verifyMutation.mutate({ password: inputPassword, token });
   };
 
   const handleLogout = () => {
@@ -96,13 +113,14 @@ function RouteComponent() {
                 value={inputPassword}
                 onChange={(e) => setInputPassword(e.target.value)}
               />
+              <TurnstileWidget onVerify={setToken} ref={turnstileRef} />
               {authError ? <p className="text-destructive text-sm">{authError}</p> : null}
               {isAuthError && !authError ? (
                 <p className="text-muted-foreground text-sm">
                   Sesja wygasła — zaloguj się ponownie
                 </p>
               ) : null}
-              <Button type="submit" isDisabled={verifyMutation.isPending}>
+              <Button type="submit" isDisabled={verifyMutation.isPending || !token}>
                 {verifyMutation.isPending ? "Logowanie..." : "Zaloguj"}
               </Button>
             </form>

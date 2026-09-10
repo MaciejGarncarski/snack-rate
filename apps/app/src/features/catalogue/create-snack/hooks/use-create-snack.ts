@@ -28,8 +28,8 @@ export function useCreateSnack() {
     }),
   );
 
-  const createSnack = async (formData: FormData) => {
-    const payload = buildCreateSnackPayload(formData);
+  const createSnack = async (formData: FormData, token?: string) => {
+    const payload = { ...buildCreateSnackPayload(formData), token };
     await mutateAsync(payload);
   };
 

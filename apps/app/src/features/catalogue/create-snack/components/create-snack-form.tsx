@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BarcodeScannerDialog } from "#/components/barcode-scanner-dialog";
 import { NavigationBlock } from "#/components/layout/navigation-block";
 import { SnackBarcode } from "#/components/snacks/snack-barcode";
+import { TurnstileWidget } from "#/components/turnstile-widget";
 import { Button } from "#/components/ui/button";
 import {
   Combobox,
@@ -37,7 +38,7 @@ type Props = {
 };
 
 export function CreateSnackForm({ types }: Props) {
-  const form = useCreateSnackForm();
+  const { form, token, setToken, turnstileRef } = useCreateSnackForm();
   const typesFormMapped = types.map((t): SnackTypeFormatted => ({ value: t.slug, label: t.name }));
   const [isBarcodeScannerOpen, setIsBarcodeScannerOpen] = useState(false);
 
@@ -238,6 +239,8 @@ export function CreateSnackForm({ types }: Props) {
             ) : null
           }
         </form.Subscribe>
+
+        <TurnstileWidget onVerify={setToken} ref={turnstileRef} />
       </SnackFormCard>
 
       <form.Subscribe
@@ -254,7 +257,12 @@ export function CreateSnackForm({ types }: Props) {
               <p className="text-xs leading-relaxed text-muted-foreground">
                 Po wysłaniu sprawdzimy zgłoszenie przed publikacją.
               </p>
-              <Button type="submit" isDisabled={!canSubmit} className="gap-2 sm:min-w-44" size="lg">
+              <Button
+                type="submit"
+                isDisabled={!canSubmit || !token}
+                className="gap-2 sm:min-w-44"
+                size="lg"
+              >
                 <CheckIcon className="size-4" />
                 {isSubmitting ? "Wysyłanie…" : "Wyślij zgłoszenie"}
               </Button>

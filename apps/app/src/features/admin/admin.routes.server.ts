@@ -5,6 +5,7 @@ import * as z from "zod";
 
 import { adminRepository } from "#/features/admin/server/admin.repository.instance";
 import { getMainDb } from "#/infrastructure/db/db";
+import { verifyTurnstileToken } from "#/infrastructure/turnstile";
 import { cookies } from "#/lib/cookie.config";
 import { baseProcedure } from "#/lib/orpc/procedure";
 import { serverEnv } from "#/lib/server.env";
@@ -22,8 +23,20 @@ function requireAdminAuth(requestHeaders: Headers) {
 }
 
 export const verifyAdminPasswordProcedure = baseProcedure
-  .input(z.object({ password: z.string().min(1) }))
-  .handler(({ input }) => {
+  .input(z.object({ password: z.string().min(1), token: z.string().optional() }))
+  .handler(async ({ input, context }) => {
+    const remoteIp =
+      context.requestHeaders.get("x-forwarded-for") ?? context.requestHeaders.get("x-real-ip");
+
+    const isVerified = await verifyTurnstileToken({
+      token: input.token ?? "",
+      remoteIp: remoteIp ?? undefined,
+    });
+
+    if (!isVerified) {
+      throw new ORPCError("BAD_REQUEST", { message: "Nie udało się zweryfikować użytkownika" });
+    }
+
     const expected = getExpectedPassword();
     if (input.password !== expected) {
       throw new ORPCError("UNAUTHORIZED", { message: "Nieprawidłowe hasło administratora" });

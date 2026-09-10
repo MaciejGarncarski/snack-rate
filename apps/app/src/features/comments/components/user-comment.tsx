@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "#/components/ui/button";
 import { Item, ItemContent, ItemHeader, ItemTitle } from "#/components/ui/item";
 import { getSnackBySlugQueryOptions } from "#/features/catalogue/queries/get-snack-by-slug.query-options";
-import { UserCommentForm } from "#/features/comments/components/user-comment-form";
+import { AddCommentForm } from "#/features/comments/components/add-comment-form";
 import { UserCommentItem } from "#/features/comments/components/user-comment-item";
 import { snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
 import { useCommentSnack } from "#/features/comments/queries/use-comment-snack";
@@ -24,7 +24,7 @@ export function UserComment() {
     return (
       <Item variant="muted">
         <ItemContent>
-          <UserCommentForm
+          <AddCommentForm
             initialRating={userRating?.value ?? null}
             initialBody={userRating?.body ?? null}
             snackItemId={snack.id}

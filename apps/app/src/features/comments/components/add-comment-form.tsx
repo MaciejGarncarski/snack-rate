@@ -1,13 +1,12 @@
-import { Turnstile } from "@marsidev/react-turnstile";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 
 import { SnackRatingPicker } from "#/components/snacks/snack-rating-picker";
+import { TurnstileWidget } from "#/components/turnstile-widget";
 import { Button } from "#/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "#/components/ui/field";
 import { Textarea } from "#/components/ui/textarea";
 import { useCommentSnack } from "#/features/comments/queries/use-comment-snack";
-import { clientEnv } from "#/lib/client.env";
 import { MAXIMUM_COMMENT_BODY_LENGTH, rateSnackFormSchema } from "#/schemas/comments";
 
 type Props = {
@@ -19,7 +18,7 @@ type Props = {
   onRated?: () => void;
 };
 
-export function UserCommentForm({
+export function AddCommentForm({
   initialRating,
   initialBody,
   snackItemId,
@@ -105,12 +104,7 @@ export function UserCommentForm({
           )}
         </form.Field>
       </div>
-      <Turnstile
-        siteKey={clientEnv.VITE_TURNSTILE_SITE_KEY}
-        onSuccess={setToken}
-        onError={() => setToken(undefined)}
-        onExpire={() => setToken(undefined)}
-      />
+      <TurnstileWidget onVerify={setToken} />
 
       <div className="flex w-full items-center gap-2 pt-1">
         {onCancel && (

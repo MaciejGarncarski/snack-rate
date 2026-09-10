@@ -32,6 +32,7 @@ export const createSnackInputSchema = z.object({
   barcode: optionalEanSchema,
   typeSlug: z.string(),
   images: z.array(z.file()).min(1).max(MAXIMUM_IMAGES),
+  token: z.string().optional(),
 });
 
 export const createSnackFormSchema = z.object({

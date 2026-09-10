@@ -15,6 +15,6 @@ export function adminCommentsQueryOptions() {
 }
 
 export const adminAuthQueryOptions = orpc.admin.checkAuth.queryOptions({
-  staleTime: ms("30s"),
+  staleTime: ms("120s"),
   retry: false,
 });
