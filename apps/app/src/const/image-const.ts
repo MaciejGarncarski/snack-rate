@@ -25,3 +25,5 @@ export const EXTREME_THRESHOLD = 2.5;
 
 export const PAD_OUTPUT_WIDTH = 1024;
 export const PAD_OUTPUT_HEIGHT = Math.round(PAD_OUTPUT_WIDTH / OUTPUT_ASPECT_RATIO);
+
+export const LOW_RESOLUTION_WARNING_MIN_SIDE = 500;

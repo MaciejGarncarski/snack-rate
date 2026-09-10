@@ -90,13 +90,18 @@ export function CommentReactions({ comment }: Props) {
                   disabled={react.isPending}
                   onClick={() => handleSelectReaction(type)}
                   className={cn(
-                    "relative flex size-10 items-center justify-center rounded-xl border border-transparent bg-muted/50 transition-all hover:scale-110 active:scale-95 disabled:opacity-50",
+                    "relative flex size-10 items-center justify-center rounded-xl border border-transparent bg-muted/50 transition-all group hover:scale-110 active:scale-95 disabled:opacity-50",
                     isSelected
                       ? cn(REACTION_ACTIVE_BG[type], "ring-1 scale-105")
                       : "hover:bg-accent",
                   )}
                 >
-                  <Image blurBackground src={iconImg} alt={label} className="size-8" />
+                  <Image
+                    blurBackground
+                    src={iconImg}
+                    alt={label}
+                    className="group-hover:scale-110 transition-transform size-8"
+                  />
                   {count > 0 ? (
                     <span className="absolute -bottom-1 -right-1 rounded-full bg-foreground px-1 py-0 text-[10px] leading-none font-semibold text-background tabular-nums">
                       {count}

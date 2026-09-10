@@ -1,8 +1,9 @@
-import { ArrowLeft, ArrowRight, CheckIcon, PlusIcon } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckIcon, PlusIcon, TriangleAlert } from "lucide-react";
 import { motion } from "motion/react";
 
 import { Button } from "#/components/ui/button";
 import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
+import { useIsLowResolution } from "#/features/catalogue/create-snack/hooks/use-is-low-resolution";
 import { cn } from "#/lib/utils";
 
 type SlotWithImage = {
@@ -37,6 +38,7 @@ export function ImageSlot({
 }: Props) {
   const isEmpty = !imageSrc;
   const rotation = rotations[index % rotations.length];
+  const isLowResolution = useIsLowResolution({ src: imageSrc });
 
   if (isEmpty) {
     return (
@@ -90,6 +92,15 @@ export function ImageSlot({
           />
           <div className="pointer-events-none absolute inset-0 rounded-lg ring-1 ring-border" />
         </div>
+        {isLowResolution && (
+          <span
+            title="Słaba rozdzielczość"
+            aria-label="Słaba rozdzielczość"
+            className="absolute top-2 left-2 z-10 flex size-5 items-center justify-center rounded-full border border-amber-200 bg-amber-100 text-amber-800 shadow-md dark:border-amber-500/20 dark:bg-amber-500/15 dark:text-amber-400"
+          >
+            <TriangleAlert className="size-3" strokeWidth={2.5} />
+          </span>
+        )}
         {isSelected && (
           <span className="absolute z-10 right-2 top-2 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md ring-1 ring-primary/20">
             <CheckIcon className="size-3" strokeWidth={3} />

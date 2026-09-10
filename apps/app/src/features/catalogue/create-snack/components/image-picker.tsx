@@ -12,6 +12,7 @@ import { MainImageBadges } from "#/features/catalogue/create-snack/components/ma
 import { MainImageToolbar } from "#/features/catalogue/create-snack/components/main-image-toolbar";
 import { useAddImage, type ImagePair } from "#/features/catalogue/create-snack/hooks/use-add-image";
 import { useCropQueue } from "#/features/catalogue/create-snack/hooks/use-crop-queue";
+import { useIsLowResolution } from "#/features/catalogue/create-snack/hooks/use-is-low-resolution";
 import { useObjectUrl } from "#/features/catalogue/create-snack/hooks/use-object-url";
 import { useReorder } from "#/features/catalogue/create-snack/hooks/use-reorder";
 import type { ImageValidationError } from "#/features/catalogue/create-snack/utils/validate-image";
@@ -80,6 +81,9 @@ export function ImagePicker({ onChange }: Props) {
 
   const queueItemUrl = useObjectUrl(currentQueueItem?.file);
 
+  const selectedFile = foundSelectedImage?.croppedFile ?? foundSelectedImage?.file;
+  const isSelectedLowResolution = useIsLowResolution({ file: selectedFile });
+
   const handleDelete = useCallback(() => {
     if (!foundSelectedImage) return;
 
@@ -114,7 +118,10 @@ export function ImagePicker({ onChange }: Props) {
           <div className="flex min-h-13 items-center justify-between gap-2 px-1 py-3">
             <div className="min-w-0 flex-1">
               {foundSelectedImage ? (
-                <MainImageBadges isPrimaryImage={selectedIndex === 0} />
+                <MainImageBadges
+                  isPrimaryImage={selectedIndex === 0}
+                  isLowResolution={isSelectedLowResolution}
+                />
               ) : (
                 <span className="text-xs tracking-wide text-muted-foreground">Brak zdjęcia</span>
               )}
