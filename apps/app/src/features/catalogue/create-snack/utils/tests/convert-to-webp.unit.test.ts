@@ -85,8 +85,8 @@ describe("validateImage with conversion", () => {
     class OkImage {
       naturalWidth = 800;
       naturalHeight = 600;
-      addEventListener(event: string, handler: () => void) {
-        if (event === "load") queueMicrotask(handler);
+      addEventListener(_event: string, handler: () => void) {
+        queueMicrotask(handler);
       }
       removeEventListener() {}
       get src() {

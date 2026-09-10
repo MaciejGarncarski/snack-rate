@@ -53,8 +53,6 @@ export async function verifyTurnstileToken({
     });
 
     if (!res.ok) {
-      console.log("NIEOK", res.status, await res.text());
-
       throw new Error(`Turnstile siteverify request failed with status ${res.status}`);
     }
 
