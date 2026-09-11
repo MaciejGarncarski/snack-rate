@@ -102,7 +102,7 @@ export function SnacksListItem({
               <CardAction>
                 <Badge
                   variant={"outline"}
-                  className="bg-primary/20 border-primary/30 rounded-full font-semibold text-xs sm:text-sm h-5 sm:h-6 px-2 sm:px-2 py-0 sm:py-1"
+                  className="bg-primary/80 ring border-0 ring-primary/50 rounded-full font-semibold text-white text-xs sm:text-sm h-5 sm:h-6 px-2 sm:px-2 py-0 sm:py-1"
                 >
                   {type}
                 </Badge>

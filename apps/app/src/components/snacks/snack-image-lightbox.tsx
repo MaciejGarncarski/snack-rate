@@ -1,19 +1,15 @@
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ExpandIcon,
-  XIcon,
-  ZoomInIcon,
-  ZoomOutIcon,
-} from "lucide-react";
+import { useHotkey } from "@tanstack/react-hotkeys";
+import { ChevronLeftIcon, ChevronRightIcon, XIcon, ZoomInIcon, ZoomOutIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useRef, useState } from "react";
 import { Dialog as DialogPrimitive, Modal as ModalPrimitive } from "react-aria-components";
-import { TransformComponent, TransformWrapper, useTransformComponent } from "react-zoom-pan-pinch";
+import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 
 import { Image } from "#/components/image/image";
-import { Button } from "#/components/ui/button";
+import { Button, buttonVariants } from "#/components/ui/button";
 import { DialogOverlay, DialogTitle } from "#/components/ui/dialog";
 import { useIsMobile } from "#/hooks/use-mobile";
+import { useSwipeNavigation } from "#/hooks/use-swipe-navigation";
 import { cn } from "#/lib/utils";
 
 type Props = {
@@ -25,12 +21,6 @@ type Props = {
   onOpenChange: (open: boolean) => void;
 };
 
-function ZoomPercentLabel() {
-  const scale = useTransformComponent((context) => context.state.scale);
-
-  return <span className="tabular-nums">{`${Math.round(scale * 100)}%`}</span>;
-}
-
 export function SnackImageLightbox({
   images,
   thumbnailUrls,
@@ -41,14 +31,35 @@ export function SnackImageLightbox({
 }: Props) {
   const count = images.length;
   const isMobile = useIsMobile();
+  const [direction, setDirection] = useState<"next" | "prev">("next");
+  const scaleRef = useRef(1);
 
   const goTo = (newIndex: number) => {
     if (count === 0) return;
     onIndexChange((newIndex + count) % count);
   };
 
-  const goNext = () => goTo(index + 1);
-  const goPrev = () => goTo(index - 1);
+  const goNext = () => {
+    setDirection("next");
+    goTo(index + 1);
+  };
+
+  const goPrev = () => {
+    setDirection("prev");
+    goTo(index - 1);
+  };
+
+  useHotkey("ArrowLeft", goPrev, { enabled: open && count > 1 });
+  useHotkey("ArrowRight", goNext, { enabled: open && count > 1 });
+
+  useSwipeNavigation({
+    enabled: isMobile && count > 1,
+    scaleRef,
+    onSwipeLeft: goNext,
+    onSwipeRight: goPrev,
+  });
+
+  const xOffset = direction === "next" ? 10 : -10;
 
   if (count === 0) return null;
 
@@ -67,29 +78,18 @@ export function SnackImageLightbox({
           className="flex h-full w-full flex-col outline-none"
         >
           <DialogTitle className="sr-only">Podgląd zdjęć produktu</DialogTitle>
-          <div className="relative z-10 flex items-center justify-between gap-2 px-4 pt-4 text-white sm:px-6">
-            <p className="text-sm font-medium tabular-nums opacity-80" aria-live="polite">
-              {index + 1} / {count}
-            </p>
-            <Button
-              variant="ghost"
-              size="icon"
-              onPress={() => onOpenChange(false)}
-              aria-label="Zamknij podgląd"
-              className="size-11 rounded-full bg-red-500/20 text-red-100 hover:bg-red-500/30 hover:text-white [&_svg:not([class*='size-'])]:size-5"
-            >
-              <XIcon />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onPress={() => onOpenChange(false)}
+            aria-label="Zamknij podgląd"
+            className="size-11 md:size-15 md:right-8 md:top-8 absolute right-4 top-4 z-10 rounded-3xl ml-auto bg-primary/80 backdrop-blur-md text-white hover:bg-white/20"
+          >
+            <XIcon className="size-5 md:size-6" />
+          </Button>
           <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 sm:px-20">
             <AnimatePresence initial={false} mode="popLayout">
-              <motion.div
-                key={`lightbox-image-${index}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="h-full w-full"
-              >
+              <div className="h-full w-full">
                 <TransformWrapper
                   key={`zoom-${index}`}
                   initialScale={1}
@@ -102,7 +102,7 @@ export function SnackImageLightbox({
                   doubleClick={{ mode: "toggle" }}
                   panning={{ velocityDisabled: false }}
                 >
-                  {({ zoomIn, zoomOut, resetTransform }) => (
+                  {({ zoomIn, zoomOut }) => (
                     <div className="flex h-full w-full flex-col items-center justify-center ">
                       <div className="flex min-h-0 w-full flex-1 items-center justify-center rounded-4xl overflow-hidden">
                         <TransformComponent
@@ -115,8 +115,13 @@ export function SnackImageLightbox({
                             justifyContent: "center",
                           }}
                         >
-                          <img
+                          <motion.img
                             src={images[index]}
+                            key={`image-${index}`}
+                            initial={{ opacity: 0, x: xOffset }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -xOffset }}
+                            transition={{ duration: 0.2, ease: "linear" }}
                             alt={`Zdjęcie ${index + 1} z ${count}`}
                             draggable={false}
                             loading="eager"
@@ -147,16 +152,18 @@ export function SnackImageLightbox({
                         >
                           <ZoomOutIcon className="size-3 sm:size-5" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onPress={() => void resetTransform()}
-                          aria-label="Resetuj powiększenie"
-                          className="min-w-16 bg-white/10 text-xs font-medium text-white hover:bg-white/20 hover:text-white sm:h-10 gap-2 sm:px-4"
+                        <p
+                          className={buttonVariants({
+                            variant: "ghost",
+                            size: "sm",
+                            className:
+                              "bg-white/10 min-w-14 text-white hover:bg-white/20 hover:text-white sm:size-10",
+                          })}
+                          aria-live="polite"
                         >
-                          <ExpandIcon className="size-4 sm:size-5" />
-                          <ZoomPercentLabel />
-                        </Button>
+                          {index + 1} / {count}
+                        </p>
+
                         <Button
                           variant="ghost"
                           size="icon-sm"
@@ -181,7 +188,7 @@ export function SnackImageLightbox({
                     </div>
                   )}
                 </TransformWrapper>
-              </motion.div>
+              </div>
             </AnimatePresence>
 
             {count > 1 && !isMobile && (
@@ -191,7 +198,7 @@ export function SnackImageLightbox({
                   size="icon"
                   onPress={goPrev}
                   aria-label="Poprzednie zdjęcie"
-                  className="absolute top-1/2 left-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:left-4 sm:size-12"
+                  className="absolute top-1/2 left-2 z-10 -translate-y-1/2 bg-white/20 text-white hover:bg-white/15 hover:text-white sm:left-4 sm:size-12"
                 >
                   <ChevronLeftIcon className="size-4 sm:size-6" />
                 </Button>
@@ -200,7 +207,7 @@ export function SnackImageLightbox({
                   size="icon"
                   onPress={goNext}
                   aria-label="Następne zdjęcie"
-                  className="absolute top-1/2 right-2 z-10 -translate-y-1/2 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:right-4 sm:size-12"
+                  className="absolute top-1/2 right-2 z-10 -translate-y-1/2 bg-white/20 text-white hover:bg-white/15 hover:text-white sm:right-4 sm:size-12"
                 >
                   <ChevronRightIcon className="size-4 sm:size-6" />
                 </Button>
@@ -216,7 +223,7 @@ export function SnackImageLightbox({
                   type="button"
                   onClick={() => goTo(i)}
                   aria-label={`Pokaż zdjęcie ${i + 1}`}
-                  aria-current={i === index}
+                  aria-current={i === index ? "true" : undefined}
                   className={cn(
                     "h-16 w-13 shrink-0 overflow-hidden rounded-md ring-2 transition-[box-shadow,opacity] outline-none",
                     i === index

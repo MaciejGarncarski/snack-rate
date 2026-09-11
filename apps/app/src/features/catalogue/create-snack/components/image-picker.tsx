@@ -99,7 +99,7 @@ export function ImagePicker({ onChange }: Props) {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="mx-auto w-full max-w-85">
+      <div className="mx-auto w-full max-w-85 md:max-w-95">
         <div className="relative">
           <div className="absolute -top-2 left-1/2 h-5 w-16 -translate-x-1/2 -rotate-2 bg-primary/15 shadow-sm ring-1 ring-primary/10 backdrop-blur-sm" />
         </div>
