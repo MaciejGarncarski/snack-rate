@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Image } from "#/components/image/image";
 import { Button } from "#/components/ui/button";
 import { Popover, PopoverTrigger } from "#/components/ui/popover";
+import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
 import {
   REACTION_ICONS,
   REACTION_TYPE_LABELS,
@@ -28,8 +29,11 @@ type Props = {
   snackItemId: string;
 };
 
+const DELAY_BEFORE_OPEN = 350;
+
 export function CommentReactions({ comment }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const react = useMutation(
     orpc.comments.react.mutationOptions({
@@ -51,10 +55,30 @@ export function CommentReactions({ comment }: Props) {
     react.mutate({ commentId: comment.id, type });
   };
 
+  const handleMouseEnter = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsOpen(true);
+    }, DELAY_BEFORE_OPEN);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+  };
+
   return (
     <div className="flex flex-wrap gap-1.5 items-center">
       <PopoverTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
-        <Button size="xs" variant="default" isDisabled={react.isPending} className="min-w-0 gap-1">
+        <Button
+          size="xs"
+          variant="default"
+          isDisabled={react.isPending}
+          className="min-w-0 gap-1"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <Image src={activeIcon} alt="" className="size-3.5" />
           {totalReactions > 0 ? (
             <span className="text-xs tabular-nums opacity-80">{totalReactions}</span>
@@ -80,34 +104,35 @@ export function CommentReactions({ comment }: Props) {
               const label = REACTION_TYPE_LABELS[type];
 
               return (
-                <button
-                  key={type}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={isSelected}
-                  aria-label={`${label}${count ? ` (${count})` : ""}`}
-                  title={label}
-                  disabled={react.isPending}
-                  onClick={() => handleSelectReaction(type)}
-                  className={cn(
-                    "relative flex size-10 items-center justify-center rounded-xl border border-transparent bg-muted/50 transition-all group hover:scale-110 active:scale-95 disabled:opacity-50",
-                    isSelected
-                      ? cn(REACTION_ACTIVE_BG[type], "ring-1 scale-105")
-                      : "hover:bg-accent",
-                  )}
-                >
-                  <Image
-                    blurBackground
-                    src={iconImg}
-                    alt={label}
-                    className="group-hover:scale-110 transition-transform size-8"
-                  />
-                  {count > 0 ? (
-                    <span className="absolute -bottom-1 -right-1 rounded-full bg-foreground px-1 py-0 text-[10px] leading-none font-semibold text-background tabular-nums">
-                      {count}
-                    </span>
-                  ) : null}
-                </button>
+                <TooltipTrigger key={type} delay={600} closeDelay={100}>
+                  <button
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={isSelected}
+                    aria-label={`${label}${count ? ` (${count})` : ""}`}
+                    disabled={react.isPending}
+                    onClick={() => handleSelectReaction(type)}
+                    className={cn(
+                      "relative flex size-10 items-center justify-center rounded-xl border border-transparent bg-muted/50 transition-all group hover:scale-110 active:scale-95 disabled:opacity-50",
+                      isSelected
+                        ? cn(REACTION_ACTIVE_BG[type], "ring-1 scale-105")
+                        : "hover:bg-accent",
+                    )}
+                  >
+                    <Image
+                      blurBackground
+                      src={iconImg}
+                      alt={label}
+                      className="group-hover:scale-110 transition-transform size-8"
+                    />
+                    {count > 0 ? (
+                      <span className="absolute -bottom-1 -right-1 rounded-full bg-foreground px-1 py-0 text-[10px] leading-none font-semibold text-background tabular-nums">
+                        {count}
+                      </span>
+                    ) : null}
+                  </button>
+                  <Tooltip>{label}</Tooltip>
+                </TooltipTrigger>
               );
             })}
           </div>

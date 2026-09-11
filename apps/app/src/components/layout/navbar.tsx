@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ClientOnly } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, UserIcon } from "lucide-react";
 
 import { Logo } from "#/components/layout/logo";
 import { NavbarMobileMenu } from "#/components/layout/navbar-mobile-menu";
@@ -26,7 +26,7 @@ export function Navbar() {
       <ClientOnly
         fallback={
           <div className="flex items-center gap-2 md:gap-4 ml-auto">
-            <Skeleton className="w-9 md:w-32 h-9" />
+            <Skeleton className="w-10 md:w-64 h-9" />
           </div>
         }
       >
@@ -39,6 +39,15 @@ export function Navbar() {
             >
               <PlusIcon className="mr-2 h-4 w-4" />
               Dodaj produkt
+            </Link>
+
+            <Link
+              to="/auth/login"
+              aria-label="Moje konto"
+              className={buttonVariants({ variant: "secondary", size: "default" })}
+            >
+              <UserIcon className="h-4 w-4" />
+              Zaloguj się
             </Link>
           </div>
           <NavbarMobileMenu />

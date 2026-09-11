@@ -13,6 +13,7 @@ import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as HealthIndexRouteImport } from './routes/health/index'
 import { Route as HealthReadyRouteImport } from './routes/health/ready'
 import { Route as AppProduktSlugRouteRouteImport } from './routes/_app/produkt/$slug/route'
@@ -37,6 +38,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/auth/login',
+  path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HealthIndexRoute = HealthIndexRouteImport.update({
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/login': typeof AuthLoginRoute
   '/health/ready': typeof HealthReadyRoute
   '/health/': typeof HealthIndexRoute
   '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
@@ -84,6 +91,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/login': typeof AuthLoginRoute
   '/health/ready': typeof HealthReadyRoute
   '/': typeof AppIndexRoute
   '/health': typeof HealthIndexRoute
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteRouteWithChildren
   '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/login': typeof AuthLoginRoute
   '/health/ready': typeof HealthReadyRoute
   '/_app/': typeof AppIndexRoute
   '/health/': typeof HealthIndexRoute
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/api/$'
+    | '/auth/login'
     | '/health/ready'
     | '/health/'
     | '/produkt/$slug'
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
   to:
     | '/admin'
     | '/api/$'
+    | '/auth/login'
     | '/health/ready'
     | '/'
     | '/health'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/admin'
     | '/api/$'
+    | '/auth/login'
     | '/health/ready'
     | '/_app/'
     | '/health/'
@@ -146,6 +158,7 @@ export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  AuthLoginRoute: typeof AuthLoginRoute
   HealthReadyRoute: typeof HealthReadyRoute
   HealthIndexRoute: typeof HealthIndexRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
@@ -179,6 +192,13 @@ declare module '@tanstack/react-router' {
       path: '/api/$'
       fullPath: '/api/$'
       preLoaderRoute: typeof ApiSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/health/': {
@@ -257,6 +277,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRoute,
   ApiSplatRoute: ApiSplatRoute,
+  AuthLoginRoute: AuthLoginRoute,
   HealthReadyRoute: HealthReadyRoute,
   HealthIndexRoute: HealthIndexRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,

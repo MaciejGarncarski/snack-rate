@@ -23,6 +23,7 @@ export function UserComment() {
   if (isFormOpen) {
     return (
       <Item variant="muted">
+        <ItemContent>TEST</ItemContent>
         <ItemContent>
           <AddCommentForm
             initialRating={userRating?.value ?? null}
@@ -41,7 +42,6 @@ export function UserComment() {
     return (
       <Item variant="muted">
         <ItemContent className="flex flex-row items-center gap-4 min-h-14">
-          <ItemTitle>Ten produkt jeszcze nie posiada Twojej oceny.</ItemTitle>
           <Button type="button" variant="default" size="sm" onClick={() => setIsFormOpen(true)}>
             <div className="relative w-8 h-4">
               <ThumbsDownIcon className="absolute -left-1 top-0.5 size-3" />
@@ -50,6 +50,7 @@ export function UserComment() {
             </div>
             Oceń produkt
           </Button>
+          <ItemTitle>Ten produkt jeszcze nie posiada Twojej oceny.</ItemTitle>
         </ItemContent>
       </Item>
     );

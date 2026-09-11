@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { MenuIcon, PlusIcon } from "lucide-react";
+import { MenuIcon, PlusIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 
 import { Logo } from "#/components/layout/logo";
@@ -59,9 +59,17 @@ export function NavbarMobileMenu() {
             <PlusIcon className="mr-2 h-4 w-4" />
             Dodaj produkt
           </Link>
+
+          <Link
+            to="/auth/login"
+            aria-label="Moje konto"
+            className={buttonVariants({ variant: "secondary", size: "default" })}
+          >
+            <UserIcon className="h-4 w-4" /> Moje konto
+          </Link>
         </div>
         <SheetFooter>
-          <SheetClose variant="outline">Zamknij</SheetClose>
+          <SheetClose variant="outline">Zamknij menu</SheetClose>
         </SheetFooter>
       </Sheet>
     </SheetTrigger>

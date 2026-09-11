@@ -30,9 +30,9 @@ const TIER_CLASSES = {
     high: "text-success",
   },
   chip: {
-    low: "bg-destructive/15 border-destructive/40 text-destructive",
-    mid: "bg-warning/15 border-warning/40 text-warning",
-    high: "bg-success/15 border-success/40 text-success",
+    low: "bg-destructive/15 ring-destructive/40 text-destructive ring-2",
+    mid: "bg-warning/15 ring-warning/40 text-warning ring-2",
+    high: "bg-success/15 ring-success/40 text-success ring-2",
   },
 } as const;
 
@@ -49,8 +49,8 @@ export function SnackRatingPicker({ currentRating, onRate, disabled }: SnackRati
   const label = currentRating !== null ? RATING_LABELS[currentRating] : "Wybierz ocenę";
 
   return (
-    <Field className="bg-input/50 rounded-2xl px-4 py-5">
-      <div className="flex w-full flex-col gap-4">
+    <Field className="bg-input/50 rounded-2xl min-w-0 px-4 py-5">
+      <div className="flex w-full flex-col min-w-0 gap-4">
         <div className="flex flex-col gap-1">
           <p
             className={cn(
@@ -64,7 +64,7 @@ export function SnackRatingPicker({ currentRating, onRate, disabled }: SnackRati
           <p className="min-h-4 text-sm text-muted-foreground">{label}</p>
         </div>
 
-        <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-10 min-w-0">
           {Array.from({ length: MAX_VALUE }, (_, index) => {
             const value = index + MIN_VALUE;
             const isSelected = currentRating === value;
@@ -78,10 +78,10 @@ export function SnackRatingPicker({ currentRating, onRate, disabled }: SnackRati
                 disabled={disabled}
                 onClick={() => onRate(value)}
                 className={cn(
-                  "flex h-9 items-center justify-center rounded-xl border text-sm font-semibold tabular-nums transition-all outline-none focus-visible:ring-3 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50",
+                  "flex h-9 items-center justify-center rounded-xl ring text-sm font-semibold tabular-nums transition-all outline-none focus-visible:ring-3 focus-visible:ring-ring/30 disabled:pointer-events-none disabled:opacity-50",
                   isSelected
                     ? TIER_CLASSES.chip[valueTier]
-                    : "border-input bg-background text-muted-foreground hover:border-ring hover:text-foreground",
+                    : "ring-input bg-card text-muted-foreground hover:ring-ring hover:text-foreground",
                 )}
               >
                 {value}
