@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "composite": false,
+    "lib": ["ESNext"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",

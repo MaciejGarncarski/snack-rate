@@ -1,6 +1,7 @@
 import { render } from "@react-email/render";
 import MagicLink from "@snack-rate/email-templates";
 import { createTransport, type TransportConfig } from "nodemailer";
+import React from "react";
 
 const mailerConfig: TransportConfig = {
   host: process.env.MAIL_SMTP_HOST,
