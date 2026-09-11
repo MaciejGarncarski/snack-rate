@@ -17,6 +17,7 @@ import {
   FieldSeparator,
 } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
+import { ModeToggle } from "#/components/ui/mode-toggle";
 import { extractORPCError } from "#/lib/extract-orpc-error";
 import { orpc } from "#/orpc/client";
 
@@ -42,12 +43,22 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      {canGoBack && (
-        <Button onClick={() => router.history.back()} className="w-fit" variant="outline" size="xs">
-          <ChevronLeft />
-          Powrót do aplikacji
-        </Button>
-      )}
+      <div className="flex justify-between items-center">
+        {canGoBack && (
+          <Button
+            onClick={() => router.history.back()}
+            className="w-fit"
+            variant="outline"
+            size="xs"
+          >
+            <ChevronLeft />
+            Powrót do aplikacji
+          </Button>
+        )}
+        <div className="ml-auto">
+          <ModeToggle />
+        </div>
+      </div>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form
@@ -70,7 +81,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="mail@example.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

@@ -5,7 +5,7 @@ import { PgBoss } from "pg-boss";
 import pino from "pino";
 
 import { handleImageProcessing } from "./image-processor.ts";
-import { sendLoginVerificationEmail } from "./login-verification.ts";
+import { sendLoginVerificationEmail } from "./login-verification.tsx";
 
 const logger = pino({ name: "pg-boss" });
 const queueDbUrl = process.env.PG_BOSS_DB_URL_INTERNAL ?? "";

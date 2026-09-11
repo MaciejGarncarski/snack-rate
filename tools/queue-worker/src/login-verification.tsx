@@ -1,5 +1,7 @@
-import { createTransport } from "nodemailer";
-import type { TransportConfig } from "nodemailer";
+import { render } from "@react-email/render";
+import MagicLink from "@snack-rate/email-templates";
+import { createTransport, type TransportConfig } from "nodemailer";
+import * as React from "react";
 
 const mailerConfig: TransportConfig = {
   host: process.env.MAIL_SMTP_HOST,
@@ -19,11 +21,12 @@ type VerificationJob = {
 
 export async function sendLoginVerificationEmail(job: VerificationJob): Promise<{ ok: boolean }> {
   try {
+    const html = await render(<MagicLink email={job.key} validationCode="RAN-DOM" />);
     await transport.sendMail({
       from: process.env.MAIL_SMTP_FROM_ADDRESS,
       to: job.key,
-      subject: "Login Verification",
-      text: "Please verify your login.",
+      subject: "Potwierdź logowanie do SnackRate",
+      html,
     });
 
     console.log("EMAIL SENT: Login verification email sent to", job.key);

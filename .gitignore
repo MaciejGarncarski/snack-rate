@@ -30,3 +30,6 @@ storybook-static
 
 # agents
 .mimocode
+
+# emails
+**/email-templates/out/

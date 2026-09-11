@@ -1,0 +1,25 @@
+{
+  "name": "@snack-rate/email-templates",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./emails/magic-link.tsx"
+  },
+  "scripts": {
+    "build": "email build",
+    "dev": "email dev --port 3002",
+    "export": "email export",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-email": "6.9.5"
+  },
+  "devDependencies": {
+    "@react-email/ui": "6.9.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}
