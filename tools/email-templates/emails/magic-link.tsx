@@ -12,6 +12,7 @@ import {
   Section,
   Tailwind,
   Text,
+  Hr,
 } from "react-email";
 
 interface MagicLinkProps {
@@ -59,27 +60,36 @@ export const MagicLink: MagicLinkComponent = ({ validationCode }) => (
             <Img
               src="https://snacks.maciejg.dev/logo-small.png"
               alt="Snack Rate"
-              width="90"
+              width="80"
               height="auto"
             />
           </Section>
 
           <Heading className="text-[#1d1c1d] text-2xl font-bold my-4 mx-0 p-0 leading-10.5">
-            Weryfikacja
+            Witamy w Snack Rate!
           </Heading>
 
-          <Text className="text-base mb-7.5">
-            Witamy w Snack Rate! Poniżej znajdziesz kod potwierdzający. Wpisz go w otwartym oknie
-            przeglądarki, aby kontynuować logowanie.
+          <Text className="text-sm mb-5 text-gray-600">
+            Otrzymaliśmy prośbę o zalogowanie się na Twoje konto.
           </Text>
 
-          <Section className="bg-[rgb(245,244,245)] rounded mb-7.5 py-10 px-2.5">
-            <Text className="text-3xl leading-6 text-center align-middle font-bold">
+          <Text className="text-sm mb-7.5 text-gray-600">
+            Wprowadź poniższy kod weryfikacyjny w oknie logowania.
+          </Text>
+
+          <Section className="rounded mb-7.5 px-2.5">
+            <Text className="text-3xl tracking-[12px] leading-6 text-center align-middle font-bold bg-[rgb(245,244,245)] rounded-xl border border-black/5 w-fit px-10 py-8 mx-auto">
               {validationCode}
+            </Text>
+
+            <Text className="text-xs mx-auto text-center text-gray-600 mb-7.5">
+              Kod jest ważny przez <span className="font-bold">15 minut</span>.
             </Text>
           </Section>
 
-          <Text className="text-black text-sm leading-6">
+          <Hr />
+
+          <Text className="text-gray-600 text-xs leading-6">
             Jeśli to nie Ty próbujesz się zalogować, nie musisz nic robić. Możesz bezpiecznie
             zignorować tę wiadomość.
           </Text>
@@ -94,7 +104,7 @@ export const MagicLink: MagicLinkComponent = ({ validationCode }) => (
 );
 
 MagicLink.PreviewProps = {
-  validationCode: "KEBAB",
+  validationCode: "QZ73FX",
 } as MagicLinkProps;
 
 export default MagicLink;

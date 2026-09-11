@@ -27,7 +27,7 @@ export async function sendLoginVerificationEmail(job: VerificationJob): Promise<
     await transport.sendMail({
       from: process.env.MAIL_SMTP_FROM_ADDRESS,
       to: job.mailTo,
-      subject: `Snack Rate - Weryfikacja logowania - ${job.code}`,
+      subject: `${job.code} - Snack Rate - Weryfikacja logowania`,
       html,
     });
 
