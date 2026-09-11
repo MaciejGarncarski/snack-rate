@@ -67,12 +67,8 @@ export const rateSnackProcedure = baseProcedure
     }),
   )
   .handler(async ({ input, context }) => {
-    const remoteIp =
-      context.requestHeaders.get("x-forwarded-for") ?? context.requestHeaders.get("x-real-ip");
-
     const isVerified = await verifyTurnstileToken({
       token: input.token ?? "",
-      remoteIp: remoteIp ?? undefined,
     });
 
     if (!isVerified) {

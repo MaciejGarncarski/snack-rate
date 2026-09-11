@@ -24,13 +24,9 @@ function requireAdminAuth(requestHeaders: Headers) {
 
 export const verifyAdminPasswordProcedure = baseProcedure
   .input(z.object({ password: z.string().min(1), token: z.string().optional() }))
-  .handler(async ({ input, context }) => {
-    const remoteIp =
-      context.requestHeaders.get("x-forwarded-for") ?? context.requestHeaders.get("x-real-ip");
-
+  .handler(async ({ input }) => {
     const isVerified = await verifyTurnstileToken({
       token: input.token ?? "",
-      remoteIp: remoteIp ?? undefined,
     });
 
     if (!isVerified) {

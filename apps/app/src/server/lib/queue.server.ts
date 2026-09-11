@@ -20,7 +20,6 @@ export async function startQueue() {
     schema: "pgboss",
   });
 
-  // oxlint-disable-next-line no-console
   boss.on("error", (err) => logger.error({ status: "pg-boss error", error: err }));
 
   await boss.start();
@@ -42,8 +41,6 @@ const knownQueues = new Set<string>();
 async function ensureQueue(name: string): Promise<void> {
   if (!boss) throw new Error("queue not started, call startQueue() first");
   if (knownQueues.has(name)) return;
-  // createQueue is idempotent — safe if the worker already created it.
-  // This also removes the startup-order race between app and worker.
   await boss.createQueue(name);
   knownQueues.add(name);
 }

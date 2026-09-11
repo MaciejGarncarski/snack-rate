@@ -1,7 +1,6 @@
 import { render } from "@react-email/render";
 import MagicLink from "@snack-rate/email-templates";
 import { createTransport, type TransportConfig } from "nodemailer";
-import * as React from "react";
 
 const mailerConfig: TransportConfig = {
   host: process.env.MAIL_SMTP_HOST,
@@ -16,20 +15,22 @@ const mailerConfig: TransportConfig = {
 const transport = createTransport(mailerConfig);
 
 type VerificationJob = {
-  key: string;
+  mailTo: string;
+  code: string;
 };
 
 export async function sendLoginVerificationEmail(job: VerificationJob): Promise<{ ok: boolean }> {
   try {
-    const html = await render(<MagicLink email={job.key} validationCode="RAN-DOM" />);
+    const html = await render(<MagicLink email={job.mailTo} validationCode={job.code} />);
+
     await transport.sendMail({
       from: process.env.MAIL_SMTP_FROM_ADDRESS,
-      to: job.key,
-      subject: "Potwierdź logowanie do SnackRate",
+      to: job.mailTo,
+      subject: `Snack Rate - Weryfikacja logowania - ${job.code}`,
       html,
     });
 
-    console.log("EMAIL SENT: Login verification email sent to", job.key);
+    console.log("EMAIL SENT: Login verification email sent to", job.mailTo);
 
     return { ok: true };
   } catch (error) {

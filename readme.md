@@ -128,9 +128,10 @@ See `./drizzle/docs/db-diagram.dbml`.
 ## Running — development
 
 ```bash
-pnpm infra:up     # starts garage, postgres, grafana, prometheus, alloy, tempo, loki
-pnpm garage:init  # configure garage key, bucket, and website hosting
-pnpm dev          # starts app — port from APP_PORT env (default 3000)
+pnpm infra:up            # starts garage, postgres, grafana, prometheus, alloy, tempo, loki
+pnpm garage:init         # configure garage key, bucket, and website hosting
+pnpm dev                 # starts app — port from APP_PORT env (default 3000)
+pnpm dev:queue-worker    # starts queue worker with hot reload (tsx --watch)
 ```
 
 > [!NOTE]

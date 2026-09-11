@@ -1,12 +1,14 @@
+import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { useMutation } from "@tanstack/react-query";
 // oxlint-disable jsx-a11y/anchor-is-valid
 import { useCanGoBack, useRouter } from "@tanstack/react-router";
 import { cn } from "cn";
 import { ChevronLeft } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { Image } from "#/components/image/image";
+import { TurnstileWidget } from "#/components/turnstile-widget";
 import { Button } from "#/components/ui/button";
 import { Card, CardContent } from "#/components/ui/card";
 import {
@@ -25,18 +27,17 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const canGoBack = useCanGoBack();
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [token, setToken] = useState<string | undefined>();
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
 
-  // TEST ONLY: triggers a loginVerification queue job to test the mail worker.
   const { mutateAsync: sendTestEmail, isPending: isSendingTestEmail } = useMutation(
     orpc.auth.sendTestEmail.mutationOptions({
       onError: (mutationError) => {
         const errorMessage = extractORPCError(mutationError)?.message;
         toast.error(errorMessage ? errorMessage : "Wystąpił nieoczekiwany błąd");
       },
-      onSuccess: ({ jobId }) => {
-        toast.success(
-          jobId ? `Testowy email zakolejkowany (${jobId})` : "Testowy email zakolejkowany",
-        );
+      onSuccess: () => {
+        toast.success(`Wysłano email do: ${email}`);
       },
     }),
   );
@@ -65,7 +66,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             className="p-6 md:p-8"
             onSubmit={(e) => {
               e.preventDefault();
-              void sendTestEmail({ email });
+              void sendTestEmail({ email, token: token ?? "" });
+              turnstileRef.current?.reset();
             }}
           >
             <FieldGroup>
@@ -120,6 +122,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                 Nie masz konta? <a href="#">Zarejestruj się</a>
               </FieldDescription> */}
             </FieldGroup>
+
+            <TurnstileWidget onVerify={setToken} ref={turnstileRef} />
           </form>
           <div className="relative hidden bg-muted md:block">
             <Image

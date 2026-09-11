@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter @snack-rate/app run dev",
+    "dev:queue-worker": "pnpm --filter @snack-rate/queue-worker run dev",
     "build": "pnpm --filter @snack-rate/app run build",
     "start": "pnpm --filter @snack-rate/app run start",
     "typecheck": "pnpm --filter @snack-rate/app run typecheck && pnpm --filter @snack-rate/queue-worker run typecheck && pnpm --filter @snack-rate/email-templates run typecheck",

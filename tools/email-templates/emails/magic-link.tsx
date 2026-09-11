@@ -57,23 +57,23 @@ export const MagicLink: MagicLinkComponent = ({ validationCode }) => (
         <Container className="mx-auto my-0 py-0 px-5">
           <Section className="mt-8 mb-8 text-center">
             <Img
-              src="https://snacks.maciejg.dev/logo.png"
+              src="https://snacks.maciejg.dev/logo-small.png"
               alt="Snack Rate"
               width="90"
               height="auto"
             />
           </Section>
 
-          <Heading className="text-[#1d1c1d] text-4xl font-bold my-7.5 mx-0 p-0 leading-10.5">
+          <Heading className="text-[#1d1c1d] text-2xl font-bold my-4 mx-0 p-0 leading-10.5">
             Weryfikacja
           </Heading>
 
-          <Text className="text-xl mb-7.5">
+          <Text className="text-base mb-7.5">
             Witamy w Snack Rate! Poniżej znajdziesz kod potwierdzający. Wpisz go w otwartym oknie
             przeglądarki, aby kontynuować logowanie.
           </Text>
 
-          <Section className="bg-[rgb(245,244,245)] rounded mb-7.5 py-14 px-2.5">
+          <Section className="bg-[rgb(245,244,245)] rounded mb-7.5 py-10 px-2.5">
             <Text className="text-3xl leading-6 text-center align-middle font-bold">
               {validationCode}
             </Text>

@@ -79,12 +79,17 @@ async function startQueue(): Promise<void> {
     return { received: job.data };
   });
 
-  await boss.work<{ key: string }>("loginVerification", { batchSize: 1 }, async ([job]) => {
-    console.log("RECIEVED JOB:", job.id, job.data);
-
-    logger.info({ jobId: job.id, key: job.data.key }, "processing login verification email");
-    return sendLoginVerificationEmail(job.data);
-  });
+  await boss.work<{ mailTo: string; code: string }>(
+    "loginVerification",
+    { batchSize: 1 },
+    async ([job]) => {
+      logger.info(
+        { jobId: job.id, mailTo: job.data.mailTo, code: job.data.code },
+        "processing login verification email",
+      );
+      return sendLoginVerificationEmail(job.data);
+    },
+  );
 
   await boss.work<{ key: string }>("imageResize", { batchSize: 1 }, async ([job]) => {
     logger.info({ jobId: job.id, key: job.data.key }, "processing image");

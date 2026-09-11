@@ -19,13 +19,9 @@ export const listSnacksProcedure = baseProcedure.input(listSnacksSchema).handler
 
 export const createSnackProcedure = baseProcedure
   .input(createSnackInputSchema)
-  .handler(async ({ input, context }) => {
-    const remoteIp =
-      context.requestHeaders.get("x-forwarded-for") ?? context.requestHeaders.get("x-real-ip");
-
+  .handler(async ({ input }) => {
     const isVerified = await verifyTurnstileToken({
       token: input.token ?? "",
-      remoteIp: remoteIp ?? undefined,
     });
 
     if (!isVerified) {
