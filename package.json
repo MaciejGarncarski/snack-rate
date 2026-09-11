@@ -6,7 +6,7 @@
     "dev": "pnpm --filter @snack-rate/app run dev",
     "build": "pnpm --filter @snack-rate/app run build",
     "start": "pnpm --filter @snack-rate/app run start",
-    "typecheck": "pnpm --filter @snack-rate/app run typecheck",
+    "typecheck": "pnpm --filter @snack-rate/app run typecheck && pnpm --filter @snack-rate/queue-worker run typecheck",
     "test": "pnpm --filter @snack-rate/app run test",
     "test:watch": "pnpm --filter @snack-rate/app run test:watch",
     "test:unit": "pnpm --filter @snack-rate/app run test:unit",

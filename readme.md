@@ -68,89 +68,13 @@ Storage:
 ## Environment variables
 
 Copy `.env.example` to the appropriate file and fill in values before running anything.
+See [`docs/environment.md`](docs/environment.md) for the full variable reference.
 
 | File               | Used for          |
 | ------------------ | ----------------- |
 | `.env.development` | Local development |
 | `.env.production`  | Production stack  |
 | `.env.staging`     | Staging stack     |
-
-### Application
-
-| Variable         | Used in    | Description                                             |
-| ---------------- | ---------- | ------------------------------------------------------- |
-| `APP_PORT` | dev + prod | Application port (default 3000)                   |
-| `NODE_ENV` | dev + prod | Runtime environment (`development`, `production`) |
-
-### Database
-
-| Variable                  | Used in    | Description                                          |
-| ------------------------- | ---------- | ---------------------------------------------------- |
-| `POSTGRES_USER`           | dev + prod | Database user                                        |
-| `POSTGRES_PASSWORD`       | dev + prod | Database password                                    |
-| `POSTGRES_DB`             | dev + prod | Database name                                        |
-| `DATABASE_URL`            | dev + prod | PostgreSQL connection string                         |
-| `PG_BOSS_DB_URL`          | dev + prod | Queue worker database connection string              |
-| `PG_BOSS_DB_URL_INTERNAL` | dev + prod | Queue worker db connection string (docker container) |
-| `PG_BOSS_MAINTENANCE_DB`  | dev + prod | Queue worker maintenance DB (default: postgres)      |
-
-### S3 / Storage
-
-| Variable               | Used in    | Description                                 |
-| ---------------------- | ---------- | ------------------------------------------- |
-| `S3_ENDPOINT`          | dev + prod | S3-compatible endpoint (e.g. Garage)        |
-| `S3_ENDPOINT_INTERNAL` | dev + prod | S3 endpoint used from inside Docker network |
-| `S3_ACCESS_KEY`        | dev + prod | S3 access key                               |
-| `S3_SECRET_KEY`        | dev + prod | S3 secret key                               |
-| `S3_REGION`            | dev + prod | S3 region (e.g. `garage`)                   |
-| `S3_BUCKET_PUBLIC`     | dev + prod | Bucket for public assets                    |
-
-### Garage
-
-| Variable               | Used in    | Description                   |
-| ---------------------- | ---------- | ----------------------------- |
-| `GARAGE_RPC_SECRET`    | dev + prod | Cluster RPC secret            |
-| `GARAGE_ADMIN_TOKEN`   | dev + prod | Garage admin API token        |
-| `GARAGE_METRICS_TOKEN` | dev + prod | Garage metrics endpoint token |
-
-### Observability
-
-| Variable                        | Used in    | Description                      |
-| ------------------------------- | ---------- | -------------------------------- |
-| `OTEL_EXPORTER_OTLP_ENDPOINT`   | dev + prod | OpenTelemetry collector endpoint |
-| `OBSERVABILITY_LOG_LEVEL`       | dev + prod | Log level (e.g. debug, info)     |
-| `OBSERVABILITY_METRICS_ENABLED` | dev + prod | Enable metrics collection        |
-| `OBSERVABILITY_TRACING_ENABLED` | dev + prod | Enable distributed tracing       |
-
-### Grafana
-
-| Variable                    | Used in    | Description                         |
-| --------------------------- | ---------- | ----------------------------------- |
-| `GF_DOMAIN`                 | dev + prod | Grafana domain (`GF_SERVER_DOMAIN`) |
-| `GF_SERVER_ROOT_URL`        | dev + prod | Grafana root URL                    |
-| `GF_INITIAL_ADMIN_USER`     | dev + prod | Initial Grafana username            |
-| `GF_INITIAL_ADMIN_PASSWORD` | dev + prod | Initial Grafana password            |
-| `GF_SMTP`                   | dev + prod | SMTP host for Grafana alerts        |
-| `GF_SMTP_USER`              | dev + prod | SMTP username                       |
-| `GF_SMTP_PASSWORD`          | dev + prod | SMTP password                       |
-| `GF_SMTP_FROM_ADDRESS`      | dev + prod | From address for alert emails       |
-
-> [!IMPORTANT]
-> `GF_INITIAL_*` variables only work on a fresh Grafana volume. Changes made after Grafana has been initialized will not be applied. Use `grafana-cli` instead.
-
-### Caddy
-
-| Variable                  | Used in        | Description                                                     |
-| ------------------------- | -------------- | --------------------------------------------------------------- |
-| `CADDY_HOST_HTTP_PORT`    | prod + staging | Host-side HTTP port (default 80)                                |
-| `CADDY_HOST_HTTPS_PORT`   | prod + staging | Host-side HTTPS port (default 443)                              |
-| `APP_DOMAIN`              | prod           | Domain for app TLS (e.g. `app.example.com`)                     |
-| `PUBLIC_BUCKET_DOMAIN`    | prod + staging | Public bucket domain (e.g. `s3.example.com`)                    |
-| `PUBLIC_BUCKET_BACKEND`   | prod + staging | Internal Garage web endpoint to proxy to                        |
-| `PUBLIC_BUCKET_HOST`      | prod + staging | Host header sent to Garage (e.g. `snack-rate-public.localhost`) |
-| `STAGING_APP_DOMAIN`      | staging        | Domain for staging app (e.g. `staging.app.example.com`)         |
-| `STAGING_BASIC_AUTH_USER` | staging        | Basic auth username for staging                                 |
-| `STAGING_BASIC_AUTH_HASH` | staging        | Bcrypt hash for staging basic auth (use `pnpm hash-password`)   |
 
 ## Database
 

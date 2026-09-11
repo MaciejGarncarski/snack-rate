@@ -5,6 +5,7 @@ import { PgBoss } from "pg-boss";
 import pino from "pino";
 
 import { handleImageProcessing } from "./image-processor.ts";
+import { sendLoginVerificationEmail } from "./login-verification.ts";
 
 const logger = pino({ name: "pg-boss" });
 const queueDbUrl = process.env.PG_BOSS_DB_URL_INTERNAL ?? "";
@@ -71,10 +72,18 @@ async function startQueue(): Promise<void> {
 
   await boss.createQueue("echo");
   await boss.createQueue("imageResize");
+  await boss.createQueue("loginVerification");
 
   await boss.work<{ message?: string }>("echo", { batchSize: 1 }, async ([job]) => {
     logger.info({ jobId: job.id, data: job.data }, "echo job");
     return { received: job.data };
+  });
+
+  await boss.work<{ key: string }>("loginVerification", { batchSize: 1 }, async ([job]) => {
+    console.log("RECIEVED JOB:", job.id, job.data);
+
+    logger.info({ jobId: job.id, key: job.data.key }, "processing login verification email");
+    return sendLoginVerificationEmail(job.data);
   });
 
   await boss.work<{ key: string }>("imageResize", { batchSize: 1 }, async ([job]) => {

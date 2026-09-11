@@ -34,26 +34,37 @@ export async function stopQueue() {
   if (!boss) return;
   await boss.stop({ graceful: true, timeout: ms("30s") });
   boss = null;
+  knownQueues.clear();
 }
 
-export function send<T = object>(
+const knownQueues = new Set<string>();
+
+async function ensureQueue(name: string): Promise<void> {
+  if (!boss) throw new Error("queue not started, call startQueue() first");
+  if (knownQueues.has(name)) return;
+  // createQueue is idempotent — safe if the worker already created it.
+  // This also removes the startup-order race between app and worker.
+  await boss.createQueue(name);
+  knownQueues.add(name);
+}
+
+export async function send<T = object>(
   name: string,
   data: T,
   options?: SendOptions,
 ): Promise<string | null> {
   if (!boss) throw new Error("queue not started, call startQueue() first");
-  // SAFETY: pg-boss serializes payloads to JSON; any plain object is a valid job payload.
+  await ensureQueue(name);
   return boss.send(name, data as object, options);
 }
 
-export function sendAfter<T = object>(
+export async function sendAfter<T = object>(
   name: string,
   data: T,
   options: SendOptions,
   delay: Date,
 ): Promise<string | null> {
   if (!boss) throw new Error("queue not started, call startQueue() first");
-
-  // SAFETY: pg-boss serializes payloads to JSON; any plain object is a valid job payload.
+  await ensureQueue(name);
   return boss.sendAfter(name, data as object, options, delay);
 }

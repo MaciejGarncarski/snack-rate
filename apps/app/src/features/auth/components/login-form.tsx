@@ -1,7 +1,10 @@
+import { useMutation } from "@tanstack/react-query";
 // oxlint-disable jsx-a11y/anchor-is-valid
 import { useCanGoBack, useRouter } from "@tanstack/react-router";
 import { cn } from "cn";
 import { ChevronLeft } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import { Image } from "#/components/image/image";
 import { Button } from "#/components/ui/button";
@@ -14,10 +17,28 @@ import {
   FieldSeparator,
 } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
+import { extractORPCError } from "#/lib/extract-orpc-error";
+import { orpc } from "#/orpc/client";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const canGoBack = useCanGoBack();
   const router = useRouter();
+  const [email, setEmail] = useState("");
+
+  // TEST ONLY: triggers a loginVerification queue job to test the mail worker.
+  const { mutateAsync: sendTestEmail, isPending: isSendingTestEmail } = useMutation(
+    orpc.auth.sendTestEmail.mutationOptions({
+      onError: (mutationError) => {
+        const errorMessage = extractORPCError(mutationError)?.message;
+        toast.error(errorMessage ? errorMessage : "Wystąpił nieoczekiwany błąd");
+      },
+      onSuccess: ({ jobId }) => {
+        toast.success(
+          jobId ? `Testowy email zakolejkowany (${jobId})` : "Testowy email zakolejkowany",
+        );
+      },
+    }),
+  );
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -29,7 +50,13 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       )}
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form
+            className="p-6 md:p-8"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void sendTestEmail({ email });
+            }}
+          >
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Witaj ponownie!</h1>
@@ -40,16 +67,25 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <FieldDescription>Wprowadź email, aby otrzymać kod weryfikacyjny.</FieldDescription>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Field>
               <Field>
-                <Button type="submit">Wyślij kod weryfikacyjny</Button>
+                <Button type="submit" isDisabled={isSendingTestEmail}>
+                  {isSendingTestEmail ? "Wysyłanie..." : "Wyślij kod weryfikacyjny"}
+                </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Lub poprzez
               </FieldSeparator>
               <Field className="grid grid-cols-2 gap-4">
-                <Button variant="outline" type="button">
+                <Button variant="outline" type="button" isDisabled>
                   <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <title>Discord</title>
                     <path
@@ -59,7 +95,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   </svg>
                   <span className="sr-only md:not-sr-only">Discord</span>
                 </Button>
-                <Button variant="outline" type="button">
+                <Button variant="outline" type="button" isDisabled>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"

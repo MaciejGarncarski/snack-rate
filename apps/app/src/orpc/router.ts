@@ -5,6 +5,7 @@ import {
   logoutAdminProcedure,
   verifyAdminPasswordProcedure,
 } from "#/features/admin/admin.routes.server";
+import { sendTestEmailProcedure } from "#/features/auth/auth.routes.server";
 import {
   createSnackProcedure,
   getSnackBySlugProcedure,
@@ -43,5 +44,8 @@ export default {
     logout: logoutAdminProcedure,
     listComments: listAdminCommentsProcedure,
     deleteComment: deleteAdminCommentProcedure,
+  },
+  auth: {
+    sendTestEmail: sendTestEmailProcedure,
   },
 };
