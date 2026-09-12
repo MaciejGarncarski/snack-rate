@@ -4,7 +4,16 @@ import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query
 
 import { DefaultErrorComponent } from "#/components/layout/default-error";
 import { DefaultNotFound } from "#/components/layout/default-not-found";
+import {
+  sessionQueryOptions,
+  type SessionData,
+} from "#/features/auth/queries/session.query-options";
 import { routeTree } from "#/routeTree.gen";
+
+export type RouterContext = {
+  queryClient: QueryClient;
+  ensureSession: () => Promise<SessionData>;
+};
 
 export function getRouter() {
   const queryClient = new QueryClient({
@@ -17,7 +26,10 @@ export function getRouter() {
 
   const router = createRouter({
     routeTree,
-    context: { queryClient },
+    context: {
+      queryClient,
+      ensureSession: () => queryClient.query({ ...sessionQueryOptions(), staleTime: "static" }),
+    } satisfies RouterContext,
     scrollRestoration: true,
     defaultPreload: "intent",
     defaultNotFoundComponent: () => <DefaultNotFound />,

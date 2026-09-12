@@ -1,4 +1,3 @@
-import { hashPassword } from "@snack-rate/db-schema/crypto";
 import * as schema from "@snack-rate/db-schema/schema";
 // oxlint-disable no-console
 // oxlint-disable max-lines
@@ -17,52 +16,56 @@ async function seedDatabase() {
   console.log("Seeding database...");
 
   // ---------------------------------------------------------------------------
-  // Users
+  // Users (Better Auth `user` table)
   // ---------------------------------------------------------------------------
 
-  const passwordHash = await hashPassword("SnackRate#");
-
   const [anna, alfred, celina, dawid, ewa] = await db
-    .insert(schema.users)
+    .insert(schema.user)
     .values([
       {
+        id: randomUUID(),
         email: "anna@przyklad.pl",
-        passwordHash: passwordHash,
+        name: "Anna",
         username: "Anna",
         role: "admin",
         status: "active",
       },
       {
+        id: randomUUID(),
         email: "alfred@przyklad.pl",
-        passwordHash: passwordHash,
+        name: "Alfred",
         username: "Alfred",
         role: "moderator",
         status: "active",
       },
       {
+        id: randomUUID(),
         email: "celina@przyklad.pl",
-        passwordHash: passwordHash,
+        name: "Celina",
         username: "Celina",
         role: "user",
         status: "active",
       },
       {
+        id: randomUUID(),
         email: "dawid@przyklad.pl",
-        passwordHash: passwordHash,
+        name: "Dawid",
         username: "Dawid",
         role: "user",
         status: "active",
       },
       {
+        id: randomUUID(),
         email: "ewa@przyklad.pl",
-        passwordHash: passwordHash,
+        name: "Ewa",
         username: "Ewa",
         role: "user",
         status: "suspended",
       },
       {
+        id: randomUUID(),
         email: "maciejg0220@gmail.com",
-        passwordHash: passwordHash,
+        name: "Maciek",
         username: "Maciek",
         role: "admin",
         status: "active",

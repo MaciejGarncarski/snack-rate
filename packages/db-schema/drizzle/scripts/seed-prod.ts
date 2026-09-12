@@ -1,8 +1,8 @@
-import { hashPassword } from "@snack-rate/db-schema/crypto";
 import * as schema from "@snack-rate/db-schema/schema";
 // oxlint-disable no-console
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
+import { randomUUID } from "node:crypto";
 
 const db = drizzle(process.env.DATABASE_URL!);
 
@@ -23,24 +23,23 @@ async function main() {
 
   console.log("  ✓ snack types");
 
-  // Demo user
+  // Demo user (Better Auth `user` table)
   const demoEmail = "demo@snackrate.pl";
   const [existingUser] = await db
-    .select({ id: schema.users.id })
-    .from(schema.users)
-    .where(eq(schema.users.email, demoEmail))
+    .select({ id: schema.user.id })
+    .from(schema.user)
+    .where(eq(schema.user.email, demoEmail))
     .limit(1);
 
   if (!existingUser) {
-    const passwordHash = await hashPassword("Demo1234!");
-
-    await db.insert(schema.users).values({
+    await db.insert(schema.user).values({
+      id: randomUUID(),
       email: demoEmail,
-      passwordHash,
+      name: "Demo",
       username: "Demo",
       role: "admin",
       status: "active",
-      emailVerifiedAt: new Date(),
+      emailVerified: true,
     });
 
     console.log("  ✓ demo user");

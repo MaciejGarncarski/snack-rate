@@ -1,7 +1,7 @@
 import { uuidv7 } from "uuidv7";
 import type * as schema from "@snack-rate/db-schema/schema";
 
-type User = typeof schema.users.$inferSelect;
+type User = typeof schema.user.$inferSelect;
 type SnackItem = typeof schema.snackItems.$inferSelect;
 
 type RatingSeed = {

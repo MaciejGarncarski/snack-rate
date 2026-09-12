@@ -49,8 +49,8 @@ function extractPgError(cause: unknown): PgErrorCandidate | null {
 }
 
 const UNIQUE_CONSTRAINT_MAP = {
-  // users
-  users_email_unique_idx: {
+  // user
+  user_email_unique: {
     message: "Ten adres e-mail jest już zajęty.",
     field: "email",
   },
@@ -88,16 +88,5 @@ const UNIQUE_CONSTRAINT_MAP = {
   // comments
   snack_comments_author_snack_unique_idx: {
     message: "Już oceniłeś ten produkt.",
-  },
-
-  // auth (unlikely to be hit via normal user flow, but covered)
-  sessions_token_hash_unique: {
-    message: "Wystąpił konflikt sesji.",
-  },
-  password_resets_token_hash_unique: {
-    message: "Wystąpił konflikt żądania resetu hasła.",
-  },
-  email_verifications_token_hash_unique: {
-    message: "Wystąpił konflikt weryfikacji e-mail.",
   },
 } satisfies Record<string, { message: string; field?: string }>;

@@ -7,9 +7,12 @@ import { NavbarMobileMenu } from "#/components/layout/navbar-mobile-menu";
 import { buttonVariants } from "#/components/ui/button";
 import { ModeToggle } from "#/components/ui/mode-toggle";
 import { Skeleton } from "#/components/ui/skeleton";
+import { useSession } from "#/features/auth/hooks/use-session.ts";
 import { NavbarSearchBox } from "#/features/catalogue/search-snacks/components/search-box";
 
 export function Navbar() {
+  const { data } = useSession();
+
   return (
     <nav className="sticky top-0 z-20 grid md:grid-cols-3 grid-cols-[minmax(3rem,auto)_1fr_minmax(3rem,auto)] w-full items-center border-b px-4 py-3 md:px-12">
       <div className="absolute left-0 top-0 w-full h-full bg-sidebar/90 -z-10 backdrop-blur-lg" />
@@ -41,15 +44,31 @@ export function Navbar() {
               Dodaj produkt
             </Link>
 
-            <Link
-              to="/auth/login"
-              aria-label="Moje konto"
-              className={buttonVariants({ variant: "secondary", size: "default" })}
-            >
-              <UserIcon className="h-4 w-4" />
-              Zaloguj się
-            </Link>
+            {data.user ? (
+              <Link
+                to="/auth/konto"
+                aria-label="Moje konto"
+                className={buttonVariants({ variant: "secondary", size: "default" })}
+              >
+                {data.user.image ? (
+                  <img src={data.user.image} alt="Avatar" className="h-4 w-4 rounded-full" />
+                ) : (
+                  <UserIcon className="h-4 w-4" />
+                )}
+                Moje konto
+              </Link>
+            ) : (
+              <Link
+                to="/auth/login"
+                aria-label="Zaloguj się"
+                className={buttonVariants({ variant: "secondary", size: "default" })}
+              >
+                <UserIcon className="h-4 w-4" />
+                Zaloguj się
+              </Link>
+            )}
           </div>
+
           <NavbarMobileMenu />
         </div>
       </ClientOnly>

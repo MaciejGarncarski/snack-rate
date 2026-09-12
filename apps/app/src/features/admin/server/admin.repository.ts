@@ -1,4 +1,4 @@
-import { snackComments, snackItems, users } from "@snack-rate/db-schema/schema";
+import { snackComments, snackItems, user } from "@snack-rate/db-schema/schema";
 import { and, desc, eq, isNull, lt, or, sql } from "drizzle-orm";
 
 import type { Database, DbTransaction } from "#/infrastructure/db/db";
@@ -73,13 +73,13 @@ export function createAdminRepository({ db }: { db: Database }) {
           snackItemId: snackComments.snackItemId,
           snackName: snackItems.name,
           snackSlug: snackItems.slug,
-          username: users.username,
+          username: user.username,
         })
         .from(snackComments)
         .innerJoin(snackItems, eq(snackComments.snackItemId, snackItems.id))
         .leftJoin(
-          users,
-          and(eq(snackComments.authorType, "user"), eq(snackComments.authorId, users.id)),
+          user,
+          and(eq(snackComments.authorType, "user"), eq(snackComments.authorId, user.id)),
         )
         .where(and(...conditions))
         .orderBy(desc(snackComments.createdAt), desc(snackComments.id))

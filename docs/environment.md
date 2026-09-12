@@ -68,6 +68,15 @@ host).
 | `S3_REGION`            | dev + prod | S3 region (e.g. `garage`)                   |
 | `S3_BUCKET_PUBLIC`     | dev + prod | Bucket for public assets                    |
 
+## Auth (better-auth: email OTP + Discord)
+
+| Variable                | Used in    | Description                                                                   |
+| ----------------------- | ---------- | ----------------------------------------------------------------------------- |
+| `BETTER_AUTH_SECRET`    | dev + prod | 32+ char secret for signing tokens (`openssl rand -hex 32`)                   |
+| `BETTER_AUTH_URL`       | dev + prod | Public app origin, used for auth callback URLs (e.g. `http://localhost:3000`) |
+| `DISCORD_CLIENT_ID`     | dev + prod | Discord OAuth client id (optional — Discord login hidden when unset)          |
+| `DISCORD_CLIENT_SECRET` | dev + prod | Discord OAuth client secret (optional — Discord login hidden when unset)      |
+
 ## Garage
 
 | Variable               | Used in    | Description                   |

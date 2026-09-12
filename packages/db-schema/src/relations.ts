@@ -3,14 +3,20 @@ import { defineRelations } from "drizzle-orm";
 import * as schema from "./schema";
 
 export const relations = defineRelations(schema, (r) => ({
-  users: {
-    commentReactions: r.many.commentReactions({ from: r.users.id, to: r.commentReactions.userId }),
-    commentReports: r.many.commentReports({ from: r.users.id, to: r.commentReports.reporterId }),
-    bookmarks: r.many.bookmarks({ from: r.users.id, to: r.bookmarks.userId }),
-    emailVerifications: r.many.emailVerifications({
-      from: r.users.id,
-      to: r.emailVerifications.userId,
-    }),
+  user: {
+    sessions: r.many.session({ from: r.user.id, to: r.session.userId }),
+    accounts: r.many.account({ from: r.user.id, to: r.account.userId }),
+    commentReactions: r.many.commentReactions({ from: r.user.id, to: r.commentReactions.userId }),
+    commentReports: r.many.commentReports({ from: r.user.id, to: r.commentReports.reporterId }),
+    bookmarks: r.many.bookmarks({ from: r.user.id, to: r.bookmarks.userId }),
+  },
+
+  session: {
+    user: r.one.user({ from: r.session.userId, to: r.user.id }),
+  },
+
+  account: {
+    user: r.one.user({ from: r.account.userId, to: r.user.id }),
   },
 
   snackTypes: {
@@ -48,21 +54,17 @@ export const relations = defineRelations(schema, (r) => ({
   },
 
   commentReactions: {
-    user: r.one.users({ from: r.commentReactions.userId, to: r.users.id }),
+    user: r.one.user({ from: r.commentReactions.userId, to: r.user.id }),
     comment: r.one.snackComments({ from: r.commentReactions.commentId, to: r.snackComments.id }),
   },
 
   commentReports: {
-    reporter: r.one.users({ from: r.commentReports.reporterId, to: r.users.id }),
+    reporter: r.one.user({ from: r.commentReports.reporterId, to: r.user.id }),
     comment: r.one.snackComments({ from: r.commentReports.commentId, to: r.snackComments.id }),
   },
 
-  emailVerifications: {
-    user: r.one.users({ from: r.emailVerifications.userId, to: r.users.id }),
-  },
-
   bookmarks: {
-    user: r.one.users({ from: r.bookmarks.userId, to: r.users.id }),
+    user: r.one.user({ from: r.bookmarks.userId, to: r.user.id }),
     snackItem: r.one.snackItems({ from: r.bookmarks.snackItemId, to: r.snackItems.id }),
   },
 }));

@@ -1,19 +1,19 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { hotkeysDevtoolsPlugin } from "@tanstack/react-hotkeys-devtools";
-import type { QueryClient } from "@tanstack/react-query";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { MotionConfig } from "motion/react";
 
 import { Toaster } from "#/components/ui/sonner";
 import { ThemeProvider } from "#/components/ui/theme-provider";
+import type { RouterContext } from "#/router";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles/app.css?url";
 
 const isDev = import.meta.env.DEV;
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       {
@@ -68,6 +68,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
   }),
   shellComponent: RootDocument,
+  beforeLoad: async ({ context }) => {
+    await context.ensureSession();
+  },
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

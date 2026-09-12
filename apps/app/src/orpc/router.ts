@@ -5,7 +5,11 @@ import {
   logoutAdminProcedure,
   verifyAdminPasswordProcedure,
 } from "#/features/admin/admin.routes.server";
-import { sendTestEmailProcedure } from "#/features/auth/auth.routes.server";
+import {
+  getSessionProcedure,
+  signInOTPProcedure,
+  verifyOTPProcedure,
+} from "#/features/auth/auth.routes.server";
 import {
   createSnackProcedure,
   getSnackBySlugProcedure,
@@ -46,6 +50,8 @@ export default {
     deleteComment: deleteAdminCommentProcedure,
   },
   auth: {
-    sendTestEmail: sendTestEmailProcedure,
+    getSession: getSessionProcedure,
+    signInOTP: signInOTPProcedure,
+    verifyOTP: verifyOTPProcedure,
   },
 };

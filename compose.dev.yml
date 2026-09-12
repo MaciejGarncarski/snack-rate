@@ -1,6 +1,7 @@
 services:
   queue-worker:
-    disabled: true
+    profiles:
+      - "donotstart"
 
   garage:
     env_file:

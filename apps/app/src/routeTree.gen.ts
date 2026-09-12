@@ -13,11 +13,13 @@ import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as AuthKontoRouteImport } from './routes/auth/konto'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as HealthIndexRouteImport } from './routes/health/index'
 import { Route as HealthReadyRouteImport } from './routes/health/ready'
 import { Route as AppProduktSlugRouteRouteImport } from './routes/_app/produkt/$slug/route'
 import { Route as AppZaproponujIndexRouteImport } from './routes/_app/zaproponuj/index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as AppProduktSlugOgDotpngRouteImport } from './routes/_app/produkt/$slug/og[.]png'
 
@@ -38,6 +40,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthKontoRoute = AuthKontoRouteImport.update({
+  id: '/auth/konto',
+  path: '/auth/konto',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
@@ -65,6 +72,11 @@ const AppZaproponujIndexRoute = AppZaproponujIndexRouteImport.update({
   path: '/zaproponuj/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
   path: '/api/rpc/$',
@@ -80,10 +92,12 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/konto': typeof AuthKontoRoute
   '/auth/login': typeof AuthLoginRoute
   '/health/ready': typeof HealthReadyRoute
   '/health/': typeof HealthIndexRoute
   '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/zaproponuj/': typeof AppZaproponujIndexRoute
   '/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
@@ -91,11 +105,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/konto': typeof AuthKontoRoute
   '/auth/login': typeof AuthLoginRoute
   '/health/ready': typeof HealthReadyRoute
   '/': typeof AppIndexRoute
   '/health': typeof HealthIndexRoute
   '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/zaproponuj': typeof AppZaproponujIndexRoute
   '/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
@@ -105,11 +121,13 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteRouteWithChildren
   '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/konto': typeof AuthKontoRoute
   '/auth/login': typeof AuthLoginRoute
   '/health/ready': typeof HealthReadyRoute
   '/_app/': typeof AppIndexRoute
   '/health/': typeof HealthIndexRoute
   '/_app/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/_app/zaproponuj/': typeof AppZaproponujIndexRoute
   '/_app/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
@@ -120,10 +138,12 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/api/$'
+    | '/auth/konto'
     | '/auth/login'
     | '/health/ready'
     | '/health/'
     | '/produkt/$slug'
+    | '/api/auth/$'
     | '/api/rpc/$'
     | '/zaproponuj/'
     | '/produkt/$slug/og.png'
@@ -131,11 +151,13 @@ export interface FileRouteTypes {
   to:
     | '/admin'
     | '/api/$'
+    | '/auth/konto'
     | '/auth/login'
     | '/health/ready'
     | '/'
     | '/health'
     | '/produkt/$slug'
+    | '/api/auth/$'
     | '/api/rpc/$'
     | '/zaproponuj'
     | '/produkt/$slug/og.png'
@@ -144,11 +166,13 @@ export interface FileRouteTypes {
     | '/_app'
     | '/admin'
     | '/api/$'
+    | '/auth/konto'
     | '/auth/login'
     | '/health/ready'
     | '/_app/'
     | '/health/'
     | '/_app/produkt/$slug'
+    | '/api/auth/$'
     | '/api/rpc/$'
     | '/_app/zaproponuj/'
     | '/_app/produkt/$slug/og.png'
@@ -158,9 +182,11 @@ export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  AuthKontoRoute: typeof AuthKontoRoute
   AuthLoginRoute: typeof AuthLoginRoute
   HealthReadyRoute: typeof HealthReadyRoute
   HealthIndexRoute: typeof HealthIndexRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
 
@@ -192,6 +218,13 @@ declare module '@tanstack/react-router' {
       path: '/api/$'
       fullPath: '/api/$'
       preLoaderRoute: typeof ApiSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/konto': {
+      id: '/auth/konto'
+      path: '/auth/konto'
+      fullPath: '/auth/konto'
+      preLoaderRoute: typeof AuthKontoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/login': {
@@ -228,6 +261,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/zaproponuj/'
       preLoaderRoute: typeof AppZaproponujIndexRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/rpc/$': {
       id: '/api/rpc/$'
@@ -277,9 +317,11 @@ const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRoute,
   ApiSplatRoute: ApiSplatRoute,
+  AuthKontoRoute: AuthKontoRoute,
   AuthLoginRoute: AuthLoginRoute,
   HealthReadyRoute: HealthReadyRoute,
   HealthIndexRoute: HealthIndexRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
 }
 export const routeTree = rootRouteImport

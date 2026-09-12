@@ -1,4 +1,4 @@
-import { snackComments, users } from "@snack-rate/db-schema/schema";
+import { snackComments, user } from "@snack-rate/db-schema/schema";
 import { and, desc, eq, isNotNull, isNull, lt, or } from "drizzle-orm";
 
 import type { SnackComment } from "#/features/comments/contracts/comments";
@@ -40,13 +40,10 @@ export async function queryCommentsForSnack(
       body: snackComments.body,
       createdAt: snackComments.createdAt,
       updatedAt: snackComments.updatedAt,
-      username: users.username,
+      username: user.username,
     })
     .from(snackComments)
-    .leftJoin(
-      users,
-      and(eq(snackComments.authorType, "user"), eq(snackComments.authorId, users.id)),
-    )
+    .leftJoin(user, and(eq(snackComments.authorType, "user"), eq(snackComments.authorId, user.id)))
     .where(and(...conditions))
     .orderBy(desc(snackComments.createdAt), desc(snackComments.id))
     .limit(data.limit);

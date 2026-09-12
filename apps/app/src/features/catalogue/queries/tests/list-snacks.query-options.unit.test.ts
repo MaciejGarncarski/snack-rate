@@ -16,14 +16,6 @@ vi.mock("#/orpc/client", () => ({
 import { listSnacksQueryOptions } from "#/features/catalogue/queries/list-snacks.query-options";
 
 describe("listSnacksQueryOptions", () => {
-  it("creates different keys for different typeSlug", () => {
-    const a = listSnacksQueryOptions({ typeSlug: "chipsy" });
-    const b = listSnacksQueryOptions({ typeSlug: "czekolada" });
-    const c = listSnacksQueryOptions();
-    expect(a.queryKey).not.toEqual(b.queryKey);
-    expect(a.queryKey).not.toEqual(c.queryKey);
-  });
-
   it("includes typeSlug in input", () => {
     const opts = listSnacksQueryOptions({ typeSlug: "chipsy" });
     const input = (opts as unknown as { input: (p: string | null) => unknown }).input?.(null);

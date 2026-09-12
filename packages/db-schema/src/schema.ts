@@ -6,6 +6,7 @@ import {
   uuid,
   text,
   timestamp,
+  boolean,
   decimal,
   integer,
   primaryKey,
@@ -14,35 +15,6 @@ import {
   check,
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
-
-// ---------------------------------------------------------------------------
-// users
-// ---------------------------------------------------------------------------
-
-export const users = pgTable(
-  "users",
-  {
-    id: uuid("id")
-      .primaryKey()
-      .default(sql`uuidv7()`),
-    email: text("email").notNull(),
-    passwordHash: text("password_hash").notNull(),
-    username: text("username"),
-    profilePictureUrl: text("profile_picture_url"),
-    role: text("role").notNull().default("user"), // 'user' | 'moderator' | 'admin'
-    status: text("status").notNull().default("active"), // 'active' | 'suspended' | 'banned'
-    emailVerifiedAt: timestamp("email_verified_at"),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
-    deletedAt: timestamp("deleted_at"),
-  },
-  (t) => [
-    // Partial unique index — enforced at DB level via raw SQL or migration
-    uniqueIndex("users_email_unique_idx")
-      .on(t.email)
-      .where(sql`deleted_at IS NULL`),
-  ],
-);
 
 // ---------------------------------------------------------------------------
 // snack_types
@@ -109,7 +81,7 @@ export const snackComments = pgTable(
     snackItemId: uuid("snack_item_id")
       .notNull()
       .references(() => snackItems.id),
-    authorId: uuid("author_id").notNull(),
+    authorId: text("author_id").notNull(), // user id (`user.id`) or guest uuidv7
     authorType: text("author_type").notNull(), // 'user' | 'guest'
     parentCommentId: uuid("parent_comment_id").references((): AnyPgColumn => snackComments.id, {
       onDelete: "cascade",
@@ -171,9 +143,9 @@ export const commentReactions = pgTable(
     id: uuid("id")
       .primaryKey()
       .default(sql`uuidv7()`),
-    userId: uuid("user_id")
+    userId: text("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => user.id),
     commentId: uuid("comment_id")
       .notNull()
       .references(() => snackComments.id),
@@ -196,9 +168,9 @@ export const commentReports = pgTable(
     id: uuid("id")
       .primaryKey()
       .default(sql`uuidv7()`),
-    reporterId: uuid("reporter_id")
+    reporterId: text("reporter_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => user.id),
     commentId: uuid("comment_id")
       .notNull()
       .references(() => snackComments.id),
@@ -215,9 +187,9 @@ export const commentReports = pgTable(
 export const bookmarks = pgTable(
   "bookmarks",
   {
-    userId: uuid("user_id")
+    userId: text("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => user.id),
     snackItemId: uuid("snack_item_id")
       .notNull()
       .references(() => snackItems.id),
@@ -227,58 +199,77 @@ export const bookmarks = pgTable(
 );
 
 // ===========================================================================
-// auth
+// auth — Better Auth core schema
+// https://better-auth.com/docs/concepts/database#core-schema
+// Singular table names (`user`, `session`, `account`, `verification`) are
+// required by the Better Auth Drizzle adapter defaults. TS keys stay
+// camelCase while DB columns use snake_case, matching the rest of this file.
 // ===========================================================================
 
-export const sessions = pgTable(
-  "sessions",
+export const user = pgTable("user", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").notNull().default(false),
+  image: text("image"),
+  // App profile fields (declared as Better Auth `additionalFields` in auth config)
+  username: text("username"),
+  role: text("role").notNull().default("user"), // 'user' | 'moderator' | 'admin'
+  status: text("status").notNull().default("active"), // 'active' | 'suspended' | 'banned'
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const session = pgTable(
+  "session",
   {
-    id: uuid("id")
-      .primaryKey()
-      .default(sql`uuidv7()`),
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id),
-    tokenHash: text("token_hash").notNull().unique(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    id: text("id").primaryKey(),
     expiresAt: timestamp("expires_at").notNull(),
-    usedAt: timestamp("used_at"),
+    token: text("token").notNull().unique(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
   },
-  (t) => [index("sessions_user_id_idx").on(t.userId)],
+  (t) => [index("session_user_id_idx").on(t.userId)],
 );
 
-export const passwordResets = pgTable(
-  "password_resets",
+export const account = pgTable(
+  "account",
   {
-    id: uuid("id")
-      .primaryKey()
-      .default(sql`uuidv7()`),
-    userId: uuid("user_id")
+    id: text("id").primaryKey(),
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    userId: text("user_id")
       .notNull()
-      .references(() => users.id),
-    tokenHash: text("token_hash").notNull().unique(),
+      .references(() => user.id, { onDelete: "cascade" }),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    idToken: text("id_token"),
+    accessTokenExpiresAt: timestamp("access_token_expires_at"),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+    scope: text("scope"),
+    password: text("password"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
-    expiresAt: timestamp("expires_at").notNull(),
-    usedAt: timestamp("used_at"),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
-  (t) => [index("password_resets_user_id_idx").on(t.userId)],
+  (t) => [index("account_user_id_idx").on(t.userId)],
 );
 
-export const emailVerifications = pgTable(
-  "email_verifications",
+export const verification = pgTable(
+  "verification",
   {
-    id: uuid("id")
-      .primaryKey()
-      .default(sql`uuidv7()`),
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id),
-    tokenHash: text("token_hash").notNull().unique(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    id: text("id").primaryKey(),
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
     expiresAt: timestamp("expires_at").notNull(),
-    usedAt: timestamp("used_at"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
-  (t) => [index("email_verifications_user_id_idx").on(t.userId)],
+  (t) => [index("verification_identifier_idx").on(t.identifier)],
 );
 
 // ===========================================================================
