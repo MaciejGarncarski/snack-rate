@@ -41,6 +41,8 @@ export const getSessionProcedure = baseProcedure.handler(async ({ context }) => 
     return { user: null };
   }
 
-  const { id, email, name, image } = session.user;
-  return { user: { id, email, name, image } };
+  const { id, email, name, image, role } = session.user as typeof session.user & {
+    role?: string;
+  };
+  return { user: { id, email, name, image, role: role ?? "user" } };
 });

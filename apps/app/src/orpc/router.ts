@@ -1,9 +1,6 @@
 import {
-  checkAdminAuthProcedure,
   deleteAdminCommentProcedure,
   listAdminCommentsProcedure,
-  logoutAdminProcedure,
-  verifyAdminPasswordProcedure,
 } from "#/features/admin/admin.routes.server";
 import {
   getSessionProcedure,
@@ -43,9 +40,6 @@ export default {
     removeReaction: removeReactionProcedure,
   },
   admin: {
-    verifyPassword: verifyAdminPasswordProcedure,
-    checkAuth: checkAdminAuthProcedure,
-    logout: logoutAdminProcedure,
     listComments: listAdminCommentsProcedure,
     deleteComment: deleteAdminCommentProcedure,
   },

@@ -14,7 +14,7 @@ export function adminCommentsQueryOptions() {
   });
 }
 
-export const adminAuthQueryOptions = orpc.admin.checkAuth.queryOptions({
+export const adminAuthQueryOptions = orpc.auth.getSession.queryOptions({
   staleTime: ms("120s"),
   retry: false,
 });

@@ -37,6 +37,39 @@ export type SnackRatingsResult = {
   } | null;
 };
 
+export type SnackRatingAggregate = {
+  avg: number;
+  count: number;
+};
+
+/**
+ * Shared AVG/COUNT aggregate over non-deleted rated comments for a snack.
+ * Single source of truth for the value + rounding stored in
+ * `snackItems.avgRating` / `snackItems.ratingCount`.
+ */
+export async function getSnackRatingAggregate(
+  client: Database | DbTransaction,
+  snackItemId: string,
+): Promise<SnackRatingAggregate> {
+  const result = await client
+    .select({
+      avg: sql<string>`COALESCE(AVG(${snackComments.rating})::numeric, 0)`,
+      count: sql<number>`COUNT(*)`,
+    })
+    .from(snackComments)
+    .where(
+      and(
+        eq(snackComments.snackItemId, snackItemId),
+        isNotNull(snackComments.rating),
+        isNull(snackComments.deletedAt),
+      ),
+    );
+
+  const count = Number(result[0]?.count ?? 0);
+  const avg = count > 0 ? Math.round(Number(result[0]?.avg ?? 0) * 100) / 100 : 0;
+  return { avg, count };
+}
+
 export async function upsertRating(
   db: Database,
   data: UpsertRatingData,
@@ -105,22 +138,7 @@ export async function recalculateAvgRating(
 ): Promise<void> {
   const client = tx ?? db;
 
-  const result = await client
-    .select({
-      avg: sql<string>`COALESCE(AVG(${snackComments.rating})::numeric, 0)`,
-      count: sql<number>`COUNT(*)`,
-    })
-    .from(snackComments)
-    .where(
-      and(
-        eq(snackComments.snackItemId, snackItemId),
-        isNotNull(snackComments.rating),
-        isNull(snackComments.deletedAt),
-      ),
-    );
-
-  const count = Number(result[0]?.count ?? 0);
-  const avgValue = count > 0 ? Math.round(Number(result[0]?.avg ?? 0) * 100) / 100 : 0;
+  const { avg: avgValue, count } = await getSnackRatingAggregate(client, snackItemId);
 
   await client
     .update(snackItems)
@@ -157,19 +175,7 @@ export async function getRatingsForSnack(
   const client = tx ?? db;
 
   const [aggregate, userComment] = await Promise.all([
-    client
-      .select({
-        avg: sql<string>`COALESCE(AVG(${snackComments.rating})::numeric, 0)`,
-        count: sql<number>`COUNT(*)`,
-      })
-      .from(snackComments)
-      .where(
-        and(
-          eq(snackComments.snackItemId, data.snackItemId),
-          isNotNull(snackComments.rating),
-          isNull(snackComments.deletedAt),
-        ),
-      ),
+    getSnackRatingAggregate(client, data.snackItemId),
     data.authorId && data.authorType
       ? client.query.snackComments.findFirst({
           where: whereAuthor(data.snackItemId, data.authorId, data.authorType),
@@ -178,8 +184,8 @@ export async function getRatingsForSnack(
       : Promise.resolve(null),
   ]);
 
-  const count = Number(aggregate[0]?.count ?? 0);
-  const avgRating = count > 0 ? Math.round(Number(aggregate[0]?.avg ?? 0) * 100) / 100 : 0;
+  const count = aggregate.count;
+  const avgRating = aggregate.avg;
 
   const distribution: Record<string, number> = {};
   if (count > 0) {

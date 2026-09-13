@@ -198,14 +198,6 @@ export const bookmarks = pgTable(
   (t) => [primaryKey({ columns: [t.userId, t.snackItemId] })],
 );
 
-// ===========================================================================
-// auth — Better Auth core schema
-// https://better-auth.com/docs/concepts/database#core-schema
-// Singular table names (`user`, `session`, `account`, `verification`) are
-// required by the Better Auth Drizzle adapter defaults. TS keys stay
-// camelCase while DB columns use snake_case, matching the rest of this file.
-// ===========================================================================
-
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -213,7 +205,6 @@ export const user = pgTable("user", {
   emailVerified: boolean("email_verified").notNull().default(false),
   image: text("image"),
   // App profile fields (declared as Better Auth `additionalFields` in auth config)
-  username: text("username"),
   role: text("role").notNull().default("user"), // 'user' | 'moderator' | 'admin'
   status: text("status").notNull().default("active"), // 'active' | 'suspended' | 'banned'
   createdAt: timestamp("created_at").notNull().defaultNow(),

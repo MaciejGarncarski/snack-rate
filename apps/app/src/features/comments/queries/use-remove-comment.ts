@@ -5,13 +5,19 @@ import { snackCommentsQueryOptions } from "#/features/comments/queries/comments.
 import { snackRatingsQueryOptions } from "#/features/comments/queries/snack-ratings.query-options";
 import { orpc } from "#/orpc/client";
 
-export function useRemoveComment({ snackItemId, slug }: { snackItemId: string; slug: string }) {
+export function useRemoveComment({
+  snackItemId,
+  snackSlug,
+}: {
+  snackItemId: string;
+  snackSlug: string;
+}) {
   return useMutation(
     orpc.comments.removeRating.mutationOptions({
       onSuccess: async (_result, _vars, _a, context) => {
         await Promise.all([
           context.client.invalidateQueries(snackRatingsQueryOptions(snackItemId)),
-          context.client.invalidateQueries(getSnackBySlugQueryOptions(slug)),
+          context.client.invalidateQueries(getSnackBySlugQueryOptions(snackSlug)),
           context.client.invalidateQueries(snackCommentsQueryOptions(snackItemId)),
         ]);
       },

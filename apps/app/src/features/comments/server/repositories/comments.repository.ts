@@ -11,6 +11,7 @@ import {
   getRatingsForSnack as getRatingsForSnackFn,
   type UpsertRatingData,
   type RatingResult,
+  type SnackRatingAggregate,
   type SnackRatingsResult,
 } from "./ratings";
 import {
@@ -25,6 +26,7 @@ export type {
   DecodedCursor,
   UpsertRatingData,
   RatingResult,
+  SnackRatingAggregate,
   SnackRatingsResult,
   ToggleReactionResult,
 };
@@ -84,7 +86,10 @@ export function createCommentsRepository({ db }: CommentsRepositoryDeps) {
       tx?: DbTransaction,
     ): Promise<SnackComment[]> => {
       const client = tx ?? db;
-      const comments = await queryCommentsForSnack(client, data);
+      const comments = await queryCommentsForSnack(client, {
+        ...data,
+        userId: data.userId ?? null,
+      });
       if (comments.length === 0) return [] as SnackComment[];
 
       const commentIds = comments.map((c) => c.id);

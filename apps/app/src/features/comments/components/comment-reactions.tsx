@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 
 import { Image } from "#/components/image/image";
@@ -12,6 +12,7 @@ import {
   type ReactionType,
 } from "#/features/comments/consts/reaction-type.const";
 import type { SnackComment } from "#/features/comments/contracts/comments";
+import { COMMENTS_PER_PAGE } from "#/features/comments/queries/comments.query-options.ts";
 import { cn } from "#/lib/utils";
 import { orpc } from "#/orpc/client";
 
@@ -31,13 +32,24 @@ type Props = {
 
 const DELAY_BEFORE_OPEN = 350;
 
-export function CommentReactions({ comment }: Props) {
+export function CommentReactions({ comment, snackItemId }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const queryClient = useQueryClient();
 
   const react = useMutation(
     orpc.comments.react.mutationOptions({
-      onSettled: () => setIsOpen(false),
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: orpc.comments.list.infiniteKey({
+            input: () => ({
+              limit: COMMENTS_PER_PAGE,
+              snackItemId,
+            }),
+            initialPageParam: null,
+          }),
+        });
+      },
     }),
   );
 
@@ -79,7 +91,7 @@ export function CommentReactions({ comment }: Props) {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <Image src={activeIcon} alt="" className="size-3.5" />
+          <Image src={activeIcon} alt="" className="size-4" />
           {totalReactions > 0 ? (
             <span className="text-xs tabular-nums opacity-80">{totalReactions}</span>
           ) : (
@@ -138,28 +150,6 @@ export function CommentReactions({ comment }: Props) {
           </div>
         </Popover>
       </PopoverTrigger>
-
-      {totalReactions > 0 ? (
-        <div className="flex items-center gap-1 text-xs text-muted-foreground" aria-hidden>
-          <span className="hidden sm:inline">
-            {totalReactions} {totalReactions === 1 ? "reakcja" : "reakcji"} ·
-          </span>
-          <span className="flex items-center gap-1">
-            {REACTION_TYPES.filter((t) => (comment.reactions?.[t] ?? 0) > 0)
-              .slice(0, 4)
-              .map((t) => {
-                return (
-                  <span key={t} className="inline-flex items-center gap-0.5">
-                    {comment.reactions[t]}
-                  </span>
-                );
-              })}
-            {REACTION_TYPES.filter((t) => (comment.reactions?.[t] ?? 0) > 0).length > 4 ? (
-              <span>…</span>
-            ) : null}
-          </span>
-        </div>
-      ) : null}
     </div>
   );
 }

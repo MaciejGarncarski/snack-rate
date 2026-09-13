@@ -134,7 +134,7 @@ export function ImageInner({
               src={placeholderSrc}
               alt=""
               aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover blur-xs"
+              className="absolute inset-0 h-full w-full left-0 blur-xs"
               loading="eager"
               decoding="async"
               fetchPriority="low"

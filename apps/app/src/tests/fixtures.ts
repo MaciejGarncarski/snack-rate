@@ -17,7 +17,6 @@ export async function createUser(overrides?: Partial<UserInsert>) {
       id: nanoid(),
       name: "Jan",
       email: `user-${nanoid(8)}@example.com`,
-      username: "Jan",
       ...overrides,
     })
     .returning();

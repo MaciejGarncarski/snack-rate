@@ -36,7 +36,6 @@ async function main() {
       id: randomUUID(),
       email: demoEmail,
       name: "Demo",
-      username: "Demo",
       role: "admin",
       status: "active",
       emailVerified: true,

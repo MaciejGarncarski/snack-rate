@@ -1,42 +1,27 @@
 import { EllipsisIcon } from "lucide-react";
-import { useState } from "react";
 
-import { CommonAlertDialog } from "#/components/layout/common-alert-dialog";
-import { SnackRating } from "#/components/snacks/snack-rating";
-import { Button } from "#/components/ui/button";
+import { CommonAlertDialog } from "#/components/layout/common-alert-dialog.tsx";
+import { Button } from "#/components/ui/button.tsx";
 import {
   DropdownMenu,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "#/components/ui/dropdown-menu";
+} from "#/components/ui/dropdown-menu.tsx";
 
 type Props = {
-  userRating: number;
-  userBody: string | null;
   onEdit: () => void;
   onRemove: () => void;
+  isRemoveOpen: boolean;
+  setIsRemoveOpen: (open: boolean) => void;
 };
 
-export function UserCommentItem({ userRating, userBody, onEdit, onRemove }: Props) {
-  const [isRemoveOpen, setIsRemoveOpen] = useState(false);
-
+export function CurrentUserCommentMenu({ isRemoveOpen, setIsRemoveOpen, onEdit, onRemove }: Props) {
   return (
-    <div className="flex items-start justify-between gap-4 flex-row">
-      <div className="flex min-w-0 flex-col items-center gap-2">
-        <div className="flex flex-col gap-4">
-          <SnackRating rating={userRating} size="md" />
-          {userBody ? (
-            <p className="line-clamp-3 text-sm text-muted-foreground">{userBody}</p>
-          ) : (
-            <p className="text-sm text-muted-foreground">Brak treści recenzji.</p>
-          )}
-        </div>
-      </div>
-
+    <>
       <DropdownMenuTrigger>
-        <Button variant="outline" size="icon-sm">
+        <Button variant="outline" size="icon-sm" className="ml-auto">
           <EllipsisIcon />
         </Button>
         <DropdownMenu>
@@ -60,6 +45,6 @@ export function UserCommentItem({ userRating, userBody, onEdit, onRemove }: Prop
         onCancel={() => {}}
         onProceed={onRemove}
       />
-    </div>
+    </>
   );
 }

@@ -187,6 +187,7 @@ export default function SnackImageSlider({ images, thumbnailUrls }: Props) {
               >
                 <Image
                   src={src}
+                  placeholderSrc={src}
                   blurBackground
                   width={80}
                   height={100}

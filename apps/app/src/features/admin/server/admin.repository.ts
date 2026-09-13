@@ -1,6 +1,7 @@
-import { snackComments, snackItems, user } from "@snack-rate/db-schema/schema";
-import { and, desc, eq, isNull, lt, or, sql } from "drizzle-orm";
+import { snackComments, snackItems } from "@snack-rate/db-schema/schema";
+import { desc, eq } from "drizzle-orm";
 
+import { getSnackRatingAggregate } from "#/features/comments/server/repositories/ratings";
 import type { Database, DbTransaction } from "#/infrastructure/db/db";
 
 export type AdminComment = {
@@ -25,8 +26,8 @@ export type AdminListResult = {
   nextCursor: string | null;
 };
 
-function resolveAuthorName(username: string | null): string {
-  return username?.trim() || "Gość";
+function resolveAuthorName(name: string | null): string {
+  return name?.trim() || "Gość";
 }
 
 function encodeCursor(createdAt: Date, id: string): string {
@@ -52,53 +53,65 @@ export function createAdminRepository({ db }: { db: Database }) {
       const limit = input.limit;
       const decoded = input.cursor ? decodeCursor(input.cursor) : null;
 
-      const cursorCondition = decoded
-        ? or(
-            lt(snackComments.createdAt, decoded.createdAt),
-            and(eq(snackComments.createdAt, decoded.createdAt), lt(snackComments.id, decoded.id)),
-          )
-        : undefined;
-
-      const conditions = [isNull(snackComments.deletedAt), cursorCondition].filter(
-        (c): c is NonNullable<typeof c> => c !== undefined,
-      );
-
-      const rows = await db
-        .select({
-          id: snackComments.id,
-          body: snackComments.body,
-          rating: snackComments.rating,
-          authorType: snackComments.authorType,
-          createdAt: snackComments.createdAt,
-          snackItemId: snackComments.snackItemId,
-          snackName: snackItems.name,
-          snackSlug: snackItems.slug,
-          username: user.username,
-        })
-        .from(snackComments)
-        .innerJoin(snackItems, eq(snackComments.snackItemId, snackItems.id))
-        .leftJoin(
-          user,
-          and(eq(snackComments.authorType, "user"), eq(snackComments.authorId, user.id)),
-        )
-        .where(and(...conditions))
-        .orderBy(desc(snackComments.createdAt), desc(snackComments.id))
-        .limit(limit + 1);
+      const rows = await db.query.snackComments.findMany({
+        where: {
+          AND: [
+            { deletedAt: { isNull: true } },
+            ...(decoded
+              ? [
+                  {
+                    OR: [
+                      { createdAt: { lt: decoded.createdAt } },
+                      { createdAt: { eq: decoded.createdAt }, id: { lt: decoded.id } },
+                    ],
+                  },
+                ]
+              : []),
+          ],
+        },
+        orderBy: (table) => [desc(table.createdAt), desc(table.id)],
+        limit: limit + 1,
+        columns: {
+          id: true,
+          body: true,
+          rating: true,
+          authorType: true,
+          createdAt: true,
+          snackItemId: true,
+        },
+        with: {
+          snackItem: {
+            columns: { name: true, slug: true },
+          },
+          author: {
+            columns: { name: true },
+          },
+        },
+      });
 
       const hasMore = rows.length > limit;
       const sliced = hasMore ? rows.slice(0, limit) : rows;
 
-      const comments: AdminComment[] = sliced.map((row) => ({
-        id: row.id,
-        body: row.body,
-        rating: row.rating,
-        authorName: resolveAuthorName(row.username),
-        authorType: row.authorType as "user" | "guest",
-        createdAt: row.createdAt,
-        snackItemId: row.snackItemId,
-        snackName: row.snackName,
-        snackSlug: row.snackSlug,
-      }));
+      const comments: AdminComment[] = sliced.flatMap((row) => {
+        // Parity with the previous inner join: skip comments whose snack is gone.
+        if (!row.snackItem) return [];
+        return [
+          {
+            id: row.id,
+            body: row.body,
+            rating: row.rating,
+            // `author` is only meaningful for user rows; guard on
+            // `authorType` to mirror the old conditional join.
+            authorName:
+              row.authorType === "user" ? resolveAuthorName(row.author?.name ?? null) : "Gość",
+            authorType: row.authorType as "user" | "guest",
+            createdAt: row.createdAt,
+            snackItemId: row.snackItemId,
+            snackName: row.snackItem.name,
+            snackSlug: row.snackItem.slug,
+          },
+        ];
+      });
 
       const nextCursor =
         hasMore && sliced.length > 0
@@ -124,22 +137,7 @@ export function createAdminRepository({ db }: { db: Database }) {
         .where(eq(snackComments.id, commentId));
 
       // Recalculate avgRating / ratingCount for related snack
-      const result = await client
-        .select({
-          avg: sql<string>`COALESCE(AVG(${snackComments.rating})::numeric, 0)`,
-          count: sql<number>`COUNT(*)`,
-        })
-        .from(snackComments)
-        .where(
-          and(
-            eq(snackComments.snackItemId, existing.snackItemId),
-            isNull(snackComments.deletedAt),
-            sql`${snackComments.rating} IS NOT NULL`,
-          ),
-        );
-
-      const count = Number(result[0]?.count ?? 0);
-      const avgValue = count > 0 ? Math.round(Number(result[0]?.avg ?? 0) * 100) / 100 : 0;
+      const { avg: avgValue, count } = await getSnackRatingAggregate(client, existing.snackItemId);
 
       await client
         .update(snackItems)

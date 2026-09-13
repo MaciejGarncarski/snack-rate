@@ -6,6 +6,7 @@ type ListSnackCommentsInput = {
   snackItemId: string;
   limit: number;
   cursor?: string | null;
+  sessionUserId?: string | null;
   userId?: string | null;
 };
 

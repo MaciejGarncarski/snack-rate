@@ -1,5 +1,5 @@
 import { baseORPC } from "#/lib/orpc/base";
-import { guestMiddleware, sessionMiddleware } from "#/middlewares/auth-middleware.server";
+import { authMiddleware } from "#/middlewares/auth-middleware.server";
 import { logger } from "#/observability/logger/logger";
 import { sanitizeRequestData } from "#/observability/request-context";
 import { mapError } from "#/orpc/map-error";
@@ -48,7 +48,4 @@ const errorHandlingMiddleware = baseORPC.middleware(async ({ next, path }, input
   }
 });
 
-export const baseProcedure = baseORPC
-  .use(errorHandlingMiddleware)
-  .use(sessionMiddleware)
-  .use(guestMiddleware);
+export const baseProcedure = baseORPC.use(errorHandlingMiddleware).use(authMiddleware);

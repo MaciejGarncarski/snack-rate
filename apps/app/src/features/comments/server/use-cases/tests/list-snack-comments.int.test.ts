@@ -45,7 +45,7 @@ describe("list snack comments", () => {
 
   it("should return comments with author name from user", async () => {
     const snack = await createSnack();
-    const user = await createUser({ username: "Anna" });
+    const user = await createUser({ name: "Anna" });
 
     await insertComment(snack.id, {
       authorId: user.id,

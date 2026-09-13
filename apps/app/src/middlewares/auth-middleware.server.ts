@@ -1,44 +1,46 @@
+import { ORPCError } from "@orpc/server";
 import { getCookie } from "@orpc/server/helpers";
 import { setCookie } from "@tanstack/react-start/server";
 import { uuidv7 } from "uuidv7";
 import * as z from "zod";
 
+import { auth } from "#/lib/auth.ts";
 import { cookies } from "#/lib/cookie.config";
 import { baseORPC } from "#/lib/orpc/base";
 
-export const sessionMiddleware = baseORPC.middleware(({ context, next }) => {
-  const userId = getCookie(context.requestHeaders, cookies.session.name);
+const guestIdSchema = z.uuidv7();
+const userRoleSchema = z.enum(["guest", "user", "admin"]);
+
+export const authMiddleware = baseORPC.middleware(async ({ context, next }) => {
+  const session = await auth.api.getSession({
+    headers: context.requestHeaders,
+  });
+
+  const guestId = getCookie(context.requestHeaders, cookies.guestId.name);
+  const parsedGuestId = guestIdSchema.safeParse(guestId);
+
+  if (!parsedGuestId.success) {
+    setCookie(cookies.guestId.name, uuidv7(), cookies.guestId.options);
+  }
+
+  const parseUserRole = userRoleSchema.safeParse(session?.user?.role ?? "guest");
 
   return next({
     context: {
       ...context,
-      userId: userId ?? null,
+      userId: session?.user?.id ?? null,
+      role: parseUserRole.success ? parseUserRole.data : "guest",
+      guestId: parsedGuestId.success ? parsedGuestId.data : uuidv7(),
     },
   });
 });
 
-const guestIdSchema = z.uuidv7();
+export const adminAuthMiddleware = baseORPC.middleware(({ context, next }) => {
+  const isAdmin = context.role === "admin";
 
-export const guestMiddleware = baseORPC.middleware(({ context, next }) => {
-  const guestId = getCookie(context.requestHeaders, cookies.guestId.name);
-  const parsedGuestId = guestIdSchema.safeParse(guestId);
-
-  if (guestId && parsedGuestId.success) {
-    return next({
-      context: {
-        ...context,
-        guestId,
-      },
-    });
+  if (!isAdmin) {
+    throw new ORPCError("UNAUTHORIZED", { message: "Unauthorized: Admin access required" });
   }
 
-  const newGuestId = uuidv7();
-  setCookie(cookies.guestId.name, newGuestId, cookies.guestId.options);
-
-  return next({
-    context: {
-      ...context,
-      guestId: newGuestId,
-    },
-  });
+  return next();
 });

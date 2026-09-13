@@ -14,6 +14,7 @@ type Props = {
   initialBody: string | null;
   snackItemId: string;
   isPending: boolean;
+  isEditing?: boolean;
   onCancel?: () => void;
   onRated?: () => void;
 };
@@ -23,6 +24,7 @@ export function AddCommentForm({
   initialBody,
   snackItemId,
   isPending,
+  isEditing = false,
   onCancel,
   onRated,
 }: Props) {
@@ -71,7 +73,7 @@ export function AddCommentForm({
       }}
     >
       <h3 className="flex items-center gap-2 text-xl font-bold text-foreground">
-        Dodawanie nowej oceny
+        {isEditing ? "Edytowanie oceny" : "Dodawanie oceny"}
       </h3>
       <div className="flex w-full flex-col gap-5">
         <form.Field name="rating">

@@ -32,6 +32,11 @@ export const relations = defineRelations(schema, (r) => ({
 
   snackComments: {
     snackItem: r.one.snackItems({ from: r.snackComments.snackItemId, to: r.snackItems.id }),
+    // Polymorphic author: `authorId` holds a `user.id` when `authorType` is
+    // 'user', otherwise a guest uuid. The join itself can't filter on
+    // `authorType`, so consumers must ignore `author` for guest rows
+    // (guest uuids never collide with user ids in practice).
+    author: r.one.user({ from: r.snackComments.authorId, to: r.user.id }),
     parent: r.one.snackComments({
       from: r.snackComments.parentCommentId,
       to: r.snackComments.id,

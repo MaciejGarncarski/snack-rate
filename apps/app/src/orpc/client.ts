@@ -15,6 +15,7 @@ const getORPCClient = createIsomorphicFn()
         requestHeaders: getRequestHeaders(),
         guestId: null,
         userId: null,
+        role: "guest" as const,
       }),
     }),
   )

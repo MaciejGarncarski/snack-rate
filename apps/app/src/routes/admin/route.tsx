@@ -1,95 +1,43 @@
-import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState, type ChangeEvent } from "react";
+import { createFileRoute, Link, redirect, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 
-import { TurnstileWidget } from "#/components/turnstile-widget";
 import { Badge } from "#/components/ui/badge";
-import { Button } from "#/components/ui/button";
+import { Button, buttonVariants } from "#/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "#/components/ui/card";
-import { Input } from "#/components/ui/input";
 import {
   adminAuthQueryOptions,
   adminCommentsQueryOptions,
 } from "#/features/admin/admin.query-options";
+import { authClient } from "#/lib/auth-client.ts";
 import { orpc } from "#/orpc/client";
 
 export const Route = createFileRoute("/admin")({
   component: RouteComponent,
   ssr: false,
+  loader: async ({ context: { ensureSession } }) => {
+    const session = await ensureSession();
+
+    if (!session.user || session.user.role !== "admin") {
+      throw redirect({ to: "/auth/login" });
+    }
+  },
 });
 
 function RouteComponent() {
   const queryClient = useQueryClient();
-  const [inputPassword, setInputPassword] = useState("");
-  const [authError, setAuthError] = useState<string | null>(null);
-  const [token, setToken] = useState<string | undefined>();
-  const turnstileRef = useRef<TurnstileInstance | null>(null);
-
+  const router = useRouter();
   const authQuery = useQuery(adminAuthQueryOptions);
-  const isAuthenticated = authQuery.data?.ok === true;
-  const isAuthPending = authQuery.isPending;
-  const isAuthError = authQuery.isError;
+  const user = authQuery.data?.user ?? null;
+  const isAdmin = (user as { role?: string } | null)?.role === "admin";
 
-  const handleVerifySuccess = () => {
-    setAuthError(null);
-    setInputPassword("");
-    setToken(undefined);
-    turnstileRef.current?.reset();
-    toast.success("Zalogowano do panelu admina");
-    void queryClient.invalidateQueries({ queryKey: orpc.admin.checkAuth.key() });
-    void queryClient.invalidateQueries({ queryKey: orpc.admin.listComments.key() });
+  const handleLogout = async () => {
+    await authClient.signOut();
+    await queryClient.invalidateQueries({ queryKey: orpc.auth.getSession.queryKey() });
+    await router.invalidate();
   };
 
-  const handleVerifyError = (error: unknown) => {
-    const message = error instanceof Error ? error.message : "Nieprawidłowe hasło";
-    setAuthError(message);
-    setToken(undefined);
-    turnstileRef.current?.reset();
-    toast.error(message);
-  };
-
-  const verifyMutation = useMutation(
-    // oxlint-disable-next-line react/refs
-    orpc.admin.verifyPassword.mutationOptions({
-      onSuccess: handleVerifySuccess,
-      onError: handleVerifyError,
-    }),
-  );
-
-  const logoutMutation = useMutation(
-    orpc.admin.logout.mutationOptions({
-      onSuccess: () => {
-        toast.success("Wylogowano");
-        void queryClient.invalidateQueries({ queryKey: orpc.admin.checkAuth.key() });
-        void queryClient.setQueryData(orpc.admin.checkAuth.key(), null);
-      },
-      onError: (error) => {
-        const message = error instanceof Error ? error.message : "Błąd wylogowania";
-        toast.error(message);
-      },
-    }),
-  );
-
-  const handleLogin = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!inputPassword.trim()) {
-      setAuthError("Podaj hasło");
-      return;
-    }
-    if (!token) {
-      setAuthError("Potwierdź, że nie jesteś robotem");
-      return;
-    }
-    verifyMutation.mutate({ password: inputPassword, token });
-  };
-
-  const handleLogout = () => {
-    logoutMutation.mutate({});
-  };
-
-  if (isAuthPending) {
+  if (authQuery.isPending) {
     return (
       <div className="mx-auto max-w-3xl p-6">
         <p className="text-muted-foreground">Sprawdzanie autoryzacji...</p>
@@ -97,49 +45,46 @@ function RouteComponent() {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
     return (
       <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center gap-6 p-6">
         <Card>
           <CardHeader>
             <CardTitle>Panel administratora</CardTitle>
-            <CardDescription>Podaj hasło aby uzyskać dostęp</CardDescription>
+            <CardDescription>Musisz się zalogować, aby uzyskać dostęp</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="flex flex-col gap-4">
-              <Input
-                type="password"
-                placeholder="Hasło"
-                value={inputPassword}
-                onChange={(e) => setInputPassword(e.target.value)}
-              />
-              <TurnstileWidget onVerify={setToken} ref={turnstileRef} />
-              {authError ? <p className="text-destructive text-sm">{authError}</p> : null}
-              {isAuthError && !authError ? (
-                <p className="text-muted-foreground text-sm">
-                  Sesja wygasła — zaloguj się ponownie
-                </p>
-              ) : null}
-              <Button type="submit" isDisabled={verifyMutation.isPending || !token}>
-                {verifyMutation.isPending ? "Logowanie..." : "Zaloguj"}
-              </Button>
-            </form>
+            <Link to="/auth/login" className={buttonVariants()}>
+              Przejdź do logowania
+            </Link>
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  return <AdminDashboard onLogout={handleLogout} isLoggingOut={logoutMutation.isPending} />;
+  if (!isAdmin) {
+    return (
+      <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center gap-6 p-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Brak dostępu</CardTitle>
+            <CardDescription>Konto {user.email} nie ma uprawnień administratora</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" onPress={handleLogout}>
+              Wyloguj
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return <AdminDashboard onLogout={handleLogout} />;
 }
 
-function AdminDashboard({
-  onLogout,
-  isLoggingOut,
-}: {
-  onLogout: () => void;
-  isLoggingOut?: boolean;
-}) {
+function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const queryClient = useQueryClient();
   const { data, isPending, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery(adminCommentsQueryOptions());
@@ -164,7 +109,7 @@ function AdminDashboard({
       <div className="mx-auto max-w-3xl p-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Admin dashboard</h1>
-          <Button variant="outline" onPress={onLogout} isDisabled={isLoggingOut}>
+          <Button variant="outline" onPress={onLogout}>
             Wyloguj
           </Button>
         </div>
@@ -175,15 +120,14 @@ function AdminDashboard({
 
   if (isError) {
     const msg = error instanceof Error ? error.message : "Błąd ładowania";
-    const isUnauthorized =
-      msg.toLowerCase().includes("hasło") || msg.toLowerCase().includes("unauthorized");
+    const isUnauthorized = msg.toLowerCase().includes("unauthorized");
     if (isUnauthorized) {
-      void queryClient.invalidateQueries({ queryKey: orpc.admin.checkAuth.key() });
+      void queryClient.invalidateQueries({ queryKey: orpc.auth.getSession.queryKey() });
       return (
         <div className="mx-auto max-w-3xl p-6">
-          <p className="text-destructive">Sesja wygasła lub hasło nieprawidłowe.</p>
+          <p className="text-destructive">Brak uprawnień administratora.</p>
           <Button className="mt-4" onPress={() => window.location.reload()}>
-            Odśwież i zaloguj ponownie
+            Odśwież
           </Button>
         </div>
       );
@@ -207,8 +151,8 @@ function AdminDashboard({
             Lista postów (komentarzy) — {comments.length} pozycji
           </p>
         </div>
-        <Button variant="outline" onPress={onLogout} isDisabled={isLoggingOut}>
-          {isLoggingOut ? "Wylogowywanie..." : "Wyloguj"}
+        <Button variant="outline" onPress={onLogout}>
+          Wyloguj
         </Button>
       </div>
 

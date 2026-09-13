@@ -1,5 +1,4 @@
-import { snackComments, user } from "@snack-rate/db-schema/schema";
-import { and, desc, eq, isNotNull, isNull, lt, or } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 
 import type { SnackComment } from "#/features/comments/contracts/comments";
 import type { Database, DbTransaction } from "#/infrastructure/db/db";
@@ -9,51 +8,63 @@ export type DecodedCursor = {
   id: string;
 };
 
-function resolveAuthorName(username: string | null): string {
-  return username?.trim() || "Gość";
+function resolveAuthorName(name: string | null): string {
+  return name?.trim() || "Gość";
 }
 
 export async function queryCommentsForSnack(
   client: Database | DbTransaction,
-  data: { snackItemId: string; limit: number; cursor: DecodedCursor | null },
+  data: {
+    snackItemId: string;
+    userId: string | null;
+    limit: number;
+    cursor: DecodedCursor | null;
+  },
 ): Promise<Omit<SnackComment, "reactions" | "userReaction">[]> {
-  const conditions = [
-    eq(snackComments.snackItemId, data.snackItemId),
-    isNull(snackComments.parentCommentId),
-    isNotNull(snackComments.rating),
-    isNull(snackComments.deletedAt),
-    data.cursor
-      ? or(
-          lt(snackComments.createdAt, data.cursor.createdAt),
-          and(
-            eq(snackComments.createdAt, data.cursor.createdAt),
-            lt(snackComments.id, data.cursor.id),
-          ),
-        )
-      : undefined,
-  ];
-
-  const commentRows = await client
-    .select({
-      id: snackComments.id,
-      rating: snackComments.rating,
-      body: snackComments.body,
-      createdAt: snackComments.createdAt,
-      updatedAt: snackComments.updatedAt,
-      username: user.username,
-    })
-    .from(snackComments)
-    .leftJoin(user, and(eq(snackComments.authorType, "user"), eq(snackComments.authorId, user.id)))
-    .where(and(...conditions))
-    .orderBy(desc(snackComments.createdAt), desc(snackComments.id))
-    .limit(data.limit);
+  const commentRows = await client.query.snackComments.findMany({
+    where: {
+      AND: [
+        { snackItemId: data.snackItemId },
+        { parentCommentId: { isNull: true } },
+        { rating: { isNotNull: true } },
+        { deletedAt: { isNull: true } },
+        ...(data.cursor
+          ? [
+              {
+                OR: [
+                  { createdAt: { eq: data.cursor.createdAt }, id: { lt: data.cursor.id } },
+                  { createdAt: { lt: data.cursor.createdAt } },
+                ],
+              },
+            ]
+          : []),
+      ],
+    },
+    orderBy: (table) => [desc(table.createdAt), desc(table.id)],
+    limit: data.limit,
+    columns: {
+      id: true,
+      rating: true,
+      body: true,
+      authorId: true,
+      authorType: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    with: {
+      author: {
+        columns: { name: true },
+      },
+    },
+  });
 
   return commentRows.map((row) => {
     return {
       id: row.id,
       rating: row.rating ?? 0,
       body: row.body,
-      authorName: resolveAuthorName(row.username),
+      authorName: row.authorType === "user" ? resolveAuthorName(row.author?.name ?? null) : "Gość",
+      isUserAuthor: row.authorId === data.userId,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       isEdited: row.updatedAt.getTime() > row.createdAt.getTime(),

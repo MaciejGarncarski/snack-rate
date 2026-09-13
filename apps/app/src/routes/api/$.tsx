@@ -62,7 +62,7 @@ const handler = new OpenAPIHandler(router, {
 async function handle({ request }: { request: Request }) {
   const { response } = await handler.handle(request, {
     prefix: "/api",
-    context: { requestHeaders: request.headers, guestId: null, userId: null },
+    context: { requestHeaders: request.headers, guestId: null, userId: null, role: "guest" },
   });
 
   const traceId = getActiveTraceId();
