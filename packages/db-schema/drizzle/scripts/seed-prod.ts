@@ -56,5 +56,5 @@ try {
   process.exit(1);
 }
 
-// oxlint-disable-next-line unicorn/require-module-specifiers
+// oxlint-disable-next-line unicorn/require-module-specifiers typescript/no-useless-empty-export
 export {};

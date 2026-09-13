@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @snack-rate/app run dev",
+    "dev": "pnpm --parallel --filter @snack-rate/app --filter @snack-rate/queue-worker run dev",
+    "dev:app": "pnpm --filter @snack-rate/app run dev",
     "dev:queue-worker": "pnpm --filter @snack-rate/queue-worker run dev",
     "build": "pnpm --filter @snack-rate/app run build",
     "start": "pnpm --filter @snack-rate/app run start",
