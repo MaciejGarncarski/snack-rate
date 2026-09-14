@@ -11,7 +11,12 @@ export async function listSnacksUseCase(
 ) {
   const decodedCursor = cursor ? decodeCursor(cursor) : null;
 
-  const pageItems = await repository.list(limit + 1, decodedCursor, typeSlug ?? null, sortBy);
+  const pageItems = await repository.list({
+    limit: limit + 1,
+    cursor: decodedCursor,
+    typeSlug: typeSlug ?? null,
+    sortBy,
+  });
 
   return slicePage(pageItems, limit);
 }

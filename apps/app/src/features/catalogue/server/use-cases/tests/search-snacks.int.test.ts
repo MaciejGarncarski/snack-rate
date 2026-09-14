@@ -54,4 +54,21 @@ describe("search snacks", () => {
     const results = await searchSnacksUseCase("Unique Snack", repository);
     expect(results).toHaveLength(8);
   });
+
+  it("should exclude soft-deleted snacks", async () => {
+    const snack = await createSnack({
+      name: "Deleted Ghost Snack",
+      deletedAt: new Date(),
+    });
+    const results = await searchSnacksUseCase("deleted ghost snack", repository);
+
+    expect(results.some((s) => s.id === snack.id)).toBe(false);
+  });
+
+  it("should treat % and _ in the query as literal characters", async () => {
+    const snack = await createSnack({ name: "100% Cacao_Bar" });
+    const results = await searchSnacksUseCase("100% Cacao_Bar", repository);
+
+    expect(results.some((s) => s.id === snack.id)).toBe(true);
+  });
 });

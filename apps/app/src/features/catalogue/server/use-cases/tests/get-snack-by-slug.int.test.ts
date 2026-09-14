@@ -31,4 +31,10 @@ describe("get snack by slug", () => {
     const snack = await getSnackBySlugUseCase("non-existent-slug", repository);
     expect(snack).toBeNull();
   });
+
+  it("should return null when snack is soft-deleted", async () => {
+    const createdSnack = await createSnack({ deletedAt: new Date() });
+    const snack = await getSnackBySlugUseCase(createdSnack.slug, repository);
+    expect(snack).toBeNull();
+  });
 });

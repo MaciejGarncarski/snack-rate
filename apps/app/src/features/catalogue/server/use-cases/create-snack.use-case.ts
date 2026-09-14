@@ -12,13 +12,15 @@ import { snacksCreatedCounter } from "#/observability/counters";
 import { logger } from "#/observability/logger/logger";
 import { getActiveSpan } from "#/observability/tracing";
 
-export function createSnackUseCase(
-  input: CreateSnackInput,
-  uploadedImages: UploadedImage[],
-  slug: Slug,
-  snackRepository: SnacksRepository,
-  db: Database,
-) {
+export function createSnackUseCase(args: {
+  input: CreateSnackInput;
+  uploadedImages: UploadedImage[];
+  slug: Slug;
+  userId: string | null;
+  snackRepository: SnacksRepository;
+  db: Database;
+}) {
+  const { input, uploadedImages, slug, userId, snackRepository, db } = args;
   const isAdminOrModerator = true;
   const snackStatus: SnackStatus = isAdminOrModerator ? "published" : "pending";
 
@@ -32,14 +34,15 @@ export function createSnackUseCase(
     const start = Date.now();
 
     try {
-      const snackId = await createSnackRecord(
+      const snackId = await createSnackRecord({
         input,
         slug,
-        snackStatus,
+        userId,
+        status: snackStatus,
         uploadedImages,
         snackRepository,
         db,
-      );
+      });
 
       const duration = Date.now() - start;
 

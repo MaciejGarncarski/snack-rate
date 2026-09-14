@@ -5,7 +5,7 @@ import {
 import { createSnackUseCase } from "#/features/catalogue/server/use-cases/create-snack.use-case";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 import type { Database } from "#/infrastructure/db/db";
-import { createSnackType } from "#/tests/fixtures";
+import { createSnackType, createUser } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup.int";
 import { noopGetFileUrl } from "#/tests/utils";
 
@@ -30,17 +30,18 @@ describe("create snack", () => {
       typeSlug: type.slug,
     };
 
-    const snack = await createSnackUseCase(
-      {
+    const snack = await createSnackUseCase({
+      input: {
         name: input.name,
         description: input.description,
         typeSlug: input.typeSlug,
       },
-      [],
-      Slug.create(input.name),
-      repository,
+      uploadedImages: [],
+      slug: Slug.create(input.name),
+      userId: null,
+      snackRepository: repository,
       db,
-    );
+    });
 
     const dbSnack = await db.query.snackItems.findFirst({
       where: { slug: snack.slug },
@@ -62,23 +63,24 @@ describe("create snack", () => {
 
     const name = "Snack With Image";
 
-    const snack = await createSnackUseCase(
-      {
+    const snack = await createSnackUseCase({
+      input: {
         name,
         description: "Test",
         typeSlug: type.slug,
       },
-      [
+      uploadedImages: [
         {
           key: "snack-with-image.png",
           thumbKey: "snack-with-image-thumb.png",
           index: 0,
         },
       ],
-      Slug.create(name),
-      repository,
+      slug: Slug.create(name),
+      userId: null,
+      snackRepository: repository,
       db,
-    );
+    });
 
     const dbSnack = await db.query.snackItems.findFirst({
       where: { slug: snack.slug },
@@ -90,5 +92,30 @@ describe("create snack", () => {
     expect(dbSnack?.images).toHaveLength(2);
     expect(dbSnack?.images[0].type).toBe("default");
     expect(dbSnack?.images[1].type).toBe("thumbnail");
+  });
+
+  it("should store the author when created by a user", async () => {
+    const type = await createSnackType();
+    const author = await createUser();
+
+    const input = {
+      name: "Authored Snack",
+      typeSlug: type.slug,
+    };
+
+    const snack = await createSnackUseCase({
+      input,
+      uploadedImages: [],
+      slug: Slug.create(input.name),
+      userId: author.id,
+      snackRepository: repository,
+      db,
+    });
+
+    const dbSnack = await db.query.snackItems.findFirst({
+      where: { slug: snack.slug },
+    });
+
+    expect(dbSnack?.authorId).toBe(author.id);
   });
 });

@@ -27,6 +27,7 @@ export type SnackItem = {
   slug: string;
   status: SnackStatus;
   barcode: string | null;
+  authorId: string | null;
   rating: { avg: number; count: number };
   typeId: string;
   createdAt: Date;
@@ -44,6 +45,10 @@ export type SnackItem = {
 };
 
 const MAX_SEARCH_RESULTS = 8;
+
+function escapeLikePattern(value: string): string {
+  return value.replaceAll(/[\\%_]/gu, (char) => `\\${char}`);
+}
 
 type SnacksRepositoryDeps = {
   db: Database;
@@ -74,6 +79,7 @@ function toSnackItem(
     description: row.description,
     slug: row.slug,
     barcode: row.barcode,
+    authorId: row.authorId,
     rating: { avg: Number(row.avgRating), count: row.ratingCount },
     typeId: row.typeId,
     createdAt: row.createdAt,
@@ -92,6 +98,7 @@ type CreateSnackData = {
   barcode?: string;
   typeSlug: string;
   status: SnackStatus;
+  authorId: string | null;
 };
 
 type AddImageData = {
@@ -114,19 +121,20 @@ async function fetchSnacksByIds(
   ids: string[],
   getFileUrl: (storageKey: string) => Promise<string>,
 ): Promise<SnackItem[]> {
-  const rows = await Promise.all(
-    ids.map((id) =>
-      db.query.snackItems.findFirst({
-        where: { id },
-        with: { type: true, images: true },
-      }),
-    ),
-  );
+  if (ids.length === 0) return [];
+
+  const rows = await db.query.snackItems.findMany({
+    where: { id: { in: ids } },
+    with: { type: true, images: true },
+  });
+
+  const byId = new Map(rows.map((row) => [row.id, row]));
 
   return Promise.all(
-    rows
-      .filter((r): r is NonNullable<typeof r> => r !== null)
-      .map((r) => toSnackItem(r, getFileUrl)),
+    ids.flatMap((id) => {
+      const row = byId.get(id);
+      return row ? [toSnackItem(row, getFileUrl)] : [];
+    }),
   );
 }
 
@@ -147,6 +155,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
         .values({
           name: data.name,
           slug: data.slug,
+          authorId: data.authorId,
           description: data.description || null,
           barcode: data.barcode || null,
           typeId: snackType.id,
@@ -179,7 +188,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
           span.setAttribute("snack.slug", slug);
 
           const found = await db.query.snackItems.findFirst({
-            where: { slug, status: "published" },
+            where: { slug, status: "published", deletedAt: { isNull: true } },
             with: { type: true, images: true },
           });
 
@@ -192,12 +201,13 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
       );
     },
 
-    list: (
-      limit: number,
-      cursor?: DecodedCursor | null,
-      typeSlug?: string | null,
-      sortBy?: SortBy,
-    ): Promise<SnackItem[]> => {
+    list: (args: {
+      limit: number;
+      cursor?: DecodedCursor | null;
+      typeSlug?: string | null;
+      sortBy?: SortBy;
+    }): Promise<SnackItem[]> => {
+      const { limit, cursor, typeSlug, sortBy } = args;
       const sort = sortBy ?? "newest";
 
       if (sort === "newest" || sort === "oldest") {
@@ -208,17 +218,20 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
     },
 
     search: async (query: string): Promise<SnackItem[]> => {
+      const pattern = `%${escapeLikePattern(query)}%`;
       const rows = await db.query.snackItems.findMany({
         with: { images: true, type: true },
         limit: MAX_SEARCH_RESULTS,
+        orderBy: (table) => [desc(table.createdAt), desc(table.id)],
         where: {
           AND: [
             { status: "published" },
+            { deletedAt: { isNull: true } },
             {
               OR: [
-                { name: { ilike: `%${query}%` } },
+                { name: { ilike: pattern } },
                 { barcode: { eq: query } },
-                { description: { ilike: `%${query}%` } },
+                { description: { ilike: pattern } },
               ],
             },
           ],

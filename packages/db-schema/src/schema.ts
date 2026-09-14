@@ -48,6 +48,7 @@ export const snackItems = pgTable(
     avgRating: decimal("avg_rating", { precision: 4, scale: 2 }).notNull().default("0"),
     ratingCount: integer("rating_count").notNull().default(0),
     status: text("status").notNull().default("pending"), // 'pending' | 'published' | 'rejected'
+    authorId: text("author_id").references(() => user.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at", { precision: 3 }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
@@ -62,6 +63,7 @@ export const snackItems = pgTable(
     index("snack_items_published_feed_idx")
       .on(t.status, t.createdAt.desc(), t.id.desc())
       .where(sql`deleted_at IS NULL`),
+    index("snack_items_author_id_idx").on(t.authorId),
   ],
 );
 

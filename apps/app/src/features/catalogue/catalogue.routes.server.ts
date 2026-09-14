@@ -19,7 +19,7 @@ export const listSnacksProcedure = baseProcedure.input(listSnacksSchema).handler
 
 export const createSnackProcedure = baseProcedure
   .input(createSnackInputSchema)
-  .handler(async ({ input }) => {
+  .handler(async ({ input, context }) => {
     const isVerified = await verifyTurnstileToken({
       token: input.token ?? "",
     });
@@ -34,7 +34,14 @@ export const createSnackProcedure = baseProcedure
     const slug = Slug.create(input.name);
     const uploadedImages = await processUploadedImages(input.images, slug);
 
-    return createSnackUseCase(input, uploadedImages, slug, snacksRepository, getMainDb());
+    return createSnackUseCase({
+      input,
+      uploadedImages,
+      slug,
+      userId: context.userId,
+      snackRepository: snacksRepository,
+      db: getMainDb(),
+    });
   });
 
 export const listTypesProcedure = baseProcedure.handler(() => {

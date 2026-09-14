@@ -9,6 +9,7 @@ export const relations = defineRelations(schema, (r) => ({
     commentReactions: r.many.commentReactions({ from: r.user.id, to: r.commentReactions.userId }),
     commentReports: r.many.commentReports({ from: r.user.id, to: r.commentReports.reporterId }),
     bookmarks: r.many.bookmarks({ from: r.user.id, to: r.bookmarks.userId }),
+    authoredSnacks: r.many.snackItems({ from: r.user.id, to: r.snackItems.authorId }),
   },
 
   session: {
@@ -25,6 +26,7 @@ export const relations = defineRelations(schema, (r) => ({
 
   snackItems: {
     type: r.one.snackTypes({ from: r.snackItems.typeId, to: r.snackTypes.id }),
+    author: r.one.user({ from: r.snackItems.authorId, to: r.user.id }),
     images: r.many.snackItemImages({ from: r.snackItems.id, to: r.snackItemImages.snackItemId }),
     comments: r.many.snackComments({ from: r.snackItems.id, to: r.snackComments.snackItemId }),
     bookmarks: r.many.bookmarks({ from: r.snackItems.id, to: r.bookmarks.snackItemId }),
