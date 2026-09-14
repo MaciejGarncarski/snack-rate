@@ -5,7 +5,15 @@ export default defineConfig({
     globals: true,
     coverage: {
       provider: "v8",
-      exclude: ["**/tests/**", "**/*.unit.test.ts", "**/*.int.test.ts", "**/*.d.ts", "**/index.ts"],
+      exclude: [
+        "**/tests/**",
+        "**/*.unit.test.ts",
+        "**/*.int.test.ts",
+        "**/*.d.ts",
+        "**/index.ts",
+        "**/assets/**",
+        "**/*.{png,jpg,jpeg,gif,svg,webp,ico,avif}",
+      ],
       reporter: ["text", "lcov", "html"],
       thresholds: {
         lines: 80,
