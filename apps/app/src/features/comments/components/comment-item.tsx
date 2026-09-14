@@ -92,7 +92,7 @@ export function CommentItem({
             <div className="flex flex-row gap-2">
               <CommentReactions comment={comment} snackItemId={snackItemId} />
               <div className="flex gap-2">
-                <Button size="xs" variant="outline" onClick={openReplyForm}>
+                <Button size="sm" variant="outline" onClick={openReplyForm}>
                   Odpowiedz
                 </Button>
               </div>

@@ -14,7 +14,7 @@ import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AuthKontoRouteImport } from './routes/auth/konto'
-import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthZalogujRouteImport } from './routes/auth/zaloguj'
 import { Route as HealthIndexRouteImport } from './routes/health/index'
 import { Route as HealthReadyRouteImport } from './routes/health/ready'
 import { Route as AppProduktSlugRouteRouteImport } from './routes/_app/produkt/$slug/route'
@@ -47,9 +47,9 @@ const AuthKontoRoute = AuthKontoRouteImport.update({
   path: '/auth/konto',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
+const AuthZalogujRoute = AuthZalogujRouteImport.update({
+  id: '/auth/zaloguj',
+  path: '/auth/zaloguj',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HealthIndexRoute = HealthIndexRouteImport.update({
@@ -93,7 +93,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/konto': typeof AuthKontoRoute
-  '/auth/login': typeof AuthLoginRoute
+  '/auth/zaloguj': typeof AuthZalogujRoute
   '/health/ready': typeof HealthReadyRoute
   '/health/': typeof HealthIndexRoute
   '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
@@ -106,7 +106,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/konto': typeof AuthKontoRoute
-  '/auth/login': typeof AuthLoginRoute
+  '/auth/zaloguj': typeof AuthZalogujRoute
   '/health/ready': typeof HealthReadyRoute
   '/': typeof AppIndexRoute
   '/health': typeof HealthIndexRoute
@@ -122,7 +122,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/konto': typeof AuthKontoRoute
-  '/auth/login': typeof AuthLoginRoute
+  '/auth/zaloguj': typeof AuthZalogujRoute
   '/health/ready': typeof HealthReadyRoute
   '/_app/': typeof AppIndexRoute
   '/health/': typeof HealthIndexRoute
@@ -139,7 +139,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/api/$'
     | '/auth/konto'
-    | '/auth/login'
+    | '/auth/zaloguj'
     | '/health/ready'
     | '/health/'
     | '/produkt/$slug'
@@ -152,7 +152,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/api/$'
     | '/auth/konto'
-    | '/auth/login'
+    | '/auth/zaloguj'
     | '/health/ready'
     | '/'
     | '/health'
@@ -167,7 +167,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/api/$'
     | '/auth/konto'
-    | '/auth/login'
+    | '/auth/zaloguj'
     | '/health/ready'
     | '/_app/'
     | '/health/'
@@ -183,7 +183,7 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRoute
   ApiSplatRoute: typeof ApiSplatRoute
   AuthKontoRoute: typeof AuthKontoRoute
-  AuthLoginRoute: typeof AuthLoginRoute
+  AuthZalogujRoute: typeof AuthZalogujRoute
   HealthReadyRoute: typeof HealthReadyRoute
   HealthIndexRoute: typeof HealthIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -227,11 +227,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthKontoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/login': {
-      id: '/auth/login'
-      path: '/auth/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
+    '/auth/zaloguj': {
+      id: '/auth/zaloguj'
+      path: '/auth/zaloguj'
+      fullPath: '/auth/zaloguj'
+      preLoaderRoute: typeof AuthZalogujRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/health/': {
@@ -318,7 +318,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRoute,
   ApiSplatRoute: ApiSplatRoute,
   AuthKontoRoute: AuthKontoRoute,
-  AuthLoginRoute: AuthLoginRoute,
+  AuthZalogujRoute: AuthZalogujRoute,
   HealthReadyRoute: HealthReadyRoute,
   HealthIndexRoute: HealthIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

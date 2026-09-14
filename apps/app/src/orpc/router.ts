@@ -4,8 +4,10 @@ import {
 } from "#/features/admin/admin.routes.server";
 import {
   getSessionProcedure,
+  linkSocialAccountProcedure,
+  listAccountsProcedure,
   signInOTPProcedure,
-  verifyOTPProcedure,
+  unlinkAccountProcedure,
 } from "#/features/auth/auth.routes.server";
 import {
   createSnackProcedure,
@@ -46,6 +48,8 @@ export default {
   auth: {
     getSession: getSessionProcedure,
     signInOTP: signInOTPProcedure,
-    verifyOTP: verifyOTPProcedure,
+    linkSocialAccount: linkSocialAccountProcedure,
+    unlinkAccount: unlinkAccountProcedure,
+    listAccounts: listAccountsProcedure,
   },
 };

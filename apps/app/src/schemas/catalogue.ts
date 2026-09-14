@@ -18,7 +18,7 @@ export const sortByEnum = z.enum([
 export type SortBy = z.infer<typeof sortByEnum>;
 
 export const listSnacksSchema = z.object({
-  limit: z.number().min(1),
+  limit: z.number().int().min(1).max(50),
   cursor: z.string().optional(),
   typeSlug: z.string().optional(),
   sortBy: sortByEnum.optional(),

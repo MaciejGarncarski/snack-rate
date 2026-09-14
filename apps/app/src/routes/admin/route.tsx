@@ -19,7 +19,7 @@ export const Route = createFileRoute("/admin")({
     const session = await ensureSession();
 
     if (!session.user || session.user.role !== "admin") {
-      throw redirect({ to: "/auth/login" });
+      throw redirect({ to: "/auth/zaloguj" });
     }
   },
 });
@@ -54,7 +54,7 @@ function RouteComponent() {
             <CardDescription>Musisz się zalogować, aby uzyskać dostęp</CardDescription>
           </CardHeader>
           <CardContent>
-            <Link to="/auth/login" className={buttonVariants()}>
+            <Link to="/auth/zaloguj" className={buttonVariants()}>
               Przejdź do logowania
             </Link>
           </CardContent>

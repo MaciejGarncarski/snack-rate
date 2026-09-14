@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { MenuIcon, PlusIcon, UserIcon } from "lucide-react";
+import { MenuIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 
+import { AccountLink } from "#/components/layout/account-link.tsx";
 import { Logo } from "#/components/layout/logo";
 import { Button, buttonVariants } from "#/components/ui/button";
 import { ModeToggle } from "#/components/ui/mode-toggle";
@@ -13,11 +14,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "#/components/ui/sheet";
+import { useSession } from "#/features/auth/hooks/use-session.ts";
 import { useIsMobile } from "#/hooks/use-mobile";
 
 export function NavbarMobileMenu() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { data } = useSession();
 
   if (!isMobile) {
     return null;
@@ -60,13 +63,7 @@ export function NavbarMobileMenu() {
             Dodaj produkt
           </Link>
 
-          <Link
-            to="/auth/login"
-            aria-label="Moje konto"
-            className={buttonVariants({ variant: "secondary", size: "default" })}
-          >
-            <UserIcon className="h-4 w-4" /> Moje konto
-          </Link>
+          <AccountLink isLoggedIn={!!data.user} userImage={data.user?.image} />
         </div>
         <SheetFooter>
           <SheetClose variant="outline">Zamknij menu</SheetClose>

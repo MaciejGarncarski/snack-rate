@@ -37,6 +37,10 @@ export function rateSnackUseCase(
       tx,
     );
 
+    await repository.recalculateAvgRating(input.snackItemId, tx);
+
+    // Read after recalculation so the response reflects the just-written
+    // rating instead of a stale pre-recalc snapshot.
     const ratings = await repository.getRatingsForSnack(
       {
         snackItemId: input.snackItemId,
@@ -45,8 +49,6 @@ export function rateSnackUseCase(
       },
       tx,
     );
-
-    await repository.recalculateAvgRating(input.snackItemId, tx);
 
     ratingsAddedCounter.add(1, {
       "rating.value": String(ratingVo.getValue()),

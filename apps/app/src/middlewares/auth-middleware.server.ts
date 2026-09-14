@@ -19,8 +19,10 @@ export const authMiddleware = baseORPC.middleware(async ({ context, next }) => {
   const guestId = getCookie(context.requestHeaders, cookies.guestId.name);
   const parsedGuestId = guestIdSchema.safeParse(guestId);
 
+  const resolvedGuestId = parsedGuestId.success ? parsedGuestId.data : uuidv7();
+
   if (!parsedGuestId.success) {
-    setCookie(cookies.guestId.name, uuidv7(), cookies.guestId.options);
+    setCookie(cookies.guestId.name, resolvedGuestId, cookies.guestId.options);
   }
 
   const parseUserRole = userRoleSchema.safeParse(session?.user?.role ?? "guest");
@@ -30,7 +32,7 @@ export const authMiddleware = baseORPC.middleware(async ({ context, next }) => {
       ...context,
       userId: session?.user?.id ?? null,
       role: parseUserRole.success ? parseUserRole.data : "guest",
-      guestId: parsedGuestId.success ? parsedGuestId.data : uuidv7(),
+      guestId: resolvedGuestId,
     },
   });
 });

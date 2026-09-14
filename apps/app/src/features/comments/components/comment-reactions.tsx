@@ -84,16 +84,16 @@ export function CommentReactions({ comment, snackItemId }: Props) {
     <div className="flex flex-wrap gap-1.5 items-center">
       <PopoverTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
         <Button
-          size="xs"
+          size="sm"
           variant="default"
           isDisabled={react.isPending}
-          className="min-w-0 gap-1"
+          className="min-w-0 gap-2"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <Image src={activeIcon} alt="" className="size-4" />
+          <Image src={activeIcon} alt="" className="size-5" />
           {totalReactions > 0 ? (
-            <span className="text-xs tabular-nums opacity-80">{totalReactions}</span>
+            <span className="text-xs tabular-nums">{totalReactions}</span>
           ) : (
             "Zareaguj"
           )}

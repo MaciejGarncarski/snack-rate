@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { ClientOnly } from "@tanstack/react-router";
-import { PlusIcon, UserIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
+import { AccountLink } from "#/components/layout/account-link.tsx";
 import { Logo } from "#/components/layout/logo";
 import { NavbarMobileMenu } from "#/components/layout/navbar-mobile-menu";
 import { buttonVariants } from "#/components/ui/button";
@@ -43,30 +44,7 @@ export function Navbar() {
               <PlusIcon className="mr-2 h-4 w-4" />
               Dodaj produkt
             </Link>
-
-            {data.user ? (
-              <Link
-                to="/auth/konto"
-                aria-label="Moje konto"
-                className={buttonVariants({ variant: "secondary", size: "default" })}
-              >
-                {data.user.image ? (
-                  <img src={data.user.image} alt="Avatar" className="h-4 w-4 rounded-full" />
-                ) : (
-                  <UserIcon className="h-4 w-4" />
-                )}
-                Moje konto
-              </Link>
-            ) : (
-              <Link
-                to="/auth/login"
-                aria-label="Zaloguj się"
-                className={buttonVariants({ variant: "secondary", size: "default" })}
-              >
-                <UserIcon className="h-4 w-4" />
-                Zaloguj się
-              </Link>
-            )}
+            <AccountLink isLoggedIn={!!data.user} userImage={data.user?.image} />
           </div>
 
           <NavbarMobileMenu />

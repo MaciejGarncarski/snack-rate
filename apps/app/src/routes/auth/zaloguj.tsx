@@ -1,9 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { LoginForm } from "#/features/auth/components/login/login-form.tsx";
 
-export const Route = createFileRoute("/auth/login")({
+export const Route = createFileRoute("/auth/zaloguj")({
   component: RouteComponent,
+  beforeLoad: async ({ context: { ensureSession } }) => {
+    const session = await ensureSession();
+
+    if (session.user !== null) {
+      throw redirect({
+        to: "/",
+      });
+    }
+  },
 });
 
 function RouteComponent() {

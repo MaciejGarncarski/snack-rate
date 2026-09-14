@@ -127,28 +127,26 @@ export function ImageInner({
         aspectRatio,
       }}
     >
-      {placeholderSrc && (
-        <AnimatePresence>
-          {status === "loading" && (
-            <motion.img
-              src={placeholderSrc}
-              alt=""
-              aria-hidden="true"
-              className="absolute inset-0 h-full w-full left-0 blur-xs"
-              loading="eager"
-              decoding="async"
-              fetchPriority="low"
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
-            />
-          )}
-        </AnimatePresence>
-      )}
+      <AnimatePresence>
+        {status === "loading" && (
+          <motion.img
+            src={placeholderSrc ?? src}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full left-0 blur-xs"
+            loading="eager"
+            decoding="async"
+            fetchPriority="low"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       {skeleton && !placeholderSrc && (
         <AnimatePresence>

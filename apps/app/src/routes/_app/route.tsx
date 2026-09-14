@@ -2,7 +2,6 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import * as z from "zod";
 
 import { AppLayout } from "#/components/layout/app-layout";
-import { getSearchedItemsQueryOptions } from "#/features/catalogue/search-snacks/queries/get-searched-items.query-options";
 
 const sharedParamsSchema = z.looseObject({
   page: z.number().optional(),
@@ -14,12 +13,6 @@ const sharedParamsSchema = z.looseObject({
 export const Route = createFileRoute("/_app")({
   component: RouteComponent,
   validateSearch: sharedParamsSchema,
-  loader: ({ context }) => {
-    void context.queryClient.query({
-      ...getSearchedItemsQueryOptions(""),
-      staleTime: "static",
-    });
-  },
   notFoundComponent: () => <div>Nie znaleziono 1</div>,
 });
 

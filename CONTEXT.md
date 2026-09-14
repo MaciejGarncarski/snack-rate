@@ -13,7 +13,7 @@ A category/classification for snack items (e.g. "Napój" / Beverage, "Chipsy", "
 _Avoid_: Category, SnackCategory
 
 **Review**:
-A 1-5 star rating value. An integer between 1 and 5.
+A 1-10 star rating value. An integer between 1 and 10.
 _Avoid_: Rating (use "Review" for the value object, "average rating" for the computed field)
 
 **Comment**:

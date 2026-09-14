@@ -21,7 +21,6 @@ type LoginOtpStepProps = {
 };
 
 export function LoginOtpStep({ email, onBack }: LoginOtpStepProps) {
-  //   const verifyOTP = useMutation(orpc.auth.verifyOTP.mutationOptions({}));
   const router = useRouter();
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);

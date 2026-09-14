@@ -6,5 +6,6 @@ export const getSearchedItemsQueryOptions = (query: string) => {
   return orpc.snacks.search.queryOptions({
     input: { query },
     staleTime: ms("5m"),
+    enabled: query.trim().length > 0,
   });
 };
