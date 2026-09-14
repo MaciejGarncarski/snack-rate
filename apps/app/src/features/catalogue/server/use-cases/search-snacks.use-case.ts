@@ -3,7 +3,8 @@ import { addContext } from "#/observability/context";
 
 export function searchSnacksUseCase(query: string, repository: SnacksRepository) {
   addContext({ span: { "search.query": query } });
+
   const normalized = query.trim().toLowerCase();
-  if (!normalized) return Promise.resolve([]);
+
   return repository.search(normalized);
 }

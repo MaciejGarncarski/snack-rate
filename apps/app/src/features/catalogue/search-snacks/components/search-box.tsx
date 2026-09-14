@@ -7,13 +7,24 @@ import { SearchBoxMessage } from "#/features/catalogue/search-snacks/components/
 import { SearchBoxResults } from "#/features/catalogue/search-snacks/components/search-box-results";
 import { useSearchBoxInput } from "#/features/catalogue/search-snacks/hooks/use-search-box-input";
 import { useSearchBoxNavigation } from "#/features/catalogue/search-snacks/hooks/use-search-box-navigation";
+import { getInitialSearchItemsQueryOptions } from "#/features/catalogue/search-snacks/queries/get-initial-search-items.query-options";
 import { getSearchedItemsQueryOptions } from "#/features/catalogue/search-snacks/queries/get-searched-items.query-options";
 
 export function NavbarSearchBox() {
   const { debouncedQuery, inputValue, setInputValue, suggestionsOpen, setSuggestionsOpen } =
     useSearchBoxInput();
 
-  const { data, isLoading } = useQuery(getSearchedItemsQueryOptions(debouncedQuery));
+  const isSearching = debouncedQuery.trim().length > 0;
+
+  const { data: searchData, isLoading: isSearchLoading } = useQuery(
+    getSearchedItemsQueryOptions(debouncedQuery),
+  );
+  const { data: initialPage, isLoading: isInitialLoading } = useQuery(
+    getInitialSearchItemsQueryOptions(!isSearching),
+  );
+
+  const data = isSearching ? searchData : initialPage?.items;
+  const isLoading = isSearching ? isSearchLoading : isInitialLoading;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const suggestionListContainerRef = useRef<HTMLUListElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);

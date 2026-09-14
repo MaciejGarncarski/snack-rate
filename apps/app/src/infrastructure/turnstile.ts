@@ -15,7 +15,7 @@ type TurnstileVerifyResponse = {
 };
 
 type VerifyTurnstileTokenOptions = {
-  token: string;
+  token: string | null | undefined;
   remoteIp?: string;
   retries?: number;
 };

@@ -218,6 +218,21 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
     },
 
     search: async (query: string): Promise<SnackItem[]> => {
+      const isInitialQuery = query.trim().length === 0;
+
+      if (isInitialQuery) {
+        const rows = await db.query.snackItems.findMany({
+          with: { images: true, type: true },
+          limit: MAX_SEARCH_RESULTS,
+          orderBy: (table) => [desc(table.createdAt), desc(table.id)],
+          where: {
+            AND: [{ status: "published" }, { deletedAt: { isNull: true } }],
+          },
+        });
+
+        return Promise.all(rows.map((row) => toSnackItem(row, getFileUrl)));
+      }
+
       const pattern = `%${escapeLikePattern(query)}%`;
       const rows = await db.query.snackItems.findMany({
         with: { images: true, type: true },

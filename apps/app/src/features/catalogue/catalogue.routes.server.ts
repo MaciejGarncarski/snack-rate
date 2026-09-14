@@ -21,7 +21,7 @@ export const createSnackProcedure = baseProcedure
   .input(createSnackInputSchema)
   .handler(async ({ input, context }) => {
     const isVerified = await verifyTurnstileToken({
-      token: input.token ?? "",
+      token: input.token,
     });
 
     if (!isVerified) {

@@ -1,5 +1,5 @@
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -27,6 +27,7 @@ export function LoginOtpStep({ email, onBack }: LoginOtpStepProps) {
   const [cooldown, setCooldown] = useState(RESEND_COOLDOWN_SECONDS);
   const [token, setToken] = useState<string | undefined>();
   const turnstileRef = useRef<TurnstileInstance | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (cooldown <= 0) {
@@ -45,6 +46,9 @@ export function LoginOtpStep({ email, onBack }: LoginOtpStepProps) {
       onSuccess: () => {
         toast.success(`Wysłano ponownie kod do: ${email}`);
         setCooldown(RESEND_COOLDOWN_SECONDS);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: orpc.auth.getSession.queryKey() });
       },
     }),
   );

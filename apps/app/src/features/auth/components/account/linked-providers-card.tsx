@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 import { Badge } from "#/components/ui/badge.tsx";
@@ -56,15 +55,13 @@ const PROVIDERS: Array<{
 
 export function LinkedProvidersCard() {
   const queryClient = useQueryClient();
-  const router = useRouter();
   const accountsQuery = useSuspenseQuery(orpc.auth.listAccounts.queryOptions());
 
   const linkMutation = useMutation(
     orpc.auth.linkSocialAccount.mutationOptions({
       onSuccess: (data) => {
-        if (data.redirect) {
-          router.navigate({ to: data.url });
-        }
+        // oxlint-disable-next-line react/immutability
+        window.location.href = data.url;
       },
       onError: (mutationError) => {
         toast.error(

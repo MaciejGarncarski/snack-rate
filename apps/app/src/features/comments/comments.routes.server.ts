@@ -68,7 +68,7 @@ export const rateSnackProcedure = baseProcedure
   )
   .handler(async ({ input, context }) => {
     const isVerified = await verifyTurnstileToken({
-      token: input.token ?? "",
+      token: input.token,
     });
 
     if (!isVerified) {
