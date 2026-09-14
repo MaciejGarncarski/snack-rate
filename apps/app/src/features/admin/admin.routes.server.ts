@@ -38,3 +38,36 @@ export const deleteAdminCommentProcedure = baseProcedure
       return { ok: true };
     });
   });
+
+export const listPendingSnacksProcedure = baseProcedure
+  .use(adminAuthMiddleware)
+  .input(
+    z.object({
+      limit: z.number().int().min(1).max(50).default(20).optional(),
+      cursor: z.string().optional().nullable(),
+    }),
+  )
+  .handler(({ input }) => {
+    return adminRepository.listPendingSnacks({
+      limit: input.limit ?? 20,
+      cursor: input.cursor ?? null,
+    });
+  });
+
+export const reviewSnackProcedure = baseProcedure
+  .use(adminAuthMiddleware)
+  .input(
+    z.object({
+      snackItemId: z.uuid(),
+      decision: z.enum(["accept", "reject"]),
+    }),
+  )
+  .handler(async ({ input }) => {
+    const status = await adminRepository.reviewSnack(input.snackItemId, input.decision);
+    if (!status) {
+      throw new ORPCError("NOT_FOUND", {
+        message: "Produkt nie znaleziony lub już rozpatrzony",
+      });
+    }
+    return { ok: true, status };
+  });

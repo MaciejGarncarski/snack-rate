@@ -1,6 +1,8 @@
 import {
   deleteAdminCommentProcedure,
   listAdminCommentsProcedure,
+  listPendingSnacksProcedure,
+  reviewSnackProcedure,
 } from "#/features/admin/admin.routes.server";
 import {
   getSessionProcedure,
@@ -44,6 +46,8 @@ export default {
   admin: {
     listComments: listAdminCommentsProcedure,
     deleteComment: deleteAdminCommentProcedure,
+    listPendingSnacks: listPendingSnacksProcedure,
+    reviewSnack: reviewSnackProcedure,
   },
   auth: {
     getSession: getSessionProcedure,

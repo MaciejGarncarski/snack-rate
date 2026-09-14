@@ -4,6 +4,10 @@ import {
 } from "#/features/catalogue/server/repositories/snacks.repository";
 import { createSnackUseCase } from "#/features/catalogue/server/use-cases/create-snack.use-case";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
+import {
+  createUsersRepository,
+  type UsersRepository,
+} from "#/features/users/server/repositories/users.repository";
 import type { Database } from "#/infrastructure/db/db";
 import { createSnackType, createUser } from "#/tests/fixtures";
 import { getDb } from "#/tests/setup.int";
@@ -11,6 +15,7 @@ import { noopGetFileUrl } from "#/tests/utils";
 
 let db: Database;
 let repository: SnacksRepository;
+let usersRepository: UsersRepository;
 
 beforeAll(() => {
   db = getDb();
@@ -18,6 +23,7 @@ beforeAll(() => {
     db,
     getFileUrl: noopGetFileUrl,
   });
+  usersRepository = createUsersRepository({ db });
 });
 
 describe("create snack", () => {
@@ -39,6 +45,7 @@ describe("create snack", () => {
       uploadedImages: [],
       slug: Slug.create(input.name),
       userId: null,
+      usersRepository,
       snackRepository: repository,
       db,
     });
@@ -78,6 +85,7 @@ describe("create snack", () => {
       ],
       slug: Slug.create(name),
       userId: null,
+      usersRepository,
       snackRepository: repository,
       db,
     });
@@ -108,6 +116,7 @@ describe("create snack", () => {
       uploadedImages: [],
       slug: Slug.create(input.name),
       userId: author.id,
+      usersRepository,
       snackRepository: repository,
       db,
     });
@@ -117,5 +126,82 @@ describe("create snack", () => {
     });
 
     expect(dbSnack?.authorId).toBe(author.id);
+  });
+
+  it("should publish immediately when created by an admin", async () => {
+    const type = await createSnackType();
+    const admin = await createUser({ role: "admin" });
+
+    const input = {
+      name: "Admin Snack",
+      typeSlug: type.slug,
+    };
+
+    const snack = await createSnackUseCase({
+      input,
+      uploadedImages: [],
+      slug: Slug.create(input.name),
+      userId: admin.id,
+      usersRepository,
+      snackRepository: repository,
+      db,
+    });
+
+    const dbSnack = await db.query.snackItems.findFirst({
+      where: { slug: snack.slug },
+    });
+
+    expect(dbSnack?.status).toBe("published");
+  });
+
+  it("should create as pending when created by a regular user", async () => {
+    const type = await createSnackType();
+    const author = await createUser({ role: "user" });
+
+    const input = {
+      name: "Regular User Snack",
+      typeSlug: type.slug,
+    };
+
+    const snack = await createSnackUseCase({
+      input,
+      uploadedImages: [],
+      slug: Slug.create(input.name),
+      userId: author.id,
+      usersRepository,
+      snackRepository: repository,
+      db,
+    });
+
+    const dbSnack = await db.query.snackItems.findFirst({
+      where: { slug: snack.slug },
+    });
+
+    expect(dbSnack?.status).toBe("pending");
+  });
+
+  it("should create as pending for guests", async () => {
+    const type = await createSnackType();
+
+    const input = {
+      name: "Guest Snack",
+      typeSlug: type.slug,
+    };
+
+    const snack = await createSnackUseCase({
+      input,
+      uploadedImages: [],
+      slug: Slug.create(input.name),
+      userId: null,
+      usersRepository,
+      snackRepository: repository,
+      db,
+    });
+
+    const dbSnack = await db.query.snackItems.findFirst({
+      where: { slug: snack.slug },
+    });
+
+    expect(dbSnack?.status).toBe("pending");
   });
 });

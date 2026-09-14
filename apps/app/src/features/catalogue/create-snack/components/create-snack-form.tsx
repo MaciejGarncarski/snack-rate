@@ -18,6 +18,7 @@ import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
 import { Tooltip, TooltipTrigger } from "#/components/ui/tooltip";
+import { useSession } from "#/features/auth/hooks/use-session.ts";
 import { ImagePicker } from "#/features/catalogue/create-snack/components/image-picker";
 import { SnackFormCard } from "#/features/catalogue/create-snack/components/snack-form-card";
 import { useCreateSnackForm } from "#/features/catalogue/create-snack/hooks/use-create-snack-form";
@@ -41,6 +42,9 @@ export function CreateSnackForm({ types }: Props) {
   const { form, token, setToken, turnstileRef } = useCreateSnackForm();
   const typesFormMapped = types.map((t): SnackTypeFormatted => ({ value: t.slug, label: t.name }));
   const [isBarcodeScannerOpen, setIsBarcodeScannerOpen] = useState(false);
+
+  const { data } = useSession();
+  const isAdminOrModerator = data?.user?.role === "admin" || data?.user?.role === "moderator";
 
   const submitForm = (formEvent: React.ChangeEvent<HTMLFormElement>) => {
     formEvent.preventDefault();
@@ -255,7 +259,9 @@ export function CreateSnackForm({ types }: Props) {
             <NavigationBlock shouldBlock={shouldBlockNavigation} />
             <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Po wysłaniu sprawdzimy zgłoszenie przed publikacją.
+                {isAdminOrModerator
+                  ? "Jako moderator lub administrator możesz od razu dodać produkt."
+                  : "Po wysłaniu sprawdzimy zgłoszenie przed publikacją."}
               </p>
               <Button
                 type="submit"
@@ -264,7 +270,11 @@ export function CreateSnackForm({ types }: Props) {
                 size="lg"
               >
                 <CheckIcon className="size-4" />
-                {isSubmitting ? "Wysyłanie…" : "Wyślij zgłoszenie"}
+                {isSubmitting
+                  ? "Wysyłanie…"
+                  : isAdminOrModerator
+                    ? "Dodaj produkt"
+                    : "Wyślij zgłoszenie"}
               </Button>
             </div>
           </>

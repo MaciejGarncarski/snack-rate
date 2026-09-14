@@ -1,12 +1,13 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import * as z from "zod";
 
 import { Image } from "#/components/image/image.tsx";
 import { Navbar } from "#/components/layout/navbar.tsx";
 import { Button } from "#/components/ui/button.tsx";
+import { Skeleton } from "#/components/ui/skeleton.tsx";
 import { LinkedProvidersCard } from "#/features/auth/components/account/linked-providers-card.tsx";
 import { useSession } from "#/features/auth/hooks/use-session.ts";
 import { authClient } from "#/lib/auth-client.ts";
@@ -46,7 +47,6 @@ function getInitials(name?: string | null) {
 function RouteComponent() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { data } = useSession();
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const handledErrorRef = useRef<string | null>(null);
@@ -68,25 +68,9 @@ function RouteComponent() {
       <div className="mx-auto flex max-w-2xl flex-col px-4 py-12 md:px-0 md:py-20">
         <h1 className="text-4xl md:text-5xl">Twoje konto</h1>
 
-        <div className="mt-10 flex items-center gap-5">
-          {data.user?.image ? (
-            <Image
-              src={data.user.image}
-              alt="Avatar"
-              placeholderSrc={data.user.image}
-              containerClassName="size-20 shrink-0 rounded-xl ring-1 ring-ring"
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex size-20 shrink-0 items-center justify-center rounded-full bg-primary/20 text-2xl text-foreground">
-              {getInitials(data.user?.name)}
-            </div>
-          )}
-          <div className="min-w-0">
-            <p className="truncate text-lg font-medium ">{data.user?.name}</p>
-            <p className="truncate text-sm text-muted-foreground">{data.user?.email}</p>
-          </div>
-        </div>
+        <Suspense fallback={<ProfileHeaderSkeleton />}>
+          <ProfileHeader />
+        </Suspense>
 
         <div className="mt-12 border-t border-border pt-8">
           <h2 className="text-base font-medium ">Połączone konta</h2>
@@ -94,7 +78,9 @@ function RouteComponent() {
             Zarządzaj serwisami, przez które możesz się logować.
           </p>
           <div className="mt-5">
-            <LinkedProvidersCard />
+            <Suspense fallback={<LinkedProvidersSkeleton />}>
+              <LinkedProvidersCard />
+            </Suspense>
           </div>
         </div>
 
@@ -118,6 +104,68 @@ function RouteComponent() {
           </Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ProfileHeader() {
+  const { data } = useSession();
+
+  return (
+    <div className="mt-10 flex items-center gap-5">
+      {data.user?.image ? (
+        <Image
+          src={data.user.image}
+          alt="Avatar"
+          placeholderSrc={data.user.image}
+          containerClassName="size-20 shrink-0 rounded-xl ring-1 ring-ring"
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <div className="flex size-20 shrink-0 items-center justify-center rounded-full bg-primary/20 text-2xl text-foreground">
+          {getInitials(data.user?.name)}
+        </div>
+      )}
+      <div className="min-w-0">
+        <p className="truncate text-lg font-medium ">{data.user?.name}</p>
+        <p className="truncate text-sm text-muted-foreground">{data.user?.email}</p>
+      </div>
+    </div>
+  );
+}
+
+function ProfileHeaderSkeleton() {
+  return (
+    <div className="mt-10 flex items-center gap-5" aria-hidden="true">
+      <Skeleton className="size-20 shrink-0 rounded-full" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-4 w-56" />
+      </div>
+    </div>
+  );
+}
+
+function LinkedProvidersSkeleton() {
+  return (
+    <div
+      className="flex flex-col gap-3 rounded-4xl bg-card p-6 shadow-md ring-1 ring-foreground/5 dark:ring-foreground/10"
+      aria-hidden="true"
+    >
+      <div className="space-y-1.5">
+        <Skeleton className="h-5 w-36" />
+        <Skeleton className="h-4 w-64" />
+      </div>
+      {[0, 1].map((index) => (
+        <div key={index} className="flex items-center gap-3 rounded-2xl border border-border p-3">
+          <Skeleton className="size-9 shrink-0 rounded-xl" />
+          <div className="min-w-0 flex-1 space-y-1.5">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-3 w-full" />
+          </div>
+          <Skeleton className="h-8 w-20 rounded-4xl" />
+        </div>
+      ))}
     </div>
   );
 }

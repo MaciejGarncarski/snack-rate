@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminSnacksRouteImport } from './routes/admin/snacks'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AuthKontoRouteImport } from './routes/auth/konto'
 import { Route as AuthZalogujRouteImport } from './routes/auth/zaloguj'
@@ -36,6 +38,16 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRouteRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSnacksRoute = AdminSnacksRouteImport.update({
+  id: '/snacks',
+  path: '/snacks',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
@@ -90,11 +102,13 @@ const AppProduktSlugOgDotpngRoute = AppProduktSlugOgDotpngRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
-  '/admin': typeof AdminRouteRoute
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/admin/snacks': typeof AdminSnacksRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/konto': typeof AuthKontoRoute
   '/auth/zaloguj': typeof AuthZalogujRoute
   '/health/ready': typeof HealthReadyRoute
+  '/admin/': typeof AdminIndexRoute
   '/health/': typeof HealthIndexRoute
   '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -103,12 +117,13 @@ export interface FileRoutesByFullPath {
   '/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
 }
 export interface FileRoutesByTo {
-  '/admin': typeof AdminRouteRoute
+  '/admin/snacks': typeof AdminSnacksRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/konto': typeof AuthKontoRoute
   '/auth/zaloguj': typeof AuthZalogujRoute
   '/health/ready': typeof HealthReadyRoute
   '/': typeof AppIndexRoute
+  '/admin': typeof AdminIndexRoute
   '/health': typeof HealthIndexRoute
   '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -119,12 +134,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
-  '/admin': typeof AdminRouteRoute
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/admin/snacks': typeof AdminSnacksRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/konto': typeof AuthKontoRoute
   '/auth/zaloguj': typeof AuthZalogujRoute
   '/health/ready': typeof HealthReadyRoute
   '/_app/': typeof AppIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/health/': typeof HealthIndexRoute
   '/_app/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -137,10 +154,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/admin/snacks'
     | '/api/$'
     | '/auth/konto'
     | '/auth/zaloguj'
     | '/health/ready'
+    | '/admin/'
     | '/health/'
     | '/produkt/$slug'
     | '/api/auth/$'
@@ -149,12 +168,13 @@ export interface FileRouteTypes {
     | '/produkt/$slug/og.png'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/admin'
+    | '/admin/snacks'
     | '/api/$'
     | '/auth/konto'
     | '/auth/zaloguj'
     | '/health/ready'
     | '/'
+    | '/admin'
     | '/health'
     | '/produkt/$slug'
     | '/api/auth/$'
@@ -165,11 +185,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/admin'
+    | '/admin/snacks'
     | '/api/$'
     | '/auth/konto'
     | '/auth/zaloguj'
     | '/health/ready'
     | '/_app/'
+    | '/admin/'
     | '/health/'
     | '/_app/produkt/$slug'
     | '/api/auth/$'
@@ -180,7 +202,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
-  AdminRouteRoute: typeof AdminRouteRoute
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   ApiSplatRoute: typeof ApiSplatRoute
   AuthKontoRoute: typeof AuthKontoRoute
   AuthZalogujRoute: typeof AuthZalogujRoute
@@ -212,6 +234,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/snacks': {
+      id: '/admin/snacks'
+      path: '/snacks'
+      fullPath: '/admin/snacks'
+      preLoaderRoute: typeof AdminSnacksRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/api/$': {
       id: '/api/$'
@@ -313,9 +349,23 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
 )
 
+interface AdminRouteRouteChildren {
+  AdminSnacksRoute: typeof AdminSnacksRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminSnacksRoute: AdminSnacksRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
-  AdminRouteRoute: AdminRouteRoute,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   ApiSplatRoute: ApiSplatRoute,
   AuthKontoRoute: AuthKontoRoute,
   AuthZalogujRoute: AuthZalogujRoute,

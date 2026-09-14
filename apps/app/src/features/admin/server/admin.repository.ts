@@ -1,5 +1,5 @@
 import { snackComments, snackItems } from "@snack-rate/db-schema/schema";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNull } from "drizzle-orm";
 
 import { getSnackRatingAggregate } from "#/features/comments/server/repositories/ratings";
 import type { Database, DbTransaction } from "#/infrastructure/db/db";
@@ -26,6 +26,30 @@ export type AdminListResult = {
   nextCursor: string | null;
 };
 
+export type PendingSnack = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  barcode: string | null;
+  typeName: string;
+  authorName: string | null;
+  createdAt: Date;
+  images: {
+    url: string;
+    storageKey: string;
+    sortOrder: number;
+    type: string;
+  }[];
+};
+
+export type PendingSnacksResult = {
+  snacks: PendingSnack[];
+  nextCursor: string | null;
+};
+
+export type ReviewDecision = "accept" | "reject";
+
 function resolveAuthorName(name: string | null): string {
   return name?.trim() || "Gość";
 }
@@ -47,7 +71,13 @@ function decodeCursor(cursor: string): { createdAt: Date; id: string } | null {
   }
 }
 
-export function createAdminRepository({ db }: { db: Database }) {
+export function createAdminRepository({
+  db,
+  getFileUrl,
+}: {
+  db: Database;
+  getFileUrl: (storageKey: string) => Promise<string>;
+}) {
   return {
     listComments: async (input: AdminListInput): Promise<AdminListResult> => {
       const limit = input.limit;
@@ -145,6 +175,100 @@ export function createAdminRepository({ db }: { db: Database }) {
         .where(eq(snackItems.id, existing.snackItemId));
 
       return existing.snackItemId;
+    },
+
+    listPendingSnacks: async (input: AdminListInput): Promise<PendingSnacksResult> => {
+      const limit = input.limit;
+      const decoded = input.cursor ? decodeCursor(input.cursor) : null;
+
+      const rows = await db.query.snackItems.findMany({
+        where: {
+          AND: [
+            { status: "pending" },
+            { deletedAt: { isNull: true } },
+            ...(decoded
+              ? [
+                  {
+                    OR: [
+                      { createdAt: { lt: decoded.createdAt } },
+                      { createdAt: { eq: decoded.createdAt }, id: { lt: decoded.id } },
+                    ],
+                  },
+                ]
+              : []),
+          ],
+        },
+        orderBy: (table) => [desc(table.createdAt), desc(table.id)],
+        limit: limit + 1,
+        columns: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          barcode: true,
+          createdAt: true,
+        },
+        with: {
+          type: { columns: { name: true } },
+          images: true,
+          author: { columns: { name: true } },
+        },
+      });
+
+      const hasMore = rows.length > limit;
+      const sliced = hasMore ? rows.slice(0, limit) : rows;
+
+      const snacks: PendingSnack[] = await Promise.all(
+        sliced.map(async (row) => ({
+          id: row.id,
+          name: row.name,
+          slug: row.slug,
+          description: row.description,
+          barcode: row.barcode,
+          typeName: row.type?.name ?? "",
+          authorName: row.author?.name?.trim() || null,
+          createdAt: row.createdAt,
+          images: await Promise.all(
+            row.images.map(async (img) => ({
+              url: await getFileUrl(img.storageKey),
+              storageKey: img.storageKey,
+              sortOrder: img.sortOrder,
+              type: img.type,
+            })),
+          ),
+        })),
+      );
+
+      const nextCursor =
+        hasMore && sliced.length > 0
+          ? encodeCursor(sliced.at(-1)!.createdAt, sliced.at(-1)!.id)
+          : null;
+
+      return { snacks, nextCursor };
+    },
+
+    reviewSnack: async (
+      snackItemId: string,
+      decision: ReviewDecision,
+      tx?: DbTransaction,
+    ): Promise<"published" | "rejected" | null> => {
+      const client = tx ?? db;
+      const status = decision === "accept" ? "published" : "rejected";
+
+      // Only transition out of pending: already-reviewed or missing rows match nothing.
+      const [updated] = await client
+        .update(snackItems)
+        .set({ status })
+        .where(
+          and(
+            eq(snackItems.id, snackItemId),
+            eq(snackItems.status, "pending"),
+            isNull(snackItems.deletedAt),
+          ),
+        )
+        .returning({ id: snackItems.id });
+
+      return updated ? status : null;
     },
   };
 }

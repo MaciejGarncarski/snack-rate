@@ -6,64 +6,65 @@ import {
 } from "#/features/catalogue/server/services/snack-record.service";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
 import type { SnackStatus } from "#/features/shared/value-objects/status.vo.ts";
+import type { UsersRepository } from "#/features/users/server/repositories/users.repository";
 import type { Database } from "#/infrastructure/db/db";
 import { deletePublicFile } from "#/infrastructure/s3-client";
 import { snacksCreatedCounter } from "#/observability/counters";
 import { logger } from "#/observability/logger/logger";
 import { getActiveSpan } from "#/observability/tracing";
 
-export function createSnackUseCase(args: {
+export async function createSnackUseCase(args: {
   input: CreateSnackInput;
   uploadedImages: UploadedImage[];
   slug: Slug;
   userId: string | null;
+  usersRepository: UsersRepository;
   snackRepository: SnacksRepository;
   db: Database;
 }) {
-  const { input, uploadedImages, slug, userId, snackRepository, db } = args;
-  const isAdminOrModerator = true;
-  const snackStatus: SnackStatus = isAdminOrModerator ? "published" : "pending";
+  const { input, uploadedImages, slug, userId, usersRepository, snackRepository, db } = args;
+  const permissions = userId ? await usersRepository.getUserPermissions(userId) : null;
+  const snackStatus: SnackStatus = permissions?.canPublishSnacks ? "published" : "pending";
 
   getActiveSpan()?.setAttributes({
     "snack.name": input.name,
     "snack.has_barcode": !!input.barcode,
     "snack.image_count": uploadedImages.length,
+    "snack.status": snackStatus,
   });
 
-  return (async () => {
-    const start = Date.now();
+  const start = Date.now();
 
-    try {
-      const snackId = await createSnackRecord({
-        input,
-        slug,
-        userId,
-        status: snackStatus,
-        uploadedImages,
-        snackRepository,
-        db,
-      });
+  try {
+    const snackId = await createSnackRecord({
+      input,
+      slug,
+      userId,
+      status: snackStatus,
+      uploadedImages,
+      snackRepository,
+      db,
+    });
 
-      const duration = Date.now() - start;
+    const duration = Date.now() - start;
 
-      getActiveSpan()?.setAttributes({
-        "snack.id": snackId,
-        "createSnack.duration_ms": duration,
-        "upload.success_count": uploadedImages.length,
-      });
+    getActiveSpan()?.setAttributes({
+      "snack.id": snackId,
+      "createSnack.duration_ms": duration,
+      "upload.success_count": uploadedImages.length,
+    });
 
-      snacksCreatedCounter.add(1);
-      return { slug: slug.getValue() };
-    } catch (err) {
-      await Promise.allSettled(
-        uploadedImages.flatMap(({ key, thumbKey }) => [
-          deletePublicFile(key),
-          deletePublicFile(thumbKey),
-        ]),
-      );
+    snacksCreatedCounter.add(1);
+    return { slug: slug.getValue() };
+  } catch (err) {
+    await Promise.allSettled(
+      uploadedImages.flatMap(({ key, thumbKey }) => [
+        deletePublicFile(key),
+        deletePublicFile(thumbKey),
+      ]),
+    );
 
-      logger.error({ err, snackName: input.name }, "Failed to create snack");
-      throw err;
-    }
-  })();
+    logger.error({ err, snackName: input.name }, "Failed to create snack");
+    throw err;
+  }
 }

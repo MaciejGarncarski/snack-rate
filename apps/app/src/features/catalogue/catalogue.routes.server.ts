@@ -6,6 +6,7 @@ import { createSnackUseCase } from "#/features/catalogue/server/use-cases/create
 import { getSnackBySlugUseCase } from "#/features/catalogue/server/use-cases/get-snack-by-slug.use-case";
 import { listSnacksUseCase } from "#/features/catalogue/server/use-cases/list-snacks.use-case";
 import { Slug } from "#/features/shared/value-objects/slug.vo";
+import { usersRepository } from "#/features/users/server/repositories/users.repository.instance";
 import { getMainDb } from "#/infrastructure/db/db";
 import { verifyTurnstileToken } from "#/infrastructure/turnstile";
 import { baseProcedure } from "#/lib/orpc/procedure";
@@ -39,6 +40,7 @@ export const createSnackProcedure = baseProcedure
       uploadedImages,
       slug,
       userId: context.userId,
+      usersRepository,
       snackRepository: snacksRepository,
       db: getMainDb(),
     });
