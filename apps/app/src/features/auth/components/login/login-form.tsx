@@ -54,12 +54,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           )}
           <div className="relative hidden bg-muted md:block">
             <Image
-              src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNW0wcWlxdzZqdWI2OTB3czY3c2h0c3EzenU0eWpxY3A0MGh2Ym9tYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/KHhs4BXpy5dba/200.webp"
-              placeholderSrc="https://i.giphy.com/4AwFO4f2VLo2fIFFA2.webp"
+              src="/logo.png"
               blurBackground
               alt=""
               className="w-full h-full object-cover rounded-2xl"
-              containerClassName="absolute inset-0 h-full w-full p-4 dark:brightness-[0.6]"
+              containerClassName="absolute inset-0 h-full w-full p-4"
             />
           </div>
         </CardContent>

@@ -8,6 +8,7 @@ import { TurnstileWidget } from "#/components/turnstile-widget";
 import { Button } from "#/components/ui/button";
 import { Field, FieldDescription, FieldGroup } from "#/components/ui/field";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "#/components/ui/input-otp";
+import { Separator } from "#/components/ui/separator.tsx";
 import { authClient } from "#/lib/auth-client";
 import { extractORPCError } from "#/lib/extract-orpc-error";
 import { orpc } from "#/orpc/client";
@@ -87,14 +88,12 @@ export function LoginOtpStep({ email, onBack }: LoginOtpStepProps) {
           <p className="text-balance text-muted-foreground">
             Wysłaliśmy 6-cyfrowy kod na adres <span className="font-medium">{email}</span>
           </p>
-          <Button type="button" variant="link" size="sm" onClick={onBack}>
-            Zmień adres email
-          </Button>
         </div>
         <Field className="items-center">
           <InputOTP
             maxLength={OTP_LENGTH}
             value={otp}
+            containerClassName="justify-center"
             onChange={(value) => {
               setOtp(value);
               if (value.length === OTP_LENGTH) {
@@ -108,12 +107,21 @@ export function LoginOtpStep({ email, onBack }: LoginOtpStepProps) {
               ))}
             </InputOTPGroup>
           </InputOTP>
-          <FieldDescription>Wprowadź kod weryfikacyjny z wiadomości email.</FieldDescription>
+          <FieldDescription className="text-center">
+            Wprowadź kod weryfikacyjny z wiadomości email.
+          </FieldDescription>
         </Field>
         <Field>
           <Button type="submit" isDisabled={isVerifying || otp.length !== OTP_LENGTH}>
-            {isVerifying ? "Weryfikowanie..." : "Zaloguj się"}
+            {isVerifying ? "Weryfikowanie..." : "Zweryfikuj kod"}
           </Button>
+
+          <Separator />
+
+          <Button type="button" variant="secondary" onClick={onBack}>
+            Zmień adres email
+          </Button>
+
           <Button
             type="button"
             variant="outline"

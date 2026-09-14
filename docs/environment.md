@@ -74,8 +74,10 @@ host).
 | ----------------------- | ---------- | ----------------------------------------------------------------------------- |
 | `BETTER_AUTH_SECRET`    | dev + prod | 32+ char secret for signing tokens (`openssl rand -hex 32`)                   |
 | `BETTER_AUTH_URL`       | dev + prod | Public app origin, used for auth callback URLs (e.g. `http://localhost:3000`) |
-| `DISCORD_CLIENT_ID`     | dev + prod | Discord OAuth client id (optional — Discord login hidden when unset)          |
-| `DISCORD_CLIENT_SECRET` | dev + prod | Discord OAuth client secret (optional — Discord login hidden when unset)      |
+| `DISCORD_CLIENT_ID`     | dev + prod | Discord OAuth client id                                                       |
+| `DISCORD_CLIENT_SECRET` | dev + prod | Discord OAuth client secret                                                   |
+| `GOOGLE_CLIENT_ID`      | dev + prod | Google oauth                                                                  |
+| `GOOGLE_CLIENT_SECRET`  | dev + prod | Google oauth                                                                  |
 
 ## Garage
 
@@ -125,12 +127,6 @@ Reserved for the app mail worker.
 > `GF_INITIAL_*` variables only work on a fresh Grafana volume. Changes made after Grafana has been initialized will not be applied. Use `grafana-cli` instead.
 
 `GF_SMTP_*` is only for Grafana alert notifications. App emails use `MAIL_SMTP_*`.
-
-## Admin
-
-| Variable         | Used in    | Description                                    |
-| ---------------- | ---------- | ---------------------------------------------- |
-| `ADMIN_PASSWORD` | dev + prod | Password for admin routes (default `admin123`) |
 
 ## Caddy
 

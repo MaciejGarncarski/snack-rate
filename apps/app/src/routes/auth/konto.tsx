@@ -17,11 +17,9 @@ const searchSchema = z.looseObject({
 });
 
 const LINK_ERROR_MESSAGES: Record<string, string> = {
-  email_does_not_match:
-    "Adres email konta Discord nie zgadza się z adresem Twojego konta. Połącz konto Discord z tym samym adresem email.",
-  account_already_linked_to_different_user:
-    "To konto Discord jest już połączone z innym użytkownikiem.",
-  unable_to_link_account: "Nie udało się połączyć konta Discord. Spróbuj ponownie.",
+  email_does_not_match: "Adresy email się nie zgadzają. Połącz konto z tym samym adresem email.",
+  account_already_linked_to_different_user: "To konto jest już połączone z innym użytkownikiem.",
+  unable_to_link_account: "Nie udało się połączyć konta. Spróbuj ponownie.",
 };
 
 export const Route = createFileRoute("/auth/konto")({
@@ -80,7 +78,7 @@ function RouteComponent() {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex size-20 shrink-0 items-center justify-center rounded-full bg-[#2F4A3C] font-serif text-2xl text-[#F5F4EF]">
+            <div className="flex size-20 shrink-0 items-center justify-center rounded-full bg-primary/20 text-2xl text-foreground">
               {getInitials(data.user?.name)}
             </div>
           )}

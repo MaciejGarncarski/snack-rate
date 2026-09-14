@@ -44,6 +44,10 @@ export const auth = betterAuth({
       clientId: serverEnv.DISCORD_CLIENT_ID,
       clientSecret: serverEnv.DISCORD_CLIENT_SECRET,
     },
+    google: {
+      clientId: serverEnv.GOOGLE_CLIENT_ID,
+      clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
+    },
   },
   secret: serverEnv.BETTER_AUTH_SECRET,
   baseUrl: serverEnv.BETTER_AUTH_URL,

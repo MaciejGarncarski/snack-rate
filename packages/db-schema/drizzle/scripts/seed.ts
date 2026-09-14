@@ -3,6 +3,7 @@ import * as schema from "@snack-rate/db-schema/schema";
 // oxlint-disable max-lines
 import { drizzle } from "drizzle-orm/node-postgres";
 import { randomUUID } from "node:crypto";
+import { readFile } from "node:fs/promises";
 
 import { createThumbnailFromBuffer } from "../../../../apps/app/src/server/lib/create-thumbnail.ts";
 import { deleteAllObjectsFromBucket, uploadFileToGarage } from "./util.ts";
@@ -175,7 +176,7 @@ async function seedDatabase() {
         ratingCount: 2,
         slug: "pringles-ser-kebab",
         barcode: "038000845017",
-        status: "rejected",
+        status: "published",
       },
       {
         typeId: chips.id,
@@ -196,7 +197,7 @@ async function seedDatabase() {
         ratingCount: 2,
         slug: "tyrrells-slodka-papryka",
         barcode: "505555100023",
-        status: "published",
+        status: "rejected",
       },
       {
         typeId: sweets.id,
@@ -228,76 +229,67 @@ async function seedDatabase() {
   // Snack item images
   // ---------------------------------------------------------------------------
 
-  const snackImageUrls: { id: string; imageUrl: string; key: string }[] = [
+  const snackImages: { id: string; file: string; key: string }[] = [
     {
       id: monsterOriginal.id,
-      imageUrl: "https://i.erli.pl/xyabj5.a966f9.xl.webp",
+      file: "mon-original.jpg",
       key: "monster-energy-original.webp",
     },
     {
       id: monsterUltra.id,
-      imageUrl: "https://i.erli.pl/16hn4no.1a5d1e.xl.webp",
+      file: "monster-ult-whi.png",
       key: "monster-energy-ultra-white.webp",
     },
     {
       id: monsterMango.id,
-      imageUrl: "https://sklep.spolemkielce.pl/wp-content/uploads/2024/07/120647.png",
+      file: "mango-loco.webp",
       key: "monster-energy-mango-loco.png",
     },
     {
       id: laysClassic.id,
-      imageUrl: "https://i.erli.pl/14ocwyk.a9bac3.xl.webp",
+      file: "lays-klasic.jpg",
       key: "lays-klasyczne.webp",
     },
     {
       id: laysKetchup.id,
-      imageUrl: "https://i.erli.pl/14ocwyk.a9bac3.xl.webp",
+      file: "lays-ketchup.avif",
       key: "lays-ketchup.webp",
     },
     {
       id: pringlesOriginal.id,
-      imageUrl:
-        "https://images.openfoodfacts.org/images/products/505/399/013/8722/front_en.233.400.jpg",
+      file: "pringles-orig.jpg",
       key: "pringles-original.jpg",
     },
     {
       id: pringlesSerKebab.id,
-      imageUrl: "https://i.erli.pl/14r3h1a.2f14fc.xl.webp",
+      file: "pringles.jpg",
       key: "pringles-ser-kebab.webp",
     },
     {
       id: tyrrellsSeaSalt.id,
-      imageUrl:
-        "https://www.tyrrellscrisps.co.uk/wp-content/uploads/2017/07/Tyrrells-UK-Lightly-Sea-Salted-Sustainability-150g-min-grocer-award.png",
+      file: "tyrells.png",
       key: "tyrrells-sol-morska.png",
     },
     {
       id: tyrrellsSweet.id,
-      imageUrl:
-        "https://images.openfoodfacts.org/images/products/506/004/264/0775/front_fr.29.400.jpg",
+      file: "tyrells.png",
       key: "tyrrells-slodka-papryka.jpg",
     },
     {
       id: wedelPtasie.id,
-      imageUrl:
-        "https://media.wedel.pl/2020/04/6c7c4bec9b091e3f5459ac38bb4629fc1b44f6f9-1024x1024.png",
+      file: "wedel.png",
       key: "wedel-ptasie-mleczko.png",
     },
     {
       id: wedelGorzka.id,
-      imageUrl:
-        "https://images.openfoodfacts.org/images/products/590/010/202/3745/front_pl.4.400.jpg",
+      file: "wedel.png",
       key: "wedel-gorzka-czekolada.jpg",
     },
   ];
 
   const imageBuffers = await Promise.all(
-    snackImageUrls.map(async ({ id, imageUrl, key }) => {
-      const response = await fetch(imageUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch image for ${key}: ${response.status}`);
-      }
-      const buffer = Buffer.from(await response.arrayBuffer());
+    snackImages.map(async ({ id, file, key }) => {
+      const buffer = await readFile(new URL(`./seed-images/${file}`, import.meta.url));
       return { id, key, buffer };
     }),
   );

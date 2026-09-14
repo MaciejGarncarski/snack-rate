@@ -29,10 +29,12 @@ const schema = z.object({
 
   DISCORD_CLIENT_SECRET: z.string().min(1),
   DISCORD_CLIENT_ID: z.string().min(1),
+
+  GOOGLE_CLIENT_SECRET: z.string().min(1),
+  GOOGLE_CLIENT_ID: z.string().min(1),
+
   BETTER_AUTH_URL: z.url().min(1),
   BETTER_AUTH_SECRET: z.string().min(1),
-
-  ADMIN_PASSWORD: z.string().min(1).default("admin123"),
 });
 
 let _data: z.infer<typeof schema> | undefined;

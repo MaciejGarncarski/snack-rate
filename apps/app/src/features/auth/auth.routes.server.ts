@@ -107,12 +107,6 @@ export const linkSocialAccountProcedure = baseProcedure
       });
     }
 
-    if (input.provider !== "discord") {
-      throw new ORPCError("BAD_REQUEST", {
-        message: "Połączenie konta Google będzie dostępne wkrótce.",
-      });
-    }
-
     try {
       const result = await auth.api.linkSocialAccount({
         headers: context.requestHeaders,
