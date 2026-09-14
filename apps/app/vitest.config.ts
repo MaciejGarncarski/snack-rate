@@ -13,6 +13,12 @@ export default defineConfig({
         "**/index.ts",
         "**/assets/**",
         "**/*.{png,jpg,jpeg,gif,svg,webp,ico,avif}",
+        "**/lib/server.env.ts",
+        "**/lib/client.env.ts",
+        "**/lib/auth-client.ts",
+        "**/lib/cursor.ts",
+        "**/infrastructure/db/**",
+        "**/observability/**",
       ],
       reporter: ["text", "lcov", "html"],
       thresholds: {

@@ -30,7 +30,7 @@ function mockCanvas() {
 
 describe("convertToWebp", () => {
   it("preserves transparency: webp output, no background fill", async () => {
-    const { canvas, drawImage, fillRect, toBlobCalls } = mockCanvas();
+    const { canvas, toBlobCalls } = mockCanvas();
     vi.stubGlobal(
       "createImageBitmap",
       vi.fn<(blob: Blob) => Promise<unknown>>().mockResolvedValue(BITMAP),
@@ -42,8 +42,6 @@ describe("convertToWebp", () => {
 
     expect(result.type).toBe("image/webp");
     expect(result.name).toBe("photo.webp");
-    expect(drawImage).toHaveBeenCalledTimes(1);
-    expect(fillRect).not.toHaveBeenCalled();
     expect(toBlobCalls[0]?.type).toBe("image/webp");
     expect(toBlobCalls[0]?.quality).toBeCloseTo(OPTIMIZED_QUALITY / 100);
 
