@@ -57,42 +57,37 @@ export function ImageInner({
   const imgRef = useRef<HTMLImageElement>(null);
   const [status, setStatus] = useState<Status>(() => (isGloballyLoaded ? "loaded" : "loading"));
 
-  const handleImgRef = useCallback(
-    (node: HTMLImageElement | null) => {
-      imgRef.current = node;
-
-      if (node?.complete && node.naturalWidth > 0) {
-        setStatus("loaded");
-
-        if (src) {
-          markImageLoaded(src);
-        }
-      }
-    },
-    [src],
-  );
-
-  useEffect(() => {
-    const img = imgRef.current;
-
-    if (!img) {
+  const resolveStatus = useCallback(() => {
+    if (isGloballyLoaded) {
+      setStatus("loaded");
       return;
     }
 
-    if (img.complete) {
-      const loaded = img.naturalWidth > 0;
+    const img = imgRef.current;
 
+    if (img?.complete) {
+      const loaded = img.naturalWidth > 0;
       setStatus(loaded ? "loaded" : "error");
 
       if (loaded && src) {
         markImageLoaded(src);
       }
-
       return;
     }
 
     setStatus("loading");
-  }, [src]);
+  }, [isGloballyLoaded, src]);
+
+  const handleImgRef = useCallback(
+    (node: HTMLImageElement | null) => {
+      imgRef.current = node;
+
+      if (node) {
+        resolveStatus();
+      }
+    },
+    [resolveStatus],
+  );
 
   useEffect(() => {
     if (status !== "loading") {
@@ -133,7 +128,7 @@ export function ImageInner({
             src={placeholderSrc ?? src}
             alt=""
             aria-hidden="true"
-            className="absolute inset-0 h-full w-full left-0 blur-xs"
+            className="absolute inset-0 h-full w-full blur-xs"
             loading="eager"
             decoding="async"
             fetchPriority="low"
