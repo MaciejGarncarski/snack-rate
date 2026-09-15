@@ -15,6 +15,10 @@ import appCss from "../styles/app.css?url";
 const isDev = import.meta.env.DEV;
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  beforeLoad: async ({ context }) => {
+    await context.ensureSession();
+  },
+  shellComponent: RootDocument,
   head: () => ({
     meta: [
       {
@@ -72,10 +76,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
     ],
   }),
-  shellComponent: RootDocument,
-  beforeLoad: async ({ context }) => {
-    await context.ensureSession();
-  },
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
