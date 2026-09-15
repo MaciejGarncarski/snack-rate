@@ -219,3 +219,36 @@ export const uploadAvatarProcedure = baseProcedure
 
     return { image: imageUrl };
   });
+
+export const updateProfileProcedure = baseProcedure
+  .input(
+    z.object({
+      name: z.string().trim().min(1).max(50),
+    }),
+  )
+  .use(
+    ratelimit({
+      limiter: () => avatarRateLimiter,
+      key: ({ context }) => `auth.profile:${context.userId ?? context.guestId ?? "anon"}`,
+    }),
+  )
+  .handler(async ({ input, context }) => {
+    if (context.userId === null) {
+      throw new ORPCError("UNAUTHORIZED", {
+        message: "Musisz być zalogowany, aby zmienić nazwę.",
+      });
+    }
+
+    const updated = await auth.api.updateUser({
+      headers: context.requestHeaders,
+      body: { name: input.name },
+    });
+
+    if (!updated?.status) {
+      throw new ORPCError("INTERNAL_SERVER_ERROR", {
+        message: "Nie udało się zapisać nazwy. Spróbuj ponownie.",
+      });
+    }
+
+    return { name: input.name };
+  });

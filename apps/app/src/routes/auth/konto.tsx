@@ -1,16 +1,18 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
-import { Suspense, useEffect, useRef, type ChangeEvent } from "react";
+import { Suspense, useEffect, useRef, useState, type ChangeEvent } from "react";
 import { toast } from "sonner";
 import * as z from "zod";
 
 import { Image } from "#/components/image/image.tsx";
 import { Navbar } from "#/components/layout/navbar.tsx";
 import { Button } from "#/components/ui/button.tsx";
+import { Input } from "#/components/ui/input.tsx";
 import { Skeleton } from "#/components/ui/skeleton.tsx";
 import { AVATAR_MAX_FILE_SIZE } from "#/const/image-const.ts";
 import { LinkedProvidersCard } from "#/features/auth/components/account/linked-providers-card.tsx";
 import { useSession } from "#/features/auth/hooks/use-session.ts";
+import { useUpdateProfile } from "#/features/auth/queries/use-update-profile.ts";
 import { useUploadAvatar } from "#/features/auth/queries/use-upload-avatar.ts";
 import { authClient } from "#/lib/auth-client.ts";
 import { orpc } from "#/orpc/client.ts";
@@ -113,7 +115,14 @@ function RouteComponent() {
 function ProfileHeader() {
   const { data } = useSession();
   const uploadAvatar = useUploadAvatar();
+  const updateProfile = useUpdateProfile();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [name, setName] = useState("");
+
+  const trimmedName = name.trim();
+  const canSaveName =
+    trimmedName.length > 0 && trimmedName.length <= 50 && !updateProfile.isPending;
 
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -128,6 +137,18 @@ function ProfileHeader() {
       return;
     }
     uploadAvatar.mutate({ image: file });
+  };
+
+  const onSaveName = () => {
+    if (!canSaveName) return;
+    updateProfile.mutate(
+      { name: trimmedName },
+      {
+        onSuccess: () => {
+          setIsEditingName(false);
+        },
+      },
+    );
   };
 
   return (
@@ -146,9 +167,47 @@ function ProfileHeader() {
         </div>
       )}
       <div className="min-w-0">
-        <p className="truncate text-lg font-medium ">{data.user?.name}</p>
+        {isEditingName ? (
+          <div className="flex flex-col gap-2">
+            <Input
+              value={name}
+              maxLength={50}
+              placeholder="Twoja nazwa"
+              aria-label="Nazwa użytkownika"
+              onChange={(event) => setName(event.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button type="button" size="sm" isDisabled={!canSaveName} onClick={onSaveName}>
+                {updateProfile.isPending ? "Zapisywanie…" : "Zapisz"}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => setIsEditingName(false)}
+              >
+                Anuluj
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <p className="truncate text-lg font-medium ">{data.user?.name}</p>
+        )}
         <p className="truncate text-sm text-muted-foreground">{data.user?.email}</p>
-        <div className="mt-2">
+        <div className="mt-2 flex flex-wrap gap-2">
+          {!isEditingName ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setName(data.user?.name ?? "");
+                setIsEditingName(true);
+              }}
+            >
+              Zmień nazwę
+            </Button>
+          ) : null}
           <input
             ref={fileInputRef}
             type="file"

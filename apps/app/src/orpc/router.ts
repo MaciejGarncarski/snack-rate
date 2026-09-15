@@ -14,6 +14,7 @@ import {
   listAccountsProcedure,
   signInOTPProcedure,
   unlinkAccountProcedure,
+  updateProfileProcedure,
   uploadAvatarProcedure,
 } from "#/features/auth/auth.routes.server";
 import {
@@ -73,5 +74,6 @@ export default {
     unlinkAccount: unlinkAccountProcedure,
     listAccounts: listAccountsProcedure,
     uploadAvatar: uploadAvatarProcedure,
+    updateProfile: updateProfileProcedure,
   },
 };
