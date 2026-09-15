@@ -1,0 +1,59 @@
+groups:
+  - name: snack-rate-app
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------
+      # App Down — the /metrics target stopped reporting to Prometheus
+      # ---------------------------------------------------------------
+      - alert: AppDown
+        expr: |
+          up{job="snack_rate_app"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Snack Rate app is down ({{ $labels.instance }})"
+          description: "The snack_rate_app target {{ $labels.instance }} has been unreachable for more than 2 minutes."
+
+      # ---------------------------------------------------------------
+      # 5xx errors — share of failed responses over total requests
+      # Mirrors the "Error %" panel on the SLO dashboard
+      # ---------------------------------------------------------------
+      - alert: High5xxRate
+        expr: |
+          100 * sum(rate(http_status_codes_total{http_status_code=~"5.."}[5m]))
+            / sum(rate(http_requests_total[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High 5xx rate on Snack Rate app"
+          description: '{{ printf "%.1f" $value }}% of responses are 5xx over the last 5 minutes (threshold: 5%).'
+
+      # ---------------------------------------------------------------
+      # Latency — p95 request duration above 1s
+      # Mirrors the "p95 Latency" panel on the SLO dashboard
+      # ---------------------------------------------------------------
+      - alert: HighP95Latency
+        expr: |
+          histogram_quantile(0.95, sum(rate(http_request_duration_ms_bucket[5m])) by (le)) > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High p95 latency on Snack Rate app"
+          description: 'p95 latency is {{ printf "%.0f" $value }}ms over the last 5 minutes (threshold: 1000ms).'
+
+      # ---------------------------------------------------------------
+      # Readiness — dependency (DB/S3) checks failing at runtime
+      # Mirrors the "Readiness Failures" panel on the Health dashboard
+      # ---------------------------------------------------------------
+      - alert: ReadinessFailures
+        expr: |
+          sum(increase(readiness_failures_total[15m])) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Snack Rate readiness checks failing"
+          description: "{{ $value }} readiness failure(s) in the last 15 minutes. Check DB/S3 connectivity."

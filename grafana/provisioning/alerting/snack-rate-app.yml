@@ -1,0 +1,223 @@
+apiVersion: 1
+
+# Grafana-managed alert rules for the Snack Rate app.
+# These mirror config/alerts/snack-rate-app.rules.yml (evaluated by Prometheus)
+# but fire through Grafana unified alerting so they reach the
+# "Snack Rate Email" contact point defined in alerting.yml.
+# The default notification policy (no matchers) routes all of these to email.
+groups:
+  - orgId: 1
+    name: snack-rate-app
+    folder: Snack Rate
+    interval: 1m
+    rules:
+      - uid: snack-rate-app-down
+        title: AppDown
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: up{job="snack_rate_app"} == 0
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: C
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 1
+                    type: lt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: Alerting
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "Snack Rate app is down"
+          description: "The snack_rate_app target has been unreachable for more than 2 minutes."
+        labels:
+          severity: critical
+        isPaused: false
+
+      - uid: snack-rate-high-5xx-rate
+        title: High5xxRate
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: >-
+                100 * sum(rate(http_status_codes_total{http_status_code=~"5.."}[5m]))
+                / sum(rate(http_requests_total[5m]))
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: C
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 5
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "High 5xx rate on Snack Rate app"
+          description: "More than 5% of responses are 5xx over the last 5 minutes."
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: snack-rate-high-p95-latency
+        title: HighP95Latency
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: >-
+                histogram_quantile(0.95, sum(rate(http_request_duration_ms_bucket[5m])) by (le))
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: C
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 1000
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "High p95 latency on Snack Rate app"
+          description: "p95 latency is above 1000ms over the last 5 minutes."
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: snack-rate-readiness-failures
+        title: ReadinessFailures
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 900
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: sum(increase(readiness_failures_total[15m]))
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: C
+            relativeTimeRange:
+              from: 0
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "Snack Rate readiness checks failing"
+          description: "Readiness failures in the last 15 minutes. Check DB/S3 connectivity."
+        labels:
+          severity: warning
+        isPaused: false
