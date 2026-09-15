@@ -1,5 +1,6 @@
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { useForm } from "@tanstack/react-form";
+import { useRouter } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import * as z from "zod";
 
@@ -18,6 +19,7 @@ const defaultValues: FormValues = {
 
 export const useCreateSnackForm = () => {
   const { createSnack } = useCreateSnack();
+  const router = useRouter();
   const [token, setToken] = useState<string | undefined>();
   const turnstileRef = useRef<TurnstileInstance | null>(null);
 
@@ -53,6 +55,7 @@ export const useCreateSnackForm = () => {
       try {
         await createSnack(formData, token);
         formApi.reset();
+        await router.navigate({ to: "/" });
       } catch {
         // keep form state on error; submission will surface validation/server errors
       } finally {
