@@ -1,3 +1,4 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
@@ -5,9 +6,12 @@ import { SnackRating } from "#/components/snacks/snack-rating";
 import { Button } from "#/components/ui/button";
 import { Item, ItemContent, ItemHeader, ItemTitle } from "#/components/ui/item";
 import { AddCommentForm } from "#/features/comments/components/add-comment-form.tsx";
+import { AddReplyForm } from "#/features/comments/components/add-reply-form.tsx";
 import { CommentReactions } from "#/features/comments/components/comment-reactions";
+import { CommentReply } from "#/features/comments/components/comment-reply.tsx";
 import { CurrentUserCommentMenu } from "#/features/comments/components/current-user-comment-menu.tsx";
 import type { SnackComment } from "#/features/comments/contracts/comments";
+import { commentRepliesQueryOptions } from "#/features/comments/queries/comments.query-options";
 import { useRemoveComment } from "#/features/comments/queries/use-remove-comment";
 import { Route } from "#/routes/_app/produkt/$slug/route.tsx";
 
@@ -27,10 +31,13 @@ export function CommentItem({
 
   const removeComment = useRemoveComment({ snackItemId: snackItemId, snackSlug: slug });
 
+  const repliesQuery = useInfiniteQuery({
+    ...commentRepliesQueryOptions(comment.id),
+    enabled: isRepliesOpen,
+  });
+
   const toggleReplies = () => {
     setIsRepliesOpen((prevState) => !prevState);
-    // oxlint-disable-next-line no-console
-    console.log("toggleReplies", isRepliesOpen);
   };
 
   const openReplyForm = () => {
@@ -100,33 +107,61 @@ export function CommentItem({
           </div>
         </ItemContent>
       </Item>
+
       {isReplying && (
         <div className="ml-4 py-2">
-          {/* <CommentReplyForm /> */}
-          aaaaaaaaa
+          <AddReplyForm
+            onClose={() => setIsReplying(false)}
+            snackItemId={snackItemId}
+            parentCommentId={comment.id}
+          />
         </div>
       )}
-
-      {/* {isRepliesOpen && (
-        <div className="flex flex-col gap-3">
-          {comment.replies.map((reply) => (
-            <CommentReply
-              key={reply.id}
-              userName={reply.authorName}
-              body={reply.body}
-              createdAt={reply.createdAt}
-            />
-          ))}
-        </div>
-      )} */}
 
       {comment.hasReplies && (
         <div className="ml-2 py-2">
           <Button type="button" size="xs" variant="outline" onClick={toggleReplies}>
-            <ChevronDown />
-            Załaduj odpowiedzi
-            {/* {comment.repliesCount} {comment.repliesCount === 1 ? "odpowiedź" : "odpowiedzi"} */}
+            <ChevronDown className={isRepliesOpen ? "rotate-180" : undefined} />
+            {isRepliesOpen ? "Ukryj odpowiedzi" : "Załaduj odpowiedzi"}
           </Button>
+        </div>
+      )}
+
+      {isRepliesOpen && (
+        <div className="flex flex-col gap-2">
+          {repliesQuery.isPending ? (
+            <p className="text-muted-foreground ml-4 text-sm">Ładowanie odpowiedzi…</p>
+          ) : repliesQuery.isError ? (
+            <p className="text-destructive ml-4 text-sm">Nie udało się załadować odpowiedzi.</p>
+          ) : (
+            repliesQuery.data.pages
+              .flatMap((page) => page.items)
+              .map((reply) => (
+                <CommentReply
+                  key={reply.id}
+                  reply={reply}
+                  snackItemId={snackItemId}
+                  parentCommentId={comment.id}
+                />
+              ))
+          )}
+          {repliesQuery.data &&
+            repliesQuery.data.pages.flatMap((page) => page.items).length === 0 && (
+              <p className="text-muted-foreground ml-4 text-sm">Brak odpowiedzi.</p>
+            )}
+          {repliesQuery.hasNextPage && (
+            <div className="ml-2 py-1">
+              <Button
+                type="button"
+                size="xs"
+                variant="outline"
+                onClick={() => repliesQuery.fetchNextPage()}
+                isDisabled={repliesQuery.isFetchingNextPage}
+              >
+                {repliesQuery.isFetchingNextPage ? "Ładowanie…" : "Pokaż więcej odpowiedzi"}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

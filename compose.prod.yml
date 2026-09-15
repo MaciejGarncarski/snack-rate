@@ -38,6 +38,7 @@ services:
       dockerfile: apps/app/Dockerfile
       args:
         VITE_TURNSTILE_SITE_KEY: ${VITE_TURNSTILE_SITE_KEY}
+        VITE_GIT_COMMIT_SHA: ${GIT_COMMIT_SHA:-unknown}
 
     restart: unless-stopped
     env_file:

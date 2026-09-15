@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PackageCheck } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
 } from "#/components/ui/alert-dialog";
 import { Badge } from "#/components/ui/badge";
-import { Button } from "#/components/ui/button";
+import { Button, buttonVariants } from "#/components/ui/button";
 import { Card, CardContent } from "#/components/ui/card";
 import {
   Empty,
@@ -32,7 +32,7 @@ import { Spinner } from "#/components/ui/spinner";
 import { adminPendingSnacksQueryOptions } from "#/features/admin/admin.query-options";
 import { orpc } from "#/orpc/client";
 
-export const Route = createFileRoute("/admin/snacks")({
+export const Route = createFileRoute("/admin/snacks/")({
   component: RouteComponent,
 });
 
@@ -170,6 +170,13 @@ function RouteComponent() {
                     <p className="whitespace-pre-wrap text-sm">{snack.description}</p>
                   ) : null}
                   <div className="flex gap-2">
+                    <Link
+                      to="/admin/snacks/$snackId"
+                      params={{ snackId: snack.id }}
+                      className={buttonVariants({ variant: "outline", size: "sm" })}
+                    >
+                      Podgląd
+                    </Link>
                     <Button
                       size="sm"
                       isDisabled={reviewMutation.isPending}

@@ -2,25 +2,32 @@ import { ORPCError } from "@orpc/client";
 import { ratelimit } from "@orpc/ratelimit";
 import { MemoryRateLimiter } from "@orpc/ratelimit/memory";
 import ms from "ms";
+import { z } from "zod";
 
 import { commentsRepository } from "#/features/comments/server/repositories/comments.repository.instance";
+import { addReplyUseCase } from "#/features/comments/server/use-cases/add-reply.use-case.ts";
 import { rateSnackUseCase } from "#/features/comments/server/use-cases/comment-snack.use-case";
+import { editReplyUseCase } from "#/features/comments/server/use-cases/edit-reply.use-case";
 import { getSnackRatingsUseCase } from "#/features/comments/server/use-cases/get-snack-comments.use-case";
+import { listCommentRepliesUseCase } from "#/features/comments/server/use-cases/list-comment-replies.use-case";
 import { listSnackCommentsUseCase } from "#/features/comments/server/use-cases/list-snack-comments.use-case";
 import {
   reactToCommentUseCase,
   removeReactionUseCase,
 } from "#/features/comments/server/use-cases/react-to-comment.use-case";
 import { removeRatingUseCase } from "#/features/comments/server/use-cases/remove-comment.use-case";
+import { removeReplyUseCase } from "#/features/comments/server/use-cases/remove-reply.use-case";
 import { getMainDb } from "#/infrastructure/db/db";
 import { verifyTurnstileToken } from "#/infrastructure/turnstile";
 import { baseProcedure } from "#/lib/orpc/procedure";
-import { listCommentsSchema } from "#/schemas/comments";
+import { listCommentsSchema, listRepliesSchema } from "#/schemas/comments";
 import {
+  editReplySchema,
   rateSnackSchema,
   reactToCommentSchema,
   removeRatingSchema,
   removeReactionSchema,
+  removeReplySchema,
   snackRatingsSchema,
 } from "#/schemas/comments";
 
@@ -159,6 +166,131 @@ export const removeReactionProcedure = baseProcedure
       {
         commentId: input.commentId,
         userId: context.userId,
+      },
+      commentsRepository,
+    );
+  });
+
+export const listCommentRepliesProcedure = baseProcedure
+  .input(listRepliesSchema)
+  .handler(({ input, context }) => {
+    return listCommentRepliesUseCase(
+      {
+        commentId: input.commentId,
+        limit: input.limit,
+        cursor: input.cursor,
+        userId: context.userId,
+      },
+      commentsRepository,
+    );
+  });
+
+export const addReplyProcedure = baseProcedure
+  .input(
+    z.object({
+      snackItemId: z.string(),
+      commentId: z.uuid(),
+      body: z.string().min(1).max(1000),
+      token: z.string(),
+    }),
+  )
+  .use(
+    ratelimit({
+      limiter: () => commentRateLimiter,
+      key: ({ context }) => `comments.addReply:${authorKey(context)}`,
+    }),
+  )
+  .handler(async ({ input, context }) => {
+    const isVerified = await verifyTurnstileToken({
+      token: input.token,
+    });
+
+    if (!isVerified) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Nie udało się zweryfikować użytkownika",
+        cause: "Turnstile token verification failed",
+      });
+    }
+
+    const userId = context.userId || context.guestId;
+
+    if (!userId) {
+      throw new ORPCError("UNAUTHORIZED", {
+        message: "Nie można dodać odpowiedzi bez identyfikatora użytkownika",
+      });
+    }
+
+    return addReplyUseCase(
+      {
+        snackItemId: input.snackItemId,
+        commentId: input.commentId,
+        body: input.body,
+        authorId: userId,
+        authorType: context.userId ? "user" : "guest",
+      },
+      commentsRepository,
+    );
+  });
+
+export const editReplyProcedure = baseProcedure
+  .input(editReplySchema.extend({ token: z.string() }))
+  .use(
+    ratelimit({
+      limiter: () => commentRateLimiter,
+      key: ({ context }) => `comments.editReply:${authorKey(context)}`,
+    }),
+  )
+  .handler(async ({ input, context }) => {
+    const isVerified = await verifyTurnstileToken({
+      token: input.token,
+    });
+
+    if (!isVerified) {
+      throw new ORPCError("BAD_REQUEST", {
+        message: "Nie udało się zweryfikować użytkownika",
+        cause: "Turnstile token verification failed",
+      });
+    }
+
+    const userId = context.userId || context.guestId;
+
+    if (!userId) {
+      throw new ORPCError("UNAUTHORIZED", {
+        message: "Nie można edytować odpowiedzi bez identyfikatora użytkownika",
+      });
+    }
+
+    return editReplyUseCase(
+      {
+        replyId: input.replyId,
+        body: input.body,
+        authorId: userId,
+      },
+      commentsRepository,
+    );
+  });
+
+export const removeReplyProcedure = baseProcedure
+  .input(removeReplySchema)
+  .use(
+    ratelimit({
+      limiter: () => commentRateLimiter,
+      key: ({ context }) => `comments.removeReply:${authorKey(context)}`,
+    }),
+  )
+  .handler(({ input, context }) => {
+    const userId = context.userId || context.guestId;
+
+    if (!userId) {
+      throw new ORPCError("UNAUTHORIZED", {
+        message: "Nie można usunąć odpowiedzi bez identyfikatora użytkownika",
+      });
+    }
+
+    return removeReplyUseCase(
+      {
+        replyId: input.replyId,
+        authorId: userId,
       },
       commentsRepository,
     );

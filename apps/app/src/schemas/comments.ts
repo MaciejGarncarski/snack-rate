@@ -40,6 +40,21 @@ export const listCommentsSchema = z.object({
   cursor: z.string().optional(),
 });
 
+export const listRepliesSchema = z.object({
+  commentId: z.uuid(),
+  limit: z.number().int().min(1).max(50),
+  cursor: z.string().optional(),
+});
+
+export const editReplySchema = z.object({
+  replyId: z.uuid(),
+  body: z.string().min(1).max(1000),
+});
+
+export const removeReplySchema = z.object({
+  replyId: z.uuid(),
+});
+
 export const reactToCommentSchema = z.object({
   commentId: z.uuid(),
   type: z.enum(REACTION_TYPES),

@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const schema = z.object({
   VITE_TURNSTILE_SITE_KEY: z.string().min(5),
+  VITE_GIT_COMMIT_SHA: z.string().min(1).default("unknown"),
 });
 
 const parsed = schema.safeParse(import.meta.env);

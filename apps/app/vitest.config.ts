@@ -16,7 +16,6 @@ export default defineConfig({
         "**/lib/server.env.ts",
         "**/lib/client.env.ts",
         "**/lib/auth-client.ts",
-        "**/lib/cursor.ts",
         "**/infrastructure/db/**",
         "**/observability/**",
       ],

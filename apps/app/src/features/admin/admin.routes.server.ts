@@ -71,3 +71,80 @@ export const reviewSnackProcedure = baseProcedure
     }
     return { ok: true, status };
   });
+
+export const getSnackProcedure = baseProcedure
+  .use(adminAuthMiddleware)
+  .input(
+    z.object({
+      snackItemId: z.uuid(),
+    }),
+  )
+  .handler(async ({ input }) => {
+    const snack = await adminRepository.getSnack(input.snackItemId);
+    if (!snack) {
+      throw new ORPCError("NOT_FOUND", { message: "Produkt nie znaleziony" });
+    }
+    return { snack };
+  });
+
+export const updateSnackProcedure = baseProcedure
+  .use(adminAuthMiddleware)
+  .input(
+    z.object({
+      snackItemId: z.uuid(),
+      name: z.string().trim().min(1).max(200),
+      description: z.string().trim().max(500).nullable(),
+      typeId: z.uuid(),
+    }),
+  )
+  .handler(async ({ input }) => {
+    const result = await adminRepository.updateSnack({
+      snackItemId: input.snackItemId,
+      name: input.name,
+      description: input.description?.length ? input.description : null,
+      typeId: input.typeId,
+    });
+    if (result.status === "not-found") {
+      throw new ORPCError("NOT_FOUND", { message: "Produkt nie znaleziony" });
+    }
+    if (result.status === "unknown-type") {
+      throw new ORPCError("BAD_REQUEST", { message: "Nieznany rodzaj produktu" });
+    }
+    return { snack: result.snack };
+  });
+
+export const reorderSnackImagesProcedure = baseProcedure
+  .use(adminAuthMiddleware)
+  .input(
+    z.object({
+      snackItemId: z.uuid(),
+      orderedImageIds: z.array(z.uuid()).min(1).max(20),
+    }),
+  )
+  .handler(async ({ input }) => {
+    const ok = await adminRepository.reorderSnackImages(input.snackItemId, input.orderedImageIds);
+    if (!ok) {
+      throw new ORPCError("NOT_FOUND", {
+        message: "Produkt nie znaleziony lub lista grafik jest niekompletna",
+      });
+    }
+    const snack = await adminRepository.getSnack(input.snackItemId);
+    return { snack };
+  });
+
+export const deleteSnackImageProcedure = baseProcedure
+  .use(adminAuthMiddleware)
+  .input(
+    z.object({
+      snackItemId: z.uuid(),
+      imageId: z.uuid(),
+    }),
+  )
+  .handler(async ({ input }) => {
+    const result = await adminRepository.deleteSnackImage(input.snackItemId, input.imageId);
+    if (!result) {
+      throw new ORPCError("NOT_FOUND", { message: "Grafika nie znaleziona" });
+    }
+    const snack = await adminRepository.getSnack(input.snackItemId);
+    return { snack };
+  });

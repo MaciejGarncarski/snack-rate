@@ -27,3 +27,7 @@ export const PAD_OUTPUT_WIDTH = 1024;
 export const PAD_OUTPUT_HEIGHT = Math.round(PAD_OUTPUT_WIDTH / OUTPUT_ASPECT_RATIO);
 
 export const LOW_RESOLUTION_WARNING_MIN_SIDE = 500;
+
+export const AVATAR_MAX_FILE_SIZE = 2 * 1024 * 1024;
+export const AVATAR_SIZE = 256;
+export const AVATAR_QUALITY = 85;

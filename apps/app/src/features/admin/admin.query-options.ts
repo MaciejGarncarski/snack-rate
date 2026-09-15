@@ -26,6 +26,13 @@ export function adminPendingSnacksQueryOptions() {
   });
 }
 
+export function adminSnackQueryOptions(snackItemId: string) {
+  return orpc.admin.getSnack.queryOptions({
+    staleTime: ms("15s"),
+    input: { snackItemId },
+  });
+}
+
 export const adminAuthQueryOptions = orpc.auth.getSession.queryOptions({
   staleTime: ms("120s"),
   retry: false,

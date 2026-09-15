@@ -1,8 +1,11 @@
+import { snackComments } from "@snack-rate/db-schema/schema";
+import { eq } from "drizzle-orm";
+
 import type { ReactionType } from "#/features/comments/consts/reaction-type.const";
 import type { SnackComment } from "#/features/comments/contracts/comments";
 import type { Database, DbTransaction } from "#/infrastructure/db/db";
 
-import { queryCommentsForSnack, type DecodedCursor } from "./queries";
+import { queryCommentsForSnack, queryRepliesForComment, type DecodedCursor } from "./queries";
 import {
   upsertRating as upsertRatingFn,
   getRating as getRatingFn,
@@ -103,6 +106,78 @@ export function createCommentsRepository({ db }: CommentsRepositoryDeps) {
           userReaction: entry?.userReaction ?? null,
         };
       });
+    },
+
+    addReply: async (
+      data: {
+        snackItemId: string;
+        commentId: string;
+        body: string;
+        authorId: string;
+        authorType: "user" | "guest";
+      },
+      tx?: DbTransaction,
+    ) => {
+      const client = tx ?? db;
+
+      const [reply] = await client
+        .insert(snackComments)
+        .values({
+          authorType: data.authorType,
+          snackItemId: data.snackItemId,
+          parentCommentId: data.commentId,
+          body: data.body,
+          authorId: data.authorId,
+        })
+        .returning();
+
+      return reply;
+    },
+
+    listRepliesForComment: (
+      data: {
+        commentId: string;
+        limit: number;
+        cursor: DecodedCursor | null;
+        userId?: string | null;
+      },
+      tx?: DbTransaction,
+    ) => {
+      const client = tx ?? db;
+      return queryRepliesForComment(client, {
+        commentId: data.commentId,
+        limit: data.limit,
+        cursor: data.cursor,
+        userId: data.userId ?? null,
+      });
+    },
+
+    getReplyById: (replyId: string, tx?: DbTransaction) => {
+      const client = tx ?? db;
+      return client.query.snackComments.findFirst({
+        where: { id: replyId },
+      });
+    },
+
+    updateReplyBody: async (data: { replyId: string; body: string }, tx?: DbTransaction) => {
+      const client = tx ?? db;
+
+      const [updated] = await client
+        .update(snackComments)
+        .set({ body: data.body, updatedAt: new Date() })
+        .where(eq(snackComments.id, data.replyId))
+        .returning();
+
+      return updated;
+    },
+
+    softDeleteReply: async (replyId: string, tx?: DbTransaction): Promise<void> => {
+      const client = tx ?? db;
+
+      await client
+        .update(snackComments)
+        .set({ deletedAt: new Date() })
+        .where(eq(snackComments.id, replyId));
     },
 
     toggleReaction: (

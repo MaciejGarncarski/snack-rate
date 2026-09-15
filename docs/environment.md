@@ -16,6 +16,22 @@ Validation lives in `apps/app/src/lib/server.env.ts` (server) and
 `apps/app/src/lib/client.env.ts` (client). The app exits on startup if
 required server vars are missing or invalid.
 
+## Build info (commit SHA)
+
+| Variable               | Used in | Description                                                                                   |
+| ---------------------- | ------- | --------------------------------------------------------------------------------------------- |
+| `VITE_GIT_COMMIT_SHA`  | build   | Short commit SHA (8 chars) embedded in the client bundle at build time (head `<meta name="git-commit">`, `/health`) |
+| `GIT_COMMIT_SHA`       | build   | Host-side value mapped to `VITE_GIT_COMMIT_SHA` for local `docker compose build`              |
+
+`apps/app/vite.config.ts` resolves the SHA from `VITE_GIT_COMMIT_SHA`, then
+`GITHUB_SHA`, then `git rev-parse HEAD`, falling back to `"unknown"`.
+CI passes `github.sha` automatically. For local Docker builds (where `.git`
+is excluded from the build context), export it explicitly:
+
+```bash
+export GIT_COMMIT_SHA=$(git rev-parse HEAD)
+```
+
 ## Application
 
 | Variable   | Used in    | Description                                       |

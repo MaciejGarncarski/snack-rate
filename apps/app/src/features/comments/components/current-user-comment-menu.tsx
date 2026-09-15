@@ -15,9 +15,22 @@ type Props = {
   onRemove: () => void;
   isRemoveOpen: boolean;
   setIsRemoveOpen: (open: boolean) => void;
+  editLabel?: string;
+  removeLabel?: string;
+  removeTitle?: string;
+  removeDescription?: string;
 };
 
-export function CurrentUserCommentMenu({ isRemoveOpen, setIsRemoveOpen, onEdit, onRemove }: Props) {
+export function CurrentUserCommentMenu({
+  isRemoveOpen,
+  setIsRemoveOpen,
+  onEdit,
+  onRemove,
+  editLabel = "Zmień ocenę",
+  removeLabel = "Usuń ocenę",
+  removeTitle = "Usuń ocenę",
+  removeDescription = "Czy na pewno chcesz usunąć swoją ocenę?",
+}: Props) {
   return (
     <>
       <DropdownMenuTrigger>
@@ -27,9 +40,9 @@ export function CurrentUserCommentMenu({ isRemoveOpen, setIsRemoveOpen, onEdit, 
         <DropdownMenu>
           <DropdownMenuGroup>
             <DropdownMenuLabel>Akcje</DropdownMenuLabel>
-            <DropdownMenuItem onAction={onEdit}>Zmień ocenę</DropdownMenuItem>
+            <DropdownMenuItem onAction={onEdit}>{editLabel}</DropdownMenuItem>
             <DropdownMenuItem variant="destructive" onAction={() => setIsRemoveOpen(true)}>
-              Usuń ocenę
+              {removeLabel}
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenu>
@@ -40,8 +53,8 @@ export function CurrentUserCommentMenu({ isRemoveOpen, setIsRemoveOpen, onEdit, 
         onOpenChange={setIsRemoveOpen}
         cancelText="Nie usuwaj"
         proceedText="Usuń"
-        title="Usuń ocenę"
-        description="Czy na pewno chcesz usunąć swoją ocenę?"
+        title={removeTitle}
+        description={removeDescription}
         onCancel={() => {}}
         onProceed={onRemove}
       />

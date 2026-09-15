@@ -24,7 +24,8 @@
     {
       "name": "tanstack-router",
       "specifier": "@tanstack/eslint-plugin-router"
-    }
+    },
+    "@shadcn/lint"
   ],
 
   "categories": {

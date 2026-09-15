@@ -13,3 +13,13 @@ export type SnackComment = {
   userReaction: ReactionType | null;
   isUserAuthor: boolean;
 };
+
+export type SnackReply = {
+  id: string;
+  body: string | null;
+  authorName: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isEdited: boolean;
+  isUserAuthor: boolean;
+};

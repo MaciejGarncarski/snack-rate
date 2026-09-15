@@ -1,8 +1,12 @@
 import {
   deleteAdminCommentProcedure,
+  deleteSnackImageProcedure,
+  getSnackProcedure,
   listAdminCommentsProcedure,
   listPendingSnacksProcedure,
+  reorderSnackImagesProcedure,
   reviewSnackProcedure,
+  updateSnackProcedure,
 } from "#/features/admin/admin.routes.server";
 import {
   getSessionProcedure,
@@ -10,6 +14,7 @@ import {
   listAccountsProcedure,
   signInOTPProcedure,
   unlinkAccountProcedure,
+  uploadAvatarProcedure,
 } from "#/features/auth/auth.routes.server";
 import {
   createSnackProcedure,
@@ -19,12 +24,16 @@ import {
 } from "#/features/catalogue/catalogue.routes.server";
 import { getSearchedItemsProcedure } from "#/features/catalogue/search-snacks/search-snacks.routes.server";
 import {
+  addReplyProcedure,
+  editReplyProcedure,
   getRatingsForSnackProcedure,
+  listCommentRepliesProcedure,
   listCommentsProcedure,
   rateSnackProcedure,
   reactToCommentProcedure,
   removeRatingProcedure,
   removeReactionProcedure,
+  removeReplyProcedure,
 } from "#/features/comments/comments.routes.server";
 
 export default {
@@ -38,6 +47,10 @@ export default {
   comments: {
     list: listCommentsProcedure,
     rate: rateSnackProcedure,
+    addReply: addReplyProcedure,
+    editReply: editReplyProcedure,
+    removeReply: removeReplyProcedure,
+    listReplies: listCommentRepliesProcedure,
     getRatings: getRatingsForSnackProcedure,
     removeRating: removeRatingProcedure,
     react: reactToCommentProcedure,
@@ -48,6 +61,10 @@ export default {
     deleteComment: deleteAdminCommentProcedure,
     listPendingSnacks: listPendingSnacksProcedure,
     reviewSnack: reviewSnackProcedure,
+    getSnack: getSnackProcedure,
+    updateSnack: updateSnackProcedure,
+    reorderSnackImages: reorderSnackImagesProcedure,
+    deleteSnackImage: deleteSnackImageProcedure,
   },
   auth: {
     getSession: getSessionProcedure,
@@ -55,5 +72,6 @@ export default {
     linkSocialAccount: linkSocialAccountProcedure,
     unlinkAccount: unlinkAccountProcedure,
     listAccounts: listAccountsProcedure,
+    uploadAvatar: uploadAvatarProcedure,
   },
 };

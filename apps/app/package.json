@@ -16,7 +16,7 @@
     "test:unit": "vitest run --project=unit",
     "test:integration": "vitest run --project=integration",
     "test:cov": "vitest run --coverage",
-    "test:e2e": "playwright test --project=chromium",
+    "test:e2e": "pnpm --dir ../.. test:e2e",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt",
@@ -103,6 +103,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^5.3.1",
     "@playwright/test": "^1.63.0",
+    "@shadcn/lint": "^0.1.0",
     "@storybook/addon-a11y": "^10.6.0",
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/addon-themes": "^10.6.0",

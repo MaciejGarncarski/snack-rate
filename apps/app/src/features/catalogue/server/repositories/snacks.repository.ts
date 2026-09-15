@@ -259,7 +259,7 @@ export function createSnacksRepository({ db, getFileUrl }: SnacksRepositoryDeps)
     listTypes: () => {
       return db.query.snackTypes.findMany({
         orderBy: (table) => [asc(table.name)],
-        columns: { name: true, slug: true },
+        columns: { id: true, name: true, slug: true },
       });
     },
   };

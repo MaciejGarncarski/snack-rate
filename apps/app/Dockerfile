@@ -10,6 +10,8 @@ RUN pnpm config set store-dir /pnpm/store
 
 ARG VITE_TURNSTILE_SITE_KEY
 ENV VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
+ARG VITE_GIT_COMMIT_SHA=unknown
+ENV VITE_GIT_COMMIT_SHA=${VITE_GIT_COMMIT_SHA}
 
 FROM base AS fetch
 WORKDIR /app
@@ -21,6 +23,8 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm fetch
 FROM base AS build
 ARG VITE_TURNSTILE_SITE_KEY
 ENV VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
+ARG VITE_GIT_COMMIT_SHA=unknown
+ENV VITE_GIT_COMMIT_SHA=${VITE_GIT_COMMIT_SHA}
 WORKDIR /app
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/app ./apps/app

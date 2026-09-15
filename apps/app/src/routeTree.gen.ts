@@ -13,7 +13,7 @@ import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as AdminSnacksRouteImport } from './routes/admin/snacks'
+import { Route as AdminSnacksRouteRouteImport } from './routes/admin/snacks/route'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AuthKontoRouteImport } from './routes/auth/konto'
 import { Route as AuthZalogujRouteImport } from './routes/auth/zaloguj'
@@ -21,6 +21,8 @@ import { Route as HealthIndexRouteImport } from './routes/health/index'
 import { Route as HealthReadyRouteImport } from './routes/health/ready'
 import { Route as AppProduktSlugRouteRouteImport } from './routes/_app/produkt/$slug/route'
 import { Route as AppZaproponujIndexRouteImport } from './routes/_app/zaproponuj/index'
+import { Route as AdminSnacksIndexRouteImport } from './routes/admin/snacks/index'
+import { Route as AdminSnacksSnackIdRouteImport } from './routes/admin/snacks/$snackId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as AppProduktSlugOgDotpngRouteImport } from './routes/_app/produkt/$slug/og[.]png'
@@ -44,7 +46,7 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminSnacksRoute = AdminSnacksRouteImport.update({
+const AdminSnacksRouteRoute = AdminSnacksRouteRouteImport.update({
   id: '/snacks',
   path: '/snacks',
   getParentRoute: () => AdminRouteRoute,
@@ -84,6 +86,16 @@ const AppZaproponujIndexRoute = AppZaproponujIndexRouteImport.update({
   path: '/zaproponuj/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AdminSnacksIndexRoute = AdminSnacksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminSnacksRouteRoute,
+} as any)
+const AdminSnacksSnackIdRoute = AdminSnacksSnackIdRouteImport.update({
+  id: '/$snackId',
+  path: '/$snackId',
+  getParentRoute: () => AdminSnacksRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -103,7 +115,7 @@ const AppProduktSlugOgDotpngRoute = AppProduktSlugOgDotpngRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
-  '/admin/snacks': typeof AdminSnacksRoute
+  '/admin/snacks': typeof AdminSnacksRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/auth/konto': typeof AuthKontoRoute
   '/auth/zaloguj': typeof AuthZalogujRoute
@@ -111,13 +123,14 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/health/': typeof HealthIndexRoute
   '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
+  '/admin/snacks/$snackId': typeof AdminSnacksSnackIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/zaproponuj/': typeof AppZaproponujIndexRoute
+  '/admin/snacks/': typeof AdminSnacksIndexRoute
   '/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
 }
 export interface FileRoutesByTo {
-  '/admin/snacks': typeof AdminSnacksRoute
   '/api/$': typeof ApiSplatRoute
   '/auth/konto': typeof AuthKontoRoute
   '/auth/zaloguj': typeof AuthZalogujRoute
@@ -126,16 +139,18 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/health': typeof HealthIndexRoute
   '/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
+  '/admin/snacks/$snackId': typeof AdminSnacksSnackIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/zaproponuj': typeof AppZaproponujIndexRoute
+  '/admin/snacks': typeof AdminSnacksIndexRoute
   '/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
-  '/admin/snacks': typeof AdminSnacksRoute
+  '/admin/snacks': typeof AdminSnacksRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/auth/konto': typeof AuthKontoRoute
   '/auth/zaloguj': typeof AuthZalogujRoute
@@ -144,9 +159,11 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/health/': typeof HealthIndexRoute
   '/_app/produkt/$slug': typeof AppProduktSlugRouteRouteWithChildren
+  '/admin/snacks/$snackId': typeof AdminSnacksSnackIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
   '/_app/zaproponuj/': typeof AppZaproponujIndexRoute
+  '/admin/snacks/': typeof AdminSnacksIndexRoute
   '/_app/produkt/$slug/og.png': typeof AppProduktSlugOgDotpngRoute
 }
 export interface FileRouteTypes {
@@ -162,13 +179,14 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/health/'
     | '/produkt/$slug'
+    | '/admin/snacks/$snackId'
     | '/api/auth/$'
     | '/api/rpc/$'
     | '/zaproponuj/'
+    | '/admin/snacks/'
     | '/produkt/$slug/og.png'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/admin/snacks'
     | '/api/$'
     | '/auth/konto'
     | '/auth/zaloguj'
@@ -177,9 +195,11 @@ export interface FileRouteTypes {
     | '/admin'
     | '/health'
     | '/produkt/$slug'
+    | '/admin/snacks/$snackId'
     | '/api/auth/$'
     | '/api/rpc/$'
     | '/zaproponuj'
+    | '/admin/snacks'
     | '/produkt/$slug/og.png'
   id:
     | '__root__'
@@ -194,9 +214,11 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/health/'
     | '/_app/produkt/$slug'
+    | '/admin/snacks/$snackId'
     | '/api/auth/$'
     | '/api/rpc/$'
     | '/_app/zaproponuj/'
+    | '/admin/snacks/'
     | '/_app/produkt/$slug/og.png'
   fileRoutesById: FileRoutesById
 }
@@ -246,7 +268,7 @@ declare module '@tanstack/react-router' {
       id: '/admin/snacks'
       path: '/snacks'
       fullPath: '/admin/snacks'
-      preLoaderRoute: typeof AdminSnacksRouteImport
+      preLoaderRoute: typeof AdminSnacksRouteRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/api/$': {
@@ -297,6 +319,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/zaproponuj/'
       preLoaderRoute: typeof AppZaproponujIndexRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/admin/snacks/': {
+      id: '/admin/snacks/'
+      path: '/'
+      fullPath: '/admin/snacks/'
+      preLoaderRoute: typeof AdminSnacksIndexRouteImport
+      parentRoute: typeof AdminSnacksRouteRoute
+    }
+    '/admin/snacks/$snackId': {
+      id: '/admin/snacks/$snackId'
+      path: '/$snackId'
+      fullPath: '/admin/snacks/$snackId'
+      preLoaderRoute: typeof AdminSnacksSnackIdRouteImport
+      parentRoute: typeof AdminSnacksRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -349,13 +385,26 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
 )
 
+interface AdminSnacksRouteRouteChildren {
+  AdminSnacksSnackIdRoute: typeof AdminSnacksSnackIdRoute
+  AdminSnacksIndexRoute: typeof AdminSnacksIndexRoute
+}
+
+const AdminSnacksRouteRouteChildren: AdminSnacksRouteRouteChildren = {
+  AdminSnacksSnackIdRoute: AdminSnacksSnackIdRoute,
+  AdminSnacksIndexRoute: AdminSnacksIndexRoute,
+}
+
+const AdminSnacksRouteRouteWithChildren =
+  AdminSnacksRouteRoute._addFileChildren(AdminSnacksRouteRouteChildren)
+
 interface AdminRouteRouteChildren {
-  AdminSnacksRoute: typeof AdminSnacksRoute
+  AdminSnacksRouteRoute: typeof AdminSnacksRouteRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
-  AdminSnacksRoute: AdminSnacksRoute,
+  AdminSnacksRouteRoute: AdminSnacksRouteRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
 }
 

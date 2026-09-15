@@ -4,11 +4,18 @@ import { MemoryRateLimiter } from "@orpc/ratelimit/memory";
 import ms from "ms";
 import * as z from "zod";
 
+import { AVATAR_MAX_FILE_SIZE } from "#/const/image-const";
+import { uploadAvatar } from "#/features/auth/server/avatar.service";
 import { verifyTurnstileToken } from "#/infrastructure/turnstile";
 import { auth } from "#/lib/auth.ts";
 import { baseProcedure } from "#/lib/orpc/procedure";
 
 const signInOTPRateLimiter = new MemoryRateLimiter({
+  maxRequests: 10,
+  window: ms("1h"),
+});
+
+const avatarRateLimiter = new MemoryRateLimiter({
   maxRequests: 10,
   window: ms("1h"),
 });
@@ -174,4 +181,41 @@ export const unlinkAccountProcedure = baseProcedure
         message: "Nie udało się odłączyć konta. Spróbuj ponownie.",
       });
     }
+  });
+
+export const uploadAvatarProcedure = baseProcedure
+  .input(
+    z.object({
+      image: z.file().max(AVATAR_MAX_FILE_SIZE),
+    }),
+  )
+  .use(
+    ratelimit({
+      limiter: () => avatarRateLimiter,
+      key: ({ context }) => `auth.avatar:${context.userId ?? context.guestId ?? "anon"}`,
+    }),
+  )
+  .handler(async ({ input, context }) => {
+    if (context.userId === null) {
+      throw new ORPCError("UNAUTHORIZED", {
+        message: "Musisz być zalogowany, aby zmienić avatar.",
+      });
+    }
+
+    const session = await auth.api.getSession({ headers: context.requestHeaders });
+
+    const imageUrl = await uploadAvatar(input.image, context.userId, session?.user?.image ?? null);
+
+    const updated = await auth.api.updateUser({
+      headers: context.requestHeaders,
+      body: { image: imageUrl },
+    });
+
+    if (!updated?.status) {
+      throw new ORPCError("INTERNAL_SERVER_ERROR", {
+        message: "Nie udało się zapisać avatara. Spróbuj ponownie.",
+      });
+    }
+
+    return { image: imageUrl };
   });

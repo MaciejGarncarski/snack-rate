@@ -35,7 +35,7 @@ function RouteComponent() {
   const user = authQuery.data?.user ?? null;
   const isAdmin = (user as { role?: string } | null)?.role === "admin";
 
-  const tab = matchRoute({ to: "/admin/snacks" }) ? "snacks" : "comments";
+  const tab = matchRoute({ to: "/admin/snacks", fuzzy: true }) ? "snacks" : "comments";
 
   const handleLogout = async () => {
     await authClient.signOut();

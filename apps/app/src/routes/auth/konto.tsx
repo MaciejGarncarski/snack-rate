@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, type ChangeEvent } from "react";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -8,8 +8,10 @@ import { Image } from "#/components/image/image.tsx";
 import { Navbar } from "#/components/layout/navbar.tsx";
 import { Button } from "#/components/ui/button.tsx";
 import { Skeleton } from "#/components/ui/skeleton.tsx";
+import { AVATAR_MAX_FILE_SIZE } from "#/const/image-const.ts";
 import { LinkedProvidersCard } from "#/features/auth/components/account/linked-providers-card.tsx";
 import { useSession } from "#/features/auth/hooks/use-session.ts";
+import { useUploadAvatar } from "#/features/auth/queries/use-upload-avatar.ts";
 import { authClient } from "#/lib/auth-client.ts";
 import { orpc } from "#/orpc/client.ts";
 
@@ -110,6 +112,23 @@ function RouteComponent() {
 
 function ProfileHeader() {
   const { data } = useSession();
+  const uploadAvatar = useUploadAvatar();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Wybierz plik graficzny (JPEG, PNG, WebP, AVIF).");
+      return;
+    }
+    if (file.size > AVATAR_MAX_FILE_SIZE) {
+      toast.error("Avatar jest za duży (maks. 2 MB).");
+      return;
+    }
+    uploadAvatar.mutate({ image: file });
+  };
 
   return (
     <div className="mt-10 flex items-center gap-5">
@@ -129,6 +148,24 @@ function ProfileHeader() {
       <div className="min-w-0">
         <p className="truncate text-lg font-medium ">{data.user?.name}</p>
         <p className="truncate text-sm text-muted-foreground">{data.user?.email}</p>
+        <div className="mt-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/avif"
+            className="hidden"
+            onChange={onFileChange}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            isDisabled={uploadAvatar.isPending}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {uploadAvatar.isPending ? "Wysyłanie…" : "Zmień avatar"}
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { MotionConfig } from "motion/react";
 
 import { Toaster } from "#/components/ui/sonner";
 import { ThemeProvider } from "#/components/ui/theme-provider";
+import { GIT_COMMIT_SHA } from "#/lib/build-info";
 import type { RouterContext } from "#/router";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
@@ -34,6 +35,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       {
         name: "apple-mobile-web-app-title",
         content: "Snack Rate",
+      },
+      {
+        name: "git-commit",
+        content: GIT_COMMIT_SHA,
       },
     ],
     links: [
