@@ -14,7 +14,7 @@ const schema = z.object({
   DATABASE_URL: z.url(),
   PG_BOSS_DB_URL: z.url(),
   PG_BOSS_DB_URL_INTERNAL: z.url(),
-  OTEL_EXPORTER_OTLP_ENDPOINT: z.url(),
+  OTEL_EXPORTER_OTLP_ENDPOINT: z.url().optional(),
 
   OBSERVABILITY_LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
   OBSERVABILITY_METRICS_ENABLED: z.enum(["true", "false"]).default("true"),

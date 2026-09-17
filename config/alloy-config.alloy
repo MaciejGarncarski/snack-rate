@@ -20,6 +20,9 @@ prometheus.scrape "prometheus" {
 }
 
 prometheus.scrape "snack_rate_app" {
+  // One target per runtime: "app" resolves inside the compose network
+  // (prod/staging), "host.docker.internal" covers `pnpm dev` on the host.
+  // Exactly one succeeds per environment — the other failing is expected.
   targets = [
     { "__address__" = "host.docker.internal:9464" },
     { "__address__" = "app:9464" },

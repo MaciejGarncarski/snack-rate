@@ -121,7 +121,7 @@ Reserved for the app mail worker.
 
 | Variable                        | Used in    | Description                      |
 | ------------------------------- | ---------- | -------------------------------- |
-| `OTEL_EXPORTER_OTLP_ENDPOINT`   | dev + prod | OpenTelemetry collector endpoint |
+| `OTEL_EXPORTER_OTLP_ENDPOINT`   | dev + prod | OpenTelemetry collector endpoint (host dev: `http://localhost:4318`, app container in compose: `http://alloy:4318`; optional when tracing is disabled) |
 | `OBSERVABILITY_LOG_LEVEL`       | dev + prod | Log level (e.g. debug, info)     |
 | `OBSERVABILITY_METRICS_ENABLED` | dev + prod | Enable metrics collection        |
 | `OBSERVABILITY_TRACING_ENABLED` | dev + prod | Enable distributed tracing       |

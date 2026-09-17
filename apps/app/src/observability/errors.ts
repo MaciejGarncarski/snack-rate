@@ -1,12 +1,12 @@
 import { SpanStatusCode } from "@opentelemetry/api";
 
 import { logger } from "#/observability/logger/logger";
-import { getTracer, startSpan } from "#/observability/tracing";
+import { getTracer, startActiveSpan } from "#/observability/tracing";
 
 const tracer = getTracer("uncaught-errors");
 
 function recordError(eventName: string, cause: unknown) {
-  startSpan(
+  startActiveSpan(
     eventName,
     (span) => {
       const message = String(cause);

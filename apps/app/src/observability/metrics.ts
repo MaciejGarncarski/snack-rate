@@ -6,7 +6,9 @@ import {
   type MetricOptions,
 } from "@opentelemetry/api";
 
-export const meter: Meter = metrics.getMeter("snack-rate", "0.1.0");
+import { OTEL_SERVICE_NAME, OTEL_SERVICE_VERSION } from "#/observability/service";
+
+export const meter: Meter = metrics.getMeter(OTEL_SERVICE_NAME, OTEL_SERVICE_VERSION);
 
 export function createCounter(name: string, options?: MetricOptions): Counter {
   return meter.createCounter(name, options);

@@ -9,11 +9,9 @@ rule_files:
 # Email notifications are handled by Grafana unified alerting — see
 # grafana/provisioning/alerting/ (contact point + provisioned rule group).
 scrape_configs:
-  - job_name: snack_rate_app
-    metrics_path: /metrics
-    static_configs:
-      - targets:
-          - app:9464
+  # NOTE: the app is scraped by Alloy (config/alloy-config.alloy) and
+  # forwarded via remote_write — do not add a direct app job here,
+  # it would duplicate every series.
   - job_name: prometheus
     static_configs:
       - targets:

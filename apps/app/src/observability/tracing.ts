@@ -57,12 +57,7 @@ export function startSpan<T>(
   fn: (span: Span) => T | Promise<T>,
   options: SpanOptions = {},
 ): Promise<T> {
-  const tracer = options.tracer ?? getTracer();
-  const span = tracer.startSpan(
-    name,
-    options.attributes ? { attributes: options.attributes } : undefined,
-  );
-  return runSpan(span, fn);
+  return startActiveSpan(name, fn, options);
 }
 
 export function startActiveSpan<T>(
