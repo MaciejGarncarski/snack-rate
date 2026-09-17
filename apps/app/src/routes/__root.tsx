@@ -15,9 +15,6 @@ import appCss from "../styles/app.css?url";
 const isDev = import.meta.env.DEV;
 
 export const Route = createRootRouteWithContext<RouterContext>()({
-  beforeLoad: async ({ context }) => {
-    await context.ensureSession();
-  },
   shellComponent: RootDocument,
   head: () => ({
     meta: [
