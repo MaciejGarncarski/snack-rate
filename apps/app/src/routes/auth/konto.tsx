@@ -67,10 +67,10 @@ function RouteComponent() {
   }, [search.error, navigate]);
 
   return (
-    <div className="min-h-svh bg-muted">
+    <div className="min-h-svh ">
       <Navbar />
       <div className="mx-auto flex max-w-2xl flex-col px-4 py-12 md:px-0 md:py-20">
-        <h1 className="text-4xl md:text-5xl">Twoje konto</h1>
+        <h1 className="text-3xl font-semibold">Twoje konto</h1>
 
         <Suspense fallback={<ProfileHeaderSkeleton />}>
           <ProfileHeader />

@@ -151,7 +151,7 @@ export function LinkedProvidersCard() {
               variant="muted"
               className="rounded-2xl border border-border p-3"
             >
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-muted ring ring-ring/50 p-1.5 [&_svg]:size-full">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-background ring ring-ring/50 p-1.5 [&_svg]:size-full">
                 {provider.icon}
               </span>
 
