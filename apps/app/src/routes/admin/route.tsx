@@ -2,8 +2,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
   Link,
+  notFound,
   Outlet,
-  redirect,
   useMatchRoute,
   useRouter,
 } from "@tanstack/react-router";
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/admin")({
     const session = await ensureSession();
 
     if (!session.user || session.user.role !== "admin") {
-      throw redirect({ to: "/auth/zaloguj" });
+      throw notFound();
     }
   },
 });

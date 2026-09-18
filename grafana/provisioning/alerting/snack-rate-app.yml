@@ -25,10 +25,32 @@ groups:
               intervalMs: 1000
               maxDataPoints: 43200
               refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
           - refId: C
-            relativeTimeRange:
-              from: 0
-              to: 0
             datasourceUid: __expr__
             model:
               conditions:
@@ -40,7 +62,7 @@ groups:
                     type: and
                   query:
                     params:
-                      - A
+                      - C
                   reducer:
                     params: []
                     type: last
@@ -48,7 +70,7 @@ groups:
               datasource:
                 type: __expr__
                 uid: __expr__
-              expression: A
+              expression: B
               intervalMs: 1000
               maxDataPoints: 43200
               refId: C
@@ -79,10 +101,32 @@ groups:
               intervalMs: 1000
               maxDataPoints: 43200
               refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
           - refId: C
-            relativeTimeRange:
-              from: 0
-              to: 0
             datasourceUid: __expr__
             model:
               conditions:
@@ -94,7 +138,7 @@ groups:
                     type: and
                   query:
                     params:
-                      - A
+                      - C
                   reducer:
                     params: []
                     type: last
@@ -102,7 +146,7 @@ groups:
               datasource:
                 type: __expr__
                 uid: __expr__
-              expression: A
+              expression: B
               intervalMs: 1000
               maxDataPoints: 43200
               refId: C
@@ -132,10 +176,32 @@ groups:
               intervalMs: 1000
               maxDataPoints: 43200
               refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
           - refId: C
-            relativeTimeRange:
-              from: 0
-              to: 0
             datasourceUid: __expr__
             model:
               conditions:
@@ -147,7 +213,7 @@ groups:
                     type: and
                   query:
                     params:
-                      - A
+                      - C
                   reducer:
                     params: []
                     type: last
@@ -155,7 +221,7 @@ groups:
               datasource:
                 type: __expr__
                 uid: __expr__
-              expression: A
+              expression: B
               intervalMs: 1000
               maxDataPoints: 43200
               refId: C
@@ -184,10 +250,32 @@ groups:
               intervalMs: 1000
               maxDataPoints: 43200
               refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
           - refId: C
-            relativeTimeRange:
-              from: 0
-              to: 0
             datasourceUid: __expr__
             model:
               conditions:
@@ -199,7 +287,7 @@ groups:
                     type: and
                   query:
                     params:
-                      - A
+                      - C
                   reducer:
                     params: []
                     type: last
@@ -207,7 +295,7 @@ groups:
               datasource:
                 type: __expr__
                 uid: __expr__
-              expression: A
+              expression: B
               intervalMs: 1000
               maxDataPoints: 43200
               refId: C

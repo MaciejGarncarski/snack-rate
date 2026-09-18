@@ -14,13 +14,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "#/components/ui/sheet";
-import { useSession } from "#/features/auth/hooks/use-session.ts";
 import { useIsMobile } from "#/hooks/use-mobile";
 
 export function NavbarMobileMenu() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const isMobile = useIsMobile();
-  const { data } = useSession();
 
   if (!isMobile) {
     return null;
@@ -63,7 +61,7 @@ export function NavbarMobileMenu() {
             Dodaj produkt
           </Link>
 
-          <AccountLink isLoggedIn={!!data.user} userImage={data.user?.image} />
+          <AccountLink />
         </div>
         <SheetFooter>
           <SheetClose variant="outline">Zamknij menu</SheetClose>

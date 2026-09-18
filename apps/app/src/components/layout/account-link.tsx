@@ -1,14 +1,25 @@
 import { Link } from "@tanstack/react-router";
 import { UserIcon } from "lucide-react";
+import { Suspense } from "react";
 
 import { buttonVariants } from "#/components/ui/button.tsx";
+import { Skeleton } from "#/components/ui/skeleton.tsx";
+import { useSession } from "#/features/auth/hooks/use-session.ts";
 
-type Props = {
-  isLoggedIn: boolean;
-  userImage?: string | null;
-};
+export function AccountLink() {
+  return (
+    <Suspense fallback={<Skeleton className="h-9 w-30" />}>
+      <AccountLinkInner />
+    </Suspense>
+  );
+}
 
-export function AccountLink({ isLoggedIn, userImage }: Props) {
+function AccountLinkInner() {
+  const { data } = useSession();
+
+  const isLoggedIn = !!data.user;
+  const userImage = data.user?.image;
+
   if (isLoggedIn) {
     return (
       <Link

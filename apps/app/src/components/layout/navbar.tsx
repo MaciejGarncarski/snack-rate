@@ -8,12 +8,9 @@ import { NavbarMobileMenu } from "#/components/layout/navbar-mobile-menu";
 import { buttonVariants } from "#/components/ui/button";
 import { ModeToggle } from "#/components/ui/mode-toggle";
 import { Skeleton } from "#/components/ui/skeleton";
-import { useSession } from "#/features/auth/hooks/use-session.ts";
 import { NavbarSearchBox } from "#/features/catalogue/search-snacks/components/search-box";
 
 export function Navbar() {
-  const { data } = useSession();
-
   return (
     <nav className="sticky top-0 z-20 grid md:grid-cols-3 grid-cols-[minmax(3rem,auto)_1fr_minmax(3rem,auto)] w-full items-center border-b px-4 py-3 md:px-12">
       <div className="absolute left-0 top-0 w-full h-full bg-sidebar/90 -z-10 backdrop-blur-lg" />
@@ -44,7 +41,7 @@ export function Navbar() {
               <PlusIcon className="mr-2 h-4 w-4" />
               Dodaj produkt
             </Link>
-            <AccountLink isLoggedIn={!!data.user} userImage={data.user?.image} />
+            <AccountLink />
           </div>
 
           <NavbarMobileMenu />
