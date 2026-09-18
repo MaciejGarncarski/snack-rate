@@ -3,7 +3,7 @@ import { Image } from "#/components/image/image";
 export function Logo() {
   return (
     <Image
-      src="/logo.png"
+      src="/logo-small.png"
       alt="Logo"
       width={100}
       skeleton={true}
