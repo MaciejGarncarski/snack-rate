@@ -66,6 +66,7 @@ export function LoginOtpStep({ email, onBack }: LoginOtpStepProps) {
         return;
       }
       toast.success("Zalogowano pomyślnie");
+      await queryClient.invalidateQueries({ queryKey: orpc.auth.getSession.queryKey() });
       await router.navigate({ to: "/" });
     } catch {
       toast.error("Wystąpił nieoczekiwany błąd");

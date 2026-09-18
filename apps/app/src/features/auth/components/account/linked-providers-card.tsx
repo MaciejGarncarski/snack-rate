@@ -61,6 +61,9 @@ export function LinkedProvidersCard() {
   const linkMutation = useMutation(
     orpc.auth.linkSocialAccount.mutationOptions({
       onSuccess: (data) => {
+        void queryClient.invalidateQueries({
+          queryKey: orpc.auth.listAccounts.queryKey(),
+        });
         // oxlint-disable-next-line react/immutability
         window.location.href = data.url;
       },
