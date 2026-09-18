@@ -3,17 +3,23 @@ groups:
     interval: 1m
     rules:
       # ---------------------------------------------------------------
-      # App Down — the /metrics target stopped reporting to Prometheus
+      # App Down — all /metrics targets stopped reporting to Prometheus
+      # Alloy scrapes TWO targets for this job (app:9464 for
+      # prod/staging, host.docker.internal:9464 for `pnpm dev`).
+      # Exactly one is expected to be down at any time, so per-instance
+      # `up == 0` always fires. Aggregate instead and only fire when
+      # NO target is up. `or on() vector(0)` also covers the case where
+      # the series is entirely absent (no scrape ever succeeded).
       # ---------------------------------------------------------------
       - alert: AppDown
         expr: |
-          up{job="snack_rate_app"} == 0
+          (sum(up{job="snack_rate_app"}) or on() vector(0)) == 0
         for: 2m
         labels:
           severity: critical
         annotations:
-          summary: "Snack Rate app is down ({{ $labels.instance }})"
-          description: "The snack_rate_app target {{ $labels.instance }} has been unreachable for more than 2 minutes."
+          summary: "Snack Rate app is down"
+          description: "No snack_rate_app target is up (all targets down for more than 2 minutes)."
 
       # ---------------------------------------------------------------
       # 5xx errors — share of failed responses over total requests
@@ -21,8 +27,8 @@ groups:
       # ---------------------------------------------------------------
       - alert: High5xxRate
         expr: |
-          100 * sum(rate(http_status_codes_total{http_status_code=~"5.."}[5m]))
-            / sum(rate(http_requests_total[5m])) > 5
+          ((100 * sum(rate(http_status_codes_total{http_status_code=~"5.."}[5m]))
+            / sum(rate(http_requests_total[5m]))) or on() vector(0)) > 5
         for: 5m
         labels:
           severity: warning
@@ -36,7 +42,7 @@ groups:
       # ---------------------------------------------------------------
       - alert: HighP95Latency
         expr: |
-          histogram_quantile(0.95, sum(rate(http_request_duration_ms_bucket[5m])) by (le)) > 1000
+          (histogram_quantile(0.95, sum(rate(http_request_duration_ms_bucket[5m])) by (le)) or on() vector(0)) > 1000
         for: 5m
         labels:
           severity: warning
@@ -50,7 +56,7 @@ groups:
       # ---------------------------------------------------------------
       - alert: ReadinessFailures
         expr: |
-          sum(increase(readiness_failures_total[15m])) > 0
+          (sum(increase(readiness_failures_total[15m])) or on() vector(0)) > 0
         for: 5m
         labels:
           severity: warning

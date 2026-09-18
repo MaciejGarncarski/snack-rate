@@ -21,7 +21,11 @@ groups:
               to: 0
             datasourceUid: prometheus
             model:
-              expr: up{job="snack_rate_app"} == 0
+              # Alloy scrapes TWO targets for this job (app:9464 and
+              # host.docker.internal:9464); exactly one is down per
+              # environment by design. Aggregate so we only fire when NO
+              # target is up. `or on() vector(0)` covers fully-absent series.
+              expr: sum(up{job="snack_rate_app"}) or on() vector(0)
               intervalMs: 1000
               maxDataPoints: 43200
               refId: A
@@ -75,12 +79,14 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: Alerting
-        execErrState: Error
+        # NoData = healthy (no series, e.g. app never scraped in window).
+        # KeepLast on error avoids email spam during Prometheus restarts.
+        noDataState: OK
+        execErrState: KeepLast
         for: 2m
         annotations:
           summary: "Snack Rate app is down"
-          description: "The snack_rate_app target has been unreachable for more than 2 minutes."
+          description: "No snack_rate_app target is up (all targets down for more than 2 minutes)."
         labels:
           severity: critical
         isPaused: false
@@ -95,9 +101,11 @@ groups:
               to: 0
             datasourceUid: prometheus
             model:
+              # `or on() vector(0)` maps "no traffic in window" to 0 (healthy)
+              # instead of NoData, so idle periods don't email.
               expr: >-
-                100 * sum(rate(http_status_codes_total{http_status_code=~"5.."}[5m]))
-                / sum(rate(http_requests_total[5m]))
+                (100 * sum(rate(http_status_codes_total{http_status_code=~"5.."}[5m]))
+                / sum(rate(http_requests_total[5m])) or on() vector(0))
               intervalMs: 1000
               maxDataPoints: 43200
               refId: A
@@ -151,8 +159,8 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
-        execErrState: Error
+        noDataState: OK
+        execErrState: KeepLast
         for: 5m
         annotations:
           summary: "High 5xx rate on Snack Rate app"
@@ -172,7 +180,7 @@ groups:
             datasourceUid: prometheus
             model:
               expr: >-
-                histogram_quantile(0.95, sum(rate(http_request_duration_ms_bucket[5m])) by (le))
+                (histogram_quantile(0.95, sum(rate(http_request_duration_ms_bucket[5m])) by (le)) or on() vector(0))
               intervalMs: 1000
               maxDataPoints: 43200
               refId: A
@@ -226,8 +234,8 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
-        execErrState: Error
+        noDataState: OK
+        execErrState: KeepLast
         for: 5m
         annotations:
           summary: "High p95 latency on Snack Rate app"
@@ -246,7 +254,7 @@ groups:
               to: 0
             datasourceUid: prometheus
             model:
-              expr: sum(increase(readiness_failures_total[15m]))
+              expr: (sum(increase(readiness_failures_total[15m])) or on() vector(0))
               intervalMs: 1000
               maxDataPoints: 43200
               refId: A
@@ -300,8 +308,8 @@ groups:
               maxDataPoints: 43200
               refId: C
               type: threshold
-        noDataState: NoData
-        execErrState: Error
+        noDataState: OK
+        execErrState: KeepLast
         for: 5m
         annotations:
           summary: "Snack Rate readiness checks failing"

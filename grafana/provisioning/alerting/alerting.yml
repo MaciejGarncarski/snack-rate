@@ -14,4 +14,9 @@ contactPoints:
 policies:
   - orgId: 1
     receiver: Snack Rate Email
-    group_by: ["..."]
+    # Batch alerts by name instead of every label (`["..."]` sent one email
+    # per instance / per DatasourceNoData group). Timings throttle repeats.
+    group_by: ["alertname", "grafana_folder"]
+    group_wait: 30s
+    group_interval: 5m
+    repeat_interval: 4h
