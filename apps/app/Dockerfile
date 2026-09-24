@@ -1,7 +1,7 @@
 ARG APP_PORT=3000
 
-FROM node:26.8.1-slim AS base
-ARG PNPM_VERSION=12.3.1
+FROM node:26.10.0-slim AS base
+ARG PNPM_VERSION=12.6.0
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -32,7 +32,7 @@ COPY packages/db-schema ./packages/db-schema
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter @snack-rate/app...
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --filter @snack-rate/app build
 
-FROM node:26.8.1-slim
+FROM node:26.10.0-slim
 ARG APP_PORT=3000
 WORKDIR /app
 COPY --from=build /app/apps/app/.output ./

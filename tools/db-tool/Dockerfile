@@ -1,5 +1,5 @@
-FROM node:26.8.1-alpine AS base
-ARG PNPM_VERSION=12.3.1
+FROM node:26.10.0-alpine AS base
+ARG PNPM_VERSION=12.6.0
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -14,7 +14,7 @@ COPY tools/db-tool ./tools/db-tool
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter @snack-rate/db-tool
 RUN pnpm deploy --filter @snack-rate/db-tool --prod /app/deploy
 
-FROM node:26.8.1-alpine
+FROM node:26.10.0-alpine
 COPY --from=builder /app/deploy /app
 ENV PATH="/app/node_modules/.bin:$PATH"
 WORKDIR /app/node_modules/@snack-rate/db-schema

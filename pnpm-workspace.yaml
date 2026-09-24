@@ -6,7 +6,7 @@ packages:
 syncInjectedDepsAfterScripts:
   - build
 injectWorkspacePackages: true
-
+autoDedupe: true
 catalog:
   "@aws-sdk/client-s3": ^3.1133.0
   "@aws-sdk/lib-storage": ^3.1133.0
@@ -45,4 +45,4 @@ allowBuilds:
   sharp: false
   ssh2: false
 minimumReleaseAgeExclude:
-  - '@shadcn/lint@0.1.0'
+  - "@shadcn/lint@0.1.0"

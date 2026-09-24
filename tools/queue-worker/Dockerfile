@@ -1,8 +1,8 @@
-FROM node:26.8.1-slim AS base
+FROM node:26.10.0-slim AS base
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ARG PNPM_VERSION=12.3.1
+ARG PNPM_VERSION=12.6.0
 RUN npm install -g --allow-scripts=pnpm pnpm@${PNPM_VERSION}
 RUN pnpm config set store-dir /pnpm/store
 
@@ -23,7 +23,7 @@ COPY tools/email-templates ./tools/email-templates
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter @snack-rate/queue-worker...
 RUN pnpm deploy --filter @snack-rate/queue-worker --prod /app/deploy
 
-FROM node:26.8.1-slim
+FROM node:26.10.0-slim
 WORKDIR /app
 COPY --from=install /app/deploy .
 ENV PATH="/app/node_modules/.bin:$PATH"
