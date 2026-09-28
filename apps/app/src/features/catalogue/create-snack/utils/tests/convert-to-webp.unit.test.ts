@@ -28,6 +28,14 @@ function mockCanvas() {
   return { canvas, drawImage, fillRect, toBlobCalls };
 }
 
+// jsdom does not implement object URLs, which checkImageResolution needs.
+function mockObjectUrls() {
+  vi.stubGlobal("URL", {
+    createObjectURL: vi.fn<(blob: Blob) => string>().mockReturnValue("blob:mock"),
+    revokeObjectURL: vi.fn<(url: string) => void>(),
+  });
+}
+
 describe("convertToWebp", () => {
   it("preserves transparency: webp output, no background fill", async () => {
     const { canvas, toBlobCalls } = mockCanvas();
@@ -93,6 +101,7 @@ describe("validateImage with conversion", () => {
       set src(_url: string) {}
     }
     vi.stubGlobal("Image", OkImage);
+    mockObjectUrls();
 
     const bmp = new File(["bmp-bytes"], "photo.bmp", { type: "image/bmp" });
     const result = await validateImage(bmp, []);
