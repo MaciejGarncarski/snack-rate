@@ -53,9 +53,9 @@
     "prod:restart": "pnpm run prod:down && pnpm run prod:up"
   },
   "devDependencies": {
-    "@oxlint/plugins": "^1.83.0",
+    "@oxlint/plugins": "^1.85.0",
     "@playwright/test": "^1.63.0",
-    "@tanstack/eslint-plugin-query": "^5.103.0",
+    "@tanstack/eslint-plugin-query": "^5.104.0",
     "@tanstack/eslint-plugin-router": "^1.162.0",
     "lefthook": "^2.1.14",
     "oxfmt": "^0.60.0",
