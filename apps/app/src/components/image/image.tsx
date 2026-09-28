@@ -2,7 +2,7 @@ import { ImageOffIcon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   useCallback,
-  useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ImgHTMLAttributes,
@@ -11,6 +11,7 @@ import {
 
 import { ImageBlur } from "#/components/image/image-blur";
 import { cn } from "#/lib/utils";
+import { hasImageLoaded, markImageLoaded } from "#/stores/image-load-store";
 
 function DefaultError() {
   return (
@@ -25,6 +26,16 @@ function DefaultFallback() {
 }
 
 type Status = "loading" | "loaded" | "error";
+
+interface ImageState {
+  /** `src` the `status` was resolved for. */
+  src: string | undefined;
+  status: Status;
+}
+
+function getInitialState(src: string | undefined): ImageState {
+  return { src, status: src && hasImageLoaded(src) ? "loaded" : "loading" };
+}
 
 type HtmlImgProps = Omit<
   ImgHTMLAttributes<HTMLImageElement>,
@@ -59,21 +70,47 @@ export function ImageInner({
   ...imgProps
 }: ImageProps) {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [status, setStatus] = useState<Status>("loading");
+  // Sources loaded earlier in this session start as `loaded`, so a cached image
+  // renders right away instead of flashing the skeleton and fading in.
+  const [state, setState] = useState<ImageState>(() => getInitialState(src));
+
+  if (state.src !== src) {
+    // Resolve a new `src` while rendering, otherwise the previous status would be
+    // painted for it.
+    setState(getInitialState(src));
+  }
+
+  const status = state.status;
+
+  const setStatus = useCallback(
+    (nextStatus: Status) => {
+      setState({ src, status: nextStatus });
+    },
+    [src],
+  );
+
+  // Runs before the browser paints, so an image that is already available is
+  // never rendered with the skeleton first.
   const resolveInitialStatus = useCallback(() => {
     const img = imgRef.current;
 
-    if (!img) {
+    // Nothing to resolve yet — the load or error event settles the status later,
+    // and an image known from the load cache keeps its `loaded` status.
+    if (!img?.complete) {
       return;
     }
 
-    if (!img.complete) {
-      setStatus("loading");
+    if (img.naturalWidth === 0) {
+      setStatus("error");
       return;
     }
 
-    setStatus(img.naturalWidth > 0 ? "loaded" : "error");
-  }, []);
+    if (src) {
+      markImageLoaded(src);
+    }
+
+    setStatus("loaded");
+  }, [setStatus, src]);
 
   const handleRef = useCallback(
     (node: HTMLImageElement | null) => {
@@ -86,11 +123,15 @@ export function ImageInner({
     [resolveInitialStatus],
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     resolveInitialStatus();
   }, [resolveInitialStatus]);
 
   const handleLoad = (event: SyntheticEvent<HTMLImageElement, Event>) => {
+    if (src) {
+      markImageLoaded(src);
+    }
+
     setStatus("loaded");
     onLoad?.(event);
   };

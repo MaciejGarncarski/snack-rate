@@ -1,27 +1,21 @@
-import { createStore } from "@tanstack/react-store";
-
 const MAX_SIZE = 300;
 
-export const imageLoadStore = createStore(new Set<string>());
+const loadedSources = new Set<string>();
+
+export function hasImageLoaded(src: string): boolean {
+  return loadedSources.has(src);
+}
 
 export function markImageLoaded(src: string): void {
-  imageLoadStore.setState((prev) => {
-    if (prev.has(src)) {
-      return prev;
+  loadedSources.add(src);
+
+  while (loadedSources.size > MAX_SIZE) {
+    const oldest = loadedSources.values().next().value;
+
+    if (oldest === undefined) {
+      break;
     }
 
-    const next = new Set([...prev, src]);
-
-    if (next.size <= MAX_SIZE) {
-      return next;
-    }
-
-    while (next.size > MAX_SIZE) {
-      const oldest = next.values().next().value;
-      if (oldest === undefined) break;
-      next.delete(oldest);
-    }
-
-    return next;
-  });
+    loadedSources.delete(oldest);
+  }
 }
