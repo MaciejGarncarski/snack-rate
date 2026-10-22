@@ -53,14 +53,14 @@
     "prod:restart": "pnpm run prod:down && pnpm run prod:up"
   },
   "devDependencies": {
-    "@oxlint/plugins": "^1.87.0",
-    "@playwright/test": "^1.64.0",
-    "@tanstack/eslint-plugin-query": "^5.104.2",
+    "@oxlint/plugins": "^1.89.0",
+    "@playwright/test": "^1.64.1",
+    "@tanstack/eslint-plugin-query": "^5.104.5",
     "@tanstack/eslint-plugin-router": "^1.162.0",
-    "lefthook": "^2.2.1",
+    "lefthook": "^2.2.2",
     "oxfmt": "^0.60.0",
-    "oxlint": "^1.87.0",
+    "oxlint": "^1.89.0",
     "uuidv7": "catalog:"
   },
-  "packageManager": "pnpm@12.6.0"
+  "packageManager": "pnpm@12.15.0"
 }
