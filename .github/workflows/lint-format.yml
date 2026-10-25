@@ -14,9 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
-      - name: Check formatting
-        run: pnpm --filter @snack-rate/app fmt:check
-      - name: Check linting
-        run: pnpm --filter @snack-rate/app lint
-      - name: Check types
-        run: pnpm typecheck
+      - parallel:
+          - name: Check formatting
+            run: pnpm --filter @snack-rate/app fmt:check
+          - name: Check linting
+            run: pnpm --filter @snack-rate/app lint
+          - name: Check types
+            run: pnpm typecheck
