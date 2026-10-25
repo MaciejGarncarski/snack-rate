@@ -9,7 +9,7 @@ services:
         condition: service_healthy
 
   garage:
-    image: dxflrs/garage:v2.3.0
+    image: dxflrs/garage:v2.5.0
     restart: unless-stopped
     command:
       - /garage
@@ -31,7 +31,7 @@ services:
         max-file: "3"
 
   postgres:
-    image: postgres:18.4-alpine
+    image: postgres:18.6-alpine
     restart: unless-stopped
 
     environment:
@@ -56,7 +56,7 @@ services:
         max-file: "3"
 
   prometheus:
-    image: prom/prometheus:v3.13.1
+    image: prom/prometheus:v3.15.1
     restart: unless-stopped
 
     extra_hosts:
@@ -91,7 +91,7 @@ services:
         condition: service_healthy
 
   tempo:
-    image: grafana/tempo:3.0.0
+    image: grafana/tempo:3.1.1
     restart: unless-stopped
 
     command:
@@ -107,7 +107,7 @@ services:
         max-file: "3"
 
   loki:
-    image: grafana/loki:3.7.2
+    image: grafana/loki:3.7.9
     restart: unless-stopped
 
     command:
@@ -131,7 +131,7 @@ services:
         max-file: "3"
 
   alloy:
-    image: grafana/alloy:v1.17.0
+    image: grafana/alloy:v1.21.2
     restart: unless-stopped
 
     command:
@@ -162,7 +162,7 @@ services:
     restart: "no"
 
   node-exporter:
-    image: prom/node-exporter:v1.11.1
+    image: prom/node-exporter:v1.12.1
     restart: unless-stopped
 
     command:
@@ -199,7 +199,7 @@ services:
         max-file: "3"
 
   grafana:
-    image: grafana/grafana:13.0.3
+    image: grafana/grafana:13.2.4
     restart: unless-stopped
 
     environment:

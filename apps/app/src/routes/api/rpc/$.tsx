@@ -10,7 +10,6 @@ import { getActiveSpan } from "#/observability/tracing";
 import { mapError } from "#/orpc/map-error";
 import router from "#/orpc/router";
 
-const OVERRIDE_BODY_CONTEXT = Symbol("OVERRIDE_BODY_CONTEXT");
 const MAX_BODY_SIZE_EXCLUDING_FILE = 3 * 1024 * 1024;
 
 const corsPlugin = new CORSHandlerPlugin({
@@ -30,21 +29,6 @@ const rateLimitPlugin = new RateLimitHandlerPlugin();
 
 const handler = new RPCHandler(router, {
   plugins: [corsPlugin, tmpFilePlugin, rateLimitPlugin],
-  fetchInterceptors: [
-    (options) => {
-      return options.next({
-        ...options,
-        context: {
-          ...options.context,
-
-          // oxlint-disable-next-line typescript/no-explicit-any
-          [OVERRIDE_BODY_CONTEXT as any]: {
-            fetchRequest: options.request,
-          },
-        },
-      });
-    },
-  ],
   interceptors: [
     async ({ request, next }) => {
       const span = getActiveSpan();

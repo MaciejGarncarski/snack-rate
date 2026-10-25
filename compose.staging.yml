@@ -81,7 +81,7 @@ services:
       - .env.staging
 
   caddy:
-    image: caddy:2.11.4-alpine
+    image: caddy:2.11.7-alpine
     env_file:
       - .env.staging
     restart: unless-stopped
