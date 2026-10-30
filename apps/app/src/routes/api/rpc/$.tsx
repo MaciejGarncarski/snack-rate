@@ -40,7 +40,6 @@ const handler = new RPCHandler(router, {
       try {
         return await next();
       } catch (error) {
-        // SAFETY: RPC handlers throw Error instances; only their cause is read off the narrowed error.
         logger.error({ err: error, cause: (error as Error).cause }, "RPC handler error");
         throw mapError(error);
       }

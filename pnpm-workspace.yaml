@@ -8,8 +8,8 @@ syncInjectedDepsAfterScripts:
 injectWorkspacePackages: true
 autoDedupe: true
 catalog:
-  "@aws-sdk/client-s3": ^3.1156.0
-  "@aws-sdk/lib-storage": ^3.1156.0
+  "@aws-sdk/client-s3": ^3.1159.0
+  "@aws-sdk/lib-storage": ^3.1159.0
   dotenv: "^17.3.1"
   drizzle-kit: "1.0.0-rc.4"
   drizzle-orm: "1.0.0-rc.4"
@@ -26,7 +26,7 @@ catalog:
   uuidv7: "^1.2.1"
   react: "^19.3.0"
   react-dom: "^19.3.0"
-  "@types/node": ^26.6.5
+  "@types/node": ^26.6.6
   "@types/pg": "^8.23.1"
   "@types/react": "^19.3.0"
   "@types/react-dom": ^19.3.0
@@ -58,3 +58,4 @@ minimumReleaseAgeExclude:
   - '@tanstack/start-plugin-core@1.171.52'
   - '@tanstack/start-server-core@1.169.42'
   - '@tanstack/start-storage-context@1.167.39'
+  - nitro@3.0.261029-rc
