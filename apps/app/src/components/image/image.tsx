@@ -143,7 +143,7 @@ function ImageInner({
             height={height}
             loading={lazy ? "lazy" : "eager"}
             decoding="async"
-            fetchPriority={lazy ? "low" : "high"}
+            fetchPriority="auto"
             className={cn(
               "relative z-10 block transition-opacity duration-300",
               status === "loaded" ? "opacity-100" : "opacity-0",
