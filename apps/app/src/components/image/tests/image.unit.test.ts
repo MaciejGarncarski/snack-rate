@@ -38,9 +38,12 @@ describe("Image", () => {
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it("should show the skeleton and fade the image in once it loads", () => {
+    vi.useFakeTimers();
+
     const { container } = render(createElement(Image, { src: "first.webp", alt: "" }));
 
     expect(hasSkeleton(container)).toBe(true);
@@ -48,8 +51,16 @@ describe("Image", () => {
 
     fireLoad(container);
 
-    expect(hasSkeleton(container)).toBe(false);
     expect(getImg(container).className).toContain("opacity-100");
+    // The skeleton crossfades out under the image instead of disappearing
+    // instantly, so the container is never empty during the fade.
+    expect(hasSkeleton(container)).toBe(true);
+
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+
+    expect(hasSkeleton(container)).toBe(false);
   });
 
   it("should render an already available image without the skeleton", () => {
