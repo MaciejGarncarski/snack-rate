@@ -19,13 +19,9 @@ jobs:
   integration:
     name: Integration tests
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:29-dind
-        options: >-
-          --privileged
-
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
+      - name: Pull Postgres image for Testcontainers
+        run: docker pull postgres:19-alpine
       - run: pnpm --filter @snack-rate/app test:integration

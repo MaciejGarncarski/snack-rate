@@ -47,9 +47,9 @@ describe("search snacks", () => {
   });
 
   it("should limit results to MAX_SEARCH_RESULTS", async () => {
-    for (let i = 0; i < 10; i++) {
-      await createSnack({ name: `Unique Snack ${i}` });
-    }
+    await Promise.all(
+      Array.from({ length: 10 }, (_, i) => createSnack({ name: `Unique Snack ${i}` })),
+    );
 
     const results = await searchSnacksUseCase("Unique Snack", repository);
     expect(results).toHaveLength(8);

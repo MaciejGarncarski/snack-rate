@@ -38,7 +38,9 @@ describe("list snacks with category filter", () => {
 
   it("paginates with filter", async () => {
     const type = await createSnackType({ name: "Napoje", slug: "napoje" });
-    for (let i = 0; i < 3; i++) await createSnack({ name: `Napoje ${i}`, typeId: type.id });
+    await Promise.all(
+      Array.from({ length: 3 }, (_, i) => createSnack({ name: `Napoje ${i}`, typeId: type.id })),
+    );
     await createSnack({ name: "Other" });
 
     const page1 = await listSnacksUseCase({ limit: 2, typeSlug: "napoje" }, repository);
