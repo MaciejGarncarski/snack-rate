@@ -1,125 +1,1363 @@
 {
-  "version": "8",
+  "type": "base",
+  "version": "10",
   "dialect": "postgres",
   "id": "5d3a09cf-8052-40d1-8980-6958b138fdd2",
-  "prevIds": ["00000000-0000-0000-0000-000000000000"],
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "bookmarks"
+      ],
+      "writes": [
+        "s|tbl|public.bookmarks",
+        "n|tbl|public.bookmarks",
+        "e|tbl|public.bookmarks",
+        "n|rel|public.bookmarks",
+        "n|type|public.bookmarks",
+        "n|rel|public.bookmarks_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "brands"
+      ],
+      "writes": [
+        "s|tbl|public.brands",
+        "n|tbl|public.brands",
+        "e|tbl|public.brands",
+        "n|rel|public.brands",
+        "n|type|public.brands",
+        "n|rel|public.brands_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "comment_reactions"
+      ],
+      "writes": [
+        "s|tbl|public.comment_reactions",
+        "n|tbl|public.comment_reactions",
+        "e|tbl|public.comment_reactions",
+        "n|rel|public.comment_reactions",
+        "n|type|public.comment_reactions",
+        "n|rel|public.comment_reactions_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "comment_reports"
+      ],
+      "writes": [
+        "s|tbl|public.comment_reports",
+        "n|tbl|public.comment_reports",
+        "e|tbl|public.comment_reports",
+        "n|rel|public.comment_reports",
+        "n|type|public.comment_reports",
+        "n|rel|public.comment_reports_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "comments"
+      ],
+      "writes": [
+        "s|tbl|public.comments",
+        "n|tbl|public.comments",
+        "e|tbl|public.comments",
+        "n|rel|public.comments",
+        "n|type|public.comments",
+        "n|rel|public.comments_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "email_verifications"
+      ],
+      "writes": [
+        "s|tbl|public.email_verifications",
+        "n|tbl|public.email_verifications",
+        "e|tbl|public.email_verifications",
+        "n|rel|public.email_verifications",
+        "n|type|public.email_verifications",
+        "n|rel|public.email_verifications_pkey",
+        "n|rel|public.email_verifications_token_hash_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "password_resets"
+      ],
+      "writes": [
+        "s|tbl|public.password_resets",
+        "n|tbl|public.password_resets",
+        "e|tbl|public.password_resets",
+        "n|rel|public.password_resets",
+        "n|type|public.password_resets",
+        "n|rel|public.password_resets_pkey",
+        "n|rel|public.password_resets_token_hash_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "review_reactions"
+      ],
+      "writes": [
+        "s|tbl|public.review_reactions",
+        "n|tbl|public.review_reactions",
+        "e|tbl|public.review_reactions",
+        "n|rel|public.review_reactions",
+        "n|type|public.review_reactions",
+        "n|rel|public.review_reactions_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "review_reports"
+      ],
+      "writes": [
+        "s|tbl|public.review_reports",
+        "n|tbl|public.review_reports",
+        "e|tbl|public.review_reports",
+        "n|rel|public.review_reports",
+        "n|type|public.review_reports",
+        "n|rel|public.review_reports_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "sessions"
+      ],
+      "writes": [
+        "s|tbl|public.sessions",
+        "n|tbl|public.sessions",
+        "e|tbl|public.sessions",
+        "n|rel|public.sessions",
+        "n|type|public.sessions",
+        "n|rel|public.sessions_pkey",
+        "n|rel|public.sessions_token_hash_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_item_images"
+      ],
+      "writes": [
+        "s|tbl|public.snack_item_images",
+        "n|tbl|public.snack_item_images",
+        "e|tbl|public.snack_item_images",
+        "n|rel|public.snack_item_images",
+        "n|type|public.snack_item_images",
+        "n|rel|public.snack_item_images_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_items"
+      ],
+      "writes": [
+        "s|tbl|public.snack_items",
+        "n|tbl|public.snack_items",
+        "e|tbl|public.snack_items",
+        "n|rel|public.snack_items",
+        "n|type|public.snack_items",
+        "n|rel|public.snack_items_pkey",
+        "n|rel|public.snack_items_slug_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_review_images"
+      ],
+      "writes": [
+        "s|tbl|public.snack_review_images",
+        "n|tbl|public.snack_review_images",
+        "e|tbl|public.snack_review_images",
+        "n|rel|public.snack_review_images",
+        "n|type|public.snack_review_images",
+        "n|rel|public.snack_review_images_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_reviews"
+      ],
+      "writes": [
+        "s|tbl|public.snack_reviews",
+        "n|tbl|public.snack_reviews",
+        "e|tbl|public.snack_reviews",
+        "n|rel|public.snack_reviews",
+        "n|type|public.snack_reviews",
+        "n|rel|public.snack_reviews_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_tags"
+      ],
+      "writes": [
+        "s|tbl|public.snack_tags",
+        "n|tbl|public.snack_tags",
+        "e|tbl|public.snack_tags",
+        "n|rel|public.snack_tags",
+        "n|type|public.snack_tags",
+        "n|rel|public.snack_tags_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "tags"
+      ],
+      "writes": [
+        "s|tbl|public.tags",
+        "n|tbl|public.tags",
+        "e|tbl|public.tags",
+        "n|rel|public.tags",
+        "n|type|public.tags",
+        "n|rel|public.tags_pkey",
+        "n|rel|public.tags_name_key",
+        "n|rel|public.tags_slug_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "users"
+      ],
+      "writes": [
+        "s|tbl|public.users",
+        "n|tbl|public.users",
+        "e|tbl|public.users",
+        "n|rel|public.users",
+        "n|type|public.users",
+        "n|rel|public.users_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "comment_reactions",
+        "comment_reactions_user_comment_unique_idx"
+      ],
+      "writes": [
+        "s|idx|public.comment_reactions_user_comment_unique_idx",
+        "n|idx|public.comment_reactions_user_comment_unique_idx",
+        "e|idx|public.comment_reactions_user_comment_unique_idx",
+        "n|rel|public.comment_reactions_user_comment_unique_idx"
+      ],
+      "reads": [
+        "n|tbl|public.comment_reactions",
+        "n|sch|public",
+        "n|col|public.comment_reactions.user_id",
+        "n|col|public.comment_reactions.comment_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "comment_reactions",
+        "comment_reactions_comment_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.comment_reactions_comment_id_idx",
+        "n|idx|public.comment_reactions_comment_id_idx",
+        "e|idx|public.comment_reactions_comment_id_idx",
+        "n|rel|public.comment_reactions_comment_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.comment_reactions",
+        "n|sch|public",
+        "n|col|public.comment_reactions.comment_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "comment_reports",
+        "comment_reports_reporter_comment_unique_idx"
+      ],
+      "writes": [
+        "s|idx|public.comment_reports_reporter_comment_unique_idx",
+        "n|idx|public.comment_reports_reporter_comment_unique_idx",
+        "e|idx|public.comment_reports_reporter_comment_unique_idx",
+        "n|rel|public.comment_reports_reporter_comment_unique_idx"
+      ],
+      "reads": [
+        "n|tbl|public.comment_reports",
+        "n|sch|public",
+        "n|col|public.comment_reports.reporter_id",
+        "n|col|public.comment_reports.comment_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "comments",
+        "comments_review_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.comments_review_id_idx",
+        "n|idx|public.comments_review_id_idx",
+        "e|idx|public.comments_review_id_idx",
+        "n|rel|public.comments_review_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.comments",
+        "n|sch|public",
+        "n|col|public.comments.review_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "comments",
+        "comments_parent_comment_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.comments_parent_comment_id_idx",
+        "n|idx|public.comments_parent_comment_id_idx",
+        "e|idx|public.comments_parent_comment_id_idx",
+        "n|rel|public.comments_parent_comment_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.comments",
+        "n|sch|public",
+        "n|col|public.comments.parent_comment_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "email_verifications",
+        "email_verifications_user_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.email_verifications_user_id_idx",
+        "n|idx|public.email_verifications_user_id_idx",
+        "e|idx|public.email_verifications_user_id_idx",
+        "n|rel|public.email_verifications_user_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.email_verifications",
+        "n|sch|public",
+        "n|col|public.email_verifications.user_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "password_resets",
+        "password_resets_user_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.password_resets_user_id_idx",
+        "n|idx|public.password_resets_user_id_idx",
+        "e|idx|public.password_resets_user_id_idx",
+        "n|rel|public.password_resets_user_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.password_resets",
+        "n|sch|public",
+        "n|col|public.password_resets.user_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "review_reactions",
+        "review_reactions_user_review_unique_idx"
+      ],
+      "writes": [
+        "s|idx|public.review_reactions_user_review_unique_idx",
+        "n|idx|public.review_reactions_user_review_unique_idx",
+        "e|idx|public.review_reactions_user_review_unique_idx",
+        "n|rel|public.review_reactions_user_review_unique_idx"
+      ],
+      "reads": [
+        "n|tbl|public.review_reactions",
+        "n|sch|public",
+        "n|col|public.review_reactions.user_id",
+        "n|col|public.review_reactions.review_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "review_reactions",
+        "review_reactions_review_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.review_reactions_review_id_idx",
+        "n|idx|public.review_reactions_review_id_idx",
+        "e|idx|public.review_reactions_review_id_idx",
+        "n|rel|public.review_reactions_review_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.review_reactions",
+        "n|sch|public",
+        "n|col|public.review_reactions.review_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "review_reports",
+        "review_reports_reporter_review_unique_idx"
+      ],
+      "writes": [
+        "s|idx|public.review_reports_reporter_review_unique_idx",
+        "n|idx|public.review_reports_reporter_review_unique_idx",
+        "e|idx|public.review_reports_reporter_review_unique_idx",
+        "n|rel|public.review_reports_reporter_review_unique_idx"
+      ],
+      "reads": [
+        "n|tbl|public.review_reports",
+        "n|sch|public",
+        "n|col|public.review_reports.reporter_id",
+        "n|col|public.review_reports.review_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "sessions",
+        "sessions_user_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.sessions_user_id_idx",
+        "n|idx|public.sessions_user_id_idx",
+        "e|idx|public.sessions_user_id_idx",
+        "n|rel|public.sessions_user_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.sessions",
+        "n|sch|public",
+        "n|col|public.sessions.user_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "snack_item_images",
+        "snack_item_images_snack_item_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.snack_item_images_snack_item_id_idx",
+        "n|idx|public.snack_item_images_snack_item_id_idx",
+        "e|idx|public.snack_item_images_snack_item_id_idx",
+        "n|rel|public.snack_item_images_snack_item_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.snack_item_images",
+        "n|sch|public",
+        "n|col|public.snack_item_images.snack_item_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "snack_items",
+        "snack_items_barcode_unique_idx"
+      ],
+      "writes": [
+        "s|idx|public.snack_items_barcode_unique_idx",
+        "n|idx|public.snack_items_barcode_unique_idx",
+        "e|idx|public.snack_items_barcode_unique_idx",
+        "n|rel|public.snack_items_barcode_unique_idx"
+      ],
+      "reads": [
+        "n|tbl|public.snack_items",
+        "n|sch|public",
+        "n|col|public.snack_items.barcode"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "snack_items",
+        "snack_items_slug_unique_idx"
+      ],
+      "writes": [
+        "s|idx|public.snack_items_slug_unique_idx",
+        "n|idx|public.snack_items_slug_unique_idx",
+        "e|idx|public.snack_items_slug_unique_idx",
+        "n|rel|public.snack_items_slug_unique_idx"
+      ],
+      "reads": [
+        "n|tbl|public.snack_items",
+        "n|sch|public",
+        "n|col|public.snack_items.slug"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "snack_review_images",
+        "snack_review_images_review_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.snack_review_images_review_id_idx",
+        "n|idx|public.snack_review_images_review_id_idx",
+        "e|idx|public.snack_review_images_review_id_idx",
+        "n|rel|public.snack_review_images_review_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.snack_review_images",
+        "n|sch|public",
+        "n|col|public.snack_review_images.review_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "snack_reviews",
+        "snack_reviews_snack_user_unique_idx"
+      ],
+      "writes": [
+        "s|idx|public.snack_reviews_snack_user_unique_idx",
+        "n|idx|public.snack_reviews_snack_user_unique_idx",
+        "e|idx|public.snack_reviews_snack_user_unique_idx",
+        "n|rel|public.snack_reviews_snack_user_unique_idx"
+      ],
+      "reads": [
+        "n|tbl|public.snack_reviews",
+        "n|sch|public",
+        "n|col|public.snack_reviews.snack_item_id",
+        "n|col|public.snack_reviews.user_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "snack_reviews",
+        "snack_reviews_snack_item_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.snack_reviews_snack_item_id_idx",
+        "n|idx|public.snack_reviews_snack_item_id_idx",
+        "e|idx|public.snack_reviews_snack_item_id_idx",
+        "n|rel|public.snack_reviews_snack_item_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.snack_reviews",
+        "n|sch|public",
+        "n|col|public.snack_reviews.snack_item_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "snack_reviews",
+        "snack_reviews_user_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.snack_reviews_user_id_idx",
+        "n|idx|public.snack_reviews_user_id_idx",
+        "e|idx|public.snack_reviews_user_id_idx",
+        "n|rel|public.snack_reviews_user_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.snack_reviews",
+        "n|sch|public",
+        "n|col|public.snack_reviews.user_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "users",
+        "users_email_unique_idx"
+      ],
+      "writes": [
+        "s|idx|public.users_email_unique_idx",
+        "n|idx|public.users_email_unique_idx",
+        "e|idx|public.users_email_unique_idx",
+        "n|rel|public.users_email_unique_idx"
+      ],
+      "reads": [
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.users.email"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "bookmarks"
+      ],
+      "writes": [
+        "s|fk|public.bookmarks.bookmarks_user_id_users_id_fkey",
+        "n|fk|public.bookmarks.bookmarks_user_id_users_id_fkey",
+        "e|fk|public.bookmarks.bookmarks_user_id_users_id_fkey",
+        "n|con|public.bookmarks.bookmarks_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.bookmarks",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.bookmarks.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "bookmarks"
+      ],
+      "writes": [
+        "s|fk|public.bookmarks.bookmarks_snack_item_id_snack_items_id_fkey",
+        "n|fk|public.bookmarks.bookmarks_snack_item_id_snack_items_id_fkey",
+        "e|fk|public.bookmarks.bookmarks_snack_item_id_snack_items_id_fkey",
+        "n|con|public.bookmarks.bookmarks_snack_item_id_snack_items_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.bookmarks",
+        "n|sch|public",
+        "n|tbl|public.snack_items",
+        "n|sch|public",
+        "n|col|public.bookmarks.snack_item_id",
+        "n|col|public.snack_items.id",
+        "e|uniqueness|public.snack_items.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "comment_reactions"
+      ],
+      "writes": [
+        "s|fk|public.comment_reactions.comment_reactions_user_id_users_id_fkey",
+        "n|fk|public.comment_reactions.comment_reactions_user_id_users_id_fkey",
+        "e|fk|public.comment_reactions.comment_reactions_user_id_users_id_fkey",
+        "n|con|public.comment_reactions.comment_reactions_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.comment_reactions",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.comment_reactions.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "comment_reactions"
+      ],
+      "writes": [
+        "s|fk|public.comment_reactions.comment_reactions_comment_id_comments_id_fkey",
+        "n|fk|public.comment_reactions.comment_reactions_comment_id_comments_id_fkey",
+        "e|fk|public.comment_reactions.comment_reactions_comment_id_comments_id_fkey",
+        "n|con|public.comment_reactions.comment_reactions_comment_id_comments_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.comment_reactions",
+        "n|sch|public",
+        "n|tbl|public.comments",
+        "n|sch|public",
+        "n|col|public.comment_reactions.comment_id",
+        "n|col|public.comments.id",
+        "e|uniqueness|public.comments.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "comment_reports"
+      ],
+      "writes": [
+        "s|fk|public.comment_reports.comment_reports_reporter_id_users_id_fkey",
+        "n|fk|public.comment_reports.comment_reports_reporter_id_users_id_fkey",
+        "e|fk|public.comment_reports.comment_reports_reporter_id_users_id_fkey",
+        "n|con|public.comment_reports.comment_reports_reporter_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.comment_reports",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.comment_reports.reporter_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "comment_reports"
+      ],
+      "writes": [
+        "s|fk|public.comment_reports.comment_reports_comment_id_comments_id_fkey",
+        "n|fk|public.comment_reports.comment_reports_comment_id_comments_id_fkey",
+        "e|fk|public.comment_reports.comment_reports_comment_id_comments_id_fkey",
+        "n|con|public.comment_reports.comment_reports_comment_id_comments_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.comment_reports",
+        "n|sch|public",
+        "n|tbl|public.comments",
+        "n|sch|public",
+        "n|col|public.comment_reports.comment_id",
+        "n|col|public.comments.id",
+        "e|uniqueness|public.comments.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "comments"
+      ],
+      "writes": [
+        "s|fk|public.comments.comments_review_id_snack_reviews_id_fkey",
+        "n|fk|public.comments.comments_review_id_snack_reviews_id_fkey",
+        "e|fk|public.comments.comments_review_id_snack_reviews_id_fkey",
+        "n|con|public.comments.comments_review_id_snack_reviews_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.comments",
+        "n|sch|public",
+        "n|tbl|public.snack_reviews",
+        "n|sch|public",
+        "n|col|public.comments.review_id",
+        "n|col|public.snack_reviews.id",
+        "e|uniqueness|public.snack_reviews.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "comments"
+      ],
+      "writes": [
+        "s|fk|public.comments.comments_user_id_users_id_fkey",
+        "n|fk|public.comments.comments_user_id_users_id_fkey",
+        "e|fk|public.comments.comments_user_id_users_id_fkey",
+        "n|con|public.comments.comments_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.comments",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.comments.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "comments"
+      ],
+      "writes": [
+        "s|fk|public.comments.comments_parent_comment_id_comments_id_fkey",
+        "n|fk|public.comments.comments_parent_comment_id_comments_id_fkey",
+        "e|fk|public.comments.comments_parent_comment_id_comments_id_fkey",
+        "n|con|public.comments.comments_parent_comment_id_comments_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.comments",
+        "n|sch|public",
+        "n|tbl|public.comments",
+        "n|sch|public",
+        "n|col|public.comments.parent_comment_id",
+        "n|col|public.comments.id",
+        "e|uniqueness|public.comments.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "email_verifications"
+      ],
+      "writes": [
+        "s|fk|public.email_verifications.email_verifications_user_id_users_id_fkey",
+        "n|fk|public.email_verifications.email_verifications_user_id_users_id_fkey",
+        "e|fk|public.email_verifications.email_verifications_user_id_users_id_fkey",
+        "n|con|public.email_verifications.email_verifications_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.email_verifications",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.email_verifications.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "password_resets"
+      ],
+      "writes": [
+        "s|fk|public.password_resets.password_resets_user_id_users_id_fkey",
+        "n|fk|public.password_resets.password_resets_user_id_users_id_fkey",
+        "e|fk|public.password_resets.password_resets_user_id_users_id_fkey",
+        "n|con|public.password_resets.password_resets_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.password_resets",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.password_resets.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "review_reactions"
+      ],
+      "writes": [
+        "s|fk|public.review_reactions.review_reactions_user_id_users_id_fkey",
+        "n|fk|public.review_reactions.review_reactions_user_id_users_id_fkey",
+        "e|fk|public.review_reactions.review_reactions_user_id_users_id_fkey",
+        "n|con|public.review_reactions.review_reactions_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.review_reactions",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.review_reactions.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "review_reactions"
+      ],
+      "writes": [
+        "s|fk|public.review_reactions.review_reactions_review_id_snack_reviews_id_fkey",
+        "n|fk|public.review_reactions.review_reactions_review_id_snack_reviews_id_fkey",
+        "e|fk|public.review_reactions.review_reactions_review_id_snack_reviews_id_fkey",
+        "n|con|public.review_reactions.review_reactions_review_id_snack_reviews_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.review_reactions",
+        "n|sch|public",
+        "n|tbl|public.snack_reviews",
+        "n|sch|public",
+        "n|col|public.review_reactions.review_id",
+        "n|col|public.snack_reviews.id",
+        "e|uniqueness|public.snack_reviews.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "review_reports"
+      ],
+      "writes": [
+        "s|fk|public.review_reports.review_reports_reporter_id_users_id_fkey",
+        "n|fk|public.review_reports.review_reports_reporter_id_users_id_fkey",
+        "e|fk|public.review_reports.review_reports_reporter_id_users_id_fkey",
+        "n|con|public.review_reports.review_reports_reporter_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.review_reports",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.review_reports.reporter_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "review_reports"
+      ],
+      "writes": [
+        "s|fk|public.review_reports.review_reports_review_id_snack_reviews_id_fkey",
+        "n|fk|public.review_reports.review_reports_review_id_snack_reviews_id_fkey",
+        "e|fk|public.review_reports.review_reports_review_id_snack_reviews_id_fkey",
+        "n|con|public.review_reports.review_reports_review_id_snack_reviews_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.review_reports",
+        "n|sch|public",
+        "n|tbl|public.snack_reviews",
+        "n|sch|public",
+        "n|col|public.review_reports.review_id",
+        "n|col|public.snack_reviews.id",
+        "e|uniqueness|public.snack_reviews.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "sessions"
+      ],
+      "writes": [
+        "s|fk|public.sessions.sessions_user_id_users_id_fkey",
+        "n|fk|public.sessions.sessions_user_id_users_id_fkey",
+        "e|fk|public.sessions.sessions_user_id_users_id_fkey",
+        "n|con|public.sessions.sessions_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.sessions",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.sessions.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_item_images"
+      ],
+      "writes": [
+        "s|fk|public.snack_item_images.snack_item_images_snack_item_id_snack_items_id_fkey",
+        "n|fk|public.snack_item_images.snack_item_images_snack_item_id_snack_items_id_fkey",
+        "e|fk|public.snack_item_images.snack_item_images_snack_item_id_snack_items_id_fkey",
+        "n|con|public.snack_item_images.snack_item_images_snack_item_id_snack_items_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.snack_item_images",
+        "n|sch|public",
+        "n|tbl|public.snack_items",
+        "n|sch|public",
+        "n|col|public.snack_item_images.snack_item_id",
+        "n|col|public.snack_items.id",
+        "e|uniqueness|public.snack_items.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_items"
+      ],
+      "writes": [
+        "s|fk|public.snack_items.snack_items_brand_id_brands_id_fkey",
+        "n|fk|public.snack_items.snack_items_brand_id_brands_id_fkey",
+        "e|fk|public.snack_items.snack_items_brand_id_brands_id_fkey",
+        "n|con|public.snack_items.snack_items_brand_id_brands_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.snack_items",
+        "n|sch|public",
+        "n|tbl|public.brands",
+        "n|sch|public",
+        "n|col|public.snack_items.brand_id",
+        "n|col|public.brands.id",
+        "e|uniqueness|public.brands.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_review_images"
+      ],
+      "writes": [
+        "s|fk|public.snack_review_images.snack_review_images_review_id_snack_reviews_id_fkey",
+        "n|fk|public.snack_review_images.snack_review_images_review_id_snack_reviews_id_fkey",
+        "e|fk|public.snack_review_images.snack_review_images_review_id_snack_reviews_id_fkey",
+        "n|con|public.snack_review_images.snack_review_images_review_id_snack_reviews_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.snack_review_images",
+        "n|sch|public",
+        "n|tbl|public.snack_reviews",
+        "n|sch|public",
+        "n|col|public.snack_review_images.review_id",
+        "n|col|public.snack_reviews.id",
+        "e|uniqueness|public.snack_reviews.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_reviews"
+      ],
+      "writes": [
+        "s|fk|public.snack_reviews.snack_reviews_snack_item_id_snack_items_id_fkey",
+        "n|fk|public.snack_reviews.snack_reviews_snack_item_id_snack_items_id_fkey",
+        "e|fk|public.snack_reviews.snack_reviews_snack_item_id_snack_items_id_fkey",
+        "n|con|public.snack_reviews.snack_reviews_snack_item_id_snack_items_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.snack_reviews",
+        "n|sch|public",
+        "n|tbl|public.snack_items",
+        "n|sch|public",
+        "n|col|public.snack_reviews.snack_item_id",
+        "n|col|public.snack_items.id",
+        "e|uniqueness|public.snack_items.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_reviews"
+      ],
+      "writes": [
+        "s|fk|public.snack_reviews.snack_reviews_user_id_users_id_fkey",
+        "n|fk|public.snack_reviews.snack_reviews_user_id_users_id_fkey",
+        "e|fk|public.snack_reviews.snack_reviews_user_id_users_id_fkey",
+        "n|con|public.snack_reviews.snack_reviews_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.snack_reviews",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.snack_reviews.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_tags"
+      ],
+      "writes": [
+        "s|fk|public.snack_tags.snack_tags_snack_item_id_snack_items_id_fkey",
+        "n|fk|public.snack_tags.snack_tags_snack_item_id_snack_items_id_fkey",
+        "e|fk|public.snack_tags.snack_tags_snack_item_id_snack_items_id_fkey",
+        "n|con|public.snack_tags.snack_tags_snack_item_id_snack_items_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.snack_tags",
+        "n|sch|public",
+        "n|tbl|public.snack_items",
+        "n|sch|public",
+        "n|col|public.snack_tags.snack_item_id",
+        "n|col|public.snack_items.id",
+        "e|uniqueness|public.snack_items.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "snack_tags"
+      ],
+      "writes": [
+        "s|fk|public.snack_tags.snack_tags_tag_id_tags_id_fkey",
+        "n|fk|public.snack_tags.snack_tags_tag_id_tags_id_fkey",
+        "e|fk|public.snack_tags.snack_tags_tag_id_tags_id_fkey",
+        "n|con|public.snack_tags.snack_tags_tag_id_tags_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.snack_tags",
+        "n|sch|public",
+        "n|tbl|public.tags",
+        "n|sch|public",
+        "n|col|public.snack_tags.tag_id",
+        "n|col|public.tags.id",
+        "e|uniqueness|public.tags.id"
+      ]
+    }
+  ],
   "ddl": [
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "bookmarks",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "brands",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "comment_reactions",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "comment_reports",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "comments",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "email_verifications",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "password_resets",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "review_reactions",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "review_reports",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "sessions",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "snack_item_images",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "snack_items",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "snack_review_images",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "snack_reviews",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "snack_tags",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "tags",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
       "isRlsEnabled": false,
+      "entityType": "tables"
+    },
+    {
+      "schema": "public",
       "name": "users",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "bookmarks",
       "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "bookmarks"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -127,12 +1365,25 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "snack_item_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "bookmarks"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "bookmarks",
+      "name": "snack_item_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "bookmarks",
+      "name": "created_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -140,12 +1391,12 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "bookmarks"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "brands",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -153,38 +1404,25 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "brands"
+      "entityType": "columns"
     },
     {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "brands",
       "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "brands"
-    },
-    {
-      "type": "timestamp",
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": "now()",
+      "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "brands",
       "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "brands"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -192,233 +1430,233 @@
       "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "brands",
       "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "brands"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "brands",
       "name": "deleted_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "brands"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "gen_random_uuid()",
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reactions"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reactions"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "comment_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reactions"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "type",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reactions"
-    },
-    {
       "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reactions"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "gen_random_uuid()",
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reports"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "reporter_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reports"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "comment_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reports"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "reason",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reports"
-    },
-    {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comment_reports"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "gen_random_uuid()",
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "review_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
-      "type": "uuid",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reactions",
+      "name": "id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reactions",
+      "name": "user_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reactions",
+      "name": "comment_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reactions",
+      "name": "type",
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reactions",
+      "name": "created_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reports",
+      "name": "id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reports",
+      "name": "reporter_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reports",
+      "name": "comment_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reports",
+      "name": "reason",
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reports",
+      "name": "created_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
+      "name": "id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
+      "name": "review_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
+      "name": "user_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
       "name": "parent_comment_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
-      "notNull": true,
+      "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
       "name": "body",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
-      "type": "timestamp",
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": "now()",
+      "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
       "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -426,90 +1664,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
       "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
       "name": "deleted_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "gen_random_uuid()",
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "email_verifications"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "email_verifications"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "token_hash",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "email_verifications"
-    },
-    {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "email_verifications"
-    },
-    {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "email_verifications"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
       "notNull": false,
@@ -517,12 +1690,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "used_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "email_verifications"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "email_verifications",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -530,12 +1703,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "password_resets"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "email_verifications",
+      "name": "user_id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -543,12 +1716,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "password_resets"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "email_verifications",
+      "name": "token_hash",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -556,12 +1729,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "token_hash",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "password_resets"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "email_verifications",
+      "name": "created_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -569,12 +1742,12 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "password_resets"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "email_verifications",
+      "name": "expires_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -582,12 +1755,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "password_resets"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "email_verifications",
+      "name": "used_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": false,
@@ -595,12 +1768,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "used_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "password_resets"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "password_resets",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -608,25 +1781,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reactions"
+      "entityType": "columns"
     },
     {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "password_resets",
       "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reactions"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -634,25 +1794,116 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "password_resets",
+      "name": "token_hash",
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "password_resets",
+      "name": "created_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "password_resets",
+      "name": "expires_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "password_resets",
+      "name": "used_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "review_reactions",
+      "name": "id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "review_reactions",
+      "name": "user_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "review_reactions",
       "name": "review_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reactions"
-    },
-    {
-      "type": "text",
+      "type": "uuid",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "review_reactions",
       "name": "type",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reactions"
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "review_reactions",
+      "name": "created_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -660,12 +1911,12 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reactions"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "review_reports",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -673,25 +1924,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reports"
+      "entityType": "columns"
     },
     {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "review_reports",
       "name": "reporter_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reports"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -699,12 +1937,25 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "review_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reports"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "review_reports",
+      "name": "review_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "review_reports",
+      "name": "reason",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -712,12 +1963,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "reason",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reports"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "review_reports",
+      "name": "created_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -725,12 +1976,12 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "review_reports"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "sessions",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -738,12 +1989,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "sessions"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "sessions",
+      "name": "user_id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -751,12 +2002,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "sessions"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "sessions",
+      "name": "token_hash",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -764,12 +2015,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "token_hash",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "sessions"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "sessions",
+      "name": "created_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -777,12 +2028,12 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "sessions"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "sessions",
+      "name": "expires_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -790,12 +2041,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "sessions"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "sessions",
+      "name": "used_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": false,
@@ -803,12 +2054,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "used_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "sessions"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_item_images",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -816,12 +2067,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_item_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_item_images",
+      "name": "snack_item_id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -829,12 +2080,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "snack_item_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_item_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_item_images",
+      "name": "storage_key",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -842,12 +2093,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "storage_key",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_item_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_item_images",
+      "name": "sort_order",
       "type": "integer",
       "typeSchema": null,
       "notNull": true,
@@ -855,12 +2106,12 @@
       "default": "0",
       "generated": null,
       "identity": null,
-      "name": "sort_order",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_item_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_item_images",
+      "name": "is_primary",
       "type": "boolean",
       "typeSchema": null,
       "notNull": true,
@@ -868,25 +2119,12 @@
       "default": "false",
       "generated": null,
       "identity": null,
-      "name": "is_primary",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_item_images"
+      "entityType": "columns"
     },
     {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "snack_item_images",
       "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_item_images"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -894,12 +2132,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_item_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_item_images",
+      "name": "updated_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "snack_item_images",
+      "name": "deleted_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": false,
@@ -907,12 +2158,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "deleted_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_item_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -920,12 +2171,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "brand_id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": false,
@@ -933,25 +2184,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "brand_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "columns"
     },
     {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "snack_items",
       "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -959,12 +2197,25 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "slug",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "slug",
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "description",
       "type": "text",
       "typeSchema": null,
       "notNull": false,
@@ -972,12 +2223,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "description",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "price",
       "type": "numeric(10,2)",
       "typeSchema": null,
       "notNull": false,
@@ -985,12 +2236,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "price",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "barcode",
       "type": "text",
       "typeSchema": null,
       "notNull": false,
@@ -998,12 +2249,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "barcode",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "avg_rating",
       "type": "numeric(3,2)",
       "typeSchema": null,
       "notNull": true,
@@ -1011,25 +2262,12 @@
       "default": "'0'",
       "generated": null,
       "identity": null,
-      "name": "avg_rating",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "columns"
     },
     {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "snack_items",
       "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -1037,12 +2275,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "updated_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "deleted_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": false,
@@ -1050,12 +2301,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "deleted_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_review_images",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -1063,12 +2314,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_review_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_review_images",
+      "name": "review_id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -1076,12 +2327,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "review_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_review_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_review_images",
+      "name": "url",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -1089,12 +2340,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "url",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_review_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_review_images",
+      "name": "sort_order",
       "type": "integer",
       "typeSchema": null,
       "notNull": true,
@@ -1102,12 +2353,12 @@
       "default": "0",
       "generated": null,
       "identity": null,
-      "name": "sort_order",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_review_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_review_images",
+      "name": "is_primary",
       "type": "boolean",
       "typeSchema": null,
       "notNull": true,
@@ -1115,25 +2366,12 @@
       "default": "false",
       "generated": null,
       "identity": null,
-      "name": "is_primary",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_review_images"
+      "entityType": "columns"
     },
     {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "snack_review_images",
       "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_review_images"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -1141,12 +2379,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_review_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_review_images",
+      "name": "updated_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "snack_review_images",
+      "name": "deleted_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": false,
@@ -1154,12 +2405,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "deleted_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_review_images"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_reviews",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -1167,25 +2418,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_reviews"
+      "entityType": "columns"
     },
     {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "snack_reviews",
       "name": "snack_item_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_reviews"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -1193,12 +2431,25 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_reviews"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_reviews",
+      "name": "user_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "snack_reviews",
+      "name": "rating",
       "type": "integer",
       "typeSchema": null,
       "notNull": true,
@@ -1206,38 +2457,25 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "rating",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_reviews"
+      "entityType": "columns"
     },
     {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "snack_reviews",
       "name": "comment",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_reviews"
-    },
-    {
-      "type": "timestamp",
+      "type": "text",
       "typeSchema": null,
-      "notNull": true,
+      "notNull": false,
       "dimensions": 0,
-      "default": "now()",
+      "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "snack_reviews",
       "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_reviews"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
       "notNull": true,
@@ -1245,12 +2483,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_reviews"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "snack_reviews",
+      "name": "updated_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "snack_reviews",
+      "name": "deleted_at",
       "type": "timestamp",
       "typeSchema": null,
       "notNull": false,
@@ -1258,25 +2509,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "deleted_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_reviews"
+      "entityType": "columns"
     },
     {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "snack_tags",
       "name": "snack_item_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_tags"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -1284,12 +2522,25 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "snack_tags",
       "name": "tag_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "snack_tags"
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "tags",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -1297,25 +2548,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "tags"
+      "entityType": "columns"
     },
     {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "tags",
       "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "tags"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -1323,12 +2561,25 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "slug",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "tags"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "tags",
+      "name": "slug",
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "users",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -1336,25 +2587,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
+      "entityType": "columns"
     },
     {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "users",
       "name": "email",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -1362,25 +2600,25 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "users",
       "name": "password_hash",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
       "type": "text",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "users",
       "name": "first_name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": false,
@@ -1388,12 +2626,12 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "users",
       "name": "last_name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": false,
@@ -1401,12 +2639,25 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "profile_picture_url",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "users",
+      "name": "profile_picture_url",
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "users",
+      "name": "role",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -1414,12 +2665,12 @@
       "default": "'user'",
       "generated": null,
       "identity": null,
-      "name": "role",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "users",
+      "name": "status",
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -1427,51 +2678,12 @@
       "default": "'active'",
       "generated": null,
       "identity": null,
-      "name": "status",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
+      "entityType": "columns"
     },
     {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "users",
       "name": "email_verified_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
       "type": "timestamp",
       "typeSchema": null,
       "notNull": false,
@@ -1479,12 +2691,51 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "deleted_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "users",
+      "name": "created_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "users",
+      "name": "updated_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "users",
+      "name": "deleted_at",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reactions",
+      "name": "comment_reactions_user_comment_unique_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1506,13 +2757,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "comment_reactions_user_comment_unique_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "comment_reactions"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "comment_reactions",
+      "name": "comment_reactions_comment_id_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1527,13 +2777,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "comment_reactions_comment_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "comment_reactions"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "comment_reports",
+      "name": "comment_reports_reporter_comment_unique_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1555,13 +2804,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "comment_reports_reporter_comment_unique_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "comment_reports"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "comments",
+      "name": "comments_review_id_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1576,13 +2824,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "comments_review_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "comments"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "comments",
+      "name": "comments_parent_comment_id_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1597,34 +2844,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "comments_parent_comment_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "comments"
+      "entityType": "indexes"
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "user_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
+      "schema": "public",
+      "table": "email_verifications",
       "name": "email_verifications_user_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "email_verifications"
-    },
-    {
       "nameExplicit": true,
       "columns": [
         {
@@ -1639,13 +2864,32 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "password_resets_user_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "password_resets"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "password_resets",
+      "name": "password_resets_user_id_idx",
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "entityType": "indexes"
+    },
+    {
+      "schema": "public",
+      "table": "review_reactions",
+      "name": "review_reactions_user_review_unique_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1667,13 +2911,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "review_reactions_user_review_unique_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "review_reactions"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "review_reactions",
+      "name": "review_reactions_review_id_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1688,13 +2931,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "review_reactions_review_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "review_reactions"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "review_reports",
+      "name": "review_reports_reporter_review_unique_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1716,13 +2958,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "review_reports_reporter_review_unique_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "review_reports"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "sessions",
+      "name": "sessions_user_id_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1737,13 +2978,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "sessions_user_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "sessions"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "snack_item_images",
+      "name": "snack_item_images_snack_item_id_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1758,13 +2998,12 @@
       "where": "deleted_at IS NULL",
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "snack_item_images_snack_item_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "snack_item_images"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "snack_items_barcode_unique_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1779,13 +3018,12 @@
       "where": "barcode IS NOT NULL AND deleted_at IS NULL",
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "snack_items_barcode_unique_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "snack_items_slug_unique_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1800,13 +3038,12 @@
       "where": "slug IS NOT NULL AND deleted_at IS NULL",
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "snack_items_slug_unique_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "snack_items"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "snack_review_images",
+      "name": "snack_review_images_review_id_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1821,13 +3058,12 @@
       "where": "deleted_at IS NULL",
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "snack_review_images_review_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "snack_review_images"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "snack_reviews",
+      "name": "snack_reviews_snack_user_unique_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1849,13 +3085,12 @@
       "where": "deleted_at IS NULL",
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "snack_reviews_snack_user_unique_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "snack_reviews"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "snack_reviews",
+      "name": "snack_reviews_snack_item_id_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1870,13 +3105,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "snack_reviews_snack_item_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "snack_reviews"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "snack_reviews",
+      "name": "snack_reviews_user_id_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1891,13 +3125,12 @@
       "where": null,
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "snack_reviews_user_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "snack_reviews"
+      "entityType": "indexes"
     },
     {
+      "schema": "public",
+      "table": "users",
+      "name": "users_email_unique_idx",
       "nameExplicit": true,
       "columns": [
         {
@@ -1912,501 +3145,636 @@
       "where": "deleted_at IS NULL",
       "with": "",
       "method": "btree",
-      "concurrently": false,
-      "name": "users_email_unique_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "users"
+      "entityType": "indexes"
     },
     {
-      "nameExplicit": false,
-      "columns": ["user_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
+      "schema": "public",
+      "table": "bookmarks",
       "name": "bookmarks_user_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "bookmarks"
-    },
-    {
       "nameExplicit": false,
-      "columns": ["snack_item_id"],
+      "columns": [
+        "user_id"
+      ],
       "schemaTo": "public",
-      "tableTo": "snack_items",
-      "columnsTo": ["id"],
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
+      "entityType": "fks"
+    },
+    {
+      "schema": "public",
+      "table": "bookmarks",
       "name": "bookmarks_snack_item_id_snack_items_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "bookmarks"
-    },
-    {
       "nameExplicit": false,
-      "columns": ["user_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "comment_reactions_user_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "comment_reactions"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["comment_id"],
-      "schemaTo": "public",
-      "tableTo": "comments",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "comment_reactions_comment_id_comments_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "comment_reactions"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["reporter_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "comment_reports_reporter_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "comment_reports"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["comment_id"],
-      "schemaTo": "public",
-      "tableTo": "comments",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "comment_reports_comment_id_comments_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "comment_reports"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["review_id"],
-      "schemaTo": "public",
-      "tableTo": "snack_reviews",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "comments_review_id_snack_reviews_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["user_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "comments_user_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["parent_comment_id"],
-      "schemaTo": "public",
-      "tableTo": "comments",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "comments_parent_comment_id_comments_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "comments"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["user_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "email_verifications_user_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "email_verifications"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["user_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "password_resets_user_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "password_resets"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["user_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "review_reactions_user_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "review_reactions"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["review_id"],
-      "schemaTo": "public",
-      "tableTo": "snack_reviews",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "review_reactions_review_id_snack_reviews_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "review_reactions"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["reporter_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "review_reports_reporter_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "review_reports"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["review_id"],
-      "schemaTo": "public",
-      "tableTo": "snack_reviews",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "review_reports_review_id_snack_reviews_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "review_reports"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["user_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "sessions_user_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "sessions"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["snack_item_id"],
+      "columns": [
+        "snack_item_id"
+      ],
       "schemaTo": "public",
       "tableTo": "snack_items",
-      "columnsTo": ["id"],
+      "columnsTo": [
+        "id"
+      ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "snack_item_images_snack_item_id_snack_items_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "snack_item_images"
+      "entityType": "fks"
     },
     {
-      "nameExplicit": false,
-      "columns": ["brand_id"],
-      "schemaTo": "public",
-      "tableTo": "brands",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "snack_items_brand_id_brands_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "snack_items"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["review_id"],
-      "schemaTo": "public",
-      "tableTo": "snack_reviews",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "snack_review_images_review_id_snack_reviews_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "snack_review_images"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["snack_item_id"],
-      "schemaTo": "public",
-      "tableTo": "snack_items",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "snack_reviews_snack_item_id_snack_items_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "snack_reviews"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["user_id"],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "snack_reviews_user_id_users_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "snack_reviews"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["snack_item_id"],
-      "schemaTo": "public",
-      "tableTo": "snack_items",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "snack_tags_snack_item_id_snack_items_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "snack_tags"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["tag_id"],
-      "schemaTo": "public",
-      "tableTo": "tags",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "NO ACTION",
-      "name": "snack_tags_tag_id_tags_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "snack_tags"
-    },
-    {
-      "columns": ["user_id", "snack_item_id"],
-      "nameExplicit": false,
-      "name": "bookmarks_pkey",
-      "entityType": "pks",
-      "schema": "public",
-      "table": "bookmarks"
-    },
-    {
-      "columns": ["snack_item_id", "tag_id"],
-      "nameExplicit": false,
-      "name": "snack_tags_pkey",
-      "entityType": "pks",
-      "schema": "public",
-      "table": "snack_tags"
-    },
-    {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "brands_pkey",
-      "schema": "public",
-      "table": "brands",
-      "entityType": "pks"
-    },
-    {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "comment_reactions_pkey",
       "schema": "public",
       "table": "comment_reactions",
-      "entityType": "pks"
+      "name": "comment_reactions_user_id_users_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
+      "schema": "public",
+      "table": "comment_reactions",
+      "name": "comment_reactions_comment_id_comments_id_fkey",
       "nameExplicit": false,
-      "name": "comment_reports_pkey",
+      "columns": [
+        "comment_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "comments",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
+    },
+    {
       "schema": "public",
       "table": "comment_reports",
-      "entityType": "pks"
+      "name": "comment_reports_reporter_id_users_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "reporter_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
+      "schema": "public",
+      "table": "comment_reports",
+      "name": "comment_reports_comment_id_comments_id_fkey",
       "nameExplicit": false,
-      "name": "comments_pkey",
+      "columns": [
+        "comment_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "comments",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
+    },
+    {
       "schema": "public",
       "table": "comments",
-      "entityType": "pks"
+      "name": "comments_review_id_snack_reviews_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "review_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "snack_reviews",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
+      "schema": "public",
+      "table": "comments",
+      "name": "comments_user_id_users_id_fkey",
       "nameExplicit": false,
-      "name": "email_verifications_pkey",
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
+      "name": "comments_parent_comment_id_comments_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "parent_comment_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "comments",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "entityType": "fks"
+    },
+    {
       "schema": "public",
       "table": "email_verifications",
-      "entityType": "pks"
+      "name": "email_verifications_user_id_users_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "password_resets_pkey",
       "schema": "public",
       "table": "password_resets",
-      "entityType": "pks"
+      "name": "password_resets_user_id_users_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "review_reactions_pkey",
       "schema": "public",
       "table": "review_reactions",
-      "entityType": "pks"
+      "name": "review_reactions_user_id_users_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
+      "schema": "public",
+      "table": "review_reactions",
+      "name": "review_reactions_review_id_snack_reviews_id_fkey",
       "nameExplicit": false,
-      "name": "review_reports_pkey",
+      "columns": [
+        "review_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "snack_reviews",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
+    },
+    {
       "schema": "public",
       "table": "review_reports",
-      "entityType": "pks"
+      "name": "review_reports_reporter_id_users_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "reporter_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
+      "schema": "public",
+      "table": "review_reports",
+      "name": "review_reports_review_id_snack_reviews_id_fkey",
       "nameExplicit": false,
-      "name": "sessions_pkey",
+      "columns": [
+        "review_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "snack_reviews",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
+    },
+    {
       "schema": "public",
       "table": "sessions",
-      "entityType": "pks"
+      "name": "sessions_user_id_users_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "snack_item_images_pkey",
       "schema": "public",
       "table": "snack_item_images",
-      "entityType": "pks"
+      "name": "snack_item_images_snack_item_id_snack_items_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "snack_item_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "snack_items",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "snack_items_pkey",
       "schema": "public",
       "table": "snack_items",
-      "entityType": "pks"
+      "name": "snack_items_brand_id_brands_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "brand_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "brands",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "snack_review_images_pkey",
       "schema": "public",
       "table": "snack_review_images",
-      "entityType": "pks"
+      "name": "snack_review_images_review_id_snack_reviews_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "review_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "snack_reviews",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "snack_reviews_pkey",
       "schema": "public",
       "table": "snack_reviews",
-      "entityType": "pks"
+      "name": "snack_reviews_snack_item_id_snack_items_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "snack_item_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "snack_items",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "tags_pkey",
       "schema": "public",
-      "table": "tags",
-      "entityType": "pks"
+      "table": "snack_reviews",
+      "name": "snack_reviews_user_id_users_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "user_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
     },
     {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "users_pkey",
       "schema": "public",
-      "table": "users",
+      "table": "snack_tags",
+      "name": "snack_tags_snack_item_id_snack_items_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "snack_item_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "snack_items",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
+    },
+    {
+      "schema": "public",
+      "table": "snack_tags",
+      "name": "snack_tags_tag_id_tags_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "tag_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "tags",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "entityType": "fks"
+    },
+    {
+      "schema": "public",
+      "table": "bookmarks",
+      "name": "bookmarks_pkey",
+      "columns": [
+        "user_id",
+        "snack_item_id"
+      ],
+      "nameExplicit": false,
       "entityType": "pks"
     },
     {
+      "schema": "public",
+      "table": "snack_tags",
+      "name": "snack_tags_pkey",
+      "columns": [
+        "snack_item_id",
+        "tag_id"
+      ],
       "nameExplicit": false,
-      "columns": ["token_hash"],
-      "nullsNotDistinct": false,
-      "name": "email_verifications_token_hash_key",
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "brands",
+      "name": "brands_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reactions",
+      "name": "comment_reactions_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "comment_reports",
+      "name": "comment_reports_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "comments",
+      "name": "comments_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
       "schema": "public",
       "table": "email_verifications",
-      "entityType": "uniques"
+      "name": "email_verifications_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
     },
     {
-      "nameExplicit": false,
-      "columns": ["token_hash"],
-      "nullsNotDistinct": false,
-      "name": "password_resets_token_hash_key",
       "schema": "public",
       "table": "password_resets",
-      "entityType": "uniques"
+      "name": "password_resets_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
     },
     {
+      "schema": "public",
+      "table": "review_reactions",
+      "name": "review_reactions_pkey",
+      "columns": [
+        "id"
+      ],
       "nameExplicit": false,
-      "columns": ["token_hash"],
-      "nullsNotDistinct": false,
-      "name": "sessions_token_hash_key",
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "review_reports",
+      "name": "review_reports_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
       "schema": "public",
       "table": "sessions",
-      "entityType": "uniques"
+      "name": "sessions_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
     },
     {
+      "schema": "public",
+      "table": "snack_item_images",
+      "name": "snack_item_images_pkey",
+      "columns": [
+        "id"
+      ],
       "nameExplicit": false,
-      "columns": ["slug"],
-      "nullsNotDistinct": false,
-      "name": "snack_items_slug_key",
+      "entityType": "pks"
+    },
+    {
       "schema": "public",
       "table": "snack_items",
+      "name": "snack_items_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "snack_review_images",
+      "name": "snack_review_images_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "snack_reviews",
+      "name": "snack_reviews_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "tags",
+      "name": "tags_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "users",
+      "name": "users_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "email_verifications",
+      "name": "email_verifications_token_hash_key",
+      "nameExplicit": false,
+      "columns": [
+        "token_hash"
+      ],
+      "nullsNotDistinct": false,
       "entityType": "uniques"
     },
     {
+      "schema": "public",
+      "table": "password_resets",
+      "name": "password_resets_token_hash_key",
       "nameExplicit": false,
-      "columns": ["name"],
+      "columns": [
+        "token_hash"
+      ],
       "nullsNotDistinct": false,
+      "entityType": "uniques"
+    },
+    {
+      "schema": "public",
+      "table": "sessions",
+      "name": "sessions_token_hash_key",
+      "nameExplicit": false,
+      "columns": [
+        "token_hash"
+      ],
+      "nullsNotDistinct": false,
+      "entityType": "uniques"
+    },
+    {
+      "schema": "public",
+      "table": "snack_items",
+      "name": "snack_items_slug_key",
+      "nameExplicit": false,
+      "columns": [
+        "slug"
+      ],
+      "nullsNotDistinct": false,
+      "entityType": "uniques"
+    },
+    {
+      "schema": "public",
+      "table": "tags",
       "name": "tags_name_key",
-      "schema": "public",
-      "table": "tags",
+      "nameExplicit": false,
+      "columns": [
+        "name"
+      ],
+      "nullsNotDistinct": false,
       "entityType": "uniques"
     },
     {
-      "nameExplicit": false,
-      "columns": ["slug"],
-      "nullsNotDistinct": false,
-      "name": "tags_slug_key",
       "schema": "public",
       "table": "tags",
+      "name": "tags_slug_key",
+      "nameExplicit": false,
+      "columns": [
+        "slug"
+      ],
+      "nullsNotDistinct": false,
       "entityType": "uniques"
     }
-  ],
-  "renames": []
+  ]
 }
