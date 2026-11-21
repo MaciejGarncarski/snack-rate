@@ -5,7 +5,7 @@ import type { TestProject } from "vitest/node";
 let pgContainer: StartedPostgreSqlContainer | undefined;
 
 export async function setup(project: TestProject) {
-  pgContainer = await new PostgreSqlContainer("postgres:18-alpine").start();
+  pgContainer = await new PostgreSqlContainer("postgres:19-alpine").start();
   console.log("##### postgres started #####");
 
   project.provide("pgConfig", {
