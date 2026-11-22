@@ -2,8 +2,9 @@ FROM node:26.13.0-slim AS base
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ARG PNPM_VERSION=12.18.0
-RUN npm install -g --allow-scripts=pnpm pnpm@${PNPM_VERSION}
+ARG PNPM_VERSION=12.21.0
+COPY --from=ghcr.io/pnpm/pnpm:${PNPM_VERSION} /opt/pnpm /opt/pnpm
+RUN for bin in pnpm pn pnpx pnx; do ln -s "/opt/pnpm/$bin" "/usr/local/bin/$bin"; done
 RUN pnpm config set store-dir /pnpm/store
 
 FROM base AS fetch

@@ -1,11 +1,12 @@
 ARG APP_PORT=3000
 
 FROM node:26.13.0-slim AS base
-ARG PNPM_VERSION=12.18.0
+ARG PNPM_VERSION=12.21.0
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm install -g --allow-scripts=pnpm pnpm@${PNPM_VERSION}
+COPY --from=ghcr.io/pnpm/pnpm:${PNPM_VERSION} /opt/pnpm /opt/pnpm
+RUN for bin in pnpm pn pnpx pnx; do ln -s "/opt/pnpm/$bin" "/usr/local/bin/$bin"; done
 RUN pnpm config set store-dir /pnpm/store
 
 ARG VITE_TURNSTILE_SITE_KEY

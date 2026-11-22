@@ -6,18 +6,12 @@ inputs:
     description: Node.js version
     default: "26"
 
-  pnpm-version:
-    description: pnpm version
-    default: "12.18.0"
-
 runs:
   using: composite
 
   steps:
     - name: Install pnpm
       uses: pnpm/action-setup@v6
-      with:
-        version: ${{ inputs.pnpm-version }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v6
