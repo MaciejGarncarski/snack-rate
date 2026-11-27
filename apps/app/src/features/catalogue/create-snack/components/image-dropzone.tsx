@@ -26,16 +26,15 @@ export const ImageDropzone = ({
 
   const processDroppedFiles = useCallback(
     async (files: File[]) => {
-      for (const file of files) {
-        const validationResult = await validateImage(
-          file,
-          images.map((img) => img.file),
-        );
+      const existingFiles = images.map((img) => img.file);
 
+      for (const file of files) {
+        const validationResult = await validateImage(file, existingFiles);
         if (validationResult instanceof File) {
           handleAddToQueue(validationResult);
           return;
         }
+
         onValidationError(validationResult);
       }
     },

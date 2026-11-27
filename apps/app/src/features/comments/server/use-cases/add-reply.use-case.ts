@@ -13,7 +13,7 @@ export function addReplyUseCase(input: AddReplyInput, repository: CommentsReposi
     snackItemId: input.snackItemId,
     authorId: input.authorId,
     authorType: input.authorType,
-    commentId: input.commentId.toString(),
+    commentId: input.commentId,
     body: input.body,
   });
 }

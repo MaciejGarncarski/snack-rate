@@ -48,9 +48,7 @@ export const useCreateSnackForm = () => {
         formData.append("typeSlug", value.typeSlug);
       }
 
-      for (const image of value.images) {
-        formData.append("images", image);
-      }
+      value.images.map((image) => formData.append("images", image));
 
       try {
         await createSnack(formData, token);

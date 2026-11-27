@@ -201,9 +201,10 @@ export async function getRatingsForSnack(
       )
       .groupBy(snackComments.rating);
 
-    for (const row of rows) {
-      distribution[String(row.rating)] = Number(row.count);
-    }
+    Object.assign(
+      distribution,
+      Object.fromEntries(rows.map((row) => [String(row.rating), Number(row.count)])),
+    );
   }
 
   const isUpdated = userComment

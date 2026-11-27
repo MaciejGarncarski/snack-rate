@@ -32,11 +32,10 @@ function truncateUrl(value: string): string {
 
 function getQueryParams(url: URL): Record<string, unknown> | undefined {
   if (url.searchParams.size === 0) return undefined;
-  const params: Record<string, unknown> = {};
-  for (const [key, value] of url.searchParams) {
-    params[key] = redactValue(value);
-  }
-  return params;
+
+  return Object.fromEntries(
+    [...url.searchParams.entries()].map(([key, value]) => [key, redactValue(value)]),
+  );
 }
 
 export const requestLoggerMiddleware = createMiddleware({ type: "request" }).server(

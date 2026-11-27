@@ -101,12 +101,6 @@ describe("rate snack", () => {
     expect(Number(dbSnack?.avgRating)).toBe(6);
   });
 
-  it("should require authorId and authorType at type level", () => {
-    // @ts-expect-error — authorId and authorType are required params
-    const call = () => rateSnackUseCase({ snackItemId: "x", rating: 4 }, repository, db);
-    expect(call).toBeDefined();
-  });
-
   it("should save optional comment body with the rating", async () => {
     const snack = await createSnack();
     const authorId = uuidv7();

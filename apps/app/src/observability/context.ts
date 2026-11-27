@@ -13,13 +13,15 @@ type AddContextOptions = {
 
 function toSpanAttributes(fields: SpanFields): Attributes {
   const clean = sanitizeRequestData(fields);
-  const attributes: Attributes = {};
-  for (const [key, value] of Object.entries(clean)) {
-    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-      attributes[key] = value;
-    }
-  }
-  return attributes;
+
+  return Object.fromEntries(
+    Object.entries(clean).filter(
+      (entry): entry is [string, string | number | boolean] =>
+        typeof entry[1] === "string" ||
+        typeof entry[1] === "number" ||
+        typeof entry[1] === "boolean",
+    ),
+  );
 }
 
 export function addContext(options: AddContextOptions, message = "Context attached"): void {

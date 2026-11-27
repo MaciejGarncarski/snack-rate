@@ -18,13 +18,8 @@ async function hashFile(file: File): Promise<string> {
 
 async function isDuplicate(newFile: File, existing: File[]): Promise<boolean> {
   const newHash = await hashFile(newFile);
-  for (const f of existing) {
-    const existingHash = await hashFile(f);
-    if (newHash === existingHash) {
-      return true;
-    }
-  }
-  return false;
+  const existingHashes = await Promise.all(existing.map((file) => hashFile(file)));
+  return existingHashes.some((existingHash) => existingHash === newHash);
 }
 
 export async function validateImage(file: File, allFiles: File[]): Promise<ImageValidationResult> {

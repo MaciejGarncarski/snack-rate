@@ -1,15 +1,16 @@
-// oxlint-disable typescript/no-explicit-any
-export function debounce<T extends (...args: any[]) => void>(fn: T, delay: number): T {
+export function debounce<T extends (...args: unknown[]) => void>(
+  fn: T,
+  delay: number,
+): (...args: Parameters<T>) => void {
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-  // SAFETY: the returned wrapper preserves T's parameters and return type by delegation.
-  return function (this: any, ...args: Parameters<T>) {
+  return (...args: Parameters<T>) => {
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
 
     timeoutId = setTimeout(() => {
-      fn.apply(this, args);
+      fn(...args);
     }, delay);
-  } as T;
+  };
 }

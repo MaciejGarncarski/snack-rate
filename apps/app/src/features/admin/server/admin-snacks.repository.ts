@@ -59,6 +59,7 @@ async function applySortMapping(
         ),
       );
   }
+
   for (const [oldSort, newSort] of newSortByOldSort) {
     await tx
       .update(snackItemImages)
@@ -240,12 +241,14 @@ export function createAdminSnacksRepository({
       });
 
       await db.transaction(async (tx) => {
-        for (const row of group) {
-          await tx
-            .update(snackItemImages)
-            .set({ deletedAt: new Date() })
-            .where(eq(snackItemImages.id, row.id));
-        }
+        await Promise.all(
+          group.map((row) =>
+            tx
+              .update(snackItemImages)
+              .set({ deletedAt: new Date() })
+              .where(eq(snackItemImages.id, row.id)),
+          ),
+        );
 
         const remaining = await tx.query.snackItemImages.findMany({
           where: {

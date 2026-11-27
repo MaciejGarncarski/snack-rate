@@ -358,11 +358,10 @@ async function listByAggregate(
     getFileUrl,
   );
 
-  for (const item of items) {
-    item.aggregateValue = direction === "most_reviewed" ? item.rating.count : item.rating.avg;
-  }
-
-  return items;
+  return items.map((item) => ({
+    ...item,
+    aggregateValue: direction === "most_reviewed" ? item.rating.count : item.rating.avg,
+  }));
 }
 
 export type SnacksRepository = ReturnType<typeof createSnacksRepository>;

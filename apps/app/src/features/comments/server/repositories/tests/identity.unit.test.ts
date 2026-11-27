@@ -1,3 +1,5 @@
+import { SQL } from "drizzle-orm";
+
 import { resolveIdentity, whereAuthor, whereAuthorSql } from "../identity";
 
 describe("resolveIdentity", () => {
@@ -55,9 +57,10 @@ describe("whereAuthor", () => {
 });
 
 describe("whereAuthorSql", () => {
-  it("should return SQL expression (no throw)", () => {
+  it("should return a SQL expression for a user identity", () => {
     const result = whereAuthorSql("snack-1", "user-123", "user");
-    expect(result).toBeDefined();
+
+    expect(result).toBeInstanceOf(SQL);
   });
 
   it("should throw when authorId is null", () => {

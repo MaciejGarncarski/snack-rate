@@ -87,11 +87,10 @@ export async function getReactionCounts(
     .where(eq(commentReactions.commentId, commentId))
     .groupBy(commentReactions.type);
 
-  const counts: Record<string, number> = {};
-  for (const row of rows) {
-    counts[row.type] = Number(row.count);
-  }
-  return counts as Record<ReactionType, number>;
+  return Object.fromEntries(rows.map((row) => [row.type, Number(row.count)])) as Record<
+    ReactionType,
+    number
+  >;
 }
 
 export async function getReactionsForComments(
@@ -116,36 +115,28 @@ export async function getReactionsForComments(
   const countsByComment = new Map<string, Record<string, number>>();
   for (const row of rows) {
     const existing = countsByComment.get(row.commentId) ?? {};
-    existing[row.type] = Number(row.count);
-    countsByComment.set(row.commentId, existing);
+    countsByComment.set(row.commentId, { ...existing, [row.type]: Number(row.count) });
   }
 
-  let userReactions = new Map<string, string>();
-  if (userId) {
-    const userRows = await client
-      .select({ commentId: commentReactions.commentId, type: commentReactions.type })
-      .from(commentReactions)
-      .where(
-        and(inArray(commentReactions.commentId, commentIds), eq(commentReactions.userId, userId)),
-      );
-    for (const r of userRows) {
-      userReactions.set(r.commentId, r.type);
-    }
-  }
+  const userRows = userId
+    ? await client
+        .select({ commentId: commentReactions.commentId, type: commentReactions.type })
+        .from(commentReactions)
+        .where(
+          and(inArray(commentReactions.commentId, commentIds), eq(commentReactions.userId, userId)),
+        )
+    : [];
+  const userReactions = new Map(userRows.map((row) => [row.commentId, row.type]));
 
-  const result = new Map<
-    string,
-    { counts: Record<ReactionType, number>; userReaction: ReactionType | null }
-  >();
-
-  for (const id of commentIds) {
-    result.set(id, {
-      counts: (countsByComment.get(id) ?? {}) as Record<ReactionType, number>,
-      userReaction: (userReactions.get(id) as ReactionType | undefined) ?? null,
-    });
-  }
-
-  return result;
+  return new Map(
+    commentIds.map((id) => [
+      id,
+      {
+        counts: (countsByComment.get(id) ?? {}) as Record<ReactionType, number>,
+        userReaction: (userReactions.get(id) as ReactionType | undefined) ?? null,
+      },
+    ]),
+  );
 }
 
 export async function removeReaction(

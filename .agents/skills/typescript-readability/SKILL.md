@@ -62,8 +62,9 @@ createUser({ name, isAdmin: true, sendWelcomeEmail: false });
 
 ## 4. Prefer declarative over imperative
 
-- **No `for`, `while`, or `do...while` loops.** Use array methods: `map`, `filter`, `flatMap`, `find`, `some`, `every`, `reduce`, and `Object.fromEntries` / `Object.entries` for objects.
+- Prefer array methods (`map`, `filter`, `flatMap`, `find`, `some`, `every`, `reduce`) and `Object.fromEntries` / `Object.entries` for objects over `for`, `while`, or `do...while` loops.
   - **Exception: test files.** Loops are fine there when they remove duplicated test code (see the `typescript-testing` skill).
+  - **Exception: building a Map/Set with conditional logic.** A `for...of` is clearer than a `reduce` that checks membership, skips duplicates, or accumulates into a mutable collection.
 - Pick the most specific method. `some`/`every`/`find` beat `filter(...).length`, and `flatMap` beats `map(...).flat()`.
 - Use `reduce` only when you are really folding a collection into one value (sums, grouping). Don't use it to build arrays or objects that `map`, `filter`, or `Object.fromEntries` express more clearly.
 - Don't mutate in a callback (`forEach` that pushes into an outer array). Return values instead.
@@ -123,7 +124,7 @@ Before finishing, check your diff for:
 - [ ] Any vague names (`data`, `result`, `handle`, `temp`)?
 - [ ] Any function doing two jobs, or many tiny helpers used once?
 - [ ] Any comment that restates the code?
-- [ ] Any `for`/`while` loop, or a `forEach` that mutates outside state?
+- [ ] Any `for`/`while` loop where an array method is clearer, or a `forEach` that mutates outside state?
 - [ ] Any long chain or dense one-liner that needs named steps?
 - [ ] Any `any`, `as`, or `!` without a reason?
 - [ ] Anything you had to reread to understand? Rewrite it.

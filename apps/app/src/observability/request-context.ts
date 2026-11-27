@@ -59,15 +59,12 @@ function sanitizeValue(value: unknown, depth: number): unknown {
   }
   if (isPlainObject(value)) {
     const keys = Object.keys(value).slice(0, MAX_OBJECT_KEYS);
-    const out: Record<string, unknown> = {};
-    for (const key of keys) {
-      if (redactKey(key)) {
-        out[key] = "[redacted]";
-      } else {
-        out[key] = sanitizeValue(value[key], depth + 1);
-      }
-    }
-    return out;
+    return Object.fromEntries(
+      keys.map((key) => [
+        key,
+        redactKey(key) ? "[redacted]" : sanitizeValue(value[key], depth + 1),
+      ]),
+    );
   }
   return "[unsupported]";
 }

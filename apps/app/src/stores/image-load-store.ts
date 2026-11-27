@@ -9,13 +9,8 @@ export function hasImageLoaded(src: string): boolean {
 export function markImageLoaded(src: string): void {
   loadedSources.add(src);
 
-  while (loadedSources.size > MAX_SIZE) {
-    const oldest = loadedSources.values().next().value;
-
-    if (oldest === undefined) {
-      break;
-    }
-
-    loadedSources.delete(oldest);
+  const overflow = loadedSources.size - MAX_SIZE;
+  if (overflow > 0) {
+    [...loadedSources].slice(0, overflow).map((oldestSource) => loadedSources.delete(oldestSource));
   }
 }

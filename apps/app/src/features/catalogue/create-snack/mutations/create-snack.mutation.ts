@@ -4,13 +4,9 @@ export const buildCreateSnackPayload = (formData: FormData) => {
   const barcode = formData.get("barcode");
   const typeSlug = formData.get("typeSlug");
 
-  const images: File[] = [];
-
-  for (const [key, value] of formData.entries()) {
-    if (key === "images" && value instanceof File) {
-      images.push(value);
-    }
-  }
+  const images = [...formData.entries()].flatMap(([key, value]) =>
+    key === "images" && value instanceof File ? [value] : [],
+  );
 
   return {
     name: String(name),
